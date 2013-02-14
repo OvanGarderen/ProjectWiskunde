@@ -1,0 +1,4 @@
+ProjectWiskunde
+===============
+
+Image compression project
