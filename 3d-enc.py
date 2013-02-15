@@ -5,15 +5,14 @@ class NotImplemented (Exception):
     pass
 
 class Filter3D:
-    encode_mat = [[[0,0],[0,0]],[[0,0],[0,0]]]           
-    decode_mat = [[[0,0],[0,0]],[[0,0],[0,0]]]           
+    encode_mat = [[[0,0],[0,0]],[[0,0],[0,0]]]
+    decode_mat = [[[0,0],[0,0]],[[0,0],[0,0]]]
     typ = 'abstract 3D filter object'
     def __str__(self):
         return self.typ
-    
+
     def apply(self,matrix):
         raise NotImplemented
-
 
 class FilterSet3D:
     name = ''
@@ -77,19 +76,67 @@ class HaarSet3D (FilterSet3D):
         self.name = "Haarset3D"
         self.filt_low = HaarL3D()
         self.filt_high_list = [HaarH13D(),HaarH23D(),HaarH33D(),HaarH43D()]
-        
+
+def split_seq(seq,n):
+    return [seq[i:i+n] for i in range(0,len(seq),n)]
+
+class Chunk3D:
+    sizelog = 1
+    mat = [[[]]]
+    def __init__(self,data,breaksize=-1):
+#if breaksize is not given, treat data as 3D matrix, else make data into matrix
+        if breaksize <0:
+            self.mat = data
+            try:
+                if len(data) == len(data[0]) and len(data[0]) == len(data[0][0]):
+                    self.sizelog = len(data)
+                else:
+                    raise TypeError
+            except:
+                raise TypeError
+        else:
+            if len(data) != 2**(3*breaksize-3):
+                print len(data)
+                print 2**(3*breaksize-3)
+                raise TypeError
+            self.mat = split_seq(split_seq(data,2**(breaksize-1)),2**(breaksize-1))
+
+    def split(self):
+        chunks = []
+
+        for x in self.mat:
+            for y in x:
+                chunks += y
+        print chunks
+        return chunks
+
+    def __repr__(self):
+        ret = ''
+        ret+= '[\033[1;30mx)\033[0m '
+        for i in self.mat:
+            ret+= '\n[\033[1;32my)\033[0m\n '
+            for j in i:
+                ret+= '\t[\033[1;33mz)\033[0m '
+                for k in j:
+                    ret+= str(k)
+                    ret+= ' '
+                ret+= '] '
+            ret+= '] '
+        ret+= '] '
+        return ret
+
 filterdict = {'default' : HaarSet3D(), 'haar3d' : HaarSet3D()}
 
 if __name__ == '__main__':
-
-    data = [[[1,1],[1,1]],[[1,1],[1,1]]]
-
     wav = Wav3D('default')
-    print wav.filterset,'applied to',data,'gives'
-
     try:
-        for filt in wav.filterset.filters():
-            print filt.apply(data)
+        lel2 = Chunk3D([i for i in range(2**(3*2))],3)
+        print lel2
+        lulz = lel2.split()
+        lulz1 = lulz[0]
+        lulz2 = lulz[1]
+        print lulz1
+        print lulz2
 
     except NotImplemented:
         print '\'tis nog nie klaar lelleke'
