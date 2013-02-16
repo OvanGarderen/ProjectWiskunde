@@ -5,8 +5,8 @@
 
 \renewcommand{\phi}{\varphi}
 
-\title{Wavelets 'n shit}
-\subtitle{}
+\title{JPEG-2000}
+\subtitle{De Wondere Wereld van Wavelets}
 \author{Jan Westerdiep \and Okke van Garderen}
 \date{\today}
 \institute{Universiteit van Amsterdam}
@@ -16,6 +16,8 @@
 \begin{document}
 
 \frame{\titlepage}
+
+\section{Theorie}
 
 \frame{
 \frametitle{Fourier Transformatie}
@@ -28,7 +30,8 @@
     \item (2d) signaal als functie te beschouwen
     \item deze functie schrijven in de Fourier-basis
     \item co\"efficienten kleiner dan $\epsilon$``weggooien"
-	\item signaal reconstrueren adhv kleinere set co\"efficienten
+    \item signaal reconstrueren adhv kleinere set co\"efficienten
+    \item praktisch probleem!!
 \end{itemize}
 \end{column}
 \begin{column}{0.25\linewidth}
@@ -41,30 +44,26 @@
 \frametitle{Wavelet Transformatie}
 \begin{columns}
 \begin{column}{0.75\linewidth}
-\[ \left\{ e^{i k 2 \pi x}: k \in \mathbb{N}_0 \right\} \]
-\[ f = \sum \langle f, \phi_k \rangle \phi_k\text{, met $\phi_k$ genormaliseerd } \]
-
-\begin{itemize}
-    \item (2d) signaal als functie te beschouwen
-    \item deze functie schrijven in de Fourier-basis
-    \item co\"efficienten kleiner dan $\epsilon$``weggooien"
-	\item signaal reconstrueren adhv kleinere set co\"efficienten
-\end{itemize}
+  \includegraphics[width=\linewidth]{wavelets.jpg}
 \end{column}
 \begin{column}{0.25\linewidth}
-    \includegraphics[width=\linewidth]{Sample1.jpg}
+\vspace{4.55pt}
+\includegraphics[width=\linewidth]{Sample1.jpg}
 \end{column}
 \end{columns}
 }
+
+\section{Begeleider}
 
 \frame{
 \frametitle{Begeleider: Rob Stevensson}
 \begin{columns}
   \begin{column}{0.5\linewidth}
     \begin{itemize}
-    \item was numerieke analyse docent
-    \item alles wat ie doet heeft met wavelets te maken
-    \item ALLES wat ie doet heeft met wavelets te maken
+    \item Was numerieke analyse docent
+    \item De helft van zijn publicaties heeeft `Wavelet' in de naam
+    \item Numerieke analayse $\rightarrow$ benaderen van functies
+    \item Verbinding met informatica
     \end{itemize}
   \end{column}
   \begin{column}{0.5\linewidth}
@@ -73,8 +72,34 @@
 \end{columns}
 }
 
+\section{Project}
+
 \frame{
-\frametitle{Jan is een neger}
+\frametitle{Motivatie en Doelen}
+Motivatie
+\begin{itemize}
+  \item Analytisch
+  \item Programmeren :D
+\end{itemize}
+Doelen
+\begin{itemize}
+  \item Zelf iets bedenken (nieuwe wavelet, algoritme)
+  \item Rob stelde 3D signalen voor
+  \item Fourier en Wavelet transformaties implementeren
+  \item Orienterende fase
+\end{itemize}
+}
+
+\frame{
+\frametitle{Afspraken}
+\begin{itemize}
+\item Elke dinsdagochtend om 11 uur werken aan het project
+\item Afspreken met Rob wanneer nodig
+\item Ori\"enteren en programmeren
+\end{itemize}
+}
+
+\frame{
 \includegraphics[height=\linewidth]{JPEGthestrongest.jpg}
 }
 
