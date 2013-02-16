@@ -3,6 +3,8 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 
+\renewcommand{\phi}{\varphi}
+
 \title{Wavelets 'n shit}
 \subtitle{}
 \author{Jan Westerdiep \and Okke van Garderen}
@@ -17,24 +19,42 @@
 
 \frame{
 \frametitle{Fourier Transformatie}
-\begin{columns}  \begin{column}{0.5\linewidth}\begin{itemize}
-    \item
-    \item
-    \item
-\end{itemize}  \end{column}\begin{column}{0.5\linewidth}
-    \includegraphics[width=\linewidth]{robbierobrob.jpg}
-\end{column}\end{columns}
+\begin{columns}
+\begin{column}{0.75\linewidth}
+\[ \left\{ e^{i k 2 \pi x}: k \in \mathbb{N}_0 \right\} \]
+\[ f = \sum \langle f, \phi_k \rangle \phi_k\text{, met $\phi_k$ genormaliseerd } \]
+
+\begin{itemize}
+    \item (2d) signaal als functie te beschouwen
+    \item deze functie schrijven in de Fourier-basis
+    \item co\"efficienten kleiner dan $\epsilon$``weggooien"
+	\item signaal reconstrueren adhv kleinere set co\"efficienten
+\end{itemize}
+\end{column}
+\begin{column}{0.25\linewidth}
+    \includegraphics[width=\linewidth]{Sample2.jpg}
+\end{column}
+\end{columns}
 }
 
 \frame{
-\frametitle{}
-\begin{columns}  \begin{column}{0.5\linewidth}\begin{itemize}
-    \item
-    \item
-    \item
-\end{itemize}  \end{column}\begin{column}{0.5\linewidth}
-    \includegraphics[width=\linewidth]{robbierobrob.jpg}
-\end{column}\end{columns}
+\frametitle{Wavelet Transformatie}
+\begin{columns}
+\begin{column}{0.75\linewidth}
+\[ \left\{ e^{i k 2 \pi x}: k \in \mathbb{N}_0 \right\} \]
+\[ f = \sum \langle f, \phi_k \rangle \phi_k\text{, met $\phi_k$ genormaliseerd } \]
+
+\begin{itemize}
+    \item (2d) signaal als functie te beschouwen
+    \item deze functie schrijven in de Fourier-basis
+    \item co\"efficienten kleiner dan $\epsilon$``weggooien"
+	\item signaal reconstrueren adhv kleinere set co\"efficienten
+\end{itemize}
+\end{column}
+\begin{column}{0.25\linewidth}
+    \includegraphics[width=\linewidth]{Sample1.jpg}
+\end{column}
+\end{columns}
 }
 
 \frame{
