@@ -1,0 +1,18 @@
+Notes voor Project Wiskunde : JPEG-2000				       
+================================================================================
+
+26-02-2013 :: Bijeenkomst 1
+--------------------------------------------------------------------------------
+
+Chris heeft wat commentaar achtergelaten -> geen wiskundige stelling
+We gaan het hier met Rob over hebben bij de volgende bijeenkomst (die is ?????)
+
+We gaan proberen om DFT (Discrete Fourier Transform) te implementeren in 2D, 
+de 1D versie hebben we al gevonden. Daarna willen we doorstoten naar FFT (Fast
+Fourier Transform)
+
+De 2D versie lijkt een herhaalde versie van 1D, de scanlines worden allemaal ge-
+comprimeerd door middel van 1D DFT.
+
+- Note: DFT (en FFT) werken op complexe getallen, hiermee kan dus een 2D signaal
+  gecomprimeerd worden, (L-R geluid, YMCK -plaatjes, etc..) -> idee.
