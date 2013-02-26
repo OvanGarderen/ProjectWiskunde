@@ -34,12 +34,35 @@ def twodidft(x):
     X.insert(n, idft(x[n]))
   return X
 
+def img2mat(name):
+  raw = Image.open(name)
+  img = list(raw.convert('1').getdata())
+
+  img_mat = []
+  for i in range(raw.size[1]):
+    c = img[:raw.size[0]]
+    img = img[raw.size[0]:]
+    img_mat.append( c )
+
+  return img_mat
+
+def mat2img(data,size):
+  from PIL import Image
+  imgl = []
+  for x in data:
+    imgl +=x
+  i = Image.new('1',size)
+  i.putdata(imgl)
+  return i
+
 if __name__ == "__main__":
   from PIL import Image
-  img = Image.open("rubiks.jpg")
-  print img
+  img = img2mat("rubiks.jpg") 
+
   x = [[0.0, 0.5], 
        [0.2, 0.8]]
-  X = twoddft(x)
-  x_ = twodidft(X)
-  print x, X, x_
+  X = twoddft(img)
+  x_ = map(lambda x: map(lambda y: y.real,x),twodidft(X))
+
+  mat2img(x_,(60,60)).save("cubecompressed.png")
+

@@ -16,3 +16,9 @@ comprimeerd door middel van 1D DFT.
 
 - Note: DFT (en FFT) werken op complexe getallen, hiermee kan dus een 2D signaal
   gecomprimeerd worden, (L-R geluid, YMCK -plaatjes, etc..) -> idee.
+
+- Note: Voor FFT zullen we het Cooley-Turkey algoritme gebruiken dit lijkt het
+  makelijkste te implementeren te zijn. 
+
+Lief dagboek:
+     DFT 2D is gelukt! We hebben een plaatje gecomprimeerd!
