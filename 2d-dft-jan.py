@@ -1,0 +1,74 @@
+import cmath
+import numpy as np
+
+def dft2dF( mat, M, N ):
+    Y = len(mat)
+    X = len(mat[0])
+    ret = [[ 0 + 0j for j in range(0,N)] for i in range(0,M)]
+
+    coeff = 1.0/(M*N)
+
+    for u in range(0,M):
+        for v in range(0,N):
+            ret[u][v] = sum(map(sum,
+                                [[coeff * mat[x][y] * 
+                                  cmath.exp(-2j * cmath.pi * ( (u*x)/(1.0*M) + (v*y)/(1.0*N) )) 
+                                  for y in range(0,Y) ] 
+                                 for x in range(0,X) ]))
+    return ret
+
+def dft2df( mat, M, N ):
+    
+    mats = [[ mat[i][j] for j in range(0,len(mat[0])) ] 
+            + [ 0 for j in range(len(mat[0]),N)] 
+            for i in range(0,len(mat)) ] + [ [0 for i in range(0,N)] for j in range(len(mat),M)]
+
+    ret = [[ 0 + 0j for j in range(0,N)] for i in range(0,M)]
+
+    for x in range(0,M):
+        for y in range(0,N):
+            ret[x][y] = sum(map(sum,
+                                [[ mats[u][v] * 
+                                  cmath.exp(2j * cmath.pi * ( (u*x)/(1.0*M) + (v*y)/(1.0*N) )) 
+                                  for v in range(0,N) ] 
+                                 for u in range(0,M) ])).real
+
+    return ret
+
+def img2mat(name):
+    from PIL import Image
+    raw = Image.open(name)
+    raw.convert('L').save('lelxD.jpg')
+    img = list(raw.convert('L').getdata())
+
+    print img[0]
+    
+    img_mat = []
+    for i in range(raw.size[1]):
+        c = img[:raw.size[0]]
+        img = img[raw.size[0]:]
+        img_mat.append( c )
+        
+    return img_mat
+
+def mat2img(data,size):
+    from PIL import Image
+    imgl = []
+    for x in data:
+        imgl +=x
+    i = Image.new('L',size)
+    i.putdata(imgl)
+    return i
+
+if __name__ == "__main__":
+    import sys
+    if(len(sys.argv) < 2):
+        exit(1)
+
+    img = img2mat(sys.argv[1])
+    coded = dft2dF( img, 59, 60 )
+    print coded, len(coded), len(coded[0])
+    uncoded = dft2df( coded, 60, 60 )
+
+    im = mat2img( uncoded, (60,60) )
+    im.save("wefuckenallesop*yay*.jpg")
