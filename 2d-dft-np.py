@@ -1,7 +1,8 @@
 import cmath
+import numpy as np
 
 def dft2dF( mat, M, N ):
-    cuttof = 0
+    cuttof = 0.1
     ret = [[] for i in range(0,M)]
 
     coeff = 1.0/(M*N)
@@ -46,7 +47,10 @@ def pr_mat( mat, col ):
 def img2mat(name):
     from PIL import Image
     raw = Image.open(name)
-    img = list(raw.convert('1').getdata())
+    raw.convert('L').save('lelxD.jpg')
+    img = list(raw.convert('L').getdata())
+
+    print img[0]
     
     img_mat = []
     for i in range(raw.size[1]):
@@ -61,7 +65,7 @@ def mat2img(data,size):
     imgl = []
     for x in data:
         imgl +=x
-    i = Image.new('1',size)
+    i = Image.new('L',size)
     i.putdata(imgl)
     return i
 
@@ -71,13 +75,8 @@ if __name__ == "__main__":
         exit(1)
 
     img = img2mat(sys.argv[1])
-    pr_mat(img,32)
-
     coded = dft2dF( img, 60, 60 )
-    pr_mat(coded,31)
-
     uncoded = dft2df( coded, 60, 60 )
-    pr_mat(uncoded,32)
 
     im = mat2img( uncoded, (60,60) )
     im.save("wefuckenallesop*yay*.jpg")
