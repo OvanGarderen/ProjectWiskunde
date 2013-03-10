@@ -1,4 +1,4 @@
-import cmath
+import cmath,math,copy
 import numpy as np
 from DFTutil import *
 
@@ -7,72 +7,67 @@ from cmath import pi
 VERSION = 1
 
 def _FFT( ls ):
-    import math
     N = len(ls)
-    ls += [0 for i in range( 2**int(math.ceil(math.log(N,2))) - N)]
+    ls += [0 for i in range( minimaxpow2(N) - N)]
     return FFT(ls)
 
 def FFT( ls ):
     N = len(ls)
     if N <= 1: 
         return ls
-    even = FFT(ls[0::2])
-    odd  = FFT(ls[1::2])
-    return [( even[k] + cmath.exp(-2j*pi*k/N)*odd[k] )*0.5 for k in xrange(N/2)] + \
-           [( even[k] - cmath.exp(-2j*pi*k/N)*odd[k] )*0.5 for k in xrange(N/2)]
+    else:
+        even = FFT(ls[0::2])
+        odd  = FFT(ls[1::2])
+        return [( even[k] + cmath.exp(-2j*pi*k/N)*odd[k] )*0.5 for k in xrange(N/2)] + \
+            [( even[k] - cmath.exp(-2j*pi*k/N)*odd[k] )*0.5 for k in xrange(N/2)]
 
 def iFFT( ls ):
     N = len(ls)
     if N <= 1: 
         return ls
-    even = iFFT(ls[0::2])
-    odd  = iFFT(ls[1::2])
-    return [even[k] + cmath.exp(2j*pi*k/N)*odd[k] for k in xrange(N/2)] + \
-           [even[k] - cmath.exp(2j*pi*k/N)*odd[k] for k in xrange(N/2)]
+    else:
+        even = iFFT(ls[0::2])
+        odd  = iFFT(ls[1::2])
+        return [even[k] + cmath.exp(2j*pi*k/N)*odd[k] for k in xrange(N/2)] + \
+            [even[k] - cmath.exp(2j*pi*k/N)*odd[k] for k in xrange(N/2)]
+
+def _FFT2D( _mat ):
+    mat = matpow2_zero(_mat)
+    return FFT2D(mat)
+    
+def _iFFT2D( _mat ):
+    mat = matpow2_zero(_mat)
+    return iFFT2D(mat)
 
 def FFT2D( _mat ):
     M = len(_mat)
     N = len(_mat[0])
 
-    mat = [[ a for a in b] for b in _mat]
+    mat = copy.deepcopy(_mat)
 
-    for x in range(M):
-        mat[x] = FFT( mat[x] )
+    # FFT on rows
+    mat = map( FFT, mat )
 
+    # FFT on columns
     mat = transpose(mat)
-
-    for y in range(N):
-        mat[y] = FFT( mat[y] )
-    
+    mat = map( FFT, mat )
     mat = transpose(mat)
 
     return mat
-
-def _FFT2D( _mat ):
-    import math
-    _mat = matpow2_zero(_mat)
-    return FFT2D(_mat)
-    
-def _iFFT2D( _mat ):
-    import math
-    _mat = matpow2_zero(_mat)
-    return iFFT2D(_mat)
 
 def iFFT2D( _mat ):
     M = len(_mat)
     N = len(_mat[0])
 
-    mat = [[ a for a in b] for b in _mat]
+    mat = copy.deepcopy(_mat)
 
+    # inverse FFT on rows
+    mat = map( FFT, mat )
+
+    # inverse FFT on columns
     mat = transpose(mat)
-
-    for y in range(N):
-        mat[y] = iFFT( mat[y] )
-
+    mat = map( iFFT, mat )
     mat = transpose(mat)
-
-    for x in range(M):
-        mat[x] = iFFT( mat[x] )
 
     return mat
 
