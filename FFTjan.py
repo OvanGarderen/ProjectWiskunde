@@ -9,7 +9,7 @@ def mat2dict( mat ):
   dict = {}
   for y in range(N):
     for x in range(M):
-      if modulus(mat[y][x]) >= 0.0:
+      if modulus(mat[y][x]) >= 2:
         dict[y*N + x] = mat[y][x]
   return dict
 
@@ -33,10 +33,13 @@ data, (N, M) = img2mat( "plaatjes/smile.png" )
 mat = FFT2D( data )
 dict = mat2dict(mat)
 mat_new = dict2mat(dict, N, M )
-data_new = realintmat(iFFT2D( mat_new ))
+data_new = iFFT2D( mat_new )
 for y in range(N):
   for x in range(M):
     pass
-    #print data[y][x] - data_new[y][x]
+    data_new[y][x] *= N
+
+mat2img(realintmat(data_new), (N,M) ).save("plaatjes/Usmile.jpg")
+print len(dict), N*M
 
 #mat2img(realintmat( iFFT2D(mat_new) ), (N, M)).save("plaatjes/Usmile.jpg")
