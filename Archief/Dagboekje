@@ -38,21 +38,35 @@ Lief dagboek:
 --------------------------------------------------------------------------------
 
 We gaan proberen om DFT dit keer beter te implementeren, [we hebben de formule
-  gevonden voor wat een FFT zou moeten zijn](http://ultrastudio.org/en/2D_Fast_Fourier_Transform)
-  We hopen dat we heir iets verder mee komen.
+  gevonden voor wat een FFT zou moeten zijn](http://ultrastudio.org/en/2D_Fast
+ _Fourier_Transform) We hopen dat we heir iets verder mee komen.
 
-De implementatie van het [rij-georieenteerde](#rij-georienteerd) algorithme is gelukt, het [python programma](progs/2d-dft-rij.py) werkt nu, al geeft de implementatie een nogal wazig plaatje.
+De implementatie van het [rij-georieenteerde](#rij-georienteerd) algorithme is 
+gelukt, het [python programma](progs/2d-dft-rij.py) werkt nu, al geeft de 
+implementatie een nogal wazig plaatje.
 
-We hebben ook geprobeerd om een [gebied-georienteerd](#gebied-georienteerd) algorithme te gebruiken maar dit blijkt nog onsuccesvol.
+We hebben ook geprobeerd om een [gebied-georienteerd](#gebied-georienteerd) 
+algorithme te gebruiken maar dit blijkt nog onsuccesvol.
 
-De compressie van het algoritme valt ook vies tegen, het bestand wordt groter dan de pixelmatrix zelf is,
-de compressiefactor kan iig wel omhoog gegooid worden, zodat het bestand bijvoorbeeld maar 5k is, ipv 15k.
+De compressie van het algoritme valt ook vies tegen, het bestand wordt groter 
+dan de pixelmatrix zelf is, de compressiefactor kan iig wel omhoog gegooid 
+worden, zodat het bestand bijvoorbeeld maar 5k is, ipv 15k.
 
 Lief dagboek:
 
      DFT 2D is gelukt door de rij-georienteerd af te kappen
 
+TODO
+--------------------------------------------------------------------------------
 
+Het Commentaar van Rob:
+- Bewijs dat FFT werkt in n log n / dat FFT valide DFT is.
+- Meer theorie opschrijven over FFT vs. DFT
+- Bevindingen opschrijven
+- Chris Zaal praat maar stoer, geen aandacht aan besteden. / Theorie komt wel
+- Cutoff : ordenen op grootte en weggooien
+- Niet al te lang bezig zijn met FFT --> was om te motiveren / snel door met 
+  wavelets want die zijn wel leuk
 
 Documentatie 
 ================================================================================

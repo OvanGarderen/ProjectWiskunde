@@ -2,3 +2,4 @@ ProjectWiskunde
 ===============
 
 Image compression project
+
