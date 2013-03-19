@@ -30,14 +30,17 @@ def dict2mat( dict, N, M ):
 #maar goed, het algo gaat iets mis in. Misschien dat daarom alles kapoet is
 print iFFT2D(FFT2D([[.5,1],[10,1]]))
 data, (N, M) = img2mat( "plaatjes/smile.png" )
+
 mat = FFT2D( data )
 dict = mat2dict(mat)
 mat_new = dict2mat(dict, N, M )
 data_new = iFFT2D( mat_new )
-for y in range(N):
-  for x in range(M):
-    pass
-    data_new[y][x] *= N
+
+#dit is dus gefixt nu, het lag toch aan het algo idd
+#for y in range(N):
+#  for x in range(M):
+#    pass
+#    data_new[y][x] *= N
 
 mat2img(realintmat(data_new), (N,M) ).save("plaatjes/Usmile.jpg")
 print len(dict), N*M

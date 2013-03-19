@@ -6,21 +6,27 @@ from cmath import pi
 
 VERSION = 1
 
-def _FFT( ls ):
+def FFT( ls ):
     N = len(ls)
     ls += [0 for i in range( minimaxpow2(N) - N)]
-    return FFT(ls)
+    return _FFT(ls)
 
-def FFT( ls ):
+def _FFT( ls ):
     N = len(ls)
     if N <= 1: 
         return ls
     else:
+        # De e-machten in de sommatie zijn van de vorm e^(-2pi/N j* k) waarbij k=2m+1 of k = 2m
+        # verdeel dus de lijst in de coefficienten met k= 2m (even) en k=2m+1 (oneven)
         even = FFT(ls[0::2])
         odd  = FFT(ls[1::2])
-        return [( even[k] + cmath.exp(-2j*pi*k/N)*odd[k] )*0.5 for k in xrange(N/2)] + \
-            [( even[k] - cmath.exp(-2j*pi*k/N)*odd[k] )*0.5 for k in xrange(N/2)]
+        # De coefficienten met k=2m zijn symmetrisch rond de oorsprong dus even[k] = even[N-k]
+        # de coeffiecienten met k=2m+1 zijn anti-symmetrisch rond de oorsprong dus odd[k] = -odd[N-k]
+        # dat is de FFT-fu
+        return [0.5*( even[k] + cmath.exp(-2j*pi*k/N)*odd[k] ) for k in xrange(N/2)] + \
+            [0.5*( even[k] - cmath.exp(-2j*pi*k/N)*odd[k] ) for k in xrange(N/2)]
 
+# is identiek aan FFT maar zonder minteken
 def iFFT( ls ):
     N = len(ls)
     if N <= 1: 
@@ -31,15 +37,15 @@ def iFFT( ls ):
         return [even[k] + cmath.exp(2j*pi*k/N)*odd[k] for k in xrange(N/2)] + \
             [even[k] - cmath.exp(2j*pi*k/N)*odd[k] for k in xrange(N/2)]
 
-def _FFT2D( _mat ):
-    mat = matpow2_zero(_mat)
-    return FFT2D(mat)
-    
-def _iFFT2D( _mat ):
-    mat = matpow2_zero(_mat)
-    return iFFT2D(mat)
-
 def FFT2D( _mat ):
+    mat = matpow2_zero(_mat)
+    return _FFT2D(mat)
+    
+def iFFT2D( _mat ):
+    mat = matpow2_zero(_mat)
+    return _iFFT2D(mat)
+
+def _FFT2D( _mat ):
     M = len(_mat)
     N = len(_mat[0])
 
@@ -55,14 +61,14 @@ def FFT2D( _mat ):
 
     return mat
 
-def iFFT2D( _mat ):
+def _iFFT2D( _mat ):
     M = len(_mat)
     N = len(_mat[0])
 
     mat = copy.deepcopy(_mat)
 
     # inverse FFT on rows
-    mat = map( FFT, mat )
+    mat = map( iFFT, mat )
 
     # inverse FFT on columns
     mat = transpose(mat)
