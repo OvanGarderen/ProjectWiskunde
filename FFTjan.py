@@ -1,15 +1,16 @@
 from FFT2util import *
 from DFTutil import *
-import math, cmath
+from WVGutil import *
+import math, cmath, sys
 
 def modulus( z ):
   return math.sqrt(z.real**2 + z.imag**2)
 
-def mat2dict( mat ):
+def mat2dict( mat, cutoff ):
   dict = {}
   for y in range(N):
     for x in range(M):
-      if modulus(mat[y][x]) >= 2:
+      if modulus(mat[y][x]) >= cutoff:
         dict[y*N + x] = mat[y][x]
   return dict
 
@@ -23,16 +24,16 @@ def dict2mat( dict, N, M ):
     mat.append(matrow)
   return mat
 
-#dit print dus, tegen m'n verwachting in, niet de matrix zelf terug.
-#je doet gekke FFT-fu op regel 21 en 22 van FFT2util die ik niet snap
-#ligt dat trouwens aan mij of niet? want het lijkt niet op het algo van die
-#pagina.
-#maar goed, het algo gaat iets mis in. Misschien dat daarom alles kapoet is
-print iFFT2D(FFT2D([[.5,1],[10,1]]))
 data, (N, M) = img2mat( "plaatjes/smile.png" )
 
 mat = FFT2D( data )
-dict = mat2dict(mat)
+dict = mat2dict(mat, float(sys.argv[1]) )
+
+print len(dict)
+
+wvg_save_v2( dict, (N,M), "plaatjes/smilec="+sys.argv[1]+".wvg" )
+dict, (N,M) = wvg_open_v2( "plaatjes/smilec="+sys.argv[1]+".wvg" )
+
 mat_new = dict2mat(dict, N, M )
 data_new = iFFT2D( mat_new )
 
@@ -42,7 +43,11 @@ data_new = iFFT2D( mat_new )
 #    pass
 #    data_new[y][x] *= N
 
-mat2img(realintmat(data_new), (N,M) ).save("plaatjes/Usmile.jpg")
-print len(dict), N*M
+print len(data_new) * len(data_new[0]), N*M
+data_new = matslice( data_new, (N,M))
+print len(data_new) * len(data_new[0]), N*M
+
+mat2img(realintmat(data_new), (N,M) ).save("plaatjes/Usmilec="+sys.argv[1]+".jpg")
+
 
 #mat2img(realintmat( iFFT2D(mat_new) ), (N, M)).save("plaatjes/Usmile.jpg")
