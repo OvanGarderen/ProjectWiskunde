@@ -68,6 +68,18 @@ Het Commentaar van Rob:
 - Niet al te lang bezig zijn met FFT --> was om te motiveren / snel door met 
   wavelets want die zijn wel leuk
 
+19-02-2013 :: Bijeenkomst 3
+-------------------------------------------------------------------------------
+
+Het is gelukt om een redelijk simpele 2d fft voor elkaar te krijgen. Het algo-
+ritme slaat nu coeffs >= een cutoff op en gooit de rest weg. De resultaten zijn
+aardig als je je realiseert dat dit idee nogn iet gericed is.
+
+Er zat een bug in inverse 2d fft en die heeft Okke ook gefixt gelukkig.
+
+Verder hebben we nog wat testjes gerund. FFT is nu af, afgezien van het bewijsje
+dat we nog gaan schrijven. We kunnen aan de slag met het inlezen over Wavelets.
+
 Documentatie 
 ================================================================================
 --------------------------------------------------------------------------------
