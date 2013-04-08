@@ -10,6 +10,7 @@
 \newcommand{\A}{\mathbb{A}}
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\F}{\mathbb{F}}
+\newcommand{\e}{\epsilon}
 
 \newcommand{\eq}[1]{\begin{eqnarray*} #1 \end{eqnarray*}}
 \newcommand{\mogelijkheden}[1]{\begin{cases} #1 \end{cases}}
@@ -34,7 +35,7 @@ Als N = 1.
 
 Anders is $N$ een macht van $2$ en splitsen we de lijst $x$ op in de lijsten:
 \eq{
-  e_k   =& x_{2k}  \quad k < N/2\\
+  \e_k   =& x_{2k}  \quad k < N/2\\
   o_k =& x_{2k+1} \quad k < N/2
 }
 Waarbij $e$ dus de lijst is met even indices en $o$ de lijst met oneven indices.
@@ -63,6 +64,29 @@ We voeren nu een inductiebewijs naar $N$ als macht van $2$ uit:
     E_{(k-N/2)} &-& e^{-i2\pi k/N} O_{(k-N/2)} &  k\geq N/2 
   \end{array}\right.
 }
+We kunnen vanwege de inductieaanname de directe vorm van $E_k$ en $O_k$ invullen, deze lijsten
+hebben immers lengte $N/2$:
+\eq{
+  X_k = \left\{\begin{array}{llll}
+    \sum^{N/2}_{n=1} \e_n \cdot e^{-i2\pi k 2n/N} &+& 
+    e^{-i2\pi k/N} 
+    \sum^{N/2}_{n=1} o_n \cdot e^{-i2\pi k 2n/N} &  k< N/2 \\
+    \sum^{N/2}_{n=1} \e_n \cdot e^{-i2\pi (k-N/2) 2n/N} &-& 
+    e^{-i2\pi k/N} 
+    \sum^{N/2}_{n=1} o_n \cdot e^{-i2\pi (k-N/2) 2n/N} &  k\geq N/2 
+  \end{array}\right.
+}
+We merken op dat 
+\eq{
+  e^{-i2\pi(k-N/2)2n/N} = e^{-i2\pi k 2n/N}\cdot e^{-i2\pi n} = - e^{-i2\pi k 2n/N}
+} 
+waardoor het gevalsonderscheid wegvalt, aangezien beide vergelijkingen identiek zijn.
 
+Dan hebben nu $X_k$ als sommatie over de lijsten $e$ en $o$, we vullen de relatie voor $e,o$ met $x$ in ennemen de factor voor de oneven indices mee in de sommatie.
+\eq{
+  X_k = \sum^{N/2}_{n=1} x_{2n} \cdot e^{-i2\pi k (2n)/N} + 
+    \sum^{N/2}_{n=1} x_{2n+1} \cdot e^{-i2\pi k (2n+1)/N} 
+    = \sum^N_{n=1} x_n \cdot e^{-i2\pi k n/N}
+}
 \end{document}
 

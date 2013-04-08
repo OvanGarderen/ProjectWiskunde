@@ -80,6 +80,16 @@ Er zat een bug in inverse 2d fft en die heeft Okke ook gefixt gelukkig.
 Verder hebben we nog wat testjes gerund. FFT is nu af, afgezien van het bewijsje
 dat we nog gaan schrijven. We kunnen aan de slag met het inlezen over Wavelets.
 
+19-02-2013 :: Bijeenkomst 4
+-------------------------------------------------------------------------------
+
+Wat gaan we doen:
+
+- channels splitten
+- geluid comprimeren
+- bewijs harken
+
+
 Documentatie 
 ================================================================================
 --------------------------------------------------------------------------------
