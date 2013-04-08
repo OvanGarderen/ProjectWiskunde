@@ -1,0 +1,68 @@
+\documentclass[11pt]{article}
+
+\usepackage{a4wide}
+\usepackage{amsmath}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+
+\newcommand{\eq}[1]{\begin{eqnarray*} #1 \end{eqnarray*}}
+\newcommand{\mogelijkheden}[1]{\begin{cases} #1 \end{cases}}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+
+De discrete fouriertransformatie wordt gegeven door:
+\eq{
+ X_k = \sum^N_{n=1} x_n \cdot e^{-i2\pi k n/N} \quad k\in N
+}
+voor een lijst getallen van lengte $N$, we gaan controleren dat 
+dit identiek is aan ons algoritme.
+
+Ons algoritme wordt gegeven door:
+
+Als N = 1.
+\[
+  X_k = x_k
+\]
+
+Anders is $N$ een macht van $2$ en splitsen we de lijst $x$ op in de lijsten:
+\eq{
+  e_k   =& x_{2k}  \quad k < N/2\\
+  o_k =& x_{2k+1} \quad k < N/2
+}
+Waarbij $e$ dus de lijst is met even indices en $o$ de lijst met oneven indices.
+
+En voeren we hierop de discrete Fourier transformatie uit, zodat we de getransformeerde lijsten
+$E$ en $O$ vinden, deze lijsten hebben dus beiden lengte $N/2$.
+De volledige discrete Fourier transformatie wordt dan gegeven door:
+\[
+  X_k = \left\{\begin{array}{llll}
+    E_k         &+& e^{-i2\pi k/N} O_k &  k< N/2 \\
+    E_{(k-N/2)} &-& e^{-i2\pi k/N} O_{(k-N/2)} &  k\geq N/2 
+  \end{array}\right.
+\]
+
+We voeren nu een inductiebewijs naar $N$ als macht van $2$ uit:
+
+(basisstap) Als $N=2^0=1$ dan geldt:
+\eq{
+  X_k = x_k = x_1 = \sum_{n=1}^{1} x_n \cdot e^{-i2\pi} = \sum_{n=1}^{N} x_n \cdot e^{-i2\pi k n /N}
+}
+
+(inductiestap) Als het algoritme geldig is voor een lijst van $N/2 = 2^{m-1}$ dan hebben we voor $N$:
+\eq{
+  X_k = \left\{\begin{array}{llll}
+    E_k         &+& e^{-i2\pi k/N} O_k &  k< N/2 \\
+    E_{(k-N/2)} &-& e^{-i2\pi k/N} O_{(k-N/2)} &  k\geq N/2 
+  \end{array}\right.
+}
+
+\end{document}
+
