@@ -27,15 +27,21 @@ def _FFT( ls ):
             [0.5*( even[k] - cmath.exp(-2j*pi*k/N)*odd[k] ) for k in xrange(N/2)]
 
 # is identiek aan FFT maar zonder minteken
+
 def iFFT( ls ):
+  N = len( ls )
+  ls += [0 for i in range( minimaxpow2(N) - N ) ]
+  return _iFFT( ls )
+
+def _iFFT( ls ):
     N = len(ls)
     if N <= 1: 
         return ls
     else:
         even = iFFT(ls[0::2])
         odd  = iFFT(ls[1::2])
-        return [even[k] + cmath.exp(2j*pi*k/N)*odd[k] for k in xrange(N/2)] + \
-            [even[k] - cmath.exp(2j*pi*k/N)*odd[k] for k in xrange(N/2)]
+        return [(even[k] + cmath.exp(2j*pi*k/N)*odd[k]) for k in xrange(N/2)] + \
+            [(even[k] - cmath.exp(2j*pi*k/N)*odd[k]) for k in xrange(N/2)]
 
 def FFT2D( _mat ):
     mat = matpow2_zero(_mat)

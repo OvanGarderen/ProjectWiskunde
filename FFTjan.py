@@ -24,6 +24,9 @@ def dict2mat( dict, N, M ):
     mat.append(matrow)
   return mat
 
+def realintar( x ):
+    return map(lambda y: int(round(y.real)),x)
+
 data, (N, M) = img2mat( "plaatjes/smile.png" )
 
 mat = FFT2D( data )
