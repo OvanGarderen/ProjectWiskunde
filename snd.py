@@ -26,12 +26,8 @@ def realintar( x ):
 n, x = sciwav.read('snd/spongebob.wav')
 X = FFT(x.tolist())
 dict = ar2dict( X, 0.05 )
-print len(dict), len(X)
 data = dict2ar( dict, len(x) )
 x_ = iFFT( data )
-x_ = numpy.array(realintar(x_)[0:len(x)]).astype('int16')
-x__= map(lambda y: y-128,x_)
-
-print len(x_), len(x)
+x_ = numpy.array(realintar(x_)[0:len(x)]).astype(x.dtype)
 
 sciwav.write('snd/spongebob_new.wav', n, x_ )
