@@ -1,7 +1,5 @@
-<head>
-<link rel="stylesheet" type="text/css" href="style.css">
-<title>Project Wiskunde : JPG-2000</title>
-</head>
+<head> <link rel="stylesheet" type="text/css" href="style.css"> <title>Project
+Wiskunde : JPG-2000</title> </head>
 
 Project Wiskunde : JPG-2000
 ================================================================================
@@ -13,43 +11,43 @@ Notities
 26-02-2013 :: Bijeenkomst 1
 --------------------------------------------------------------------------------
 
-Chris heeft wat commentaar achtergelaten -> geen wiskundige stelling
-We gaan het hier met Rob over hebben bij de volgende bijeenkomst (die is ?????)
+Chris heeft wat commentaar achtergelaten -> geen wiskundige stelling We gaan
+het hier met Rob over hebben bij de volgende bijeenkomst (die is ?????)
 
-We gaan proberen om DFT (Discrete Fourier Transform) te implementeren in 2D, 
-de 1D versie hebben we al gevonden. Daarna willen we doorstoten naar FFT (Fast
+We gaan proberen om DFT (Discrete Fourier Transform) te implementeren in 2D, de
+1D versie hebben we al gevonden. Daarna willen we doorstoten naar FFT (Fast
 Fourier Transform)
 
-De 2D versie lijkt een herhaalde versie van 1D, de scanlines worden allemaal ge-
-comprimeerd door middel van 1D DFT.
+De 2D versie lijkt een herhaalde versie van 1D, de scanlines worden allemaal
+ge- comprimeerd door middel van 1D DFT.
 
-- Note: DFT (en FFT) werken op complexe getallen, hiermee kan dus een 2D signaal
-  gecomprimeerd worden, (L-R geluid, YMCK -plaatjes, etc..) -> idee.
+- Note: DFT (en FFT) werken op complexe getallen, hiermee kan dus een 2D
+  signaal gecomprimeerd worden, (L-R geluid, YMCK -plaatjes, etc..) -> idee.
 
 - Note: Voor FFT zullen we het Cooley-Turkey algoritme gebruiken dit lijkt het
   makelijkste te implementeren te zijn. 
 
 Lief dagboek:
 
-     DFT 2D is gelukt! We hebben een plaatje gecomprimeerd! 
-     bijstelling ~ niet helemaal er was dus geen compressie
+     DFT 2D is gelukt! We hebben een plaatje gecomprimeerd!  bijstelling ~ niet
+     helemaal er was dus geen compressie
 
 05-02-2013 :: Bijeenkomst 2
 --------------------------------------------------------------------------------
 
 We gaan proberen om DFT dit keer beter te implementeren, [we hebben de formule
-  gevonden voor wat een FFT zou moeten zijn](http://ultrastudio.org/en/2D_Fast
- _Fourier_Transform) We hopen dat we heir iets verder mee komen.
+gevonden voor wat een FFT zou moeten zijn](http://ultrastudio.org/en/2D_Fast
+_Fourier_Transform) We hopen dat we heir iets verder mee komen.
 
-De implementatie van het [rij-georieenteerde](#rij-georienteerd) algorithme is 
-gelukt, het [python programma](progs/2d-dft-rij.py) werkt nu, al geeft de 
+De implementatie van het [rij-georieenteerde](#rij-georienteerd) algorithme is
+gelukt, het [python programma](progs/2d-dft-rij.py) werkt nu, al geeft de
 implementatie een nogal wazig plaatje.
 
-We hebben ook geprobeerd om een [gebied-georienteerd](#gebied-georienteerd) 
+We hebben ook geprobeerd om een [gebied-georienteerd](#gebied-georienteerd)
 algorithme te gebruiken maar dit blijkt nog onsuccesvol.
 
-De compressie van het algoritme valt ook vies tegen, het bestand wordt groter 
-dan de pixelmatrix zelf is, de compressiefactor kan iig wel omhoog gegooid 
+De compressie van het algoritme valt ook vies tegen, het bestand wordt groter
+dan de pixelmatrix zelf is, de compressiefactor kan iig wel omhoog gegooid
 worden, zodat het bestand bijvoorbeeld maar 5k is, ipv 15k.
 
 Lief dagboek:
@@ -65,7 +63,7 @@ Het Commentaar van Rob:
 - Bevindingen opschrijven
 - Chris Zaal praat maar stoer, geen aandacht aan besteden. / Theorie komt wel
 - Cutoff : ordenen op grootte en weggooien
-- Niet al te lang bezig zijn met FFT --> was om te motiveren / snel door met 
+- Niet al te lang bezig zijn met FFT --> was om te motiveren / snel door met
   wavelets want die zijn wel leuk
 
 19-02-2013 :: Bijeenkomst 3
@@ -77,33 +75,65 @@ aardig als je je realiseert dat dit idee nogn iet gericed is.
 
 Er zat een bug in inverse 2d fft en die heeft Okke ook gefixt gelukkig.
 
-Verder hebben we nog wat testjes gerund. FFT is nu af, afgezien van het bewijsje
-dat we nog gaan schrijven. We kunnen aan de slag met het inlezen over Wavelets.
+Verder hebben we nog wat testjes gerund. FFT is nu af, afgezien van het
+bewijsje dat we nog gaan schrijven. We kunnen aan de slag met het inlezen over
+Wavelets.
 
-19-02-2013 :: Bijeenkomst 4
+08-04-2013 :: Bijeenkomst 4
 -------------------------------------------------------------------------------
 
-Wat gaan we doen:
-
+Wat gedaan:
 - channels splitten
 - geluid comprimeren
 - bewijs harken
 
+12-04-2013 :: Bijeenkomst 5
+-------------------------------------------------------------------------------
 
-Documentatie 
+We hebben 3 en 4-kanaals plaatjes voor elkaar gekregen met FFT, in andere
+woorden, we kunnen nu _echt_ kleurenplaatjes comprimeren. Hier hebben we wat
+mee getest en dit levert verrassend goede resultaten op.
+
+Daarna hebben we een stuk verbeterd aan de compressie van 1-dimensionale
+functies (met als main toepassing audio), wat nu feilloos werkt (er zat een bug
+in het script wat er voor zorgde dat er altijd gedeeld werd door de
+eerstvolgende macht van twee, in plaats van door de lengte van de vector zelf).
+Hier hebben we ook wat tests mee gedaan, wederom met goede resultaten. De FFT
+werkt echt best wel goed.
+
+Daarnaast hebben we een schets gemaakt van wat we (al dan niet) in onze
+presentatie willen vertellen. Dit houdt in:
+- 1D DFT:
+  - definitie, inverse DFT
+  - een babyvoorbeeld met N=4 om een klein idee te geven
+  - wat gaat er mis als we niet voldoen aan periodiciteit?
+  - wat gaat er mis als we niet voldoen aan continuiteit?
+  - bewijs dat de iDFT( DFT( x ) ) = x
+  - FFT:
+    - bewijs dat iFFT dezelfde coefficienten vindt als de DFT
+  - voorbeelden in de vorm van een aantal .wavs (meetresultaten)
+- 2D FFT:
+  - wat is een "plaatje"?
+  - hoe kan je een 2D FFT doen d.m.v. het combineren van 1D FFTs?
+  - bevindingen (meetresultaten)
+- de toekomst:
+  - wavelets
+  - "basis"code is er, nu nog FFT omwisselen voor wavelets
+  - 3D -> filmpjes?
+
+Documentatie
 ================================================================================
 --------------------------------------------------------------------------------
 
 2D Discrete Fourier Transform :: Begrippen
 --------------------------------------------------------------------------------
-###<a name="coefficienten-matrix"> Coefficienten matrix </a>###
-  De coefficienten matrix bevat alle coefficienten die uit het 2D naar 2D FFT
-  algoritme komen, en is even groot als het plaatje dat geinput is.
-###<a name="rij-georienteerd"> Rij-georienteerde compressie </a>###
-  Hierbij wordt de coefficienten matrix kleiner gemaakt door elke rij in de 
-  matrix af te kappen zodra een coeffiecient in deze rij kleiner is dan een 
-  bepaalde drempel. Elke rij apart wordt dan gecomprimeerd.
-###<a name="gebied-georienteerd">Gebied-georienteerde compressie</a>
-  Hierbij wordt de coefficienten matrix kleiner gemaakt door een rechthoekig 
-  gebied uit de matrix als nieuwe coefficienten matrix te nemen, en zo te 
-  comprimeren.
+###<a name="coefficienten-matrix"> Coefficienten matrix </a>### De
+coefficienten matrix bevat alle coefficienten die uit het 2D naar 2D FFT
+algoritme komen, en is even groot als het plaatje dat geinput is.  ###<a
+name="rij-georienteerd"> Rij-georienteerde compressie </a>### Hierbij wordt de
+coefficienten matrix kleiner gemaakt door elke rij in de matrix af te kappen
+zodra een coeffiecient in deze rij kleiner is dan een bepaalde drempel. Elke
+rij apart wordt dan gecomprimeerd.  ###<a
+name="gebied-georienteerd">Gebied-georienteerde compressie</a> Hierbij wordt de
+coefficienten matrix kleiner gemaakt door een rechthoekig gebied uit de matrix
+als nieuwe coefficienten matrix te nemen, en zo te comprimeren.
