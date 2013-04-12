@@ -1,0 +1,70 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[dutch]{babel}
+\usepackage{a4wide}
+%\setlength{\parindent}{0pt}
+
+\newtheorem*{vraag}{Vraag}
+\theoremstyle{definition}
+\newtheorem*{uitwerking}{Uitwerking}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\f}{\varphi}
+\newcommand{\e}{\varepsilon}
+\renewcommand{\d}{\delta}
+
+\begin{document}
+
+\title{}
+\author{Jan Westerdiep}
+\maketitle
+
+Voorbeeld.
+
+Neem $f(x) = \sin( \frac{1}{2} \pi x )$. We gaan deze functie evalueren op de punten
+\[
+\vec{y} = (0, 1, 2, 3) \Rightarrow f(\vec{y}) = x := (0, 1, 0, -1).
+\]
+
+Hiervan bepalen we vervolgens de DFT (Discrete Fouriertransformatie):
+\[
+  X_k = \frac{1}{N}\sum_{n=0}^{N-1} x_n e^{- 2 \pi i k n / N}, k,n \in \{0,1,\ldots,N-1\},
+\]
+waarbij $N$ het aantal evaluatiepunten is, in ons geval 4.\footnote{In het algemeen evalueer je de functie op precies de plaatsen $0,1,\ldots,N-1$.}
+
+We berekenen:
+\begin{align*}
+  X_0 &= \sum x_n e^{-2 \pi i\cdot 0 \cdot n/4} = \sum x_n \cdot 1 = \sum x_n = 0 \\
+  X_1 &= \sum x_n e^{-2 \pi i\cdot 1 \cdot n/4} = x_0 - i x_1 - x_2 + i x_3 = -\frac{1}{2}i \\
+  X_2 &= \sum x_n e^{-2 \pi i\cdot 2 \cdot n/4} = x_0 - x_1 + x_2 - x_3 = 0 \\
+  X_3 &= \sum x_n e^{-2 \pi i\cdot 3 \cdot n/4} = x_0 + i x_1 - x_2 - i x_3 = \frac{1}{2} i
+\end{align*}
+
+Blijkbaar geeft de Fouriertransformatie ons de volgende vector
+\[
+  X = (0, -\frac{1}{2}i, 0, \frac{1}{2}i)
+\]
+
+De terugweg is nu te bewandelen volgens het algoritme van de iDFT (inverse Discrete Fouriertransformatie):
+\[
+  x_k = \sum_{k=0}^{N-1} X_k e^{2 \pi i k n / N}, k,n \in \{ 0, 1, \ldots, N-1 \}.
+\]
+
+Deze laten we maar achterwege. Het is precies hetzelfde principe. Gebruik nu des noods het Lemma dat de iDFT van de DFT van $x$ gelijk is aan $x$.
+
+Hoe hadden we dit anders in kunnen zien? Onthoud: we willen $f$ (op bepaalde punten) schrijven als som van complexe $e$-machten.
+\[
+f(x) = \sin( \frac{1}{2} \pi x) = \frac{ e^{i \frac{1}{2} \pi x} - e^{- i \frac{1}{2} \pi x} }{2 i} = -\frac{1}{2}i e^{\frac{1}{2} i \pi x} + \frac{1}{2} i e^{-\frac{1}{2} i \pi x}
+\]
+\[
+= 0 + X_1 e^{\frac{1}{2} i \pi x} + 0 + X_3 e^{\frac{3}{2} \pi x} = \sum_{k=0}^{3} X_k e^{2 \pi i k x/4},
+\]
+en dit is precies de Fouriertransformatie van $f$. Was dit een verrassing? Nee.
+
+\end{document}
