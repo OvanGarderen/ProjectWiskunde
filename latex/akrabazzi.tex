@@ -1,0 +1,73 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[dutch]{babel}
+\usepackage{a4wide}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx}
+%\setlength{\parindent}{0pt}
+
+\newtheorem*{vraag}{Vraag}
+\theoremstyle{definition}
+\newtheorem*{uitwerking}{Uitwerking}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\f}{\varphi}
+\newcommand{\e}{\varepsilon}
+\renewcommand{\d}{\delta}
+
+\begin{document}
+
+\section{Pseudocode FFT}
+\begin{algorithmic}
+\Function{FFT}{$x$}
+\State $n \gets \text{lengte}(x)$ \Comment Assumptie: $n = 2^m$ voor een $m$, oftewel $n$ is een tweemacht
+\If {$n == 1$}
+	\State{$X \gets x$}
+\Else
+	\State $E \gets FFT(x[0::2])$ \Comment{Pak alle even indices}
+	\State $O \gets FFT(x[1::2])$ \Comment{Pak alle oneven indices}
+	\For{$i = 0$ to $n-1$}
+		\If{$i < n/2$}
+			\State $X[i] \gets E[i] + e^{-2i \pi k/n} \cdot O[i]$
+		\Else
+			\State $X[i] \gets E[i] - e^{-2i \pi k/n} \cdot O[i]$
+		\EndIf
+	\EndFor
+\EndIf
+\State \Return{$X$}
+\EndFunction
+\end{algorithmic}
+
+
+\section{Bewijs van tijdscomplexiteit FFT}
+We willen bewijzen dat we de Fouriertransformatie van een of andere discrete functie kunnen vinden in $\mathcal{O}(n \log n)$ tijd, waar $n$ de lengte van de invoer is.
+
+Een college in complexiteitstheorie geeft ons de volgende twee definities. 
+
+\[
+f \in \theta(g) \Leftrightarrow \exists c \in \R_+: \lim_{n \to \infty} \frac{f(n)}{g(n)} = c
+\]
+
+Een \emph{recurrente betrekking} $T(n)$ is volgt te omschrijven:
+\[
+T(n) = \begin{cases}
+  c &\text{ als } n \leq d \\
+  a T(n/b) + f(n) &\text{ anders,} \\
+\end{cases}
+\]
+en geeft ``het aantal stappen" van een bepaald type algoritme weer in formulevorm.
+
+De (vereenvoudigde) stelling van Akra-Bazzi levert ons daarna het volgende resultaat:
+\[
+\exists k \in \N \text{ zodat }f(n) \in \theta(n^{\log a/\log b} \log^k n) \text{ dan } T(n) \in \theta(n^{\log a / \log b} \log^{k+1}n).
+\]
+
+Kijkende naar de opbouw van de algoritme, zien we dat $a=b=2$ en $c=d=1$. Verder is $f(n)$ te omschrijven als ``het extra werk wat verricht moet worden om een tussenantwoord te krijgen", in andere woorden: het uitrekenen van de sommatie. Dit is in ons geval lineair in de lengte van de invoer, dus $k=0$. Dit betekent dat $T(n) \in \theta(n \log n)$. Dus het aantal stappen (tijdscomplexiteit) van de FFT is $\theta(n \log n)$ dus zeker $\mathcal{O}(n \log n)$.
+
+\end{document}
