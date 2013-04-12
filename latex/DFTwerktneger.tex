@@ -1,0 +1,49 @@
+\documentclass[11pt]{article}
+
+\usepackage{amssymb, amsmath}
+\usepackage{a4wide}
+
+\newcommand{\R}{\mathb1b{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\e}{\epsilon}
+
+\newcommand{\eq}[1]{\begin{eqnarray*} #1 \end{eqnarray*}}
+\newcommand{\mogelijkheden}[1]{\begin{cases} #1 \end{cases}}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+
+Voor een lijst van lengte N, laat $s_k$ een vector zodat $(s_k)_n = e^{i2\pi k n /N}$.
+(Merk op dat dus $(s_k)_n = (s_n)_k$))
+
+Dan zijn de Discrete Fourier Transformatie en zijn inverse gedefini\"eerd door:
+\eq{
+  X_k = \langle x, s_k \rangle \\
+  x_n = \frac 1 N \langle X, s_{-n} \rangle
+}
+Waar de functie $\langle . , . \rangle$ het complexe inproduct op $\C^N$ aangeeft
+
+We gaan bewijzen dat toepassen van DFT en zijn inverse de identiteit oplevert.
+Dit zou betekenen dat:
+\eq{
+  x_n &= \frac 1 N \langle X , s_{-n} \rangle = \frac 1 N \sum_{k=1}^N X_k\cdot s_{-n}(k) \\
+      &= \frac 1 N \sum_{k=1}^N \langle x , s_k \rangle s_{-n}(k) \\
+      &= \langle x , \frac1N \sum_{k=1}^N s_k s_{-n}(k) \rangle
+}
+Er is hier gelijkheid zodra:
+\eq{
+  \frac1N \sum_{k=1}^N s_k s_{-n}(k) =& e_n \\
+  \frac1N \sum_{k=1}^N s_k(j) s_{-n}(k) =& \delta_{jn}\\
+  \frac1N \sum_{k=1}^N e^{i2\pi k j /N} \cdot e^{-i2\pi k n/N} =& \delta_{jn} \\
+  \frac1N \sum_{k=1}^N e^{i2\pi k (j-n) /N} =& \delta_{jn}
+}
+Hier is $\delta$ de kronicker delta functie.
+Maar dit laatse feit volgt precies uit de orthogonaliteit van de complexe e-machten!
+
+\end{document}
