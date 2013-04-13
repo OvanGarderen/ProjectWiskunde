@@ -1,0 +1,89 @@
+\documentclass{beamer}
+\usepackage{beamerthemeAmsterdam}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\newcommand{\lijstje}[1]{\begin{itemize} #1 \end{itemize}}
+
+\title{Jpeg Compressie}
+\subtitle{De Wondere Wereld van Wavelets}
+\author{Jan Westerdiep \and Okke van Garderen}
+\date{\today}
+\institute{Universiteit van Amsterdam}
+
+\renewcommand{\figurename}{}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section{Recap}
+
+\frame{\frametitle{Welk project bij wie?}
+  \lijstje{
+  \item robstevensson.jpg
+  \item JPEG compressie
+  \item Fouriertransformatie
+  }
+}
+
+\section{Theoretische beschouwing}
+\frame{\frametitle{DFT}
+  \lijstje{
+    \item uitleg van het algo
+  }
+}
+\frame{\frametitle{Uitleg}
+  Keuze uit:
+  \lijstje{
+    \item is de inverse DFT ook echt een inverse
+    \item voorbeeldje geven
+  }
+}
+\frame{\frametitle{FFT}
+  \lijstje{
+    \item uitleg van dit algo
+  }
+}
+\frame{\frametitle{snelheid/bewijs}
+  Keuze uit:
+  \lijstje{
+    \item Werkt FFT nou echt sneller?
+    \item Werkt FFT uberhaupt als snelle DFT?
+  }
+}
+
+\section{Resultaten}
+\frame{\frametitle{1 Kanaals - 1D Geluid}
+  \lijstje{ 
+  \item[?] spongebob.wav
+  \item[?] pokemon.wav
+  }
+}
+\frame{\frametitle{1 Kanaals - 2D plaatjes}
+  \lijstje{
+  \item[?] even een soort van plaatje maken
+  }
+}
+\frame{\frametitle{4 Kanaals - 2D plaatjes}
+  \lijstje{
+  \item installgentoo.jpg
+  }
+}
+
+\section{Toekomst}
+\frame{\frametitle{Toekomst}
+  \lijstje{
+  \item Overschakelen naar Wavelets
+  \item 3D / Filmpjes
+  }
+}
+
+\section{Slides voor Chris}
+\frame{
+  \lijstje{
+  \item Volgende slides geven antwoord op Chris zn vragen
+  }
+}
+
+\end{document}
