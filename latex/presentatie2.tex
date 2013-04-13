@@ -2,6 +2,12 @@
 \usepackage{beamerthemeAmsterdam}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx}
+
+\iffalse
+idee: alle slides uitwerken/kennen, en dan gewoon aan de klas vragen wat ze willen?
+\fi
 
 \newcommand{\lijstje}[1]{\begin{itemize} #1 \end{itemize}}
 
@@ -30,9 +36,19 @@
 \section{Theoretische beschouwing}
 \frame{\frametitle{DFT}
   \lijstje{
-    \item uitleg van het algo
+  \item $x_n$ is een lijst meetwaarden van lengte $N$
+  \item De DFT hiervan geeft een nieuwe lijst $X_k$:
+    \[
+      X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i 2 \pi k n / N}
+    \]
+  \item $X_k$ is nu te beschouwen als de co\"effici\"ent van $k$'de basiselement
+  \item inverse DFT:
+    \[
+      x_n = \frac{1}{N}\sum_{k=0}^{N-1} X_k \cdot e^{i 2 \pi k n / N}
+    \]
   }
 }
+\iffalse
 \frame{\frametitle{Uitleg}
   Keuze uit:
   \lijstje{
@@ -40,10 +56,56 @@
     \item voorbeeldje geven
   }
 }
-\frame{\frametitle{FFT}
+\fi
+\frame{\frametitle{Voorbeeld}
   \lijstje{
-    \item uitleg van dit algo
+  \item Stel $x = (0, 1, 0, -1)$
+  \begin{align*}
+    X_0 &= \sum x_n e^{-2 \pi i\cdot 0 \cdot n/4} = \sum x_n \cdot 1 = \sum x_n = 0 \\
+    X_1 &= \sum x_n e^{-2 \pi i\cdot 1 \cdot n/4} = x_0 - i x_1 - x_2 + i x_3 = -\frac{1}{2}i \\
+    X_2 &= \sum x_n e^{-2 \pi i\cdot 2 \cdot n/4} = x_0 - x_1 + x_2 - x_3 = 0 \\
+    X_3 &= \sum x_n e^{-2 \pi i\cdot 3 \cdot n/4} = x_0 + i x_1 - x_2 - i x_3 = \frac{1}{2} i
+  \end{align*}
   }
+}
+\frame{\frametitle{Voorbeeld}
+
+  \lijstje{
+  \item $x = (0,1,0,-1) \Rightarrow X = (0,-\frac{1}{2} i, 0, \frac{1}{2}i)$
+  \item Hadden we dit ook anders kunnen zien?
+  \[
+    \sin(\pi x /2) \text{ op de punten } (0, 1, 2, 3)
+  \]
+  \[
+    \sin( \pi x /2) = \frac{ e^{i \frac{1}{2} \pi x} - e^{- i \frac{1}{2} \pi x} }{2 i} = -\frac{1}{2}i e^{\frac{1}{2} i \pi x} + \frac{1}{2} i e^{-\frac{1}{2} i \pi x}
+  \]
+  \[
+    = 0 + X_1 e^{\frac{1}{2} i \pi x} + 0 + X_3 e^{\frac{3}{2} \pi x} = \sum_{k=0}^{3} X_k e^{2 \pi i k x/4}!
+  \]
+  }
+}
+\frame{\frametitle{FFT}
+  \small{
+  \begin{algorithmic}
+  \Function{FFT}{$x$}
+  \State $n \gets \text{lengte}(x)$ \Comment Assumptie: $n$ is een tweemacht
+  \If {$n == 1$}
+          \State{$X \gets x$}
+  \Else
+          \State $E \gets FFT(x[0::2])$ \Comment{Pak alle even indices}
+          \State $O \gets FFT(x[1::2])$ \Comment{Pak alle oneven indices}
+          \For{$i = 0$ to $n-1$}
+                  \If{$i < n/2$}
+                          \State $X[i] \gets E[i] + e^{-2i \pi k/n} \cdot O[i]$
+                  \Else
+                          \State $X[i] \gets E[i] - e^{-2i \pi k/n} \cdot O[i]$
+                  \EndIf
+          \EndFor
+  \EndIf
+  \State \Return{$X$}
+  \EndFunction
+  \end{algorithmic}
+}
 }
 \frame{\frametitle{snelheid/bewijs}
   Keuze uit:

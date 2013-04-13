@@ -34,7 +34,7 @@ Neem $f(x) = \sin( \frac{1}{2} \pi x )$. We gaan deze functie evalueren op de pu
 
 Hiervan bepalen we vervolgens de DFT (Discrete Fouriertransformatie):
 \[
-  X_k = \frac{1}{N}\sum_{n=0}^{N-1} x_n e^{- 2 \pi i k n / N}, k,n \in \{0,1,\ldots,N-1\},
+  X_k = \sum_{n=0}^{N-1} x_n e^{- 2 \pi i k n / N}, k,n \in \{0,1,\ldots,N-1\},
 \]
 waarbij $N$ het aantal evaluatiepunten is, in ons geval 4.\footnote{In het algemeen evalueer je de functie op precies de plaatsen $0,1,\ldots,N-1$.}
 
@@ -53,7 +53,7 @@ Blijkbaar geeft de Fouriertransformatie ons de volgende vector
 
 De terugweg is nu te bewandelen volgens het algoritme van de iDFT (inverse Discrete Fouriertransformatie):
 \[
-  x_k = \sum_{k=0}^{N-1} X_k e^{2 \pi i k n / N}, k,n \in \{ 0, 1, \ldots, N-1 \}.
+  x_k = \frac{1}{N}\sum_{k=0}^{N-1} X_k e^{2 \pi i k n / N}, k,n \in \{ 0, 1, \ldots, N-1 \}.
 \]
 
 Deze laten we maar achterwege. Het is precies hetzelfde principe. Gebruik nu des noods het Lemma dat de iDFT van de DFT van $x$ gelijk is aan $x$.
