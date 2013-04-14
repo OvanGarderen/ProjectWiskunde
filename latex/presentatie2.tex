@@ -84,35 +84,101 @@ idee: alle slides uitwerken/kennen, en dan gewoon aan de klas vragen wat ze will
   \]
   }
 }
+
 \frame{\frametitle{FFT}
   \small{
-  \begin{algorithmic}
-  \Function{FFT}{$x$}
-  \State $n \gets \text{lengte}(x)$ \Comment Assumptie: $n$ is een tweemacht
-  \If {$n == 1$}
-          \State{$X \gets x$}
-  \Else
-          \State $E \gets FFT(x[0::2])$ \Comment{Pak alle even indices}
-          \State $O \gets FFT(x[1::2])$ \Comment{Pak alle oneven indices}
-          \For{$i = 0$ to $n-1$}
-                  \If{$i < n/2$}
-                          \State $X[i] \gets E[i] + e^{-2i \pi k/n} \cdot O[i]$
-                  \Else
-                          \State $X[i] \gets E[i] - e^{-2i \pi k/n} \cdot O[i]$
-                  \EndIf
-          \EndFor
-  \EndIf
-  \State \Return{$X$}
-  \EndFunction
-  \end{algorithmic}
-}
-}
-\frame{\frametitle{snelheid/bewijs}
-  Keuze uit:
-  \lijstje{
-    \item Werkt FFT nou echt sneller?
-    \item Werkt FFT uberhaupt als snelle DFT?
+    \begin{algorithmic}
+    \Function{FFT}{$x$}
+    \State $n \gets \text{lengte}(x)$ \Comment Assumptie: $n$ is een tweemacht
+    \If {$n == 1$}
+      \State{$X \gets x$}
+    \Else
+      \State $E \gets FFT(x[0::2])$ \Comment{Pak alle even indices}
+      \State $O \gets FFT(x[1::2])$ \Comment{Pak alle oneven indices}
+      \For{$i = 0$ to $n-1$}
+        \If{$i < n/2$}
+          \State $X[i] \gets E[i] + e^{-2i \pi k/n} \cdot O[i]$
+        \Else
+          \State $X[i] \gets E[i] - e^{-2i \pi k/n} \cdot O[i]$
+        \EndIf
+      \EndFor
+    \EndIf
+    \State \Return{$X$}
+    \EndFunction
+    \end{algorithmic}
   }
+}
+\frame{\frametitle{Is deze FFT nou echt beter? Een les complexiteitstheorie}
+\lijstje{
+	\item Claim: DFT is $\mathcal{O}(n^2)$; FFT is $\mathcal{O}(n \log n)$
+	\item Recurrente betrekking geeft aantal stappen van algoritme in formulevorm
+	\[
+		T(n) = \begin{cases}
+		  c &\text{ als } n \leq d \\
+		  a T(n/b) + f(n) &\text{ anders} \\
+		\end{cases}
+	\]
+	\item (vereenvoudigde) stelling van Akra-Bazzi
+	\[
+		\exists k \in \mathbb{N}: f(n) \in \mathcal{O}(n^{\log a/\log b} \log^k n) 
+	\]
+	\[
+		\Rightarrow T(n) \in \mathcal{O}(n^{\log a / \log b} \log^{k+1}n).
+	\]
+}
+}
+
+\frame{
+\begin{columns}
+\begin{column}{0.5\textwidth}
+  \small{
+    \begin{algorithmic}
+    \Function{FFT}{$x$}
+    \State $n \gets \text{lengte}(x)$
+    \If {$n == 1$}
+      \State{$X \gets x$}
+    \Else
+      \State $E \gets FFT(x[0::2])$
+      \State $O \gets FFT(x[1::2])$
+      \For{$i = 0$ to $n-1$}
+        \If{$i < n/2$}
+          \State $X[i] \gets E[i] + e^{-2i \pi k/n} \cdot O[i]$
+        \Else
+          \State $X[i] \gets E[i] - e^{-2i \pi k/n} \cdot O[i]$
+        \EndIf
+      \EndFor
+    \EndIf
+    \State \Return{$X$}
+    \EndFunction
+    \end{algorithmic}
+  }
+\end{column}
+\begin{column}{0.6\textwidth}
+	\[
+		T(n) = \begin{cases}
+		  c &\text{ als } n \leq d \\
+		  a T(n/b) + f(n) &\text{ anders} \\
+		\end{cases}
+	\]
+	\[
+		\exists k \in \mathbb{N}: f(n) \in \mathcal{O}(n^{\log a/\log b} \log^k n) 
+	\]
+	\[
+		\Rightarrow T(n) \in \mathcal{O}(n^{\log a / \log b} \log^{k+1}n).
+	\]
+	We vinden
+	\[
+		c=1; a=2; b=2;
+	\]
+	\[
+		f(n) \in \mathcal{O}(n) = \mathcal{O}(n^1 \log^0 n)
+	\]
+	\[
+		\Rightarrow \text{FFT} \in \mathcal{O}(n^1\log^1) = \mathcal{O}(n \log n)
+	\]
+\end{column}
+\end{columns}
+
 }
 
 \section{Resultaten}
@@ -123,14 +189,38 @@ idee: alle slides uitwerken/kennen, en dan gewoon aan de klas vragen wat ze will
   }
 }
 \frame{\frametitle{1 Kanaals - 2D plaatjes}
-  \lijstje{
-  \item[?] even een soort van plaatje maken
-  }
+\lijstje{
+	\item 1 kanaal: matrix van grijswaarden: hoe hoger, hoe lichter
+}
+\begin{columns}
+	\begin{column}{.5\textwidth}
+	  \includegraphics[width=\textwidth]{plaatje.jpg}% picture filename
+	\end{column}
+	\begin{column}{.5\textwidth}
+	  $\left[ \begin{array}{rrrrrr}
+		250 & 237 & 215 & 209 & 218 & 238 \\
+		237 & 194 & 138 & 109 & 136 & 195 \\
+		217 & 133 &  45 &  15 &  46 & 135 \\
+		204 & 103 &  14 &   0 &  14 & 105 \\
+		215 & 128 &  36 &  11 &  38 & 128 \\
+		233 & 186 & 120 &  91 & 120 & 185 \\
+	  \end{array}\right]$
+	\end{column}
+\end{columns}
 }
 \frame{\frametitle{4 Kanaals - 2D plaatjes}
-  \lijstje{
-  \item installgentoo.jpg
-  }
+\begin{columns}
+	\begin{column}{.5\textwidth}
+		\includegraphics[width=\textwidth]{splitchannels.jpg}% picture filename
+	\end{column}
+	\begin{column}{.5\textwidth}
+		\lijstje{
+			\item 3 kleurenkanalen: Rood, Groen, Blauw
+			\item Mogelijk 1 extra alpha-kanaal
+			\item Hogere waarde $\Rightarrow$ pixel bevat meer kleur van die component
+		}
+	\end{column}
+\end{columns}
 }
 
 \section{Toekomst}
@@ -146,6 +236,12 @@ idee: alle slides uitwerken/kennen, en dan gewoon aan de klas vragen wat ze will
   \lijstje{
   \item Volgende slides geven antwoord op Chris zn vragen
   }
+}
+
+\frame{
+Voorbeeldvraag:
+- waarom zou je uberhaupt FFT doen
+- significantie coeffs (toepassing babyvoorbeeld)
 }
 
 \end{document}
