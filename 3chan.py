@@ -5,6 +5,7 @@ def listtomat( ls, scl ):
     
 def img3mat( filename ):
     img = Image.open(filename)
+    img.load()
     rgbtuple = map(lambda x: x.getdata(), img.split())
 
     rgb = map(list,rgbtuple)
@@ -42,7 +43,7 @@ dim2 = (len(encoded[0][0]),len(encoded[0]))
 print dim2
 
 print "making dicks"
-dicks = map(lambda x: mat2dict(x,0.0),encoded)
+dicks = map(lambda x: mat2dict(x,0.15),encoded)
 
 print len(dicks[0])
 
