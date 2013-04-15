@@ -1,5 +1,5 @@
 all:
-	pdflatex -interaction=nonstopmode ProjWisk-pres-Okke-Jan.tex
+	pdflatex -interaction=nonstopmode -halt-on-error presentatie2.tex
 
 open:	all
-	xdg-open ProjWisk-pres-Okke-Jan.pdf
+	xdg-open presentatie2.pdf

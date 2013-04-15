@@ -47,8 +47,8 @@ idee: alle slides uitwerken/kennen, en dan gewoon aan de klas vragen wat ze will
     \[
       X(s) = \int_{-\infty}^\infty x(t) e^{-i 2 \pi s t} dt
     \]
-    \item Probleem: calculus nodig, computer kan dit niet.
-    \item Oplossing: DFT; transformeer signaal op bepaalde punten $\Rightarrow$ integraal wordt (eindige) sommatie
+    \item Computer gebruikt discrete signalen. $\Rightarrow$ benadering van continu signaal.
+    \item Analogon: Discrete Fourier Tranformatie $\Rightarrow$ integraal wordt (eindige) sommatie
   }
 }
 \frame{\frametitle{DFT}
@@ -201,10 +201,18 @@ idee: alle slides uitwerken/kennen, en dan gewoon aan de klas vragen wat ze will
 
 \section{Resultaten}
 \frame{\frametitle{1 Kanaals - 1D Geluid}
-  \lijstje{ 
-  \item[?] spongebob.wav
-  \item[?] pokemon.wav
-  }
+\begin{columns}
+  \begin{column}{.5\textwidth}
+    \includegraphics[width=\textwidth]{presi_plaatjes/sampling-rate.png}
+  \end{column}
+  \begin{column}{.5\textwidth}
+    \lijstje{ 
+    \item Geluidsgolven benaderen met discretisatie
+    \item $\Rightarrow$ Fourier transformatie
+    \item Voorbeeldje
+    }
+  \end{column}
+\end{columns}
 }
 \frame{\frametitle{1 Kanaals - 2D plaatjes}
 \lijstje{
