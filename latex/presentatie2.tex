@@ -61,7 +61,6 @@ idee: alle slides uitwerken/kennen, en dan gewoon aan de klas vragen wat ze will
     \[
       X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i 2 \pi k n / N}
     \]
-    \item !!! wanneer we te maken hebben met ``niet-continuiteit", kunnen we weinig/geen $X_k$'s weggooien
   \item $X_k$ is nu te beschouwen als de co\"effici\"ent van $k$'de basiselement
   \item inverse DFT:
     \[
@@ -69,15 +68,7 @@ idee: alle slides uitwerken/kennen, en dan gewoon aan de klas vragen wat ze will
     \]
   }
 }
-\iffalse
-\frame{\frametitle{Uitleg}
-  Keuze uit:
-  \lijstje{
-    \item is de inverse DFT ook echt een inverse
-    \item voorbeeldje geven
-  }
-}
-\fi
+
 \frame{\frametitle{Voorbeeld}
   \lijstje{
   \item Stel $x = (0, 1, 0, -1)$
@@ -211,7 +202,6 @@ idee: alle slides uitwerken/kennen, en dan gewoon aan de klas vragen wat ze will
   \begin{column}{.5\textwidth}
     \lijstje{ 
     \item Geluidsgolven benaderen met discretisatie
-    \item $\Rightarrow$ Fourier transformatie
     \item Voorbeeldje
     }
   \end{column}
@@ -286,46 +276,8 @@ idee: alle slides uitwerken/kennen, en dan gewoon aan de klas vragen wat ze will
 \section{Toekomst}
 \frame{\frametitle{Toekomst}
   \lijstje{
-  \item Overschakelen naar Wavelets
-  \item 3D / Filmpjes
-  }
-}
-
-\section{Slides voor Chris}
-\frame{
-  \lijstje{
-  \item Volgende slides geven antwoord op Chris zn vragen
-  }
-}
-
-\frame{
-  \frametitle{Werkt FFT wel echt als DFT? Ja!}
-DEZE SLIDE FAALT
-  De co\"efficienten FFT wordt gegeven door de volgende vergelijking:
-  \[
-  X_k = \left\{\begin{array}{ll}
-  \sum^{N/2}_{n=1} \e_n \cdot e^{-i2\pi k 2n/N} + 
-  e^{-i2\pi k/N} 
-  \sum^{N/2}_{n=1} o_n \cdot e^{-i2\pi k 2n/N} &  k< N/2 \\
-  \sum^{N/2}_{n=1} \e_n \cdot e^{-i2\pi (k-N/2) 2n/N} - 
-  e^{-i2\pi k/N} 
-  \sum^{N/2}_{n=1} o_n \cdot e^{-i2\pi (k-N/2) 2n/N} &  k\geq N/2 
-  \end{array}\right.
-  \]
-  \[
-  X_k = \sum^{N/2}_{n=1} x_{2n} \cdot e^{-i2\pi k (2n)/N} + 
-  \sum^{N/2}_{n=1} x_{2n+1} \cdot e^{-i2\pi k (2n+1)/N} 
-  = \sum^N_{n=1} x_n \cdot e^{-i2\pi k n/N}
-  \]
-  Werkt door symmetrie in de basis-functies.
-}
-
-\frame{
-  Voorbeeldvraag:
-  \lijstje{
-  \item- waarom zou je uberhaupt FFT doen
-  \item- significantie coeffs (toepassing babyvoorbeeld)
-  \item- FFT op plaatje (2d fft), hoe werkt het? -> FFT op rijen van plaatje, dan FFT op kolommen van je FFT (ofzo?)
+  \item Verdergaan met wavelets
+  \item Andere toepassingen onderzoeken.
   }
 }
 
