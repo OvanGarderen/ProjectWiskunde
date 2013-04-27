@@ -50,7 +50,9 @@ class Wavelet( object ):
       print "we gaat %i steps doen" % steps
 
       for i in range( steps ):
-        output = np.concatenate((cls.next( output[0: len(output)/(2**i)] ), output[len(output)/2**i:]))
+        #output = np.concatenate((cls.next( output[0: len(output)/(2**i)] ), output[len(output)/2**i:]))
+        k = len(output)/(2**i)
+        output[0:k] = cls.next(output[0:k])
         print "volgende rondeeee:)"
 
       return output
@@ -72,8 +74,8 @@ class Wavelet( object ):
 
     for i in range( steps ):
       j = steps - i-1
-      output = np.concatenate((cls.prev( output[0: len(output)/(2**j)] ), output[len(output)/2**j:]))
-      #output = cls.prev( output )
+      k = len(output)/(2**j)
+      output[0:k] = cls.prev(output[0:k])
       print "vorige rondeeeee:)"
 
     return output[0:m]
@@ -88,6 +90,45 @@ class Wavelet( object ):
 
   Het lijkt er op dat jwave iets anders doet dan pywt maar is me niet helemaal duidelijk.
   """
+
+  @classmethod
+  def next_2d( cls, input ):
+    assert len(input.shape) == 2 #alleen vierkanten
+    n, m = input.shape #rijen, kolommen
+    assert _is_pow2(n) and _is_pow2(m)
+    output = np.zeros(input.shape) #init matrix
+
+    H = np.zeros( (m,n/2) )
+    L = np.zeros( (m,n/2) )
+    for i in range(m):
+      out = cls.next( input[i,:] )
+      L[i] = out[:n/2]
+      H[i] = out[n/2:]
+
+    H = np.transpose(H)
+    L = np.transpose(L)
+
+    LL, LH = np.zeros( (m/2,n/2) ), np.zeros( (m/2,n/2) )
+    for i in range(m/2):
+      out = cls.next( L[i] )
+      LL[i] = out[:n/2]
+      LH[i] = out[n/2:]
+    del L
+
+    HL, HH = np.zeros( (m/2,n/2) ), np.zeros( (m/2,n/2) )
+    for i in range(m/2):
+      out = cls.next( H[i] )
+      HL[i] = out[:n/2]
+      HH[i] = out[n/2:]
+    del H
+
+    output[:n/2,:n/2] = np.transpose(LL)
+    output[:n/2,n/2:] = np.transpose(LH)
+    output[n/2:,:n/2] = np.transpose(HL)
+    output[n/2:,n/2:] = np.transpose(HH)
+
+    return output
+
   """
   @classmethod
   def next_2d( cls, input ):

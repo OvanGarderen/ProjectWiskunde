@@ -11,10 +11,10 @@ def test2d():
         [1,1,1,1],
         [1,1,1,1] ]
   )
-  X = HaarWavelet.next_2d(x)
   Y = pywt.dwt2( x, 'haar' )
-  Z = pywt.dwt2( Y[0], 'haar' )
-  print Y, Z
+  X = HaarWavelet.next_2d(x)
+  X = HaarWavelet.next_2d(X)
+  print Y
   print X
 
 def ar2dict( ar, cutoff ):
@@ -49,35 +49,42 @@ def main():
     geluidje = argv[1]
 
   okke = 0
-  geluid = 1
+  geluid = 0
 
   x = np.zeros(1)
   if geluid:
     n, x = sciwav.read( geluidje )
+    x_float = x.astype('float')
   else:
     x = np.array([1,2,3,20,41,23,5,12,74,2,35,2,5])
+    x_float = x.astype('float')
   x_ = np.zeros(x.shape[0])
   if okke:
     cA, cD = pywt.dwt( x, 'haar', mode='zpd' ) #noot: doet maar 1 stapje
     x_ = pywt.idwt( cA, cD, 'haar' )[0:len(x)].astype(x.dtype)
   else:
     steps = -1
-    X = HaarWavelet.dwt(x, steps=steps) #noot: doet alle stapjes in 1 keer
-    #print X
-    cutoff = find_cutoff(X, 0.01)
+    X = HaarWavelet.dwt(x_float, steps=steps) #noot: doet alle stapjes in 1 keer
+    data = X
+    print X
+    """
+    cutoff = find_cutoff(X, 1)
     print cutoff
     dict = ar2dict( X, cutoff )
     #print "dict = ", dict
     print "Compression: %f" % (float(len(dict))/len(X))
     data = dict2ar( dict, len(X) )
-    x_ = np.rint(HaarWavelet.idwt( data,steps=steps,m = x.shape[0] )).astype(x.dtype)
+    """
+    data = HaarWavelet.idwt( X, steps = steps, m = x.shape[0] )
+    x_ = np.rint(data).astype(x.dtype)
     print x, x_
 
   if geluid:
     sciwav.write( geluidje.replace(".wav","_new.wav") , n, x_.astype(x.dtype) )
   else:
-    print [int(round(i)) for i in HaarWavelet.idwt(X, m=x.shape[0]) ] #is dit ongeveer `x'? We krijgen helaas afrondingsfouten.
+    pass
+    #print [int(round(i)) for i in HaarWavelet.idwt(X, m=x.shape[0]) ] #is dit ongeveer `x'? We krijgen helaas afrondingsfouten.
   print sum( x-x_ )
 
 if __name__ == "__main__":
-  main()
+  test2d()
