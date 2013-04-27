@@ -88,7 +88,6 @@ class Wavelet( object ):
       if n == 1:
         return output
 
-      print "n", n, minimaxpow2( n ), int(log( minimaxpow2(n), 2))
       if steps < 0:
         steps = int(log(minimaxpow2(n), 2))
       

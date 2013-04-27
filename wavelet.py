@@ -8,15 +8,14 @@ def test2d():
   x = np.array(
       [ [1,2,1,1],
         [1,1,1,1],
-        [1,1,1,1],
-        [1,1,1,1] ]
+        [1,4,1,1],
+        [1,1,1,3] ]
   )
   x_float = x.astype('float')
   Y = pywt.dwt2( x_float, 'haar' )
   X = HaarWavelet.dwt(x_float)
   data = HaarWavelet.idwt(X, -1, len(x_float))
   x_ = np.rint(data).astype(x.dtype)
-  #x_ = HaarWavelet.prev_2d(x_)
   print Y
   print X 
   print x_
