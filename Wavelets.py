@@ -30,11 +30,28 @@ class Wavelet( object ):
   @classmethod
   def dwt( cls, input, steps = -1 ):
     if len( input.shape ) > 1:
-      assert _is_pow2( input.shape[0] ) #alleen machten van 2 so far
+      n = input.shape[0]
+      assert _is_pow2(n) #alleen machten van 2 so far
       for i in input.shape:
-        assert i == input.shape[0] #square/cube/etc
+        assert i == n #square/cube/etc
 
-      #doe iets?
+      output = input
+
+      if n == 1:
+        return output
+
+      if steps < 0:
+        steps = int( log( minimaxpow2(n), 2) )
+
+      print "we gaan %i steps doen" % steps
+
+      for i in range( steps ):
+        print output
+        k = len( output )/(2**i)
+        output[0:k,0:k] = cls.next_2d( output[0:k,0:k] )
+        print "volgende rondee:)"
+
+      return output
     else:
       n = len( input )
       output = input
@@ -60,26 +77,53 @@ class Wavelet( object ):
 
   @classmethod
   def idwt( cls, input, steps = -1, m = -1 ):
-    n = len( input )
-    output = input
+    if len( input.shape ) > 1:
+      n = input.shape[0]
+      assert _is_pow2(n) #alleen machten van 2 so far
+      for i in input.shape:
+        assert i == n #square/cube/etc
 
-    if n == 1:
-      return output
+      output = input
 
-    if not _is_pow2( n ):
-      output = np.concatenate((output, [0 for i in range( minimaxpow2(n) - n)]))
+      if n == 1:
+        return output
 
-    if steps < 0:
-      steps = int(log(minimaxpow2(n), 2))
-    print "we gaatn %i steps terug doen" % steps
+      print "n", n, minimaxpow2( n ), int(log( minimaxpow2(n), 2))
+      if steps < 0:
+        steps = int(log(minimaxpow2(n), 2))
+      
+      print "we gaan %i steps terugdoen" % steps
 
-    for i in range( steps ):
-      j = steps - i-1
-      k = len(output)/(2**j)
-      output[0:k] = cls.prev(output[0:k])
-      print "vorige rondeeeee:)"
+      for i in range( steps ):
+        j = steps - i - 1
+        print len(output), j
+        k = len(output ) / (2**j)
+        print k
+        output[0:k,0:k] = cls.prev_2d( output[0:k,0:k] )
+        print "vorige ronde!"
 
-    return output[0:m]
+      return output[0:m,0:m]
+    else:
+      n = len( input )
+      output = input
+
+      if n == 1:
+        return output
+
+      if not _is_pow2( n ):
+        output = np.concatenate((output, [0 for i in range( minimaxpow2(n) - n)]))
+
+      if steps < 0:
+        steps = int(log(minimaxpow2(n), 2))
+      print "we gaatn %i steps terug doen" % steps
+
+      for i in range( steps ):
+        j = steps - i-1
+        k = len(output)/(2**j)
+        output[0:k] = cls.prev(output[0:k])
+        print "vorige rondeeeee:)"
+
+      return output[0:m]
 
   """
   Voor 2d zie https://github.com/nigma/pywt/blob/master/src/pywt/multidim.py

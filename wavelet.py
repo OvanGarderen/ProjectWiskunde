@@ -11,10 +11,15 @@ def test2d():
         [1,1,1,1],
         [1,1,1,1] ]
   )
-  #Y = pywt.dwt2( x, 'haar' )
-  X = HaarWavelet.next_2d(x)
-  x_ = HaarWavelet.prev_2d(X)
-  print X, x_
+  x_float = x.astype('float')
+  Y = pywt.dwt2( x_float, 'haar' )
+  X = HaarWavelet.dwt(x_float)
+  data = HaarWavelet.idwt(X, -1, len(x_float))
+  x_ = np.rint(data).astype(x.dtype)
+  #x_ = HaarWavelet.prev_2d(x_)
+  print Y
+  print X 
+  print x_
 
 def ar2dict( ar, cutoff ):
   dict = {}
