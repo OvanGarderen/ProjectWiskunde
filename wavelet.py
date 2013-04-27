@@ -5,13 +5,16 @@ def test2d():
   from Wavelets import HaarWavelet
   import numpy as np
   x = np.array(
-    [ [1,2],
-      [4,5] ]
+      [ [1,1,1,1],
+        [1,1,1,1],
+        [1,1,1,1],
+        [1,1,1,1] ]
   )
-  coeffs = pywt.dwt2(x, 'haar')
   X = HaarWavelet.next_2d(x)
+  Y = pywt.dwt2( x, 'haar' )
+  Z = pywt.dwt2( Y[0], 'haar' )
+  print Y, Z
   print X
-  print HaarWavelet.prev_2d( X )
 
 def main():
   from Wavelets import HaarWavelet

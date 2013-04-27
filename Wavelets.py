@@ -15,6 +15,8 @@ Noot: dit is dus nog geen "fast" wavelet transform. -> OF TOCH WEL?
 http://code.google.com/p/jwave/source/browse/trunk/src/main/java/math/transform/jwave/transforms/FastWaveletTransform.java?r=87
 wat is die link in gods naam?
 """
+def _is_pow2( num ):
+  return num > 0 and ((num & (num - 1)) == 0)
 
 class Wavelet( object ):
   _waveLength = None
@@ -26,12 +28,14 @@ class Wavelet( object ):
   @classmethod
   def dwt( cls, input, steps = -1 ):
     if len( input.shape ) > 1:
+      assert _is_pow2( input.shape[0] ) #alleen machten van 2 so far
       for i in input.shape:
         assert i == input.shape[0] #square/cube/etc
 
       #doe iets?
     else:
       n = len( input )
+      assert _is_pow2(n)
       output = input
       if steps < 0:
         steps = int(log( n, 2 ))
@@ -55,17 +59,29 @@ class Wavelet( object ):
 
     return output
 
+  """
+  Voor 2d zie https://github.com/nigma/pywt/blob/master/src/pywt/multidim.py
+  en http://code.google.com/p/jwave/source/browse/trunk/src/main/java/math/jwave/transforms/FastWaveletTransform.java
+
+  Voor unit tests van jwave zie
+  http://code.google.com/p/jwave/source/browse/trunk/src/test/java/math/jwave/transforms/FastWaveletTransformTest.java
+  en die van pywt kan men gewoon zelf doen (door pywt te installen)
+
+  Het lijkt er op dat jwave iets anders doet dan pywt maar is me niet helemaal duidelijk.
+  """
+  """
   @classmethod
   def next_2d( cls, input ):
-    assert len(input.shape) == 2
+    assert len(input.shape) == 2 #alleen vierkanten
     n, m = input.shape
-    output = np.zeros(input.shape)
+    assert _is_pow2(n) and _is_pow2(m)
+    output = np.zeros(input.shape) #init matrix
 
-    for i in range(n): #rijen
+    for i in range(m): #rijen
       output[i,:] = cls.next( input[i,:] )
 
-    for i in range(m): #kolommen
-      output[:,i] = cls.next( input[:,i] )
+    for j in range(n): #kolommen
+      output[:,j] = cls.next( input[:,j] )
 
     return output
 
@@ -82,6 +98,7 @@ class Wavelet( object ):
       output[i,:] = cls.prev( input[i,:] )
 
     return output
+  """
 
   """
   Doet een 1d stapje vooruit. Zie http://code.google.com/p/jwave
