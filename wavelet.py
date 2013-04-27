@@ -16,8 +16,6 @@ def test2d():
   X = HaarWavelet.dwt(x_float)
   data = HaarWavelet.idwt(X, -1, len(x_float))
   x_ = np.rint(data).astype(x.dtype)
-  print Y
-  print X 
   print x_
 
 def ar2dict( ar, cutoff ):

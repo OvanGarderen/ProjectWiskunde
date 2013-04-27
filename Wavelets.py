@@ -46,7 +46,6 @@ class Wavelet( object ):
       print "we gaan %i steps doen" % steps
 
       for i in range( steps ):
-        print output
         k = len( output )/(2**i)
         output[0:k,0:k] = cls.next_2d( output[0:k,0:k] )
         print "volgende rondee:)"
@@ -95,9 +94,7 @@ class Wavelet( object ):
 
       for i in range( steps ):
         j = steps - i - 1
-        print len(output), j
         k = len(output ) / (2**j)
-        print k
         output[0:k,0:k] = cls.prev_2d( output[0:k,0:k] )
         print "vorige ronde!"
 
