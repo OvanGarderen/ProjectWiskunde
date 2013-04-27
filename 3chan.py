@@ -2,7 +2,7 @@ from PIL import Image
 
 def listtomat( ls, scl ):
     return [ ls[i*scl : (i+1) * scl] for i in xrange(len(ls)/scl)]
-    
+
 def img3mat( filename ):
     img = Image.open(filename)
     img.load()
@@ -29,34 +29,35 @@ def mat3img( data, size ):
 def compress( dicks, mats):
     return float(len(dicks))/(len(mats)*len(mats[0]))
 
-from sys import argv
-from FFT2util import FFT2D,iFFT2D,matslice,realintmat
-from FFTjan import mat2dict,dict2mat
 
-data, dim = img3mat(argv[1])
+if __name__=="__main__":
+    from sys import argv
+    from FFT2util import FFT2D,iFFT2D,matslice,realintmat
+    from FFTjan import mat2dict,dict2mat
 
-print "starting encoding of image %s" % (argv[1])
-encoded = map(FFT2D,data)
-print "encoding succesfull"
+    data, dim = img3mat(argv[1])
 
-dim2 = (len(encoded[0][0]),len(encoded[0]))
-print dim2
+    print "starting encoding of image %s" % (argv[1])
+    encoded = map(FFT2D,data)
+    print "encoding succesfull"
 
-print "making dicks"
-dicks = map(lambda x: mat2dict(x,0.15),encoded)
+    dim2 = (len(encoded[0][0]),len(encoded[0]))
+    print dim2
 
-print len(dicks[0])
+    print "making dicks"
+    dicks = map(lambda x: mat2dict(x,0.15),encoded)
+    
+    print len(dicks[0])
+    
+    print map(lambda x: compress(x[0],x[1]), zip(dicks,encoded))
 
-print map(lambda x: compress(x[0],x[1]), zip(dicks,encoded))
-
-print "listing dicks"
-lists = map(lambda x: dict2mat(x,dim2[0],dim2[1]),dicks)
-
-print "starting decoding"
-decoded = map(iFFT2D,lists)
-
-print "decoding succesfull"
-sliced = map(lambda x: matslice(realintmat(x),dim),decoded)
-
-mat3img(sliced,dim).save(argv[1].replace('.','_new.'))
-
+    print "listing dicks"
+    lists = map(lambda x: dict2mat(x,dim2[0],dim2[1]),dicks)
+    
+    print "starting decoding"
+    decoded = map(iFFT2D,lists)
+    
+    print "decoding succesfull"
+    sliced = map(lambda x: matslice(realintmat(x),dim),decoded)
+    
+    mat3img(sliced,dim).save(argv[1].replace('.','_new.'))
