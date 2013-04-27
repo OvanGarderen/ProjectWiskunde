@@ -1,5 +1,6 @@
 from math import sqrt, log
 import numpy as np
+from FFT2util import minimaxpow2
 
 """
 Goed. Even beetje uitleg: op wiki kan je zien hoe "One level of the transform"
@@ -35,29 +36,47 @@ class Wavelet( object ):
       #doe iets?
     else:
       n = len( input )
-      assert _is_pow2(n)
       output = input
+
+      if n == 1:
+        return output
+
+      if not _is_pow2( n ):
+        output = np.concatenate((output, [0 for i in range( minimaxpow2(n) - n)]))
+
       if steps < 0:
-        steps = int(log( n, 2 ))
+        steps = int(log(minimaxpow2(n), 2))
+
+      print "we gaat %i steps doen" % steps
 
       for i in range( steps ):
-        output = cls.next( output )
+        output = np.concatenate((cls.next( output[0: len(output)/(2**i)] ), output[len(output)/2**i:]))
+        print "volgende rondeeee:)"
 
       return output
-    
 
   @classmethod
-  def idwt( cls, input, steps = -1 ):
+  def idwt( cls, input, steps = -1, m = -1 ):
     n = len( input )
     output = input
-    print output
+
+    if n == 1:
+      return output
+
+    if not _is_pow2( n ):
+      output = np.concatenate((output, [0 for i in range( minimaxpow2(n) - n)]))
+
     if steps < 0:
-      steps = int(log( n, 2 ))
+      steps = int(log(minimaxpow2(n), 2))
+    print "we gaatn %i steps terug doen" % steps
 
     for i in range( steps ):
-      output = cls.prev( output )
+      j = steps - i-1
+      output = np.concatenate((cls.prev( output[0: len(output)/(2**j)] ), output[len(output)/2**j:]))
+      #output = cls.prev( output )
+      print "vorige rondeeeee:)"
 
-    return output
+    return output[0:m]
 
   """
   Voor 2d zie https://github.com/nigma/pywt/blob/master/src/pywt/multidim.py
@@ -133,8 +152,8 @@ class Wavelet( object ):
     for i in range(h):
       for j in range( cls._waveLength ):
         k = ( (i << 1) + j ) % n
-        output[k] = output[k] + input[i]   * cls._rec_l[j]
-        output[k] = output[k] + input[i+h] * cls._rec_h[j]
+        output[k] = output[k] + input[i]   * cls._dec_l[j] \
+                              + input[i+h] * cls._dec_h[j]
 
     return output
 
@@ -149,7 +168,6 @@ class HaarWavelet( Wavelet ):
   """
   dit is de versie zoals hij op wiki staat. Boven is de algemenere versie,
   hoewel ik dat nog niet getest heb met andere wavelets.
-  """
   @classmethod
   def next( cls, input ):
     assert len(input.shape) == 1
@@ -181,3 +199,4 @@ class HaarWavelet( Wavelet ):
                                     + input[i+h] * cls._rec_h[1]
 
     return output
+  """

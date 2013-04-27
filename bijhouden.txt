@@ -1,1 +1,5 @@
 http://radio.feld.cvut.cz/matlab/toolbox/wavelet/ch06_a14.html#32248
+
+- wat zijn die filters precies
+- is dit FWT
+- waarom dec en rec en wat gaat er mis
