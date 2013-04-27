@@ -6,16 +6,15 @@ def test2d():
   from Wavelets import HaarWavelet
   import numpy as np
   x = np.array(
-      [ [1,1,1,1],
+      [ [1,2,1,1],
         [1,1,1,1],
         [1,1,1,1],
         [1,1,1,1] ]
   )
-  Y = pywt.dwt2( x, 'haar' )
+  #Y = pywt.dwt2( x, 'haar' )
   X = HaarWavelet.next_2d(x)
-  X = HaarWavelet.next_2d(X)
-  print Y
-  print X
+  x_ = HaarWavelet.prev_2d(X)
+  print X, x_
 
 def ar2dict( ar, cutoff ):
   dict = {}

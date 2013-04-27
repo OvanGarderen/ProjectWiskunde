@@ -1,6 +1,7 @@
 from math import sqrt, log
 import numpy as np
 from FFT2util import minimaxpow2
+from itertools import izip
 
 """
 Goed. Even beetje uitleg: op wiki kan je zien hoe "One level of the transform"
@@ -95,7 +96,7 @@ class Wavelet( object ):
   def next_2d( cls, input ):
     assert len(input.shape) == 2 #alleen vierkanten
     n, m = input.shape #rijen, kolommen
-    assert _is_pow2(n) and _is_pow2(m)
+    assert _is_pow2(n)
     output = np.zeros(input.shape) #init matrix
 
     H = np.zeros( (m,n/2) )
@@ -126,6 +127,42 @@ class Wavelet( object ):
     output[:n/2,n/2:] = np.transpose(LH)
     output[n/2:,:n/2] = np.transpose(HL)
     output[n/2:,n/2:] = np.transpose(HH)
+
+    return output
+
+  @classmethod
+  def prev_2d( cls, input ):
+    assert len( input.shape ) == 2
+    n, m = input.shape
+    assert _is_pow2(n)
+    output = np.zeros( input.shape )
+
+    LL = np.transpose( input[:n/2,:n/2] )
+    LH = np.transpose( input[:n/2,n/2:] )
+    HL = np.transpose( input[n/2:,:n/2] )
+    HH = np.transpose( input[n/2:,n/2:] )
+
+    L = np.zeros( (n/2, n) )
+    i = 0
+    for rowL, rowH in izip( LL, LH ):
+      L[i,:] = cls.prev( np.concatenate( (rowL, rowH) ) )
+      i += 1
+    del LL, LH
+
+    H = np.zeros( (n/2, n) )
+    i = 0
+    for rowL, rowH in izip( HL, HH ):
+      H[i,:] = cls.prev( np.concatenate( (rowL, rowH) ) )
+      i += 1
+    del HL, HH
+
+    L = np.transpose( L )
+    H = np.transpose( H )
+
+    i = 0
+    for rowL, rowH in izip( L, H ):
+      output[i,:] = cls.prev( np.concatenate( (rowL, rowH) ) )
+      i += 1
 
     return output
 
