@@ -17,6 +17,7 @@ Noot: dit is dus nog geen "fast" wavelet transform. -> OF TOCH WEL?
 http://code.google.com/p/jwave/source/browse/trunk/src/main/java/math/transform/jwave/transforms/FastWaveletTransform.java?r=87
 wat is die link in gods naam?
 """
+
 def _is_pow2( num ):
   return num > 0 and ((num & (num - 1)) == 0)
 
@@ -30,27 +31,7 @@ class Wavelet( object ):
   @classmethod
   def dwt( cls, input, steps = -1 ):
     if len( input.shape ) > 1:
-      n = input.shape[0]
-      assert _is_pow2(n) #alleen machten van 2 so far
-      for i in input.shape:
-        assert i == n #square/cube/etc
-
-      output = input
-
-      if n == 1:
-        return output
-
-      if steps < 0:
-        steps = int( log( minimaxpow2(n), 2) )
-
-      print "we gaan %i steps doen" % steps
-
-      for i in range( steps ):
-        k = len( output )/(2**i)
-        output[0:k,0:k] = cls.next_2d( output[0:k,0:k] )
-        print "volgende rondee:)"
-
-      return output
+      return cls.dwt2d(input,steps)
     else:
       n = len( input )
       output = input
@@ -70,35 +51,14 @@ class Wavelet( object ):
         #output = np.concatenate((cls.next( output[0: len(output)/(2**i)] ), output[len(output)/2**i:]))
         k = len(output)/(2**i)
         output[0:k] = cls.next(output[0:k])
-        print "volgende rondeeee:)"
+        #print "volgende rondeeee:)"
 
       return output
 
   @classmethod
   def idwt( cls, input, steps = -1, m = -1 ):
     if len( input.shape ) > 1:
-      n = input.shape[0]
-      assert _is_pow2(n) #alleen machten van 2 so far
-      for i in input.shape:
-        assert i == n #square/cube/etc
-
-      output = input
-
-      if n == 1:
-        return output
-
-      if steps < 0:
-        steps = int(log(minimaxpow2(n), 2))
-      
-      print "we gaan %i steps terugdoen" % steps
-
-      for i in range( steps ):
-        j = steps - i - 1
-        k = len(output ) / (2**j)
-        output[0:k,0:k] = cls.prev_2d( output[0:k,0:k] )
-        print "vorige ronde!"
-
-      return output[0:m,0:m]
+      return cls.idwt2d(input,steps,m)
     else:
       n = len( input )
       output = input
@@ -120,6 +80,60 @@ class Wavelet( object ):
         print "vorige rondeeeee:)"
 
       return output[0:m]
+
+  @classmethod
+  def dwt2d( cls, input, steps = -1 ):
+    n = input.shape[0]
+    assert _is_pow2(n) #alleen machten van 2 so far
+    for i in input.shape:
+      assert i == n #square/cube/etc
+      
+    output = input
+  
+    if n == 1:
+      return output
+
+    if steps < 0:
+      steps = int( log( minimaxpow2(n), 2))
+      
+    print "we gaan %i steps doen" % steps
+
+
+    for i in range( steps ):
+      k = len( output )/(2**i)
+      output[0:k,0:k] = cls.next_2d( output[0:k,0:k] )
+      #print "volgende rondee:)"
+
+    return output
+
+  @classmethod
+  def idwt2d( cls, input, steps = -1, m = -1 ):
+    n = input.shape[0]
+    assert _is_pow2(n) #alleen machten van 2 so far
+    for i in input.shape:
+      assert i == n #square/cube/etc
+
+    output = input
+
+    if m<0:
+      m = n
+
+    if n == 1:
+      return output
+
+    if steps < 0:
+      steps = int(log(minimaxpow2(n), 2))
+
+    print "we gaan %i steps terugdoen" % steps
+
+    for i in range( steps ):
+      j = steps - i - 1
+      k = len(output ) / (2**j)
+      output[0:k,0:k] = cls.prev_2d( output[0:k,0:k] )
+      #print "vorige ronde!"
+
+    return output[0:m,0:m]
+
 
   """
   Voor 2d zie https://github.com/nigma/pywt/blob/master/src/pywt/multidim.py
