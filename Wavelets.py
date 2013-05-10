@@ -76,6 +76,8 @@ class Wavelet( object ):
 
   @classmethod
   def idwt( cls, input, steps = -1, m = -1 ):
+    if m == -1:
+      m = input.shape[0]
     if len( input.shape ) > 1:
       n = input.shape[0]
       assert _is_pow2(n) #alleen machten van 2 so far
@@ -90,13 +92,10 @@ class Wavelet( object ):
       if steps < 0:
         steps = int(log(minimaxpow2(n), 2))
       
-      print "we gaan %i steps terugdoen" % steps
-
       for i in range( steps ):
         j = steps - i - 1
         k = len(output ) / (2**j)
         output[0:k,0:k] = cls.prev_2d( output[0:k,0:k] )
-        print "vorige ronde!"
 
       return output[0:m,0:m]
     else:
@@ -111,13 +110,14 @@ class Wavelet( object ):
 
       if steps < 0:
         steps = int(log(minimaxpow2(n), 2))
-      print "we gaatn %i steps terug doen" % steps
+
+      print "we gaan %i steps terug doen zwa" % steps
 
       for i in range( steps ):
         j = steps - i-1
         k = len(output)/(2**j)
         output[0:k] = cls.prev(output[0:k])
-        print "vorige rondeeeee:)"
+        print "vorige rondeeee"
 
       return output[0:m]
 
@@ -274,6 +274,33 @@ class Wavelet( object ):
                               + input[i+h] * cls._dec_h[j]
 
     return output
+
+class Daubechies2Wavelet( Wavelet ):
+  _waveLength = 4
+  _dec_l = np.array([
+    -0.12940952255092145,
+    0.22414386804185735,
+    0.83651630373746899,
+    0.48296291314469025
+  ])
+  _dec_h = np.array([
+    -0.48296291314469025,
+    0.83651630373746899,
+    -0.22414386804185735,
+    -0.12940952255092145
+  ])
+  _rec_l = np.array([
+    0.48296291314469025,
+    0.83651630373746899,
+    0.22414386804185735,
+    -0.12940952255092145
+  ])
+  _rec_h = np.array([
+    -0.12940952255092145,
+    -0.22414386804185735,
+    0.83651630373746899,
+    -0.48296291314469025
+  ])
 
 class HaarWavelet( Wavelet ):
   # zie http://wavelets.pybytes.com/wavelet/haar/

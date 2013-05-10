@@ -21,7 +21,7 @@ def test2d():
 def ar2dict( ar, cutoff ):
   dict = {}
   for x in range(len(ar)):
-    if abs(ar[x]) >= cutoff:
+    if abs(ar[x]) > cutoff:
       dict[x] = ar[x]
   return dict
 
@@ -41,7 +41,8 @@ def find_cutoff( ar, ratio ):
 
 def main():
   import scipy.io.wavfile as sciwav
-  from Wavelets import HaarWavelet
+  from Wavelets import HaarWavelet, Daubechies2Wavelet
+  from PSNR import PSNR
   from sys import argv
 
   if len(argv) == 1:
@@ -50,7 +51,7 @@ def main():
     geluidje = argv[1]
 
   okke = 0
-  geluid = 0
+  geluid = 1
 
   x = np.zeros(1)
   if geluid:
@@ -59,33 +60,28 @@ def main():
   else:
     x = np.array([1,2,3,20,41,23,5,12,74,2,35,2,5])
     x_float = x.astype('float')
+
   x_ = np.zeros(x.shape[0])
   if okke:
     cA, cD = pywt.dwt( x, 'haar', mode='zpd' ) #noot: doet maar 1 stapje
     x_ = pywt.idwt( cA, cD, 'haar' )[0:len(x)].astype(x.dtype)
   else:
     steps = -1
-    X = HaarWavelet.dwt(x_float, steps=steps) #noot: doet alle stapjes in 1 keer
-    data = X
-    print X
-    """
-    cutoff = find_cutoff(X, 1)
-    print cutoff
+    X = Daubechies2Wavelet.dwt(x_float, steps=steps) #noot: doet alle stapjes in 1 keer
+    cutoff = find_cutoff(X, 0.5)
     dict = ar2dict( X, cutoff )
-    #print "dict = ", dict
     print "Compression: %f" % (float(len(dict))/len(X))
     data = dict2ar( dict, len(X) )
-    """
-    data = HaarWavelet.idwt( X, steps = steps, m = x.shape[0] )
+    data = Daubechies2Wavelet.idwt( data, steps = steps, m = x.shape[0] )
     x_ = np.rint(data).astype(x.dtype)
     print x, x_
 
   if geluid:
-    sciwav.write( geluidje.replace(".wav","_new.wav") , n, x_.astype(x.dtype) )
+    sciwav.write( geluidje.replace(".wav","_new.wav") , n, x_ )
   else:
     pass
     #print [int(round(i)) for i in HaarWavelet.idwt(X, m=x.shape[0]) ] #is dit ongeveer `x'? We krijgen helaas afrondingsfouten.
-  print sum( x-x_ )
 
+  print PSNR( x, x_ )
 if __name__ == "__main__":
-  test2d()
+  main()
