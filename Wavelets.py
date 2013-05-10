@@ -268,8 +268,8 @@ class Wavelet( object ):
     for i in range(h):
       for j in range(cls._waveLength):
         k = ( (i << 1) + j ) % n
-        output[i]   = output[i]   + input[k] * cls._dec_l[j]
-        output[i+h] = output[i+h] + input[k] * cls._dec_h[j]
+        output[i]   += input[k] * cls._dec_l[j]
+        output[i+h] += input[k] * cls._dec_h[j]
 
     return output
 
@@ -287,8 +287,8 @@ class Wavelet( object ):
     for i in range(h):
       for j in range( cls._waveLength ):
         k = ( (i << 1) + j ) % n
-        output[k] = output[k] + input[i]   * cls._dec_l[j] \
-                              + input[i+h] * cls._dec_h[j]
+        output[k] += input[i]   * cls._rec_l[j]  \
+                   + input[i+h] * cls._rec_h[j]
 
     return output
 
