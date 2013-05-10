@@ -30,11 +30,12 @@ class Wavelet( object ):
 
   @classmethod
   def dwt( cls, input, steps = -1 ):
-    if len( input.shape ) > 1:
-      return cls.dwt2d(input,steps)
+    print np.sum(cls._dec_l)
+    output = input.copy()
+    if len( input.shape ) == 2:
+      return cls.dwt2d(output,steps)
     else:
       n = len( input )
-      output = input
 
       if n == 1:
         return output
@@ -57,13 +58,13 @@ class Wavelet( object ):
 
   @classmethod
   def idwt( cls, input, steps = -1, m = -1 ):
+    output = input.copy()
     if m == -1:
       m = input.shape[0]
-    if len( input.shape ) > 1:
-      return cls.idwt2d(input,steps,m)
+    if len( input.shape ) == 2:
+      return cls.idwt2d(output,steps,m)
     else:
-      n = len( input )
-      output = input
+      n = input.shape[0]
 
       if n == 1:
         return output
@@ -290,6 +291,85 @@ class Wavelet( object ):
                               + input[i+h] * cls._dec_h[j]
 
     return output
+
+#zie http://faculty.gvsu.edu/aboufade/web/wavelets/student_work/EF/how-works.html
+class BiOrtho97Wavelet( Wavelet ):
+  _waveLength = 9
+  _dec_l = np.array([
+    0.02674875741080976,
+    -0.01686411844287495,
+    -0.07822326652898785,
+    0.2668641184428723,
+    0.6029490182363579,
+    0.2668641184428723,
+    -0.07822326652898785,
+    -0.01686411844287495,
+    0.02674875741080976
+  ]) * sqrt(2)
+  _dec_h = np.array([
+    0.0,
+    0.09127176311424948,
+    -0.05754352622849957,
+    -0.5912717631142470,
+    1.115087052456994,
+    -0.5912717631142470,
+    -0.05754352622849957,
+    0.09127176311424948,
+    0.0
+  ]) * sqrt(2)
+  _rec_l = np.array([
+    0.0,
+    -0.09127176311424948,
+    -0.05754352622849957,
+    0.5912717631142470,
+    1.115087052456994,
+    0.5912717631142470,
+    -0.05754352622849957,
+    -0.09127176311424948,
+    0.0
+  ]) * sqrt(2)
+  _rec_h = np.array([
+    0.02674875741080976,
+    0.01686411844287495,
+    -0.07822326652898785,
+    -0.2668641184428723,
+    0.6029490182363579,
+    -0.2668641184428723,
+    -0.07822326652898785,
+    0.01686411844287495,
+    0.02674875741080976
+  ]) * sqrt(2)
+
+class BiOrtho53Wavelet( Wavelet ):
+  _waveLength = 5
+  _dec_l = np.array([
+    -1.0/8,
+    2.0/8,
+    6.0/8,
+    2.0/8,
+    -1.0/8
+  ]) * sqrt(2)
+  _dec_h = np.array([
+    0.0,
+    -1.0/2,
+    1.0,
+    -1.0/2,
+    0.0
+  ]) * sqrt(2)
+  _rec_l = np.array([
+    0.0,
+    1.0/2,
+    1.0,
+    1.0/2,
+    0.0
+  ]) * sqrt(2)
+  _rec_h = np.array([
+    -1.0/8,
+    -2.0/8,
+    6.0/8,
+    -2.0/8,
+    -1.0/8
+  ]) * sqrt(2)
 
 class Daubechies2Wavelet( Wavelet ):
   _waveLength = 4
