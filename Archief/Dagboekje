@@ -121,6 +121,19 @@ presentatie willen vertellen. Dit houdt in:
   - "basis"code is er, nu nog FFT omwisselen voor wavelets
   - 3D -> filmpjes?
 
+07-05-2013 :: Bijeenkomst 100
+-------------------------------------------------------------------------------
+
+Afspraak met Rob gehad. We gaan:
+- andere/hogere orde wavelets implementeren
+- tensor product/DWT
+- 3d (n-d?)
+
+- "bewijzen" van coefficienten die dalen Fourier O(log|e|) DWT O(e^-1/s) een of andere s = s(wavelet)
+- onderzoekje filters (evt)
+
+- onthouden: presentatie komt er aan (zorg dat er mooie plaatjes zijn) -> 27 juni of iets dergelijks
+
 Documentatie
 ================================================================================
 --------------------------------------------------------------------------------
