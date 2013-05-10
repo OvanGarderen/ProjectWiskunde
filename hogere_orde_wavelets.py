@@ -11,7 +11,11 @@ def main():
 
   X = Daubechies2Wavelet.dwt(x_float, steps=1)
   cA, cD = pywt.dwt( x, 'db2', mode='zpd' ) #noot: doet maar 1 stapje
-  print X, cA, cD
+  print "Onze implementatie:\n",X
+  print "Pywt:\n",cA, cD
+  print
+  print "Onze implementatie geeft terug:\n",Daubechies2Wavelet.idwt(X,steps=1)
+  print "Pywt:\n",pywt.idwt(cA,cD,'db2',mode='zpd')
 
 if __name__ == "__main__":
   main()

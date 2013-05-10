@@ -83,7 +83,7 @@ def main():
   print
 
   """ Temporary bypass to check for problems in main algorithm -- Confirmed """
-  compression = 40.5
+  compression = 100.5
 
   print "Converted to dictionaries:"
   print "Compression cutoff is %f" % compression
