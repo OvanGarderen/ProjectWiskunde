@@ -30,12 +30,14 @@ class Wavelet( object ):
 
   @classmethod
   def dwt( cls, input, steps = -1 ):
-    print np.sum(cls._dec_l)
     output = input.copy()
-    if len( input.shape ) == 2:
-      return cls.dwt2d(output,steps)
+    if len( input.shape ) == 3:
+      return cls.dwt3d(input,steps)
+    elif len( input.shape ) == 2:
+      return cls.dwt2d(input,steps)
     else:
       n = len( input )
+      output = input.copy()
 
       if n == 1:
         return output
@@ -58,13 +60,15 @@ class Wavelet( object ):
 
   @classmethod
   def idwt( cls, input, steps = -1, m = -1 ):
-    output = input.copy()
     if m == -1:
       m = input.shape[0]
-    if len( input.shape ) == 2:
-      return cls.idwt2d(output,steps,m)
+    if len( input.shape ) == 3:
+      return cls.idwt3d(input,steps,m)
+    elif len( input.shape ) == 2:
+      return cls.idwt2d(input,steps,m)
     else:
-      n = input.shape[0]
+      n = len( input )
+      output = input.copy()
 
       if n == 1:
         return output
@@ -87,12 +91,13 @@ class Wavelet( object ):
 
   @classmethod
   def dwt2d( cls, input, steps = -1 ):
+    assert len(input.shape) == 2
     n = input.shape[0]
     assert _is_pow2(n) #alleen machten van 2 so far
     for i in input.shape:
       assert i == n #square/cube/etc
       
-    output = input
+    output = np.copy( input )
   
     if n == 1:
       return output
@@ -111,12 +116,13 @@ class Wavelet( object ):
 
   @classmethod
   def idwt2d( cls, input, steps = -1, m = -1 ):
+    assert len(input.shape) == 2
     n = input.shape[0]
     assert _is_pow2(n) #alleen machten van 2 so far
     for i in input.shape:
       assert i == n #square/cube/etc
 
-    output = input
+    output = np.copy( input )
 
     if m<0:
       m = n
@@ -137,6 +143,49 @@ class Wavelet( object ):
 
     return output[0:m,0:m]
 
+  @classmethod
+  def dwt3d( cls, input, steps = -1 ):
+    assert len(input.shape) == 3
+    for i in input.shape:
+      assert _is_pow2(i)
+
+    n = input.shape[0]
+    output = np.copy( input )
+
+    if n == 1:
+      return output
+
+    if steps < 0:
+      steps = int( log( minimaxpow2(n), 2) )
+
+    for i in range( steps ):
+      k = len( output ) / ( 2 ** i )
+      output[ 0:k, 0:k, 0:k ] = cls.next_3d( output[ 0:k, 0:k, 0:k ] )
+
+    return output
+
+  @classmethod
+  def idwt3d( cls, input, steps = -1, m = -1 ):
+    assert len(input.shape) == 3
+
+    n = input.shape[0]
+    output = np.copy( input )
+
+    if n == 1:
+      return output
+
+    if m < 0:
+      m = n
+  
+    if steps < 0:
+      steps = int( log( minimaxpow2(n), 2) )
+
+    for i in range( steps ):
+      j = steps - i - 1
+      k = len( output ) / ( 2 ** j )
+      output[ 0:k, 0:k, 0:k ] = cls.prev_3d( output[ 0:k, 0:k, 0:k ] )
+
+    return output[ 0:m, 0:m, 0:m ]
 
   """
   Voor 2d zie https://github.com/nigma/pywt/blob/master/src/pywt/multidim.py
@@ -154,7 +203,7 @@ class Wavelet( object ):
     assert len(input.shape) == 2 #alleen vierkanten
     n, m = input.shape #rijen, kolommen
     assert _is_pow2(n)
-    output = np.zeros(input.shape) #init matrix
+    output = np.copy( input )
 
     H = np.zeros( (m,n/2) )
     L = np.zeros( (m,n/2) )
@@ -192,7 +241,7 @@ class Wavelet( object ):
     assert len( input.shape ) == 2
     n, m = input.shape
     assert _is_pow2(n)
-    output = np.zeros( input.shape )
+    output = np.copy( input )
 
     LL = np.transpose( input[:n/2,:n/2] )
     LH = np.transpose( input[:n/2,n/2:] )
@@ -223,36 +272,65 @@ class Wavelet( object ):
 
     return output
 
-  """
   @classmethod
-  def next_2d( cls, input ):
+  def next_2d_tensor( cls, input ):
     assert len(input.shape) == 2 #alleen vierkanten
-    n, m = input.shape
-    assert _is_pow2(n) and _is_pow2(m)
-    output = np.zeros(input.shape) #init matrix
+    x, y = input.shape
+    assert _is_pow2(x) and _is_pow2(y)
+    output = np.copy( input )
 
-    for i in range(m): #rijen
-      output[i,:] = cls.next( input[i,:] )
+    for j in range(x): #rows
+      output[j,:] = cls.next( output[j,:] )
 
-    for j in range(n): #kolommen
-      output[:,j] = cls.next( input[:,j] )
+    for i in range(y): #cols
+      output[:,i] = cls.next( output[:,i] )
 
     return output
 
   @classmethod
-  def prev_2d( cls, input ):
+  def prev_2d_tensor( cls, input ):
     assert len( input.shape ) == 2
-    n, m = input.shape
-    output = np.zeros( input.shape )
+    x, y = input.shape
+    output = np.copy( input )
 
-    for i in range(m): #kolommen
-      output[:,i] = cls.prev( input[:,i] )
+    for j in range(x): #rows
+      output[j,:] = cls.prev( output[j,:] )
 
-    for i in range(n): #rijen
-      output[i,:] = cls.prev( input[i,:] )
+    for i in range(y): #cols
+      output[:,i] = cls.prev( output[:,i] )
 
     return output
-  """
+
+  @classmethod
+  def next_3d( cls, input ):
+    assert len( input.shape ) == 3
+    x, y, z = input.shape
+    assert _is_pow2(x) and _is_pow2(y) and _is_pow2(z)
+    output = np.copy( input )
+
+    for i in range(x): #rows
+      output[i,:,:] = cls.next_2d( output[i,:,:] )
+
+    for j in range(y): #..layers? slices? stacks? fibers? dunno, pick a word.
+      for k in range(z):
+        output[:,j,k] = cls.next( output[:,j,k] )
+
+    return output
+
+  @classmethod
+  def prev_3d( cls, input ):
+    assert len( input.shape ) == 3
+    x, y, z = input.shape
+    output = np.copy( input )
+
+    for i in range(x): #rows
+      output[i,:,:] = cls.prev_2d( output[i,:,:] )
+
+    for j in range(y): #..layers? slices? stacks? fibers? dunno, pick a word.
+      for k in range(z):
+        output[:,j,k] = cls.prev( output[:,j,k] )
+
+    return output
 
   """
   Doet een 1d stapje vooruit. Zie http://code.google.com/p/jwave
@@ -287,8 +365,8 @@ class Wavelet( object ):
     for i in range(h):
       for j in range( cls._waveLength ):
         k = ( (i << 1) + j ) % n
-        output[k] += input[i]   * cls._rec_l[j]  \
-                   + input[i+h] * cls._rec_h[j]
+        output[k] += input[i]   * cls._dec_l[j]  \
+                   + input[i+h] * cls._dec_h[j]
 
     return output
 
