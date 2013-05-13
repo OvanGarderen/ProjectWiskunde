@@ -42,7 +42,7 @@ x_ = numpy.array(realintar(x_)[0:len(x)]).astype(x.dtype)
 """
 n, x = sciwav.read( geluidje )
 X = FFT( list(x) )
-dict = ar2dict( X, 0.005 )
+dict = ar2dict( X, 0.2 )
 print "Compression: %f" % (float(len(dict))/len(X))
 
 data = dict2ar( dict, len(X) )

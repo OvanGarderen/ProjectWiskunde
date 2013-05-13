@@ -1,4 +1,5 @@
-from Wavelets import HaarWavelet
+from Wavelets import HaarWavelet as haar
+from Wavelets import Daubechies2Wavelet as db2
 from channels import *
 from sys import argv
 from FFT2util import FFT2D,iFFT2D,matslice,realintmat
@@ -65,6 +66,7 @@ def testje():
 """
 
 def main():
+  mywavelet = haar
   data, dim = img3mat(argv[1])
   
   data = map(lambda x: np.array(x), data)
@@ -74,7 +76,7 @@ def main():
   print "Image has dimensions : %i,%i" % dim
   print
 
-  encoded = map(HaarWavelet.dwt,data_float)
+  encoded = map(mywavelet.dwt,data_float)
   interdims = (len(encoded[0]),len(encoded[0][0]))
 
   print "Encoding done"
@@ -106,7 +108,7 @@ def main():
 
   print "Starting decoding"
 
-  decoded = map(HaarWavelet.idwt,lists)
+  decoded = map(mywavelet.idwt,lists)
 
   print "Decoding done"  
   #  print_dimensions_matlist("Decoded dimensions are:",decoded)

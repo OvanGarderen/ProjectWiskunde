@@ -1,5 +1,6 @@
 import scipy.io.wavfile as sciwav
 from Wavelets import Daubechies2Wavelet as db2
+from Wavelets import HaarWavelet as haar
 from itertools import izip
 from FFT2util import FFT, iFFT
 import math, cmath
@@ -42,12 +43,12 @@ x_ = iFFT( data ) # x_ is een lijst van getallen
 x_ = numpy.array(realintar(x_)[0:len(x)]).astype(x.dtype)
 """
 n, x = sciwav.read( geluidje )
-X = db2.dwt(x)
+X = haar.dwt(x)
 dict = ar2dict( X, 100.0 )
 print "Compression: %f" % (float(len(dict))/len(X))
 
 data = numpy.array(dict2ar( dict, len(X) )).astype('float')
-x_ = numpy.array(map(lambda x: numpy.rint(x),db2.idwt(data)[0:len(x)])).astype('uint8')
+x_ = numpy.array(map(lambda x: numpy.rint(x),haar.idwt(data)[0:len(x)])).astype(x.dtype)
 print x_, x.dtype, x_.dtype
 
 filename = geluidje.replace(".wav","_new.wav")
