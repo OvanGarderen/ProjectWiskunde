@@ -93,9 +93,8 @@ class Wavelet( object ):
   def dwt2d( cls, input, steps = -1 ):
     assert len(input.shape) == 2
     n = input.shape[0]
-    assert _is_pow2(n) #alleen machten van 2 so far
     for i in input.shape:
-      assert i == n #square/cube/etc
+      assert _is_pow2(i) #alleen machten van 2 so far
       
     output = np.copy( input )
   
@@ -109,7 +108,7 @@ class Wavelet( object ):
 
     for i in range( steps ):
       k = len( output )/(2**i)
-      output[0:k,0:k] = cls.next_2d_tensor( output[0:k,0:k] )
+      output[0:k,0:k] = cls.next_2d( output[0:k,0:k] )
       #print "volgende rondee:)"
 
     return output
@@ -138,7 +137,7 @@ class Wavelet( object ):
     for i in range( steps ):
       j = steps - i - 1
       k = len(output ) / (2**j)
-      output[0:k,0:k] = cls.prev_2d_tensor( output[0:k,0:k] )
+      output[0:k,0:k] = cls.prev_2d( output[0:k,0:k] )
       #print "vorige ronde!"
 
     return output[0:m,0:m]
@@ -199,7 +198,7 @@ class Wavelet( object ):
   """
 
   @classmethod
-  def next_2d_tensor( cls, input ):
+  def next_2d( cls, input ):
     assert len(input.shape) == 2 #alleen vierkanten
     x, y = input.shape
     assert _is_pow2(x) and _is_pow2(y)
@@ -214,7 +213,7 @@ class Wavelet( object ):
     return output
 
   @classmethod
-  def prev_2d_tensor( cls, input ):
+  def prev_2d( cls, input ):
     assert len( input.shape ) == 2
     x, y = input.shape
     output = np.copy( input )
