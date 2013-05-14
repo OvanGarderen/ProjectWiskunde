@@ -69,7 +69,7 @@ def testje():
 """
 
 def main():
-  mywavelet = haar
+  mywavelet = db2
   data, dim = img3mat(argv[1])
   
   data = map(lambda x: np.array(x), data)
@@ -88,7 +88,7 @@ def main():
   print
 
   """ Temporary bypass to check for problems in main algorithm -- Confirmed """
-  compression = 0.0
+  compression = 200.0
 
   print "Converted to dictionaries:"
   print "Compression cutoff is %f" % compression

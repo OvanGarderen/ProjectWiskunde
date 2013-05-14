@@ -291,8 +291,8 @@ class Wavelet( object ):
     for i in range(h):
       for j in range( cls._waveLength ):
         k = ( (i << 1) + j ) % n
-        output[k] += input[i]   * cls._rec_l[j]  \
-                   + input[i+h] * cls._rec_h[j]
+        output[k]   += input[i]   * cls._dec_l[j]  \
+                       + input[i+h] * cls._dec_h[j]
 
     return output
 
@@ -413,7 +413,7 @@ class HaarWavelet( Wavelet ):
   """
   dit is de versie zoals hij op wiki staat. Boven is de algemenere versie,
   hoewel ik dat nog niet getest heb met andere wavelets.
-  """
+
   @classmethod
   def next( cls, input ):
     assert len(input.shape) == 1
@@ -446,4 +446,4 @@ class HaarWavelet( Wavelet ):
                                     + input[i+h] * cls._rec_h[1]
 
     return output
-
+  """
