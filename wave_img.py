@@ -1,5 +1,8 @@
 from Wavelets import HaarWavelet as haar
 from Wavelets import Daubechies2Wavelet as db2
+from Wavelets import BiOrtho97Wavelet as bo97
+from Wavelets import BiOrtho97Wavelet as bo53
+
 from channels import *
 from sys import argv
 from FFT2util import FFT2D,iFFT2D,matslice,realintmat
@@ -85,7 +88,7 @@ def main():
   print
 
   """ Temporary bypass to check for problems in main algorithm -- Confirmed """
-  compression = 100.5
+  compression = 0.0
 
   print "Converted to dictionaries:"
   print "Compression cutoff is %f" % compression

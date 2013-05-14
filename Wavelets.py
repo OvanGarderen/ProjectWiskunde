@@ -109,7 +109,7 @@ class Wavelet( object ):
 
     for i in range( steps ):
       k = len( output )/(2**i)
-      output[0:k,0:k] = cls.next_2d( output[0:k,0:k] )
+      output[0:k,0:k] = cls.next_2d_tensor( output[0:k,0:k] )
       #print "volgende rondee:)"
 
     return output
@@ -138,7 +138,7 @@ class Wavelet( object ):
     for i in range( steps ):
       j = steps - i - 1
       k = len(output ) / (2**j)
-      output[0:k,0:k] = cls.prev_2d( output[0:k,0:k] )
+      output[0:k,0:k] = cls.prev_2d_tensor( output[0:k,0:k] )
       #print "vorige ronde!"
 
     return output[0:m,0:m]
@@ -197,80 +197,6 @@ class Wavelet( object ):
 
   Het lijkt er op dat jwave iets anders doet dan pywt maar is me niet helemaal duidelijk.
   """
-
-  @classmethod
-  def next_2d( cls, input ):
-    assert len(input.shape) == 2 #alleen vierkanten
-    n, m = input.shape #rijen, kolommen
-    assert _is_pow2(n)
-    output = np.copy( input )
-
-    H = np.zeros( (m,n/2) )
-    L = np.zeros( (m,n/2) )
-    for i in range(m):
-      out = cls.next( input[i,:] )
-      L[i] = out[:n/2]
-      H[i] = out[n/2:]
-
-    H = np.transpose(H)
-    L = np.transpose(L)
-
-    LL, LH = np.zeros( (m/2,n/2) ), np.zeros( (m/2,n/2) )
-    for i in range(m/2):
-      out = cls.next( L[i] )
-      LL[i] = out[:n/2]
-      LH[i] = out[n/2:]
-    del L
-
-    HL, HH = np.zeros( (m/2,n/2) ), np.zeros( (m/2,n/2) )
-    for i in range(m/2):
-      out = cls.next( H[i] )
-      HL[i] = out[:n/2]
-      HH[i] = out[n/2:]
-    del H
-
-    output[:n/2,:n/2] = np.transpose(LL)
-    output[:n/2,n/2:] = np.transpose(LH)
-    output[n/2:,:n/2] = np.transpose(HL)
-    output[n/2:,n/2:] = np.transpose(HH)
-
-    return output
-
-  @classmethod
-  def prev_2d( cls, input ):
-    assert len( input.shape ) == 2
-    n, m = input.shape
-    assert _is_pow2(n)
-    output = np.copy( input )
-
-    LL = np.transpose( input[:n/2,:n/2] )
-    LH = np.transpose( input[:n/2,n/2:] )
-    HL = np.transpose( input[n/2:,:n/2] )
-    HH = np.transpose( input[n/2:,n/2:] )
-
-    L = np.zeros( (n/2, n) )
-    i = 0
-    for rowL, rowH in izip( LL, LH ):
-      L[i,:] = cls.prev( np.concatenate( (rowL, rowH) ) )
-      i += 1
-    del LL, LH
-
-    H = np.zeros( (n/2, n) )
-    i = 0
-    for rowL, rowH in izip( HL, HH ):
-      H[i,:] = cls.prev( np.concatenate( (rowL, rowH) ) )
-      i += 1
-    del HL, HH
-
-    L = np.transpose( L )
-    H = np.transpose( H )
-
-    i = 0
-    for rowL, rowH in izip( L, H ):
-      output[i,:] = cls.prev( np.concatenate( (rowL, rowH) ) )
-      i += 1
-
-    return output
 
   @classmethod
   def next_2d_tensor( cls, input ):
@@ -365,8 +291,8 @@ class Wavelet( object ):
     for i in range(h):
       for j in range( cls._waveLength ):
         k = ( (i << 1) + j ) % n
-        output[k] += input[i]   * cls._dec_l[j]  \
-                   + input[i+h] * cls._dec_h[j]
+        output[k] += input[i]   * cls._rec_l[j]  \
+                   + input[i+h] * cls._rec_h[j]
 
     return output
 
@@ -396,15 +322,15 @@ class BiOrtho97Wavelet( Wavelet ):
     0.0
   ]) * sqrt(2)
   _rec_l = np.array([
-    0.0,
-    -0.09127176311424948,
-    -0.05754352622849957,
-    0.5912717631142470,
-    1.115087052456994,
-    0.5912717631142470,
-    -0.05754352622849957,
-    -0.09127176311424948,
-    0.0
+    -0.0,
+    0.09127176311424948,
+    0.05754352622849957,
+    -0.5912717631142470,
+    -1.115087052456994,
+    -0.5912717631142470,
+    0.05754352622849957,
+    0.09127176311424948,
+    -0.0
   ]) * sqrt(2)
   _rec_h = np.array([
     0.02674875741080976,
@@ -435,11 +361,11 @@ class BiOrtho53Wavelet( Wavelet ):
     0.0
   ]) * sqrt(2)
   _rec_l = np.array([
-    0.0,
-    1.0/2,
-    1.0,
-    1.0/2,
-    0.0
+    -0.0,
+    -1.0/2,
+    -1.0,
+    -1.0/2,
+    -0.0
   ]) * sqrt(2)
   _rec_h = np.array([
     -1.0/8,
@@ -487,6 +413,7 @@ class HaarWavelet( Wavelet ):
   """
   dit is de versie zoals hij op wiki staat. Boven is de algemenere versie,
   hoewel ik dat nog niet getest heb met andere wavelets.
+  """
   @classmethod
   def next( cls, input ):
     assert len(input.shape) == 1
@@ -501,6 +428,7 @@ class HaarWavelet( Wavelet ):
       #neem het verschil (genormaliseerd)
       output[i+h] = output[i+h] + input[2*i]   * cls._dec_h[0] \
                                 + input[2*i+1] * cls._dec_h[1]
+
 
     return output
 
@@ -518,4 +446,4 @@ class HaarWavelet( Wavelet ):
                                     + input[i+h] * cls._rec_h[1]
 
     return output
-  """
+
