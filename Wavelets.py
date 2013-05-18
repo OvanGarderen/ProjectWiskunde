@@ -158,6 +158,7 @@ class Wavelet( object ):
       steps = int( log( minimaxpow2(n), 2) )
 
     for i in range( steps ):
+      print "nieuwe ronde %i van %i!" % (i, steps)
       k = len( output ) / ( 2 ** i )
       output[ 0:k, 0:k, 0:k ] = cls.next_3d( output[ 0:k, 0:k, 0:k ] )
 
@@ -181,6 +182,7 @@ class Wavelet( object ):
 
     for i in range( steps ):
       j = steps - i - 1
+      print "nieuwe ronde %i van %i!" % (j, steps)
       k = len( output ) / ( 2 ** j )
       output[ 0:k, 0:k, 0:k ] = cls.prev_3d( output[ 0:k, 0:k, 0:k ] )
 

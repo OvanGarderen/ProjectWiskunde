@@ -27,7 +27,7 @@ def mat3img( data, size ):
     return img
 
 def compress( dicks, mats):
-    return float(len(dicks))/(len(mats)*len(mats[0]))
+    return float(len(dicks))/reduce(lambda x, y: x * y, mats.shape)
 
 
 if __name__=="__main__":

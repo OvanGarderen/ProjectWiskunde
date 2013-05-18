@@ -3,6 +3,7 @@ from Wavelets import Daubechies2Wavelet as db2
 from Wavelets import BiOrtho97Wavelet as bo97
 from Wavelets import BiOrtho97Wavelet as bo53
 from db40 import Daubechies40Wavelet as db40
+from Tools import find_cutoff_nd
 
 from channels import *
 from sys import argv
@@ -17,7 +18,7 @@ def mat5dict( mat, cutoff ):
   dict = {}
   for y in range(N):
     for x in range(M):
-      if abs(mat[y][x]) >= cutoff:
+      if abs(mat[y][x]) > cutoff:
         dict[y*M + x] = mat[y][x]
   return dict
 
@@ -70,7 +71,7 @@ def testje():
 """
 
 def main():
-  mywavelet = db40
+  mywavelet = haar
   data, dim = img3mat(argv[1])
   
   data = map(lambda x: np.array(x), data)
@@ -89,7 +90,7 @@ def main():
   print
 
   """ Temporary bypass to check for problems in main algorithm -- Confirmed """
-  compression = 0.0
+  compression = find_cutoff_nd( encoded, 0.01 )
 
   print "Converted to dictionaries:"
   print "Compression cutoff is %f" % compression
