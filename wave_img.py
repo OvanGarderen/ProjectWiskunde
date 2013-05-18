@@ -2,6 +2,7 @@ from Wavelets import HaarWavelet as haar
 from Wavelets import Daubechies2Wavelet as db2
 from Wavelets import BiOrtho97Wavelet as bo97
 from Wavelets import BiOrtho97Wavelet as bo53
+from db40 import Daubechies40Wavelet as db40
 
 from channels import *
 from sys import argv
@@ -69,7 +70,7 @@ def testje():
 """
 
 def main():
-  mywavelet = db2
+  mywavelet = db40
   data, dim = img3mat(argv[1])
   
   data = map(lambda x: np.array(x), data)
@@ -88,7 +89,7 @@ def main():
   print
 
   """ Temporary bypass to check for problems in main algorithm -- Confirmed """
-  compression = 200.0
+  compression = 0.0
 
   print "Converted to dictionaries:"
   print "Compression cutoff is %f" % compression
