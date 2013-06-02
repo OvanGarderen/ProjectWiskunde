@@ -1,8 +1,4 @@
-from Wavelets import HaarWavelet as haar
-from Wavelets import Daubechies2Wavelet as db2
-from Wavelets import BiOrtho97Wavelet as bo97
-from Wavelets import BiOrtho97Wavelet as bo53
-from db40 import Daubechies40Wavelet as db40
+from Wavelet_Defs import wavelet_dict
 from Tools import find_cutoff_nd
 
 from channels import *
@@ -70,9 +66,10 @@ def testje():
   print np.rint(c)
 """
 
-def main():
-  mywavelet = haar
-  data, dim = img3mat(argv[1])
+def main(infile):
+  global mycompress,mywavelet,myoutfile
+
+  data, dim = img3mat(infile)
   
   data = map(lambda x: np.array(x), data)
   data_float = map(lambda x: x.astype('float'),data)
@@ -85,17 +82,17 @@ def main():
   interdims = (len(encoded[0]),len(encoded[0][0]))
 
   print "Encoding done"
-#  print_dimensions_matlist("Encoded dims:",encoded)
+  #  print_dimensions_matlist("Encoded dims:",encoded)
   print "Using dimensions:",interdims
   print
 
   """ Temporary bypass to check for problems in main algorithm -- Confirmed """
-  compression = find_cutoff_nd( encoded, 0.01 )
-
+  cutoff = find_cutoff_nd( encoded, mycompress )
+  
   print "Converted to dictionaries:"
-  print "Compression cutoff is %f" % compression
+  print "Compression cutoff is %f" % cutoff
 
-  dicks = map(lambda x: mat5dict(x,compression),encoded)
+  dicks = map(lambda x: mat5dict(x,cutoff),encoded)
 
   print "Dictionary lengths:"
   for x in dicks:
@@ -123,10 +120,58 @@ def main():
 
   #  print_dimensions_matlist("Sliced dimensions are:",sliced)
 
-  filename = argv[1].replace('.','_new.')
+  if myoutfile == None:
+    filename = infile.replace('.','_new.')
+  else:
+    filename = myoutfile
   print "Saving to",filename
   mat5img(sliced,dim).save(filename)
   
 if __name__ == "__main__":
-#  testje()
-  main()
+  # Dit stuk regelt de CLI options
+  from sys import stderr
+  import CLI,sys
+  my_opts = [
+    # short, long, args, description
+    ('w','wavelet',1,"select wavelet <arg>"),
+    ('c','compress',1,"set compression to <arg>"),
+    ('o','output',1,"set destination to <arg>"),
+    ('h','help',0,'print this message')
+  ]
+  my_usage = CLI.usage("python wave_img.py [picture] [options]",
+                       "Uses various wavelets to compress and then decompress a picture",
+                       my_opts)
+  try:
+    args, opts = CLI.parse_args(sys.argv,my_opts) #throws IOError on error
+    if len(args) == 1: # additional IOError
+      raise IOError
+  except IOError:
+    print my_usage.short()
+    exit(1)
+
+  #set defaults for various options
+  from Wavelet_Defs import wavelet_dict
+  mywavelet = wavelet_dict['haar']
+  mycompress = 1.0
+  myoutfile = None
+
+  for o in opts:
+    if o[0] == 'wavelet':
+      try:
+        mywavelet = wavelet_dict[o[1]]
+      except:
+        print >>stderr,o[1],'is not a valid wavelet'
+        exit(1)
+    elif o[0] == 'compress':
+      try:
+        mycompress = float(o[1]) 
+      except TypeError:
+        exit(1)
+    elif o[0] == 'output':
+        myoutfile = o[1]
+    elif o[0] == 'help':
+      print my_usage
+      exit(1)
+  
+  map(main,args[1:])
+
