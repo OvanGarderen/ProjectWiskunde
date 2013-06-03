@@ -30,9 +30,9 @@ def mat5img( data, size ):
   tuplist = []
   for y in xrange(len(data[0])):
     for x in xrange(len(data[0][0])):
-      tuplist += [tuple([mat[y,x] for mat in data])]
+      tuplist += [tuple([int(mat[y,x]) for mat in data])]
   
-  print len(tuplist),len(tuplist[0])
+  #print len(tuplist),len(tuplist[0])
 
   img = Image.new('RGBA'[:len(tuplist)],(size[1],size[0]))
   img.putdata(tuplist)

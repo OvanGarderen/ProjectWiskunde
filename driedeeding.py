@@ -8,7 +8,7 @@ import numpy as np
 import sys
 
 def mat_3d_to_dict( mat, cutoff ):
-  K, L, M = (len(mat), len(mat[0]), len(mat[0][0]))
+  K, L, M = mat.shape
   dict = {}
   for z in range( M ):
     for y in range( L ):

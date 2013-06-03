@@ -13,7 +13,7 @@ def read7Gif( fn ):
   return frames
 
 def plaatje():
-  frames = read7Gif( "gif/cirkeltje.gif" )
+  frames = read7Gif( "plaatjes/croppedgif.gif" )
   i=0
   for f in frames:
     f.save("gif/frame%i.png" % i)

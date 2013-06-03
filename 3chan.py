@@ -4,7 +4,7 @@ def listtomat( ls, scl ):
     return [ ls[i*scl : (i+1) * scl] for i in xrange(len(ls)/scl)]
 
 def img3mat( filename ):
-    img = Image.open(filename)
+    img = Image.open(filename).convert('RGBA')
     img.load()
     rgbtuple = map(lambda x: x.getdata(), img.split())
 
@@ -20,7 +20,7 @@ def mat3img( data, size ):
     for i in xrange(len(rgb[0])):
         tuplist.append( tuple([ls[i] for ls in rgb]) )
 
-    print len(tuplist),len(tuplist[0])
+    #print len(tuplist),len(tuplist[0])
 
     img = Image.new('RGBA'[:len(tuplist)],(size[1],size[0]))
     img.putdata(tuplist)
