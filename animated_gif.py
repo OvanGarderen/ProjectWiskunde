@@ -51,13 +51,15 @@ def plaatje(plaat):
       frame[j,:,:] = sliced[j][i,:,:]
     frame_list.append(frame)
 
+  print "converting gifs"
   for i, frame in enumerate( frame_list ):
+    print "converting frame %i" % i
     fn = ''.join(["gif/temp.", str(i).zfill(3), ".png"])
     mat5img(frame, (rows, cols) ).save( fn )
     os.system(' '.join(["convert", fn, fn.replace("png", "gif")]))
 
   print "creating gif"
-  os.system(''.join(["gifsicle -d 10 -m ","gif/temp.*.gif"," > ",plaat.replace(".", "_new.")]))
+  os.system(''.join(["gifsicle -d 10 --loopcount=forever -m ","gif/temp.*.gif"," > ",plaat.replace(".", "_new.")]))
 
   print "removing temp files"
   call(["rm"]+list(glob('gif/temp.*.gif')))
