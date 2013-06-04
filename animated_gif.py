@@ -10,9 +10,10 @@ from driedeeding import mat_3d_to_dict, dict_to_mat_3d
 from wave_img import mat5img
 
 def plaatje(plaat):
+  print "splitting up gif... (this may take a while)"
   call(["gifsicle", "--unoptimize", "-e", plaat, "-o", plaat])
 
-  gifs = glob(''.join([plaat,".*"]))
+  gifs = sorted(glob(''.join([plaat,".*"])))
   driedlist = [[],[],[],[]]
 
   for f in gifs:
@@ -36,7 +37,7 @@ def plaatje(plaat):
   lists = map( lambda x: dict_to_mat_3d( x, interdims[0], interdims[1], interdims[2]), dicks )
   lists = map( lambda x: np.array(x), lists )
 
-  decoded = map( HaarWavelet.idwt, encoded )
+  decoded = map( HaarWavelet.idwt, lists )
   sliced = map( lambda x: np.rint(x).astype( data[0].dtype ), decoded )
   print PSNR( np.array(data), np.array(sliced) )
 
@@ -55,9 +56,12 @@ def plaatje(plaat):
     mat5img(frame, (rows, cols) ).save( fn )
     os.system(' '.join(["convert", fn, fn.replace("png", "gif")]))
 
-  os.system(''.join(["gifsicle -m ","gif/temp.*.gif"," > ",plaat.replace(".", "_new.")]))
+  print "creating gif"
+  os.system(''.join(["gifsicle -d 10 -m ","gif/temp.*.gif"," > ",plaat.replace(".", "_new.")]))
 
-  call(["rm", "gif/temp.*"])
+  print "removing temp files"
+  call(["rm"]+list(glob('gif/temp.*.gif')))
+  call(["rm"]+list(glob('gif/temp.*.png')))
 
 if __name__ == "__main__":
   plaatje("gif/croppedgif.gif")
