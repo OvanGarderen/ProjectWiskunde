@@ -19,6 +19,96 @@ http://code.google.com/p/jwave/source/browse/trunk/src/main/java/math/transform/
 wat is die link in gods naam?
 """
 
+def downsampling_convolution( input, filter, step=2 ):
+  F = len(filter)
+  N = len(input)
+  start = step - 1
+  output = np.zeros( N+1 )#(N + F - 1)//2 )
+  k = 0
+
+  if F <= N:
+    #convolve het begin
+    for i in range( start, F, step ):
+      sum = 0
+      for j in range( i ):
+        sum += input[i-j]*filter[j]
+      output[k] = sum
+      k += 1
+      start = i
+
+    #convolve het midden
+    for i in range( start, N, step ):
+      sum = input[i] * filter[0]
+      for j in range( 1, F ):
+        sum += input[i-j]*filter[j]
+      output[k] = sum
+      k += 1
+      start = i
+
+    #convolve het einde
+    for i in range( start, N+F-1, step ):
+      sum = 0;
+      for j in range( i-(N-1), F ):
+        sum += input[i-j]*filter[j]
+      output[k] = sum
+      k += 1
+  else:
+    buffer = np.zeros( N + 2*(F-1) )
+    buffer[F-1:1-F] = input
+    stop = N + 2*(F-1)
+    for i in range( start, stop, step ):
+      sum = 0
+      for j in range( F ):
+        sum += buffer[i-j] * filter[j]
+        output[k] = sum
+        k += 1
+
+  print output
+  return output[1::2]
+
+def upsampling_convolution( input, filter, step=2 ):
+  F = len(filter)
+  N = len(input)
+  k = (N-1) << 1
+  output = np.zeros( N ) #lengte moet nog even bepaald worden
+
+  assert F >= 2
+
+  for i in range( N-1, 0, -1 ):
+    for j in range( F ):
+      output[k] += input[i] * filter[j]
+    k -= step
+  return output
+
+def upsampling_convolution_valid_sf( input, filter ):
+  F = len( filter )
+  N = len( input )
+  output = np.zeros( 2 *N )
+  assert F % 2 == 0 and N >= F//2
+
+  filter_even = np.zeros( F//2 )
+  filter_odd = np.zeros( F//2 )
+  for i in range( F//2 ):
+    filter_even[i] = filter[i << 1]
+    filter_odd[i] = filter[(i << 1) + 1]
+
+  k = F//2 - 1
+  l = 0
+  for i in range( N - (F//2 - 1) ):
+    sum_even = filter_even[0] * input[k+i]
+    sum_odd = filter_odd[0] * input[k+i]
+
+    for j in range( 1, F//2 ):
+      sum_even += filter_even[j] * input[k + i-j]
+      sum_odd += filter_odd[j] * input[k + i-j]
+    print sum_even, sum_odd, "sommie"
+    output[l] = sum_even
+    l += 1
+    output[l] = sum_odd
+    l += 1
+
+  return output
+
 def _is_pow2( num ):
   return num > 0 and ((num & (num - 1)) == 0)
 
@@ -264,56 +354,24 @@ class Wavelet( object ):
   """
   @classmethod
   def next( cls, input ):
-    assert len(input.shape) == 1
-    n = len(input)
-    output = np.zeros(n)
-    k = 0
-    h = n >> 1
+    assert len(input.shape) == 1 and _is_pow2( len(input) )
 
-    output[:h] = signal.convolve(input,cls._dec_l,'same')[1::2]
-    output[h:] = signal.convolve(input,cls._dec_h,'same')[1::2]
+    low = downsampling_convolution( input, cls._dec_l )
+    hi = downsampling_convolution( input, cls._dec_h )
 
-    #    for i in range(h):
-    #      for j in range(cls._waveLength):
-    #        k = ( (i << 1) + j ) % n
-    #        output[i]   += input[k] * cls._dec_l[j]
-    #        output[i+h] += input[k] * cls._dec_h[j]
-
-    return output
+    return np.concatenate( (low, hi) )
 
   """
   Doet een 1d stapje terug.
   """
   @classmethod
   def prev( cls, input ):
-    assert len(input.shape) == 1
-    n = len( input )
-    output = np.zeros(n)
-    k = 0
-    h = n >> 1
+    assert len(input.shape) == 1 and _is_pow2( len(input) )
+    N = len(input)
 
-    input_l = np.zeros(n)
-    input_h = np.zeros(n)
-    for i in range(n/2):
-      input_l[2*i]   = input[i]
-      input_l[2*i+1] = 0
-
-      input_h[2*i]   = input[h + i]
-      input_h[2*i+1] = 0
-
-#    print "input h en l"
-#    print input
-#    print input_l
-#    print input_h
-
-    output += signal.convolve(input_l,cls._rec_l,'full')
-    output += signal.convolve(input_h,cls._rec_h,'full')
-
-    #    for i in range(h):
-    #      for j in range( cls._waveLength ):
-    #        k = ( (i << 1) + j ) % n
-    #        output[k]   += input[i]   * cls._dec_l[j]  \
-    #                       + input[i+h] * cls._dec_h[j]
+    output = upsampling_convolution_valid_sf( input[:N//2], cls._rec_l ) +  \
+        upsampling_convolution_valid_sf( input[N//2:], cls._rec_h )
+    print input, output
     return output
 
 #zie http://faculty.gvsu.edu/aboufade/web/wavelets/student_work/EF/how-works.html

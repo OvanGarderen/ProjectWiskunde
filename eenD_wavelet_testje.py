@@ -1,19 +1,20 @@
 import numpy as np
+import pywt
 from Wavelet_Defs import wavelet_dict
 
-wave = wavelet_dict['db2']
+wave = wavelet_dict['haar']
 
 dataset = np.array(
-    [2,-16,6,1,
-     5,1,-9,10]
+    [1,2,3,0,1,2,3,4]
 ).astype('float')
 
-enc = wave.dwt(dataset,steps=1)
+enc = wave.dwt(dataset)
 
-print enc
 
-dec = wave.idwt(enc,steps=1)
+dec = wave.idwt(enc)
 
 print dataset
-print "-->"
+print enc
 print dec
+
+print pywt.dwt(dataset, 'haar')
