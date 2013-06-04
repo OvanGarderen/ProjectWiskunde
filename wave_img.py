@@ -143,8 +143,6 @@ if __name__ == "__main__":
                        my_opts)
   try:
     args, opts = CLI.parse_args(sys.argv,my_opts) #throws IOError on error
-    if len(args) == 1: # additional IOError
-      raise IOError
   except IOError:
     print my_usage.short()
     exit(1)
@@ -169,9 +167,14 @@ if __name__ == "__main__":
         exit(1)
     elif o[0] == 'output':
         myoutfile = o[1]
+
     elif o[0] == 'help':
       print my_usage
       exit(1)
+
+  if len(args) == 1: # additional IOError
+    print my_usage.short()
+    exit(1)
   
   map(main,args[1:])
 

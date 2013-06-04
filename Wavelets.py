@@ -1,5 +1,6 @@
 from math import sqrt, log
 import numpy as np
+import scipy.signal as signal
 from FFT2util import minimaxpow2
 from itertools import izip
 
@@ -30,14 +31,13 @@ class Wavelet( object ):
 
   @classmethod
   def dwt( cls, input, steps = -1 ):
-    output = input.copy()
     if len( input.shape ) == 3:
       return cls.dwt3d(input,steps)
     elif len( input.shape ) == 2:
       return cls.dwt2d(input,steps)
     else:
-      n = len( input )
-      output = input.copy()
+      n = input.shape[0]
+      output = np.copy( input )
 
       if n == 1:
         return output
@@ -51,10 +51,10 @@ class Wavelet( object ):
       print "we gaat %i steps doen" % steps
 
       for i in range( steps ):
-        #output = np.concatenate((cls.next( output[0: len(output)/(2**i)] ), output[len(output)/2**i:]))
         k = len(output)/(2**i)
         output[0:k] = cls.next(output[0:k])
-        #print "volgende rondeeee:)"
+        print output
+        print "volgende rondeeee:)"
 
       return output
 
@@ -270,11 +270,14 @@ class Wavelet( object ):
     k = 0
     h = n >> 1
 
-    for i in range(h):
-      for j in range(cls._waveLength):
-        k = ( (i << 1) + j ) % n
-        output[i]   += input[k] * cls._dec_l[j]
-        output[i+h] += input[k] * cls._dec_h[j]
+    output[:h] = signal.convolve(input,cls._dec_l,'same')[1::2]
+    output[h:] = signal.convolve(input,cls._dec_h,'same')[1::2]
+
+    #    for i in range(h):
+    #      for j in range(cls._waveLength):
+    #        k = ( (i << 1) + j ) % n
+    #        output[i]   += input[k] * cls._dec_l[j]
+    #        output[i+h] += input[k] * cls._dec_h[j]
 
     return output
 
@@ -289,12 +292,28 @@ class Wavelet( object ):
     k = 0
     h = n >> 1
 
-    for i in range(h):
-      for j in range( cls._waveLength ):
-        k = ( (i << 1) + j ) % n
-        output[k]   += input[i]   * cls._dec_l[j]  \
-                       + input[i+h] * cls._dec_h[j]
+    input_l = np.zeros(n)
+    input_h = np.zeros(n)
+    for i in range(n/2):
+      input_l[2*i]   = input[i]
+      input_l[2*i+1] = 0
 
+      input_h[2*i]   = input[h + i]
+      input_h[2*i+1] = 0
+
+#    print "input h en l"
+#    print input
+#    print input_l
+#    print input_h
+
+    output += signal.convolve(input_l,cls._rec_l,'full')
+    output += signal.convolve(input_h,cls._rec_h,'full')
+
+    #    for i in range(h):
+    #      for j in range( cls._waveLength ):
+    #        k = ( (i << 1) + j ) % n
+    #        output[k]   += input[i]   * cls._dec_l[j]  \
+    #                       + input[i+h] * cls._dec_h[j]
     return output
 
 #zie http://faculty.gvsu.edu/aboufade/web/wavelets/student_work/EF/how-works.html
@@ -323,15 +342,15 @@ class BiOrtho97Wavelet( Wavelet ):
     0.0
   ]) * sqrt(2)
   _rec_l = np.array([
-    -0.0,
-    0.09127176311424948,
-    0.05754352622849957,
-    -0.5912717631142470,
-    -1.115087052456994,
-    -0.5912717631142470,
-    0.05754352622849957,
-    0.09127176311424948,
-    -0.0
+    0.0,
+    -0.09127176311424948,
+    -0.05754352622849957,
+    0.5912717631142470,
+    1.115087052456994,
+    0.5912717631142470,
+    -0.05754352622849957,
+    -0.09127176311424948,
+    0.0
   ]) * sqrt(2)
   _rec_h = np.array([
     0.02674875741080976,
@@ -406,10 +425,10 @@ class Daubechies2Wavelet( Wavelet ):
 class HaarWavelet( Wavelet ):
   # zie http://wavelets.pybytes.com/wavelet/haar/
   _waveLength = 2
-  _dec_l = np.array([  1,  1])/sqrt(2.0)
-  _dec_h = np.array([ -1,  1])/sqrt(2.0)
-  _rec_l = np.array([  1,  1])/sqrt(2.0)
-  _rec_h = np.array([  1, -1])/sqrt(2.0)
+  _dec_l = np.array([   1.,  1.])/sqrt(2.0)
+  _dec_h = np.array([   -1., 1.])/sqrt(2.0)
+  _rec_l = np.array([   1.,  1.])/sqrt(2.0)
+  _rec_h = np.array([   1.,  -1.])/sqrt(2.0)
   
   """
   dit is de versie zoals hij op wiki staat. Boven is de algemenere versie,
