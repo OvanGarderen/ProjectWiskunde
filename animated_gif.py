@@ -68,4 +68,4 @@ def plaatje(plaat):
   call(["rm"]+list(glob('gif/temp.*.png')))
 
 if __name__ == "__main__":
-  plaatje("gif/croppedgif.gif")
+  plaatje("gif/boule.gif")
