@@ -9,7 +9,7 @@ from Wavelet_Defs import wavelet_dict
 from driedeeding import mat_3d_to_dict, dict_to_mat_3d
 from wave_img import mat5img
 
-wave = wavelet_dict['db2']
+wave = wavelet_dict['haar']
 
 def plaatje(plaat):
   print "splitting up gif... (this may take a while)"
