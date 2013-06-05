@@ -19,52 +19,52 @@ http://code.google.com/p/jwave/source/browse/trunk/src/main/java/math/transform/
 wat is die link in gods naam?
 """
 
-def downsampling_convolution( input, filter, step=2 ):
+def downsampling_convolution( input, filter ):
   F = len(filter)
   N = len(input)
-  start = step - 1
-  output = np.zeros( N+1 )#(N + F - 1)//2 )
+  start = 1
+  output = np.zeros( (N )//2 ) #(N - F - 1)//2
   k = 0
 
   if F <= N:
     #convolve het begin
-    for i in range( start, F, step ):
-      sum = 0
-      for j in range( i ):
-        sum += input[i-j]*filter[j]
-      output[k] = sum
-      k += 1
-      start = i
+    #    for i in range( start, F, 2):
+    #  sum = 0
+    #  for j in range( i+1 ):
+    #    sum += input[i-j]*filter[j]
+    #  output[k] = sum
+    #  k += 1
+    #  start = i + 2
 
     #convolve het midden
-    for i in range( start, N, step ):
-      sum = input[i] * filter[0]
-      for j in range( 1, F ):
+    for i in range( start, N, 2 ):
+      sum = 0
+      for j in range( F ):
         sum += input[i-j]*filter[j]
       output[k] = sum
       k += 1
-      start = i
+      start = i + 2
 
     #convolve het einde
-    for i in range( start, N+F-1, step ):
-      sum = 0;
-      for j in range( i-(N-1), F ):
-        sum += input[i-j]*filter[j]
-      output[k] = sum
-      k += 1
+    #for i in range( start, N+F-1, 2):
+    #  sum = 0;
+    #  for j in range( i-(N-1), F ):
+    #    sum += input[i-j]*filter[j]
+    #  output[k] = sum
+    #  k += 1
   else:
     buffer = np.zeros( N + 2*(F-1) )
     buffer[F-1:1-F] = input
+    start = F
     stop = N + 2*(F-1)
-    for i in range( start, stop, step ):
+    for i in range( start, stop, 2 ):
       sum = 0
       for j in range( F ):
         sum += buffer[i-j] * filter[j]
         output[k] = sum
         k += 1
-
   print output
-  return output[1::2]
+  return output
 
 def upsampling_convolution( input, filter, step=2 ):
   F = len(filter)
@@ -83,7 +83,7 @@ def upsampling_convolution( input, filter, step=2 ):
 def upsampling_convolution_valid_sf( input, filter ):
   F = len( filter )
   N = len( input )
-  output = np.zeros( 2 *N )
+  output = np.zeros( 2 * N )
   assert F % 2 == 0 and N >= F//2
 
   filter_even = np.zeros( F//2 )
@@ -94,14 +94,14 @@ def upsampling_convolution_valid_sf( input, filter ):
 
   k = F//2 - 1
   l = 0
-  for i in range( N - (F//2 - 1) ):
+  for i in range( N - k ):
     sum_even = filter_even[0] * input[k+i]
     sum_odd = filter_odd[0] * input[k+i]
 
     for j in range( 1, F//2 ):
       sum_even += filter_even[j] * input[k + i-j]
       sum_odd += filter_odd[j] * input[k + i-j]
-    print sum_even, sum_odd, "sommie"
+    #print sum_even, sum_odd, "sommie"
     output[l] = sum_even
     l += 1
     output[l] = sum_odd
@@ -143,8 +143,6 @@ class Wavelet( object ):
       for i in range( steps ):
         k = len(output)/(2**i)
         output[0:k] = cls.next(output[0:k])
-        print output
-        print "volgende rondeeee:)"
 
       return output
 
@@ -175,7 +173,7 @@ class Wavelet( object ):
         j = steps - i-1
         k = len(output)/(2**j)
         output[0:k] = cls.prev(output[0:k])
-        print "vorige rondeeee"
+        #print "vorige rondeeee"
 
       return output[0:m]
 
@@ -371,7 +369,7 @@ class Wavelet( object ):
 
     output = upsampling_convolution_valid_sf( input[:N//2], cls._rec_l ) +  \
         upsampling_convolution_valid_sf( input[N//2:], cls._rec_h )
-    print input, output
+    #print input, output
     return output
 
 #zie http://faculty.gvsu.edu/aboufade/web/wavelets/student_work/EF/how-works.html

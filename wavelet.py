@@ -83,5 +83,6 @@ def main():
     #print [int(round(i)) for i in HaarWavelet.idwt(X, m=x.shape[0]) ] #is dit ongeveer `x'? We krijgen helaas afrondingsfouten.
 
   print PSNR( x, x_ )
+
 if __name__ == "__main__":
   main()
