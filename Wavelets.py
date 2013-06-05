@@ -243,12 +243,9 @@ class Wavelet( object ):
         j = steps - i - 1
         k = len(output ) / (2**j)
         for p in range(n):
-          output[p,0:k] = cls.prev( output[p,0:k] )
-      for i in range( steps ):
-        j = steps - i - 1
-        k = len(output ) / (2**j)
-        for p in range(n):
           output[0:k,p] = cls.prev( output[0:k,p] )
+        for p in range(n):
+          output[p,0:k] = cls.prev( output[p,0:k] )
       
     return output[0:m,0:m]
 
@@ -277,8 +274,6 @@ class Wavelet( object ):
         k = len( output ) / (2**i)
         for p in range( n ):
           output[p,0:k,0:k] = cls.next_2d( output[p, 0:k, 0:k] )
-      for i in range( steps ):
-        k = len( output )/ (2**i)
         for p in range( n ):
           for q in range( n ):
             output[0:k,p,q] = cls.next( output[0:k,p,q] )
@@ -312,13 +307,10 @@ class Wavelet( object ):
         j = steps - i - 1
         k = len( output ) / ( 2 ** j )
         for p in range( n ):
-          output[p,0:k,0:k] = cls.next_2d( output[p, 0:k, 0:k] )
-      for i in range( steps ):
-        j = steps - i - 1
-        k = len( output ) / ( 2 ** j )
-        for p in range( n ):
           for q in range( n ):
-            output[0:k,p,q] = cls.next( output[0:k,p,q] )
+            output[0:k,p,q] = cls.prev( output[0:k,p,q] )
+        for p in range( n ):
+          output[p,0:k,0:k] = cls.prev_2d( output[p, 0:k, 0:k] )
 
     return output[ 0:m, 0:m, 0:m ]
 
