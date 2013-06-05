@@ -12,6 +12,7 @@ from wave_img import mat5img
 wave = wavelet_dict['haar']
 
 def plaatje(plaat):
+  mytensor = False
   print "splitting up gif... (this may take a while)"
   call(["gifsicle", "--unoptimize", "-e", plaat, "-o", plaat])
 
@@ -27,7 +28,7 @@ def plaatje(plaat):
   print np.array(data).shape
   data_float = map( lambda x: x.astype('float'), data )
 
-  encoded = np.array(map( lambda x: wave.dwt(x,tensor=True), data_float ))
+  encoded = np.array(map( lambda x: wave.dwt(x,tensor=mytensor), data_float ))
   interdims = encoded[0].shape
   print "interdims:", interdims
 
@@ -39,7 +40,7 @@ def plaatje(plaat):
   lists = map( lambda x: dict_to_mat_3d( x, interdims[0], interdims[1], interdims[2]), dicks )
   lists = map( lambda x: np.array(x), lists )
 
-  decoded = map( lambda x: wave.idwt(x,tensor=True), lists )
+  decoded = map( lambda x: wave.idwt(x,tensor=mytensor), lists )
   sliced = map( lambda x: np.rint(x).astype( data[0].dtype ), decoded )
   print PSNR( np.array(data), np.array(sliced) )
 
