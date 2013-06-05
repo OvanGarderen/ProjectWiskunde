@@ -26,44 +26,45 @@ def downsampling_convolution( input, filter ):
   output = np.zeros( (N )//2 ) #(N - F - 1)//2
   k = 0
 
-  if F <= N:
-    #convolve het begin
-    #    for i in range( start, F, 2):
-    #  sum = 0
-    #  for j in range( i+1 ):
-    #    sum += input[i-j]*filter[j]
-    #  output[k] = sum
-    #  k += 1
-    #  start = i + 2
+  #  print "N=",N
+  #  if F <= N:
+  #convolve het begin
+  #    for i in range( start, F, 2):
+  #  sum = 0
+  #  for j in range( i+1 ):
+  #    sum += input[i-j]*filter[j]
+  #  output[k] = sum
+  #  k += 1
+  #  start = i + 2
 
-    #convolve het midden
-    for i in range( start, N, 2 ):
-      sum = 0
-      for j in range( F ):
-        sum += input[i-j]*filter[j]
-      output[k] = sum
-      k += 1
-      start = i + 2
+  #convolve het midden
+  for i in range( start, N, 2 ):
+    sum = 0
+    for j in range( F ):
+      sum += input[i-j]*filter[j]
+    output[k] = sum 
+    k += 1
+    start = i + 2
 
-    #convolve het einde
-    #for i in range( start, N+F-1, 2):
-    #  sum = 0;
-    #  for j in range( i-(N-1), F ):
-    #    sum += input[i-j]*filter[j]
-    #  output[k] = sum
-    #  k += 1
-  else:
-    buffer = np.zeros( N + 2*(F-1) )
-    buffer[F-1:1-F] = input
-    start = F
-    stop = N + 2*(F-1)
-    for i in range( start, stop, 2 ):
-      sum = 0
-      for j in range( F ):
-        sum += buffer[i-j] * filter[j]
-        output[k] = sum
-        k += 1
-  print output
+  #convolve het einde
+  #for i in range( start, N+F-1, 2):
+  #  sum = 0;
+  #  for j in range( i-(N-1), F ):
+  #    sum += input[i-j]*filter[j]
+  #  output[k] = sum
+  #  k += 1
+  #  else:
+  #    buffer = np.zeros( N + 2*(F-1) )
+  #    buffer[F-1:1-F] = input
+  #    start = F
+  #    stop = N + 2*(F-1)
+  #    for i in range( start, stop, 2 ):
+  #      sum = 0
+  #      for j in range( F ):
+  #        sum += buffer[i-j] * filter[j]
+  #        output[k] = sum
+  #        k += 1
+  #  print output
   return output
 
 def upsampling_convolution( input, filter, step=2 ):
@@ -84,7 +85,8 @@ def upsampling_convolution_valid_sf( input, filter ):
   F = len( filter )
   N = len( input )
   output = np.zeros( 2 * N )
-  assert F % 2 == 0 and N >= F//2
+  # print N,F
+  # assert F % 2 == 0 and N >= F//2
 
   filter_even = np.zeros( F//2 )
   filter_odd = np.zeros( F//2 )
@@ -93,18 +95,19 @@ def upsampling_convolution_valid_sf( input, filter ):
     filter_odd[i] = filter[(i << 1) + 1]
 
   k = F//2 - 1
+  
   l = 0
-  for i in range( N - k ):
-    sum_even = filter_even[0] * input[k+i]
-    sum_odd = filter_odd[0] * input[k+i]
+  for i in range( N ):
+    sum_even = 0
+    sum_odd = 0 
 
-    for j in range( 1, F//2 ):
-      sum_even += filter_even[j] * input[k + i-j]
-      sum_odd += filter_odd[j] * input[k + i-j]
+    for j in range( F//2 ):
+      sum_even += filter_even[j] * input[i-j]
+      sum_odd += filter_odd[j] * input[i-j]
     #print sum_even, sum_odd, "sommie"
-    output[l] = sum_even
+    output[l - 2*k] = sum_even
     l += 1
-    output[l] = sum_odd
+    output[l - 2*k] = sum_odd
     l += 1
 
   return output
@@ -120,11 +123,11 @@ class Wavelet( object ):
   _rec_h = None
 
   @classmethod
-  def dwt( cls, input, steps = -1 ):
+  def dwt( cls, input, steps = -1, tensor=False):
     if len( input.shape ) == 3:
-      return cls.dwt3d(input,steps)
+      return cls.dwt3d(input,steps,tensor=tensor)
     elif len( input.shape ) == 2:
-      return cls.dwt2d(input,steps)
+      return cls.dwt2d(input,steps,tensor=tensor)
     else:
       n = input.shape[0]
       output = np.copy( input )
@@ -147,13 +150,13 @@ class Wavelet( object ):
       return output
 
   @classmethod
-  def idwt( cls, input, steps = -1, m = -1 ):
+  def idwt( cls, input, steps = -1, m = -1, tensor=False ):
     if m == -1:
       m = input.shape[0]
     if len( input.shape ) == 3:
-      return cls.idwt3d(input,steps,m)
+      return cls.idwt3d(input,steps,m,tensor=tensor)
     elif len( input.shape ) == 2:
-      return cls.idwt2d(input,steps,m)
+      return cls.idwt2d(input,steps,m,tensor=tensor)
     else:
       n = len( input )
       output = input.copy()
@@ -178,7 +181,7 @@ class Wavelet( object ):
       return output[0:m]
 
   @classmethod
-  def dwt2d( cls, input, steps = -1 ):
+  def dwt2d( cls, input, steps = -1, tensor=False ):
     assert len(input.shape) == 2
     n = input.shape[0]
     for i in input.shape:
@@ -194,15 +197,22 @@ class Wavelet( object ):
       
     print "we gaan %i steps doen" % steps
 
-    for i in range( steps ):
-      k = len( output )/(2**i)
-      output[0:k,0:k] = cls.next_2d( output[0:k,0:k] )
-      #print "volgende rondee:)"
-
+    if not tensor:
+      for i in range( steps ):
+        k = len( output )/(2**i)
+        output[0:k,0:k] = cls.next_2d( output[0:k,0:k] )
+        #print "volgende rondee:)"
+    else:
+      for i in range( steps ):
+        k = len(output ) / (2**i)
+        for p in range(n):
+          output[p,0:k] = cls.next( output[p,0:k] )
+        for p in range(n):
+          output[0:k,p] = cls.next( output[0:k,p] )
     return output
 
   @classmethod
-  def idwt2d( cls, input, steps = -1, m = -1 ):
+  def idwt2d( cls, input, steps = -1, m = -1, tensor=False ):
     assert len(input.shape) == 2
     n = input.shape[0]
     assert _is_pow2(n) #alleen machten van 2 so far
@@ -222,16 +232,28 @@ class Wavelet( object ):
 
     print "we gaan %i steps terugdoen" % steps
 
-    for i in range( steps ):
-      j = steps - i - 1
-      k = len(output ) / (2**j)
-      output[0:k,0:k] = cls.prev_2d( output[0:k,0:k] )
-      #print "vorige ronde!"
-
+    if not tensor:
+      for i in range( steps ):
+        j = steps - i - 1
+        k = len(output ) / (2**j)
+        output[0:k,0:k] = cls.prev_2d( output[0:k,0:k] )
+        #print "vorige ronde!"
+    else:
+      for i in range( steps ):
+        j = steps - i - 1
+        k = len(output ) / (2**j)
+        for p in range(n):
+          output[p,0:k] = cls.prev( output[p,0:k] )
+      for i in range( steps ):
+        j = steps - i - 1
+        k = len(output ) / (2**j)
+        for p in range(n):
+          output[0:k,p] = cls.prev( output[0:k,p] )
+      
     return output[0:m,0:m]
 
   @classmethod
-  def dwt3d( cls, input, steps = -1 ):
+  def dwt3d( cls, input, steps = -1, tensor = False ):
     assert len(input.shape) == 3
     for i in input.shape:
       assert _is_pow2(i)
@@ -245,22 +267,34 @@ class Wavelet( object ):
     if steps < 0:
       steps = int( log( minimaxpow2(n), 2) )
 
-    for i in range( steps ):
-      print "nieuwe ronde %i van %i!" % (i, steps)
-      k = len( output ) / ( 2 ** i )
-      output[ 0:k, 0:k, 0:k ] = cls.next_3d( output[ 0:k, 0:k, 0:k ] )
+    if not tensor:
+      for i in range( steps ):
+        print "nieuwe ronde %i van %i!" % (i, steps)
+        k = len( output ) / ( 2 ** i )
+        output[ 0:k, 0:k, 0:k ] = cls.next_3d( output[ 0:k, 0:k, 0:k ] )
+    else:
+      for i in range( steps ):
+        k = len( output ) / (2**i)
+        for p in range( n ):
+          output[p,0:k,0:k] = cls.next_2d( output[p, 0:k, 0:k] )
+      for i in range( steps ):
+        k = len( output )/ (2**i)
+        for p in range( n ):
+          for q in range( n ):
+            output[0:k,p,q] = cls.next( output[0:k,p,q] )
 
+        
     return output
 
   @classmethod
-  def idwt3d( cls, input, steps = -1, m = -1 ):
+  def idwt3d( cls, input, steps = -1, m = -1, tensor=False ):
     assert len(input.shape) == 3
 
     n = input.shape[0]
     output = np.copy( input )
 
     if n == 1:
-      return output
+      return output 
 
     if m < 0:
       m = n
@@ -268,11 +302,23 @@ class Wavelet( object ):
     if steps < 0:
       steps = int( log( minimaxpow2(n), 2) )
 
-    for i in range( steps ):
-      j = steps - i - 1
-      print "nieuwe ronde %i van %i!" % (j, steps)
-      k = len( output ) / ( 2 ** j )
-      output[ 0:k, 0:k, 0:k ] = cls.prev_3d( output[ 0:k, 0:k, 0:k ] )
+    if not tensor:
+      for i in range( steps ):
+        j = steps - i - 1
+        k = len( output ) / ( 2 ** j )
+        output[ 0:k, 0:k, 0:k ] = cls.prev_3d( output[ 0:k, 0:k, 0:k ] )
+    else:
+      for i in range( steps ):
+        j = steps - i - 1
+        k = len( output ) / ( 2 ** j )
+        for p in range( n ):
+          output[p,0:k,0:k] = cls.next_2d( output[p, 0:k, 0:k] )
+      for i in range( steps ):
+        j = steps - i - 1
+        k = len( output ) / ( 2 ** j )
+        for p in range( n ):
+          for q in range( n ):
+            output[0:k,p,q] = cls.next( output[0:k,p,q] )
 
     return output[ 0:m, 0:m, 0:m ]
 

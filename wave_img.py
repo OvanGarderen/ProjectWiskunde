@@ -67,7 +67,7 @@ def testje():
 """
 
 def main(infile):
-  global mycompress,mywavelet,myoutfile
+  global mycompress,mywavelet,myoutfile,mytensor
 
   data, dim = img3mat(infile)
   
@@ -75,10 +75,11 @@ def main(infile):
   data_float = map(lambda x: x.astype('float'),data)
 
   print "Starting encoding of image %s" % (argv[1])
+  print "TensorProduct =",mytensor
   print "Image has dimensions : %i,%i" % dim
   print
 
-  encoded = map(mywavelet.dwt,data_float)
+  encoded = map(lambda x: mywavelet.dwt(x,tensor=mytensor),data_float)
   interdims = (len(encoded[0]),len(encoded[0][0]))
 
   print "Encoding done"
@@ -110,7 +111,7 @@ def main(infile):
 
   print "Starting decoding"
 
-  decoded = map(mywavelet.idwt,lists)
+  decoded = map(lambda x: mywavelet.idwt(x,tensor=mytensor),lists)
 
   print "Decoding done"  
   #  print_dimensions_matlist("Decoded dimensions are:",decoded)
@@ -133,6 +134,7 @@ if __name__ == "__main__":
   import CLI,sys
   my_opts = [
     # short, long, args, description
+    ('t','tensor',0,"zet tensor aan"),
     ('w','wavelet',1,"select wavelet <arg>"),
     ('c','compress',1,"set compression to <arg>"),
     ('o','output',1,"set destination to <arg>"),
@@ -152,6 +154,7 @@ if __name__ == "__main__":
   mywavelet = wavelet_dict['haar']
   mycompress = 1.0
   myoutfile = None
+  mytensor = False
 
   for o in opts:
     if o[0] == 'wavelet':
@@ -166,7 +169,10 @@ if __name__ == "__main__":
       except TypeError:
         exit(1)
     elif o[0] == 'output':
-        myoutfile = o[1]
+      myoutfile = o[1]
+        
+    elif o[0] == 'tensor':
+      mytensor = True
 
     elif o[0] == 'help':
       print my_usage
