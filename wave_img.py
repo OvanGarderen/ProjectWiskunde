@@ -7,15 +7,19 @@ from FFT2util import FFT2D,iFFT2D,matslice,realintmat
 from FFTjan import mat2dict,dict2mat
 import pywt
 import numpy as np
-from math import sqrt
+from math import sqrt,copysign
+from threshold import *
 
-def mat5dict( mat, cutoff ):
+def mat5dict( mat, cutoff, threshfunc ):
   N,M = (len(mat),len(mat[0]))
   dict = {}
   for y in range(N):
     for x in range(M):
-      if abs(mat[y][x]) > cutoff:
-        dict[y*M + x] = mat[y][x]
+      try:
+        thresh = threshfunc(mat[y][x],cutoff)
+        dict[y*M + x] = thresh #mat[y][x]
+      except:
+        pass
   return dict
 
 def dict5mat( dict, N, M ):
@@ -67,7 +71,7 @@ def testje():
 """
 
 def main(infile):
-  global mycompress,mywavelet,myoutfile,mytensor
+  global mycompress,mywavelet,myoutfile,mytensor,mythreshfunc
 
   data, dim = img3mat(infile)
   
@@ -76,6 +80,7 @@ def main(infile):
 
   print "Starting encoding of image %s" % (argv[1])
   print "TensorProduct =",mytensor
+  print "Threshold func =",mythreshfunc
   print "Image has dimensions : %i,%i" % dim
   print
 
@@ -93,7 +98,7 @@ def main(infile):
   print "Converted to dictionaries:"
   print "Compression cutoff is %f" % cutoff
 
-  dicks = map(lambda x: mat5dict(x,cutoff),encoded)
+  dicks = map(lambda x: mat5dict(x,cutoff,mythreshfunc),encoded)
 
   print "Dictionary lengths:"
   for x in dicks:
@@ -134,7 +139,9 @@ if __name__ == "__main__":
   import CLI,sys
   my_opts = [
     # short, long, args, description
-    ('t','tensor',0,"zet tensor aan"),
+    ('t','tensor',0,"turn on tensor mode"),
+    ('s','smooth',0,"activate quadratic threshold"),
+    ('l','logsmooth',0,"activate logarithmic theshold"),
     ('w','wavelet',1,"select wavelet <arg>"),
     ('c','compress',1,"set compression to <arg>"),
     ('o','output',1,"set destination to <arg>"),
@@ -155,6 +162,7 @@ if __name__ == "__main__":
   mycompress = 1.0
   myoutfile = None
   mytensor = False
+  mythreshfunc = threshold_hard
 
   for o in opts:
     if o[0] == 'wavelet':
@@ -170,13 +178,15 @@ if __name__ == "__main__":
         exit(1)
     elif o[0] == 'output':
       myoutfile = o[1]
-        
     elif o[0] == 'tensor':
       mytensor = True
-
     elif o[0] == 'help':
       print my_usage
       exit(1)
+    elif o[0] == 'smooth':
+      mythreshfunc = threshold_quad
+    elif o[0] == 'logsmooth':
+      mythreshfunc = threshold_log
 
   if len(args) == 1: # additional IOError
     print my_usage.short()

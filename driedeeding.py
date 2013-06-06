@@ -3,18 +3,22 @@ from channels import listtomat, compress
 from Wavelets import HaarWavelet as haar
 import images2gif as gifs
 from Tools import find_cutoff_nd
+from threshold import *
 
 import numpy as np
 import sys
 
-def mat_3d_to_dict( mat, cutoff ):
+def mat_3d_to_dict( mat, cutoff, threshfunc ):
   K, L, M = mat.shape
   dict = {}
   for z in range( M ):
     for y in range( L ):
       for x in range( K ):
-        if abs( mat[z,y,x] ) > cutoff:
-          dict[ z*K*L + y*K + x ] = mat[z,y,x]
+        try:
+          thresh = threshfunc(mat[z,y,x],cutoff)
+          dict[ z*K*L + y*K + x ] = thresh
+        except:
+          pass
   return dict
 
 def dict_to_mat_3d( dict, K, L, M ):

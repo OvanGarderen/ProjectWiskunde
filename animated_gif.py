@@ -8,15 +8,14 @@ from Tools import find_cutoff_nd
 from Wavelet_Defs import wavelet_dict
 from driedeeding import mat_3d_to_dict, dict_to_mat_3d
 from wave_img import mat5img
-
-
+from threshold import *
 
 def plaatje(plaat):
-  global mywavelet, mycompress, myoutfile, mytensor, mydelay, mytensor
+  global mywavelet, mycompress, myoutfile, mytensor, mydelay, mytensor, mythreshfunc
 
   print "compressing",plaat
   print "tensor is %s" % ("on" if mytensor else "off")
-  print 
+  print "thresholding :",mythreshfunc
   print "splitting up gif... (this may take a while)"
   call(["gifsicle", "--unoptimize", "-e", plaat, "-o", plaat])
 
@@ -38,7 +37,7 @@ def plaatje(plaat):
 
   compression = find_cutoff_nd( encoded, mycompress )
 
-  dicks = map( lambda x: mat_3d_to_dict( x, compression ), encoded )
+  dicks = map( lambda x: mat_3d_to_dict( x, compression, mythreshfunc ), encoded )
   print map( lambda x: compress( x[0], x[1] ), zip( dicks, encoded ) )
 
   lists = map( lambda x: dict_to_mat_3d( x, interdims[0], interdims[1], interdims[2]), dicks )
@@ -89,6 +88,7 @@ if __name__ == "__main__":
     # short, long, args, description
     ('t','tensor',0,"zet tensor aan"),
     ('w','wavelet',1,"select wavelet <arg>"),
+    ('s','smooth',0,"select quadratic thresholding"),
     ('c','compress',1,"set compression to <arg>"),
     ('o','output',1,"set destination to <arg>"),
     ('d','delay',1,"set frame-delay to <arg>"),
@@ -110,6 +110,7 @@ if __name__ == "__main__":
   myoutfile = None
   mytensor = False
   mydelay = 10
+  mythreshfunc = threshold_hard
 
   for o in opts:
     if o[0] == 'wavelet':
@@ -132,7 +133,9 @@ if __name__ == "__main__":
     elif o[0] == 'help':
       print my_usage
       exit(1)
-    
+    elif o[0] == 'smooth':
+      mythreshfunc = threshold_quad
+
     elif o[0] == 'delay':
       try:
         mydelay = int(o[1])
