@@ -29,7 +29,7 @@
 Hilbertruimte = inproductruimte die compleet is. Laat $\Psi$ een orthonormale basis voor deze ruimte. Als nu een functie $f$ in deze ruimte geschreven wordt in $\Psi$:
 \[
 f = \sum_{\lambda} \langle f, \psi_\lambda \rangle \psi_\lambda,
-\]jljjk
+\]
 dan geldt
 \[
 ||f||^2 = \sum_{\lambda} | \langle f, \psi_\lambda \rangle |^2,
@@ -45,13 +45,13 @@ omdat
 Vanaf nu zullen we aannemen dat elke functie in $L_2$ leeft, dus dat $\int |f(x)|^2 dx$ begrensd is. Verder noemen we de gehele ruimte $\Omega$.
 
 \section{Wavelets}
-Wavelets geven basisfuncties met een aantal eigenschappen. De meest prominente eigenschap is dat deze basisfuncties een compacte drager $S_\lambda$ hebben (in tegenstelling tot de Fourierbasis). Deze basisfuncties worden vaak opgeschreven als $\psi_{s,t}$ of $\psi_\lambda$. De $s$ geeft hierbij de schaling aan, en $t$ de verschuiving. Gegeven een Wavelet of moederfunctie kunnen we de basisfunctie $\psi_\lambda$ maken door:
+Wavelets geven basisfuncties met een aantal eigenschappen. De meest prominente eigenschap is dat deze basisfuncties een compacte drager $S_\lambda$ hebben (in tegenstelling tot de Fourierbasis). Deze basisfuncties worden vaak opgeschreven als $\psi_{s,t}$ of $\psi_\lambda$. De $s$ geeft hierbij de schaling aan en $t$ de verschuiving. Gegeven een Waveletfunctie $\psi$ kunnen we de basisfunctie $\psi_\lambda$ maken door:
 \[
 	\psi_\lambda(x) = \frac{1}{\sqrt{s}}\psi\left(\frac{x-t}{s}\right).
 \]
 Het quotient is om de functie te normaliseren.
 
-Omdat wij het discrete geval bekijken, zullen we kijken naar signalen die als rij $f[k_1,\ldots,k_n]$, $n \in \N, i \in \{ 1, \ldots, n \}, k_i \in \N$ opgevat kunnen worden. Hierbij wordt $n$ de dimensie van het `rooster', oftewel de dimensie van onze ruimte. In dit geval wordt ook onze Waveletbasis discreet (aftelbaar) en geldt $\lambda = (j,l)$, met $j,l \in \N$.  Definieer nu de lengte van $\lambda$ als $|\lambda| = |(j,l)| = j$.
+Omdat wij het discrete geval bekijken, zullen we kijken naar signalen die als rij $f[k_1,\ldots,k_n]$, $n \in \N, i \in \{ 1, \ldots, n \}, k_i \in \N$ opgevat kunnen worden. Hierbij wordt $n$ de dimensie van het `rooster', oftewel de dimensie van onze ruimte. In dit geval wordt ook onze Waveletbasis discreet (aftelbaar) en geldt $\lambda = (l,j)$, met $l,j \in \N$.  Definieer nu de lengte van $\lambda$ als $|\lambda| = |(l,j)| = l$.
 
 Een tweede eigenschap is de zogenaamde orde van de wavelet. Wanneer de wavelet loodrecht staat op alle polynomen van graad $p-1$ of lager, spreken we van een wavelet van orde $p$.\footnote{Veel wavelets worden ontworpen met de wil om de orde zo groot mogelijk te maken. Daubechies, Coiflets en Symlets zijn alle drie voorbeelden hiervan.} Dit komt overeen met te zeggen dat
 \[
