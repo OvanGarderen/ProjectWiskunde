@@ -1,0 +1,61 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[dutch]{babel}
+\usepackage{a4wide}
+%\setlength{\parindent}{0pt}
+
+\newtheorem*{vraag}{Vraag}
+\theoremstyle{definition}
+\newtheorem*{uitwerking}{Uitwerking}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\f}{\varphi}
+\newcommand{\e}{\varepsilon}
+\renewcommand{\d}{\delta}
+
+\newtheorem*{thm}{Lemma van Riemann-Lebesgue}
+
+\begin{document}
+
+\title{Fourier fout}
+\author{Jan Westerdiep}
+\maketitle
+
+Laat $f \in L_2[0,1]$. Stel $f$ is $C^n$ en periodiek (voor alle afgeleides $f^{(j)}$ geldt $f^{(j)}(1) = f^{(j)}(0)$). Dan kunnen we iets zeggen over de mate van daling in de co\"effici\"enten.
+
+Voor dit bewijs zullen we het Lemma van Riemann-Lebesgue gebruiken: TODO-bewijs of referentie.
+\begin{thm}
+Wanneer $g \in L^1(\R)$, dan geldt
+\[
+	G(z) = \left|\int_{-\infty}^\infty g(t) e^{- 2 \pi i z t} dt\right| \to 0 \text{ voor } z \to \infty.
+\]
+\end{thm}
+
+Wij willen graag iets zeggen over $\langle f, \psi_k\rangle$, de $k$-de co\"effici\"ent van onze Fourierbasis. Dan:
+\[
+	|\langle f, \psi_k \rangle| = \left|\int_0^1 f(x) e^{- 2 \pi i k x} dx\right| = \left|\left[ f(x) \cdot \frac{-1}{2 \pi i k} e^{- 2 \pi i k x} \right]_0^1\right| + \left|\frac{1}{2 \pi i k}\right| \left|\int_0^1 f'(x) e^{-2 \pi i k x} dx \right|
+\]
+\[
+	= | f(1) \cdot 1 - f(0) \cdot 1| + \frac{1}{2 \pi k} \left| \int_0^1 f'(x) e^{-2 \pi i k x} dx \right| = \frac{1}{2 \pi |k|} \left| \int_0^1 f'(x) e^{-2 \pi i k x} dx \right|.
+\]
+Omdat $f$ nu $C^n$ is, herhaal totdat:
+\[
+	\frac{1}{2 \pi k} \left| \int_0^1 f'(x) e^{-2 \pi i k x} dx \right| = (2 \pi |k|)^{-n}\left| \int_0^1 f^{(n)}(x) e^{- 2 \pi i k x} dx \right|.
+\]
+Vermenigvuldig beide kanten met $(2 \pi |k|)^n$ om te vinden dat
+\[
+	(2 \pi |k|)^n |\langle f, \psi_k \rangle| = \left| \int_0^1 f^{(n)}(x) e^{- 2 \pi i k x} dx \right|.
+\]
+We willen graag het lemma van Riemann-Lebesgue toepassen op de rechterkant. Merk daartoe op dat omdat $f \in C^n$, $f^{(n)}$ continu op $[0,1]$ dus neemt hier een maximum en een minimum aan. Dus is de integraal van $|f|$ begrensd en dus is $f$, $L_1[0,1]$. Maar een functie die integreerbaar is op $[0,1]$ en daarbuiten nul, is integreerbaar op $\R$. Dus we mogen Riemann-Lebesgue gebruiken om te zien dat
+\[
+	(2 \pi |k|)^n |\langle f, \psi_k \rangle| \to 0 \text{ als } |k| \to \infty \Rightarrow \langle f, \psi_k \rangle \in o((2 \pi |k|)^{-n}) \subset O((2 \pi |k|)^{-n}) = O(|k|^{-n}),
+\]
+oftewel een algebraische afname.
+
+\end{document}
