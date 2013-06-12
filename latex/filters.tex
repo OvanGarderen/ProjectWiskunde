@@ -1,0 +1,39 @@
+\documentclass[11pt]{article}
+
+\usepackage{bbold}
+\usepackage{amssymb, amsmath}
+\usepackage{a4wide}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\e}{\epsilon}
+
+\newcommand{\eq}[1]{\begin{eqnarray*} #1 \end{eqnarray*}}
+\newcommand{\mogelijkheden}[1]{\begin{cases} #1 \end{cases}}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+
+Wavelets zijn zo geconstrueerd dat de volgende relaties gelden:
+\eq{
+  \exists F \in \N :& \phi(x) = \sum_{k=-F}^F c_k \cdot \phi(2\cdot x + k) \\
+ &\psi(x) = \sum_{k=-F}^F (-1)^k c_{1-k} \cdot \phi(2\cdot x + k)
+}
+Hier hoeven niet alle co\"efficienten $c_k$ ongelijk nul te zijn
+
+We noemen deze lijst van $\{c_k | k\in[-F,F]\}$'s de highpass filter co\"efficienten en de lijst van $\{(-1)^k \cdot c_{1-k} | k\in[-F,F]\}$ de lowpass filter co\"efficienten.
+
+Door gebruik te maken van de orthonormaliteit van de wavelets onder verschuiving kunnen
+we deze co\"efficienten dan als volgt berekenen:
+\eq{
+  <\phi(x),\phi(2x+k)> =& \sum_{n=-F}^F c_n \cdot <\phi(2\cdot x + n),\phi(2x+k)> \\
+                       =& \sum_{n=-F}^F c_n \cdot \mathbb{1}_{n=k} \\
+                       =& c_k
+}
+\end{document}
