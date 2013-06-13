@@ -1,0 +1,215 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amssymb, amsmath}
+\usepackage{a4wide}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\e}{\epsilon}
+\renewcommand{\O}{\mathcal{O}}
+
+\newcommand{\FFT}{\text{FFT}}
+
+\newtheorem*{stelling}{Stelling}
+\newtheorem*{algo}{Algoritme}
+\newcommand{\eq}[1]{\begin{eqnarray*} #1 \end{eqnarray*}}
+\newcommand{\mogelijkheden}[1]{\begin{cases} #1 \end{cases}}
+\newcommand{\repr}[1]{{#1}^{\!\!-1}}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+%-----------------------------------------------------------------------------------------------------------------
+\section{Discrete Fourier Transform}
+{}
+%-----------------------------------------------------------------------------------------------------------------
+\section{Inverteerbaarheid van de DFT}
+Voor de werking van het DFT algoritme als signaal-compressie algoritme is het van belang dat er een inverse algoritme bestaat dat het getransformeerde ingangs signaal weer terugtransformeert zonder verlies van informatie.\bigskip
+
+We zullen bewijzen dat de DFT (Discrete Fourier Transform) en iDFT (inverse-DFT) elkaars inversen zijn.
+Bekijk daarvoor een een verzameling transformatie-vectoren $\{s_k\, |\, k\in [0,N]\}$ van lengte N zodat $s_k[n] = e^{i2\pi k n /N}$.
+(Merk op dat dus $s_k[n]= s_n[k]$)
+En laat $x,X$ vectoren van lengte $N$ die respectievelijk het signaal en het getransformeerde signaal aangeven.\bigskip
+
+Dan zijn de Discrete Fourier Transformatie en zijn inverse gedefini\"eerd door:
+\eq{
+  X_i = \langle x, s_i \rangle \quad\quad \text{(DFT)}\\
+  x_j = \frac 1 N \langle X, \repr{s_j} \rangle \quad\quad\text{(iDFT)}
+}
+Waar de functie $\langle . , . \rangle$ het complexe inproduct op $\C^N$ aangeeft
+We gaan bewijzen dat toepassen van DFT en zijn inverse de identiteit oplevert.
+Hiervoor voldoet het om de iDFT uit te schrijven in termen van $x$ door $X$ in te vullen volgens de formule van de DFT.
+\eq{
+  x_j =& \frac 1 N \langle X , \repr{s_j} \rangle \\
+      =& \frac 1 N \sum_{i=1}^N X_i\cdot \overline{\repr{s_j}[i]} \\
+      =& \frac 1 N \sum_{i=1}^N \langle x , s_i \rangle \overline{\repr{s_j}[i]} \\
+      =& \langle x , \frac1N \sum_{i=1}^N s_i \repr{s_j}[i] \rangle
+}
+Rest ons nog om aan te tonen dat deze sommatie over de transformatie-vectoren een eenheids-vector oplevert, namelijk dat
+\eq{
+  \frac1N \sum_{i=1}^N s_i \repr{s_j}[i] =& e_n
+}
+Hiervoor schrijven we de sommatie (die een vector van lengte $N$ representeert) uit in zijn componenten. We maken gebruik van het feit
+dat we de indices in blokhaken kunnen verwisselen met die in het subscript van $s$ en verkrijgen daarmee
+\eq{
+  \frac1N \sum_{i=1}^N s_i[n] \repr{s_j}[i] = \frac1N \sum_{i=1}^N s_n[i] \overline{s_j[i]} = \langle s_n , s_j \rangle = \delta_{jn}.\\
+}
+Waar het inproduct gelijk aan een kronicker delta, omdat de basisfuncties orthonormaal zijn.
+Hieruit volgt dus dat de iDFT en de DFT elkaars inversen zijn.
+
+%-----------------------------------------------------------------------------------------------------------------
+\section{De Fast Fourier Transform}
+De snelheid van het DFT algoritme valt in de praktijk nogal tegen, het nemen van $n$ inproducten over vectoren 
+van lengte $n$ heeft namelijk een tijdscomplexiteit van $\O{n^2}$. Dit staat de directe implementatie van de DFT 
+voor praktische toepassingen in de weg. Daarom is er een alternatief algoritme, de \emph{Fast Fourier Transform}.  \bigskip
+
+%%%%%
+\begin{algo}[Fast Fourier Transform]
+Gegeven zij een input signaal $x$ van lengte $2^n$, dan geeft het algoritme $\FFT$ 
+een lijst terug van waardes $X$ van lengte $2^n$ als volgt:
+
+Als $n=0$ dan geeft de $\FFT$ de lijst (van \'e\'en element) direct terug:
+\eq{
+X = x
+}
+Wanneer $n\neq0$ splitsen we de lijst $x$ op in lijsten $\e,o$ van zijn even en oneven indices:
+\eq{
+  \e_k   =& x_{2k}   &\quad \text{voor } k < 2^{n-1}\\
+   o_k   =& x_{2k+1} &\quad \text{voor } k < 2^{n-1}
+}
+Vervolgens voeren we hierop het $\FFT$ algoritme uit om de volgende lijsten te verkrijgen:
+\eq{
+  E =& \FFT(\e) \\
+  O =& \FFT(o)
+}
+Hiermee wordt de output van het algoritme geconstrueerd als volgt:
+\eq{
+  X_k = \left\{\begin{array}{llll}
+    E_k         &+& e^{-i2\pi k2^{-n}} O_k &  k< 2^{n-1} \\
+    E_{(k-2^{n-1})} &-& e^{-i2\pi (k-2^{n-1})2^{-n}} O_{(k-2^{n-1})} &  k\geq N/2 
+  \end{array}\right.
+}
+\end{algo}
+%%%%%
+
+Dit is dus een recursief gedefinieerd algoritme dat een signaal meermaals halveert en in zichzelf terugvoert.
+Ook is het gegarandeerd dat dit algoritme afloopt vanwege de conditie op $n=0$ samen met de halvering van de input bij elke stap.\bigskip
+
+Een belangrijke voorwaarde is nu dat het FFT algoritme hetzelfde resultaat geeft als het DFT algoritme en dit zullen we nu dan ook bewijzen. We gebruiken hier een inductie bewijs met inductie naar $n$, onze aanname is dat het FFT algoritme voor $x$ van lengte $N=2^n$ gelijk is aan de DFT van $x$, ofwel
+\eq{
+  X_k = \sum^{N}_{k=1} x_j \cdot e^{-2\pi i \cdot jk/N}
+}
+Dit geldt duidelijkerwijs wanneer $n=0$, onze basistap, hier hebben we namelijk:
+\eq{
+  X_k = x_k = x_1 = \sum^{2^0}_{k=1} x_j \cdot e^{-2\pi i \cdot 1/2^0}
+}
+Vervolgens passen we inductie toe naar $n$ door onze aanname voor $n-1$ te gebruiken,
+we vullen hiermee $E_k$ en $O_k$ in de vergelijking voor $X_k$ in, deze hebben immers lengte $2^{n-1}$.
+\eq{
+  X_k = \left\{\begin{array}{llll}
+    \sum^{N/2}_{j=1} \e_j \cdot e^{-2\pi i \cdot kj \cdot 2/N} &+& 
+    e^{-2\pi i \cdot k/N}
+    \sum^{N/2}_{j=1} o_j \cdot e^{-2\pi i\cdot kj \cdot 2/N} &  k< N/2 \\
+    \sum^{N/2}_{j=1} \e_j \cdot e^{-2\pi i\cdot (k-N/2) j\cdot 2/N} &-& 
+    e^{-2\pi i\cdot (k-N/2)/N}
+    \sum^{N/2}_{j=1} o_j \cdot e^{-2\pi i\cdot (k-N/2)j\cdot 2/N} &  k\geq N/2 
+  \end{array}\right.
+}
+We merken op dat we de e-machten in het tweede geval kunnen vereenvoudigen volgens
+\eq{
+  e^{-2\pi i\cdot (k-N/2)j \cdot 2/N} = - e^{-2\pi i\cdot kj\cdot 2/N} \quad,\quad e^{-2\pi i\cdot(k-N/2)/N} = -e^{-2\pi i\cdot k/N},
+}
+waardoor het gevalsonderscheid wegvalt, aangezien beide vergelijkingen nu identiek zijn.
+We verkrijgen $X_k$ als sommatie over de lijsten $e$ en $o$, we vullen de relatie voor $e,o$ met $x$ in, en nemen de factor voor de oneven indices mee in de sommatie.
+\eq{
+  X_k = \sum^{N/2}_{j=1} x_{2j} \cdot e^{-2\pi i\cdot k (2j)/N} + 
+    \sum^{N/2}_{j=1} x_{2j+1} \cdot e^{-2\pi i\cdot k (2j+1)/N} 
+    = \sum^N_{j=1} x_j \cdot e^{-2\pi i\cdot k j/N}
+}
+Dit bewijst dat de FFT hetzelfde resultaat levert als het DFT algoritme, het bewijs voor de gelijkheid van de iDFT en de inverse FFT is 
+hetzelfde wanneer men de substitutie $-2\pi i \rightarrow 2\pi i$ uitvoert.
+
+%-----------------------------------------------------------------------------------------------------------------
+\section{Complexiteit van de Fast Fourier Transform}
+Hoewel wiskundig van minder relevant, is de complexiteit van het algoritme een eigenschap die van enorm praktisch belang is. De complexiteit vertaalt namelijk direct naar de looptijd van het algoritme.\bigskip
+
+We zullen bewijzen dat de complexiteit van de FFT een element is van $\O(n \log n)$. Daarmee is ook de complexiteit van de iFFT vastgesteld aangezien deze hetzelfde schema volgt met andere co\"efficienten. We schrijven het algoritme in pseudocode. \bigskip
+
+\begin{algorithmic}
+\Function{FFT}{$x$}
+\State $n \gets \text{lengte}(x)$ \Comment Assumptie: $n = 2^m$ voor een $m$, oftewel $n$ is een tweemacht
+\If {$n == 1$}
+	\State{$X \gets x$}
+\Else
+	\State $E \gets FFT(x[0::2])$ \Comment{Pak alle even indices}
+	\State $O \gets FFT(x[1::2])$ \Comment{Pak alle oneven indices}
+	\For{$i = 0$ to $n-1$}
+		\If{$i < n/2$}
+			\State $X[i] \gets E[i] + e^{-2i \pi k/n} \cdot O[i]$
+		\Else
+			\State $X[i] \gets E[i] - e^{-2i \pi k/n} \cdot O[i]$
+		\EndIf
+	\EndFor
+\EndIf
+\State \Return{$X$}
+\EndFunction
+\end{algorithmic} \bigskip
+
+Dit algoritme is recursief, dus kunnen we de complexiteit schrijven door middel van een recurente betrekking. Laat hiervoor $T(n)$ het aantal berekeningen zijn dat het algoritme kost bij een invoersignaal van lengte $n$. We een gevals onderscheid: als de lijst lengte $1$ heeft geven we deze direct terug (1 berekening), en anders gaan we de recursie in. Bij een lijst van lengte $>1$ splitsen we de lijst op in de even en oneven entries en voeren we op beiden weer het FFT algoritme uit, vervolgens voeren we nog $n$ maal een vast aantal berekeningen (= c berekeningen) uit om tot het eindresultaat te komen. In formulevorm geeft dit de volgende \emph{recurrente betrekking}
+\[
+T(n) = \begin{cases}
+    1 &\text{ als } n = 1 \\
+      2\cdot T(n/2) + c\cdot n &\text{ anders} \\
+\end{cases}
+\]
+We zullen nu een stelling uit complexiteits theorie gebruiken die betrekking heeft op algoritmes van deze vorm, namelijk de (vereenvoudigde) stelling van Akkra-Bazzi. We rekenen hierbij niet de $\O$ van de FFT uit maar de strictere $\theta$ die gedefinieerd is volgens:
+\[
+f \in \theta(g) \Leftrightarrow \exists c \in \R_+: \lim_{n \to \infty} \frac{f(n)}{g(n)} = c
+\]
+Zonder verder al te veel in te gaan op de implicaties die $\theta$ heeft op het gedrag van de FFT gebruiken we dan dat in ieder geval geldt dat $f \in \theta(g)$ impliceert dat $f \in \O(g)$. 
+De stelling die voor dit probleem van belang is, is de vereenvoudigde stelling van \emph{Akkra-Bazzi}.
+
+%%%%%
+\begin{stelling}[Akkra-Bazzi]
+Zij $T(n)$ recurrente betrekking van de vorm
+\[
+T(n) = \begin{cases}
+  c &\text{ als } n \leq d \\
+  a T(n/b) + f(n) &\text{ anders} \\
+\end{cases},
+\]
+waarbij $a,b,d\in\N$, $c\in\R$ en $f$ een functie $f:\N\rightarrow\R$ die voldoet aan 
+\eq{
+  \exists k \in \N \,:\, f(n) \in \theta(n^{\log a/\log b} \log^k n).
+}
+Dan wordt de orde van $T(n)$ gegeven door:
+\eq{
+  T(n) \in \theta(n^{\log a / \log b} \log^{k+1}n).
+}
+\end{stelling}
+%%%%%
+
+De recurrente betrekking voor de complexiteit van de FFT is inderdaad van dezelfde vorm als die van $T(n)$ in bovenstaande stelling.
+Laat hiervoor namelijk $a=b=2$, $c=d=1$ en $f$ de functie die $n\mapsto n$ dan voldoet $f$ aan:
+\eq{
+  f(n) \in \theta(n^{\log 2/\log 2} \log^0 n)=\theta(n).
+}
+Dit betekent dat $T(n) \in \theta(n \log n)$ en dus zeker $T(n) \in \O(n \log n)$.
+Hiermee hebben we bewezen dat de FFT en de iFFT in tijdscomplexiteit $\O(n\log n)$ lopen. 
+
+%-----------------------------------------------------------------------------------------------------------------
+\section{Fast Fourier Transform in meer dimensies}
+{}
+
+%-----------------------------------------------------------------------------------------------------------------
+\section{Compressie van Beeldmateriaal onder FFT}
+{}
+
+\end{document}
