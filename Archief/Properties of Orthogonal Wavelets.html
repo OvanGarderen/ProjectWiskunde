@@ -1,0 +1,135 @@
+<!--This file created 30/06/98 9:48 by Claris Home Page version 2.0This file created 30/06/98 11:51 by Claris Home Page version 2.0This file created 1/07/98 15:16 by Claris Home Page version 2.0This file created 1/07/98 15:50 by Claris Home Page version 2.0This file created 1/07/98 17:01 by Claris Home Page version 2.0This file created 1/07/98 17:02 by Claris Home Page version 2.0This file created 2/07/98 11:14 by Claris Home Page version 2.0This file created 2/07/98 16:31 by Claris Home Page version 2.0This file created 3/07/98 16:10 by Claris Home Page version 2.0This file created 6/07/98 11:48 by Claris Home Page version 2.0This file created 6/07/98 14:51 by Claris Home Page version 2.0This file created 16/07/98 10:15 by Claris Home Page version 2.0This file created 16/07/98 16:00 by Claris Home Page version 2.0This file created 17/07/98 21:37 by Claris Home Page version 2.0This file created 17/07/98 21:40 by Claris Home Page version 2.0This file created 19/07/98 14:20 by Claris Home Page version 2.0This file created 19/07/98 14:33 by Claris Home Page version 2.0This file created 19/07/98 14:38 by Claris Home Page version 2.0This file created 23/10/98 14:49 by Claris Home Page version 2.0This file created 6/11/98 14:34 by Claris Home Page version 2.0This file created 11/01/99 14:27 by Claris Home Page version 2.0This file created 11/01/99 14:30 by Claris Home Page version 2.0-->
+<!--This file created 4/06/99 12:40 by Claris Home Page version 2.0-->
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+   <title>Properties of Orthogonal Wavelets</title>
+   <meta name="GENERATOR" content="Claris Home Page 2.0">
+   </head><body><x-sas-window top="66" bottom="613" left="8" right="538">
+   <x-sas-remotesave server="cas.ensmp.fr" user="chaplais" dir="public_html/Wavetour_presentation/Ondelettes/" file="">
+
+
+
+<h1><center>Properties</center></h1>
+
+<p><font size="+2">Dilated wavelets are related by a scaling
+equation.</font></p>
+
+<p><font size="+2">Rescaling can be interpreted as discrete
+filtering.</font></p>
+
+<p><font size="+2">Vanishing moments, support, regularity and
+symmetry of the wavelet and scaling function are determined by the
+scaling filter.</font></p>
+
+<p><font size="+1">
+</font></p><hr><font size="+1">
+</font><p></p>
+
+<h2>Scaling equation</h2>
+
+<p><font face="Symbol" size="+1">y</font><font size="+1">(t/2) and
+</font><font face="Symbol" size="+1">f</font><font size="+1">(t) are
+related by a scaling equation, similar to </font><font size="+1"><a href="http://cas.ensmp.fr/%7Echaplais/wavetour_presentation/Multiresolution/ScalingEq.gif" target="_blank">the equation which relates </a></font><a href="http://cas.ensmp.fr/%7Echaplais/wavetour_presentation/Multiresolution/ScalingEq.gif" target="_blank"><font face="Symbol" size="+1">j</font><font size="+1">(t/2) and </font><font face="Symbol" size="+1">j</font><font size="+1">(t)</font></a><font size="+1">. It is a consequence of (7.60):</font></p>
+
+<p></p><center><font size="+1"><img src="Properties%20of%20Orthogonal%20Wavelets_files/WaveScaleEq.gif" x-sas-useimagewidth="" x-sas-useimageheight="" align="bottom" height="53" width="235"></font></center><p></p>
+
+<p><font size="+1">In the Fourier domain, this equation
+becomes</font></p>
+
+<p></p><center><font size="+1"><img src="Properties%20of%20Orthogonal%20Wavelets_files/ScaledWaveHat.gif" x-sas-useimagewidth="" x-sas-useimageheight="" align="bottom" height="50" width="204"></font></center><p></p>
+
+<p><font size="+1">The h and g filters are a </font><font size="+1"><a href="http://cas.ensmp.fr/%7Echaplais/wavetour_presentation/filtres/Perfect_Reconstruction.html#filtres_conjugues" target="_blank">conjugate mirror filter bank</a></font><font size="+1">.</font></p>
+
+<h2>Vanishing moments</h2>
+
+<p><font size="+1">A wavelet has m vanishing moments if and only if
+its scaling function can generate polynomials of degree smaller than
+or equal to m. While this property is used to describe the
+approximating power of scaling functions, in the wavelet case it has
+a "dual" usage, e.g. the possibility to caracterize the order of
+isolated singularities.</font></p>
+
+<p><font size="+1">The number of vanishing moments is entirely
+determined by the coefficients h[n] of the filter h which is featured
+in the </font><font size="+1"><a href="http://cas.ensmp.fr/%7Echaplais/wavetour_presentation/Multiresolution/ScalingEq.gif" target="_blank">scaling equation.</a></font></p>
+
+<p><font size="+1">If the Fourier transform of the wavelet is p
+continuously differentiable, then the three following conditions are
+equivalent:</font></p>
+
+<ul>
+   <li><font size="+2">the wavelet </font><font face="Symbol" size="+2">y</font><font size="+2"> has p vanishing
+   moments</font>
+   
+   </li><li><font size="+2">the scaling function </font><font face="Symbol" size="+2">j</font><font size="+2"> can generate polynomials of
+   degree smaller than or equal to p</font>
+   
+   </li><li><font size="+2">the transfer function of the filter h and its
+   p-1 first derivatives vanish at </font><font face="Symbol" size="+2">w=p.</font>
+</li></ul>
+
+<h2>Compact support</h2>
+
+<p><font size="+1">Compactly supported wavelets and scaling functions
+exist.</font></p>
+
+<p><font size="+1">The scaling function is compactly supported if and
+only if the filter h has a finite support, and their supports are the
+same. If the support of the scaling function is [N</font><sub><font size="+1">1</font></sub><font size="+1">,N</font><sub><font size="+1">2</font></sub><font size="+1">], then the wavelet support
+is [(N</font><sub><font size="+1">1</font></sub><font size="+1">-N</font><sub><font size="+1">2</font></sub><font size="+1">+1)/2,(N</font><sub><font size="+1">2</font></sub><font size="+1">-N</font><sub><font size="+1">1</font></sub><font size="+1">+1)2].</font></p>
+
+<p><font size="+2">Atoms are thus compactly supported if and only if
+the filter h is.</font></p>
+
+<p><font size="+1">Daubechies has proved that, to generate an
+orthogonal wavelet with p vanishing moment, a filter h with minimum
+length 2p had to be used. Daubechies filters, which generate
+Daubechies wavelets, have a length of 2p. The Daubechies filter
+coefficients are available as </font><font size="+1"><a href="http://cas.ensmp.fr/%7Echaplais/wavetour_presentation/Tables/Daubechies/">ASCII text
+files</a></font><font size="+1"> which can be used in a spreadsheet,
+for instance.</font></p>
+
+<h2>Regularity</h2>
+
+<p><font size="+1">Wavelet regularity is much less important than
+their vanishing moments. Il is studied in a </font><font size="+1"><a href="http://cas.ensmp.fr/%7Echaplais/wavetour_presentation/ondelettes/TchamitchianUS.gif" target="_blank">theorem by
+Tchamitchian</a></font></p>
+
+<p><font size="+1">The following two properties are important:</font>
+</p>
+
+<ul>
+   <li><font size="+1">there is no compactly supported orthogonal
+   wavelet which indefinitely differentiable</font>
+   
+   </li><li><font size="+1">for Daubechies wavelets with a large p, the
+   scaling function and wavelet are l-Lipschitz, where l is of the
+   order of 0.2 p. For large classes of orthogonal wavelets, more
+   regularity implies more vanishing moments.</font>
+</li></ul>
+
+<p><font size="+1">Meyer wavelets are indefinitely differentiable
+orthogonal wavelets, with an infinite support. They are generally
+implemented in the Fourier domain.</font></p>
+
+<h2>Symmetry</h2>
+
+<p><font size="+1">Symmetric scaling functions and wavelets are
+important because they are used to build bases of regular wavelets
+over an interval, rather than the real axis. Daubechies has proved
+that, for a wavelet to be symmetric or antisymmetric, its filter must
+have a linear complex phase, and the only symmetric compactly
+supported conjugate mirror filter is the Haar filter, which
+corresponds to a discontinuous wavelet with one vanishing moment.
+Besides the Haar wavelet, there is </font><b><font size="+1">no
+symmetric compactly supported orthogonal wavelet.</font></b></p>
+
+<p align="RIGHT">
+</p><hr>
+<p></p>
+
+<p align="RIGHT"><font size="+1"><a href="http://cas.ensmp.fr/%7Echaplais/wavetour_presentation/ondelettes/Orth_Wavelets_and_Filters.html">Orthogonal
+Wavelets and Discrete Filters</a></font></p>
+
+
+</x-sas-remotesave></x-sas-window><div style="display: none; right: 1432px; top: 483px;" class="att-bubble left" id="1370943275607"></div></body></html>

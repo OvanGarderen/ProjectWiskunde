@@ -1,0 +1,97 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[dutch]{babel}
+\usepackage{a4wide}
+%\setlength{\parindent}{0pt}
+
+\newtheorem*{vraag}{Vraag}
+\theoremstyle{definition}
+\newtheorem*{uitwerking}{Uitwerking}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\f}{\varphi}
+\newcommand{\e}{\varepsilon}
+\renewcommand{\d}{\delta}
+
+\begin{document}
+
+\title{}
+\author{Jan Westerdiep}
+\maketitle
+
+
+Hilbertruimte = inproductruimte die compleet is. Laat $\Psi$ een orthonormale basis voor deze ruimte. Als nu een functie $f$ in deze ruimte geschreven wordt in $\Psi$:
+\[
+f = \sum_{\lambda} \langle f, \psi_\lambda \rangle \psi_\lambda,
+\]
+dan geldt
+\[
+||f||^2 = \sum_{\lambda} | \langle f, \psi_\lambda \rangle |^2,
+\]
+omdat
+\[
+||f||^2 = \langle f, f \rangle = \left\langle \sum_{\lambda} \langle f, \psi_\lambda \rangle \psi_\lambda, \sum_{\mu} \langle f, \psi_\mu \rangle \psi_\mu \right\rangle = \sum_{\lambda} \sum_{\mu} \left\langle \langle f, \psi_\lambda \rangle \psi_\lambda, \langle f, \psi_\mu \rangle \psi_\mu \right \rangle
+\]
+\[
+ = \sum_\lambda \sum_\mu \langle f, \psi_\lambda \rangle \overline{\langle f, \psi_\mu \rangle}\langle \psi_\lambda, \psi_\mu \rangle = \sum_\lambda \sum_\mu \langle f, \psi_\lambda \rangle \overline{\langle f, \psi_\mu \rangle} \delta_{\lambda \mu} = \sum_\lambda \langle f, \psi_\lambda \rangle \overline{\langle f, \psi_\lambda \rangle} = \sum_\lambda |\langle f, \psi_\lambda \rangle |^2.
+\]
+
+Vanaf nu zullen we aannemen dat elke functie in $L_2$ leeft, dus dat $\int |f(x)|^2 dx$ begrensd is. Verder noemen we de gehele ruimte $\Omega$.
+
+\section{Wavelets}
+Wavelets geven basisfuncties met een aantal eigenschappen. De meest prominente eigenschap is dat deze basisfuncties een compacte drager $S_\lambda$ hebben (in tegenstelling tot de Fourierbasis). Deze basisfuncties worden vaak opgeschreven als $\psi_{s,t}$ of $\psi_\lambda$. De $s$ geeft hierbij de schaling aan en $t$ de verschuiving. Gegeven een Waveletfunctie $\psi$ kunnen we de basisfunctie $\psi_\lambda$ maken door:
+\[
+	\psi_\lambda(x) = \frac{1}{\sqrt{s}}\psi\left(\frac{x-t}{s}\right).
+\]
+Het quotient is om de functie te normaliseren.
+
+Omdat wij het discrete geval bekijken, zullen we kijken naar signalen die als rij $f[k_1,\ldots,k_n]$, $n \in \N, i \in \{ 1, \ldots, n \}, k_i \in \N$ opgevat kunnen worden. Hierbij wordt $n$ de dimensie van het `rooster', oftewel de dimensie van onze ruimte. In dit geval wordt ook onze Waveletbasis discreet (aftelbaar) en geldt $\lambda = (l,j)$, met $l,j \in \N$.  Definieer nu de lengte van $\lambda$ als $|\lambda| = |(l,j)| = l$.
+
+Een tweede eigenschap is de zogenaamde orde van de wavelet. Wanneer de wavelet loodrecht staat op alle polynomen van graad $p-1$ of lager, spreken we van een wavelet van orde $p$.\footnote{Veel wavelets worden ontworpen met de wil om de orde zo groot mogelijk te maken. Daubechies, Coiflets en Symlets zijn alle drie voorbeelden hiervan.} Dit komt overeen met te zeggen dat
+\[
+	\int_{-\infty}^\infty t^k \psi(t) dt = 0 \text{ voor } k \in \{ 0, \ldots p-1 \}.
+\]
+
+Gevolg van deze eigenschap is dat we $|\langle f, \psi_\lambda\rangle |$ als volgt om kunnen schrijven:
+\[
+	|\langle f, \psi_\lambda \rangle | = |\langle f-q, \psi_\lambda \rangle | \text{ voor elk polynoom $q$ van graad $p-1$ of lager,} 
+\]
+zodat
+\[
+	|\langle f-q, \psi_\lambda \rangle | \leq ||f-q||_\Omega \cdot ||\psi_\lambda||_\Omega.
+\]
+
+De norm van deze functies is de $L_2$-norm, welke bepaald wordt door een integraal over de ruimte. Omdat $\psi_\lambda$ een compacte drager $S_\lambda$ heeft, is het laatste product net zo goed te beschouwen op $S_\lambda$:
+\[
+	||f-q||_\Omega \cdot ||\psi_\lambda||_\Omega = ||f-q||_{S_\lambda} \cdot ||\psi_\lambda||_{S_\lambda} = ||f-q||_{S_\lambda},
+\]
+omdat $\psi_\lambda$ per constructie norm 1 heeft.
+
+Lokaal kunnen we $f$ echter redelijk goed benaderen door middel van een polynoom van graad $p-1$, namelijk de eerste $p$ termen van de Taylorontwikkeling. Per definitie van deze Taylorontwikkeling weten we nu dat de restterm, $f(x)-q(x) \in \mathcal{O}(h^p)$ met $h$ de diameter van $S$.\cite[\S 31.\{3,4\}]{ross} Met andere woorden, $||f-q||_{S_\lambda} \in \mathcal{O}(h^p)$. Omdat deze drager gewoon een $N$-dimensionale kubus met zijde $2^{-|\lambda|}$ is, wordt de diameter $h$ 
+\[
+	h = \sqrt{\sum_{i=1}^n (2^{-|\lambda|})^2} = \sqrt{n 2^{-2|\lambda|}} = \sqrt{n} 2^{-|\lambda|}.
+\]
+
+Uiteindelijk krijgen we dat $||f-p||_{S_\lambda} \in \mathcal{O}(\sqrt{n} 2^{-|\lambda|d})$.
+
+TODO -- Wanneer $f$ glad genoeg is, krijgt men de beste benadering door alle $\lambda$ met $|\lambda|$ tot een bepaald niveau, zeg $M$, te pakken. Bekijk de fout:
+\[
+	\left\| f - \sum_{|\lambda| \leq M} \langle f, \psi_\lambda \rangle \psi_\lambda \right\|_\Omega = \sum_{|\lambda| > M} | \langle f, \psi_\lambda \rangle |^2 \in \mathcal{O}\left(\sum_{|\lambda| > M} \sqrt{n} 2^{-|\lambda|p} \right) = \mathcal{O}(\sqrt{n}2^{-Mp}),
+\]
+waarbij het laatste isteken voortkomt uit
+\[
+	\sum_{k=M+1}^\infty \sqrt{n} \, 2^{- kp} = \sqrt{n} \frac{2^{-Mp}}{2^p-1}
+\]
+en de notie dat $p$ constant is voor een keuze van de wavelet.
+
+Voor elke dimensie van de ruimte zitten er $\mathcal{O}(2^M)$ basisfuncties in ``alle $\lambda$ met $|\lambda| \leq M$''. We hebben $n$ dimensies, dus er zijn $2^{Mn} = K $ wavelets die zorgen voor een fout van $\mathcal{O}(\sqrt{n} 2^{-Mp})$. Omschrijven geeft dat dit overeenkomt met een fout van $\mathcal{O}(\sqrt{n} K^{-p/n})$. We zullen dit zodirect vergelijken met de fout die het Tensorproduct geeft om een uitspraak te doen over een van onze bevindingen.
+
+TODO: bibtex Ross
+
+\end{document}

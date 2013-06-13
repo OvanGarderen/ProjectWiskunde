@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        
+    <title>Intuition behind decay of Fourier coefficients - Mathematics Stack Exchange</title>
+    <link rel="shortcut icon" href="http://cdn.sstatic.net/math/img/favicon.ico">
+    <link rel="apple-touch-icon image_src" href="http://cdn.sstatic.net/math/img/apple-touch-icon.png">
+    <link rel="search" type="application/opensearchdescription+xml" title="Mathematics Stack Exchange" href="http://math.stackexchange.com/opensearch.xml">
+    
+    <script src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/ga.js" async="" type="text/javascript"></script><script src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/quant.js" async="" type="text/javascript"></script><script src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/adzerk2_2_17_76" async="" type="text/javascript"></script><script type="text/javascript" src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/jquery.js"></script>
+    <script type="text/javascript" src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/stub.js"></script>
+    <link rel="stylesheet" type="text/css" href="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/all.css">
+    
+    <link rel="canonical" href="http://math.stackexchange.com/questions/93066/intuition-behind-decay-of-fourier-coefficients">
+    <link rel="alternate" type="application/atom+xml" title="Feed for question 'Intuition behind decay of Fourier coefficients'" href="http://math.stackexchange.com/feeds/question/93066">
+<script src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/citation.js" type="text/javascript"></script>    <script type="text/javascript">
+        
+        StackExchange.ready(function () {
+            StackExchange.using("postValidation", function () {
+                StackExchange.postValidation.initOnBlurAndSubmit($('#post-form'), 2, 'answer');
+            });
+
+            
+            StackExchange.question.init({canOpenBounty:true,votesCast:[],showCitation:true,totalCommentCount:0,shownCommentCount:0,highlightColor:'#F4A83D',backgroundColor:'#FFF',questionId:93066});
+
+            styleCode();
+
+                StackExchange.realtime.subscribeToQuestion('69', '93066');
+            
+                
+        });
+    </script>
+
+                <script type="text/x-mathjax-config;executed=true">
+                    MathJax.Hub.Config({"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"], linebreaks: { automatic:true }, EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+                                        tex2jax: { inlineMath: [ ["$", "$"], ["\\\\(","\\\\)"] ], displayMath: [ ["$$","$$"], ["\\[", "\\]"] ], processEscapes: true, ignoreClass: "tex2jax_ignore|dno" },
+                                        TeX: {  noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, Macros: { href: "{}" } },
+                                        messageStyle: "none"
+                });
+                </script>
+                <script type="text/javascript" src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/MathJax.js"></script>                
+
+    <script type="text/javascript">
+        StackExchange.ready(function () {
+            StackExchange.realtime.init('ws://sockets.ny.stackexchange.com:80');
+            StackExchange.realtime.subscribeToInboxNotifications();
+                    StackExchange.realtime.subscribeToReputationNotifications('69');
+                });
+    </script>
+    <script type="text/javascript">
+        StackExchange.init({"stackAuthUrl":"https://stackauth.com","serverTime":1370954050,"enableUserHovercards":true,"site":{"name":"Mathematics Stack Exchange","description":"Q&A for people studying math at any level and professionals in related fields","isNoticesTabEnabled":true,"recaptchaPublicKey":"6LdsB7sSAAAAAAzjgEF_Hd8vXv-C42sa_KyofaGR","enableSocialMediaInSharePopup":true},"user":{"fkey":"284ca47b8566a9575118568fee565bff","isRegistered":true,"userId":43729,"accountId":438664,"gravatar":"<div class=\"\"><img src=\"http://www.gravatar.com/avatar/afe663be23a9152d66b6a68a8e303bb0?s=32&d=identicon&r=PG\" alt=\"\" width=\"32\" height=\"32\"></div>","profileUrl":"http://math.stackexchange.com/users/43729/jan-westerdiep","notificationsUnviewedCount":0,"inboxUnviewedCount":0}});
+        StackExchange.using.setCacheBreakers({"js/prettify-full.js":"6c261bebf56a","js/moderator.js":"f96f7e4ee5dc","js/full-anon.js":"0916c60ba5ef","js/full.js":"4890977376c7","js/wmd.js":"028571a2bde1","js/third-party/jquery.autocomplete.min.js":"e5f01e97f7c3","js/mobile.js":"6eb68240242f","js/help.js":"1745cc3d535a","js/tageditor.js":"450c9e8426fc","js/tageditornew.js":"b6c68ad4c7dd","js/inline-tag-editing.js":"8e84e8a137f7","js/revisions.js":"7273bb714bba","js/review.js":"56c3941a5bfc","js/tagsuggestions.js":"aa48ef6154df","js/post-validation.js":"4aec80fc0009","js/explore-qlist.js":"1c5bbd79b562"});
+        StackExchange.using.setCacheBreakers({"js/mathjax-editing.js":"6da1b6cfe19f"});
+    </script>
+    <script type="text/javascript">
+        StackExchange.using("gps", function() {
+             StackExchange.gps.init(true);
+        });
+    </script>
+    
+<script src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/full.js" type="text/javascript" async=""></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Hover_Arrow {position: absolute; width: 15px; height: 11px; cursor: pointer}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 5px 0px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 1px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; color: #666666}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuRadioCheck {position: absolute; left: .7em}
+.MathJax_MenuLabel {padding: 1px 2em 3px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #DDDDDD; margin: 4px 3px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: #606872; color: white}
+.MathJax_Menu_Close {position: absolute; width: 31px; height: 31px; top: -15px; left: -15px}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1px; bottom: 2px; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><script src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/post-validation.js" type="text/javascript" async=""></script><script src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/wmd.js" type="text/javascript" async=""></script><script src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/mathjax-editing.js" type="text/javascript" async=""></script><style type="text/css">.MathJax_Display {text-align: center; margin: 1em 0em; position: relative; display: block; width: 100%}
+.MathJax .merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+#MathJax_Tooltip {background-color: InfoBackground; color: InfoText; border: 1px solid black; box-shadow: 2px 2px 5px #AAAAAA; -webkit-box-shadow: 2px 2px 5px #AAAAAA; -moz-box-shadow: 2px 2px 5px #AAAAAA; -khtml-box-shadow: 2px 2px 5px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true'); padding: 3px 4px; z-index: 401; position: absolute; left: 0; top: 0; width: auto; height: auto; display: none}
+.MathJax {display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 100%; font-size-adjust: none; text-indent: 0; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; direction: ltr; border: 0; padding: 0; margin: 0}
+.MathJax img, .MathJax nobr, .MathJax a {border: 0; padding: 0; margin: 0; max-width: none; max-height: none; vertical-align: 0; line-height: normal; text-decoration: none}
+img.MathJax_strut {border: 0 !important; padding: 0 !important; margin: 0 !important; vertical-align: 0 !important}
+.MathJax span {display: inline; position: static; border: 0; padding: 0; margin: 0; vertical-align: 0; line-height: normal; text-decoration: none}
+.MathJax nobr {white-space: nowrap ! important}
+.MathJax img {display: inline ! important; float: none ! important}
+.MathJax * {transition: none; -webkit-transition: none; -moz-transition: none; -ms-transition: none; -o-transition: none}
+.MathJax_Processing {visibility: hidden; position: fixed; width: 0; height: 0; overflow: hidden}
+.MathJax_Processed {display: none!important}
+.MathJax_ExBox {display: block; overflow: hidden; width: 1px; height: 60ex}
+.MathJax .MathJax_EmBox {display: block; overflow: hidden; width: 1px; height: 60em}
+.MathJax .MathJax_HitBox {cursor: text; background: white; opacity: 0; filter: alpha(opacity=0)}
+.MathJax .MathJax_HitBox * {filter: none; opacity: 1; background: transparent}
+#MathJax_Tooltip * {filter: none; opacity: 1; background: transparent}
+@font-face {font-family: MathJax_Blank; src: url('about:blank')}
+.MathJax .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+<body class="question-page"><div style="visibility: hidden; overflow: hidden; position: absolute; top: 0px; height: 1px; width: auto; padding: 0px; border: 0px none; margin: 0px; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal;"><div id="MathJax_Hidden"></div></div><div style="display: none;" id="MathJax_Message"></div>
+    <noscript><div id="noscript-padding"></div></noscript>
+    <div id="notify-container"></div>
+    <div id="overlay-header"></div>
+    <div id="custom-header"></div>
+
+    <div class="container">
+        <div id="header">
+            <div id="portalLink">
+                <a class="genu" onclick="StackExchange.ready(function(){genuwine.click();});return false;">Stack Exchange</a>
+            </div>
+            <div id="topbar">
+                <div id="hlinks">
+                    
+<span id="hlinks-user">        <span class="profile-triangle">▼</span><a href="http://math.stackexchange.com/users/43729/jan-westerdiep" class="profile-link">Jan Westerdiep</a>&nbsp;<a href="http://math.stackexchange.com/users/43729/jan-westerdiep?tab=reputation"><span class="reputation-score" title="your reputation; view reputation changes" dir="ltr">101</span></a>
+ <span class="lsep">|</span>
+
+</span>
+<span id="hlinks-nav"></span>
+<span id="hlinks-custom">            <a href="http://chat.stackexchange.com/">chat</a>
+
+ <span class="lsep">|</span>
+                    <a href="http://meta.math.stackexchange.com/">meta</a>
+
+ <span class="lsep">|</span>
+            <a href="http://math.stackexchange.com/about">about</a>
+
+ <span class="lsep">|</span>
+        <a href="http://math.stackexchange.com/help">help</a>
+</span>
+                </div>
+                <div id="hsearch">
+                    <form id="search" action="/search" method="get" autocomplete="off">
+                        <div>
+                            <input autocomplete="off" name="q" class="textbox" placeholder="search" tabindex="1" maxlength="240" size="28" type="text">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br class="cbt">
+            <div id="hlogo">
+                <a href="http://math.stackexchange.com/">
+                    Mathematics
+                </a>
+            </div>
+            <div id="hmenus">
+                <div class="nav mainnavs ">
+                    <ul>
+                            <li class="youarehere"><a id="nav-questions" href="http://math.stackexchange.com/questions">Questions</a></li>
+                            <li><a id="nav-tags" href="http://math.stackexchange.com/tags">Tags</a></li>
+                            <li><a id="nav-users" href="http://math.stackexchange.com/users">Users</a></li>
+                            <li><a id="nav-badges" href="http://math.stackexchange.com/badges">Badges</a></li>
+                            <li><a id="nav-unanswered" href="http://math.stackexchange.com/unanswered">Unanswered</a></li>
+                    </ul>
+                </div>
+                <div class="nav askquestion">
+                    <ul>
+                        <li>
+                            <a id="nav-askquestion" href="http://math.stackexchange.com/questions/ask">Ask Question</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+
+
+
+        <div id="content">
+            
+
+<div itemscope="" itemtype="http://schema.org/Article">
+<link itemprop="image" href="http://cdn.sstatic.net/math/img/apple-touch-icon.png">
+<div id="question-header">
+    <h1 itemprop="name"><a href="http://math.stackexchange.com/questions/93066/intuition-behind-decay-of-fourier-coefficients" class="question-hyperlink">Intuition behind decay of Fourier coefficients</a></h1>
+</div>
+<div id="mainbar">
+
+
+
+<div class="question" data-questionid="93066" id="question">
+    
+        <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input value="93066" type="hidden">
+    <a class="vote-up-off" title="This question shows research effort; it is useful and clear (click again to undo)">up vote</a>
+    <span class="vote-count-post ">2</span>
+    <a class="vote-down-off" title="This question does not show any research effort; it is unclear or not useful (click again to undo)">down vote</a>
+    
+    <a class="star-off" href="#" title="This is a favorite question (click again to undo)">favorite</a>
+    <div class="favoritecount"><b>2</b></div>   
+
+</div>
+
+            </td>
+            
+<td class="postcell">
+<div>
+    <div class="post-text" itemprop="description">
+        <p>Many other posts have discussed the standard result that the 
+smoothness of a function is related to the rate at which its Fourier 
+coefficients decay. For example, there are proofs that show that if <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-1-Frame" class="MathJax"><nobr><span style="width: 0.483em; display: inline-block;" id="MathJax-Span-1" class="math"><span style="display: inline-block; position: relative; width: 0.406em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.699em, 1000em, 2.932em, -0.669em); top: -2.551em; left: 0em;"><span id="MathJax-Span-2" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-3" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.146em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.151em; vertical-align: -0.305em;"></span></span></nobr></span><script id="MathJax-Element-1" type="math/tex">f</script> is of class <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-2-Frame" class="MathJax"><nobr><span style="width: 1.35em; display: inline-block;" id="MathJax-Span-4" class="math"><span style="display: inline-block; position: relative; width: 1.159em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.095em, 1000em, 2.337em, -0.456em); top: -2.145em; left: 0em;"><span id="MathJax-Span-5" class="mrow"><span id="MathJax-Span-6" class="msubsup"><span style="display: inline-block; position: relative; width: 1.175em; height: 0px;"><span style="position: absolute; clip: rect(1.711em, 1000em, 2.743em, -0.456em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-7" class="mi">C<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.022em;"></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.654em; left: 0.752em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-8" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.012em;"></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.145em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.161em; vertical-align: -0.087em;"></span></span></nobr></span><script id="MathJax-Element-2" type="math/tex">C^k</script> then <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-3-Frame" class="MathJax"><nobr><span style="width: 1.483em; display: inline-block;" id="MathJax-Span-9" class="math"><span style="display: inline-block; position: relative; width: 1.275em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.701em, 1000em, 2.881em, -0.455em); top: -2.551em; left: 0em;"><span id="MathJax-Span-10" class="mrow"><span id="MathJax-Span-11" class="texatom"><span id="MathJax-Span-12" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-13" class="mo">|</span></span></span><span id="MathJax-Span-14" class="msubsup"><span style="display: inline-block; position: relative; width: 0.887em; height: 0px;"><span style="position: absolute; clip: rect(1.936em, 1000em, 2.736em, -0.492em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-15" class="mi">c</span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.111em; left: 0.464em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-16" class="mi">n</span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span><span id="MathJax-Span-17" class="texatom"><span id="MathJax-Span-18" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-19" class="mo">|</span></span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.091em; vertical-align: -0.246em;"></span></span></nobr></span><script id="MathJax-Element-3" type="math/tex">|c_n|</script> tends to zero faster than <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-4-Frame" class="MathJax"><nobr><span style="width: 2.017em; display: inline-block;" id="MathJax-Span-20" class="math"><span style="display: inline-block; position: relative; width: 1.739em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.491em, 1000em, 2.739em, -0.455em); top: -2.551em; left: 0em;"><span id="MathJax-Span-21" class="mrow"><span id="MathJax-Span-22" class="texatom"><span id="MathJax-Span-23" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-24" class="mo">|</span></span></span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-25" class="mi">n</span><span id="MathJax-Span-26" class="msubsup"><span style="display: inline-block; position: relative; width: 1.061em; height: 0px;"><span style="position: absolute; clip: rect(1.701em, 1000em, 2.739em, -0.455em); top: -2.551em; left: 0em;"><span id="MathJax-Span-27" class="texatom"><span id="MathJax-Span-28" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-29" class="mo">|</span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.664em; left: 0.174em;"><span id="MathJax-Span-30" class="texatom"><span id="MathJax-Span-31" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-32" class="mo">−</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-33" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.012em;"></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.168em; vertical-align: -0.083em;"></span></span></nobr></span><script id="MathJax-Element-4" type="math/tex">|n|^{-k}</script> as <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-5-Frame" class="MathJax"><nobr><span style="width: 4.217em; display: inline-block;" id="MathJax-Span-34" class="math"><span style="display: inline-block; position: relative; width: 3.652em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.875em, 1000em, 2.812em, -0.508em); top: -2.551em; left: 0em;"><span id="MathJax-Span-35" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-36" class="mi">n</span><span style="font-family: STIXGeneral; padding-left: 0.313em;" id="MathJax-Span-37" class="mo">→</span><span style="font-family: STIXGeneral; padding-left: 0.313em;" id="MathJax-Span-38" class="mo">±</span><span style="font-family: STIXGeneral;" id="MathJax-Span-39" class="mi">∞</span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 0.811em; vertical-align: -0.167em;"></span></span></nobr></span><script id="MathJax-Element-5" type="math/tex">n\to\pm\infty</script>.</p>
+
+<p>Is there a intuitive geometric picture to explain this? If <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-6-Frame" class="MathJax"><nobr><span style="width: 0.483em; display: inline-block;" id="MathJax-Span-40" class="math"><span style="display: inline-block; position: relative; width: 0.406em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.699em, 1000em, 2.932em, -0.669em); top: -2.551em; left: 0em;"><span id="MathJax-Span-41" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-42" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.146em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.151em; vertical-align: -0.305em;"></span></span></nobr></span><script id="MathJax-Element-6" type="math/tex">f</script>
+ is not differentiable imagine slowly changing the function so that it 
+becomes twice differentiable, then the Fourier coefficients <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-7-Frame" class="MathJax"><nobr><span style="width: 11.083em; display: inline-block;" id="MathJax-Span-43" class="math"><span style="display: inline-block; position: relative; width: 9.623em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.48em, 1000em, 3.134em, -0.492em); top: -2.551em; left: 0em;"><span id="MathJax-Span-44" class="mrow"><span id="MathJax-Span-45" class="msubsup"><span style="display: inline-block; position: relative; width: 0.887em; height: 0px;"><span style="position: absolute; clip: rect(1.936em, 1000em, 2.736em, -0.492em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-46" class="mi">c</span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.111em; left: 0.464em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-47" class="mi">n</span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span><span style="font-family: STIXGeneral; padding-left: 0.313em;" id="MathJax-Span-48" class="mo">=</span><span style="padding-left: 0.432em; padding-right: 0.12em;" id="MathJax-Span-49" class="mfrac"><span style="display: inline-block; position: relative; width: 0.874em; height: 0px;"><span style="position: absolute; clip: rect(1.609em, 1000em, 2.435em, -0.443em); top: -2.68em; left: 50%; margin-left: -0.174em;"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-50" class="mn">1</span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(1.609em, 1000em, 2.448em, -0.501em); top: -1.864em; left: 50%; margin-left: -0.377em;"><span id="MathJax-Span-51" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-52" class="mn">2</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-53" class="mi">π<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.023em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(0.855em, 1000em, 1.275em, -0.522em); top: -1.321em; left: 0em;"><span style="border-left: 0.874em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.25px; vertical-align: 0em;"></span><span style="display: inline-block; width: 0px; height: 1.101em;"></span></span></span></span><span style="padding-left: 0.188em;" id="MathJax-Span-54" class="msubsup"><span style="display: inline-block; position: relative; width: 1.402em; height: 0px;"><span style="position: absolute; clip: rect(1.555em, 1000em, 3.047em, -0.49em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral; vertical-align: -0.002em;" id="MathJax-Span-55" class="mo">∫<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.18em;"></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; clip: rect(1.784em, 1000em, 2.448em, -0.508em); top: -2.81em; left: 0.742em;"><span id="MathJax-Span-56" class="texatom"><span id="MathJax-Span-57" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-58" class="mi">π<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.023em;"></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(1.784em, 1000em, 2.448em, -0.476em); top: -1.904em; left: 0.458em;"><span id="MathJax-Span-59" class="texatom"><span id="MathJax-Span-60" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-61" class="mo">−</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-62" class="mi">π<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.023em;"></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span><span style="font-family: STIXGeneral; font-style: italic; padding-left: 0.188em;" id="MathJax-Span-63" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.146em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-64" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-65" class="mi">θ<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.014em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-66" class="mo">)</span><span id="MathJax-Span-67" class="msubsup"><span style="display: inline-block; position: relative; width: 1.93em; height: 0px;"><span style="position: absolute; clip: rect(1.936em, 1000em, 2.736em, -0.491em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-68" class="mi">e</span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.624em; left: 0.464em;"><span id="MathJax-Span-69" class="texatom"><span id="MathJax-Span-70" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-71" class="mo">−</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-72" class="mi">i</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-73" class="mi">n</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-74" class="mi">θ<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.01em;"></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-75" class="mi">d<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.027em;"></span></span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-76" class="mi">θ<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.014em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.635em; vertical-align: -0.538em;"></span></span></nobr></span><script id="MathJax-Element-7" type="math/tex">c_n = \frac{1}{2\pi}\int_{-\pi}^{\pi}f(\theta) e^{-in\theta}d\theta</script> should change their rate of decay, but how is that obvious from the definition of the Fourier coefficients.</p>
+
+<p>What about considering <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-8-Frame" class="MathJax"><nobr><span style="width: 12.817em; display: inline-block;" id="MathJax-Span-77" class="math"><span style="display: inline-block; position: relative; width: 11.13em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.348em, 1000em, 3.134em, -0.492em); top: -2.551em; left: 0em;"><span id="MathJax-Span-78" class="mrow"><span id="MathJax-Span-79" class="msubsup"><span style="display: inline-block; position: relative; width: 0.887em; height: 0px;"><span style="position: absolute; clip: rect(1.936em, 1000em, 2.736em, -0.492em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-80" class="mi">c</span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.111em; left: 0.464em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-81" class="mi">n</span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-82" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-83" class="mi">θ<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.014em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-84" class="mo">)</span><span style="font-family: STIXGeneral; padding-left: 0.313em;" id="MathJax-Span-85" class="mo">=</span><span style="padding-left: 0.432em; padding-right: 0.12em;" id="MathJax-Span-86" class="mfrac"><span style="display: inline-block; position: relative; width: 0.874em; height: 0px;"><span style="position: absolute; clip: rect(1.609em, 1000em, 2.435em, -0.443em); top: -2.68em; left: 50%; margin-left: -0.174em;"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-87" class="mn">1</span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(1.609em, 1000em, 2.448em, -0.501em); top: -1.864em; left: 50%; margin-left: -0.377em;"><span id="MathJax-Span-88" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-89" class="mn">2</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-90" class="mi">π<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.023em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(0.855em, 1000em, 1.275em, -0.522em); top: -1.321em; left: 0em;"><span style="border-left: 0.874em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.25px; vertical-align: 0em;"></span><span style="display: inline-block; width: 0px; height: 1.101em;"></span></span></span></span><span style="padding-left: 0.188em;" id="MathJax-Span-91" class="msubsup"><span style="display: inline-block; position: relative; width: 1.402em; height: 0px;"><span style="position: absolute; clip: rect(1.555em, 1000em, 3.047em, -0.49em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral; vertical-align: -0.002em;" id="MathJax-Span-92" class="mo">∫<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.18em;"></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; clip: rect(1.608em, 1000em, 2.443em, -0.503em); top: -2.81em; left: 0.742em;"><span id="MathJax-Span-93" class="texatom"><span id="MathJax-Span-94" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-95" class="mi">θ<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.01em;"></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(1.784em, 1000em, 2.448em, -0.476em); top: -1.904em; left: 0.458em;"><span id="MathJax-Span-96" class="texatom"><span id="MathJax-Span-97" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-98" class="mo">−</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-99" class="mi">π<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.023em;"></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span><span style="font-family: STIXGeneral; font-style: italic; padding-left: 0.188em;" id="MathJax-Span-100" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.146em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-101" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-102" class="mi">ϕ</span><span style="font-family: STIXGeneral;" id="MathJax-Span-103" class="mo">)</span><span id="MathJax-Span-104" class="msubsup"><span style="display: inline-block; position: relative; width: 1.988em; height: 0px;"><span style="position: absolute; clip: rect(1.936em, 1000em, 2.736em, -0.491em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-105" class="mi">e</span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.624em; left: 0.464em;"><span id="MathJax-Span-106" class="texatom"><span id="MathJax-Span-107" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-108" class="mo">−</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-109" class="mi">i</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-110" class="mi">n</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-111" class="mi">ϕ</span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-112" class="mi">d<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.027em;"></span></span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-113" class="mi">ϕ</span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.787em; vertical-align: -0.538em;"></span></span></nobr></span><script id="MathJax-Element-8" type="math/tex">c_n(\theta) = \frac{1}{2\pi}\int_{-\pi}^{\theta}f(\phi) e^{-in\phi}d\phi</script>. Is there some kind of bad behavior in <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-9-Frame" class="MathJax"><nobr><span style="width: 2.35em; display: inline-block;" id="MathJax-Span-114" class="math"><span style="display: inline-block; position: relative; width: 2.029em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.699em, 1000em, 2.902em, -0.492em); top: -2.551em; left: 0em;"><span id="MathJax-Span-115" class="mrow"><span id="MathJax-Span-116" class="msubsup"><span style="display: inline-block; position: relative; width: 0.887em; height: 0px;"><span style="position: absolute; clip: rect(1.936em, 1000em, 2.736em, -0.492em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-117" class="mi">c</span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.111em; left: 0.464em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-118" class="mi">n</span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-119" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-120" class="mi">θ<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.014em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-121" class="mo">)</span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.117em; vertical-align: -0.27em;"></span></span></nobr></span><script id="MathJax-Element-9" type="math/tex">c_n(\theta)</script> when it encounters a discontinuity in <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-10-Frame" class="MathJax"><nobr><span style="width: 2.95em; display: inline-block;" id="MathJax-Span-122" class="math"><span style="display: inline-block; position: relative; width: 2.551em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.489em, 1000em, 2.932em, -0.669em); top: -2.551em; left: 0em;"><span id="MathJax-Span-123" class="mrow"><span id="MathJax-Span-124" class="msubsup"><span style="display: inline-block; position: relative; width: 1.386em; height: 0px;"><span style="position: absolute; clip: rect(1.699em, 1000em, 2.932em, -0.669em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-125" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.146em;"></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.666em; left: 0.5em;"><span id="MathJax-Span-126" class="texatom"><span id="MathJax-Span-127" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-128" class="mo">(</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-129" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.012em;"></span></span><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-130" class="mo">)</span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-131" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-132" class="mi">θ<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.014em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-133" class="mo">)</span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.393em; vertical-align: -0.305em;"></span></span></nobr></span><script id="MathJax-Element-10" type="math/tex">f^{(k)}(\theta)</script> that would prevent <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-11-Frame" class="MathJax"><nobr><span style="width: 2.35em; display: inline-block;" id="MathJax-Span-134" class="math"><span style="display: inline-block; position: relative; width: 2.029em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.699em, 1000em, 2.902em, -0.492em); top: -2.551em; left: 0em;"><span id="MathJax-Span-135" class="mrow"><span id="MathJax-Span-136" class="msubsup"><span style="display: inline-block; position: relative; width: 0.887em; height: 0px;"><span style="position: absolute; clip: rect(1.936em, 1000em, 2.736em, -0.492em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-137" class="mi">c</span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.111em; left: 0.464em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-138" class="mi">n</span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-139" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-140" class="mi">θ<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.014em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-141" class="mo">)</span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.117em; vertical-align: -0.27em;"></span></span></nobr></span><script id="MathJax-Element-11" type="math/tex">c_n(\theta)</script> from being small.</p>
+
+    </div>
+    <div class="post-taglist">
+        <a href="http://math.stackexchange.com/questions/tagged/fourier-analysis" class="post-tag" title="show questions tagged 'fourier-analysis'" rel="tag">fourier-analysis</a> <a href="http://math.stackexchange.com/questions/tagged/fourier-series" class="post-tag" title="show questions tagged 'fourier-series'" rel="tag">fourier-series</a> 
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="http://math.stackexchange.com/q/93066/43729" title="short permalink to this question" class="short-link" id="link-post-93066">share</a><span class="lsep">|</span><a href="http://math.stackexchange.com/posts/93066/edit" class="suggest-edit-post" title="revise and improve this post">edit</a><span class="lsep">|</span><a id="flag-post-93066" href="#" title="flag this post for serious problems or moderator attention">flag</a></div>        
+    </td>
+    <td class="post-signature" align="right">
+
+
+    <div class="user-info ">
+        <div class="user-action-time">
+                            <a href="http://math.stackexchange.com/posts/93066/revisions" title="show all edits to this post">edited <span title="2011-12-21 02:38:56Z" class="relativetime">Dec 21 '11 at 2:38</span></a>
+
+        </div>
+        <div class="user-gravatar32">
+            <a href="http://math.stackexchange.com/users/5363/t-b"><div class=""><img src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/a355f623ecf0dd63f8db1a25720f89c5.png" alt="" height="32" width="32"></div></a>
+        </div>
+        <div class="user-details">
+            <a href="http://math.stackexchange.com/users/5363/t-b">t.b.</a><br>
+            <span class="reputation-score" title="reputation score 43409" dir="ltr">43.4k</span><span title="3 gold badges"><span class="badge1"></span><span class="badgecount">3</span></span><span title="112 silver badges"><span class="badge2"></span><span class="badgecount">112</span></span><span title="195 bronze badges"><span class="badge3"></span><span class="badgecount">195</span></span>
+        </div>
+    </div>
+    </td>
+    <td class="post-signature owner">
+        
+
+    <div class="user-info ">
+        <div class="user-action-time">
+                                    asked <span title="2011-12-21 00:06:14Z" class="relativetime">Dec 21 '11 at 0:06</span>
+        </div>
+        <div class="user-gravatar32">
+            <a href="http://math.stackexchange.com/users/21556/user782220"><div class=""><img src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/48e5a8f8e4739bf7930a0de03311b634.png" alt="" height="32" width="32"></div></a>
+        </div>
+        <div class="user-details">
+            <a href="http://math.stackexchange.com/users/21556/user782220">user782220</a><br>
+            <span class="reputation-score" title="reputation score" dir="ltr">700</span><span title="2 silver badges"><span class="badge2"></span><span class="badgecount">2</span></span><span title="17 bronze badges"><span class="badge3"></span><span class="badgecount">17</span></span>
+        </div>
+    </div>
+
+    </td>
+    </tr>
+    </tbody></table>
+</div>
+</td>
+        </tr>
+
+
+<tr>
+<td class="votecell"></td>
+<td>
+    <div id="comments-93066" class="comments dno">
+        <table>
+        <tbody>
+        
+            <tr><td></td><td></td></tr>
+        
+        </tbody>
+    
+        <tfoot>
+            <tr>
+                <td></td>
+                <td class="comment-form"><form id="add-comment-93066"></form></td>
+            </tr>
+        </tfoot>
+    
+        </table>
+    </div>
+    <a id="comments-link-93066" class="comments-link" data-comments-count="0" title="ask author for clarification about this post">add comment</a>
+</td>
+</tr>                  <tr class="bounty-notification">
+          <td class="votecell"></td>
+          <td>
+          <div style="margin-top:20px">
+            <a class="bounty-link bounty" title="offer some of your reputation for better answers">
+                start a bounty
+            </a>
+          </div>
+          </td>
+          </tr>
+    </tbody></table>    
+</div>
+
+
+<div id="answers">
+
+    <a name="tab-top"></a>
+    <div id="answers-header">
+        <div class="subheader answers-subheader">
+            <h2>
+                    1 Answer
+            </h2>
+            <div id="tabs">
+                <a href="http://math.stackexchange.com/questions/93066/intuition-behind-decay-of-fourier-coefficients?answertab=active#tab-top" title="Answers with the latest activity first">active</a>
+<a href="http://math.stackexchange.com/questions/93066/intuition-behind-decay-of-fourier-coefficients?answertab=oldest#tab-top" title="Answers in the order they were provided">oldest</a>
+<a class="youarehere" href="http://math.stackexchange.com/questions/93066/intuition-behind-decay-of-fourier-coefficients?answertab=votes#tab-top" title="Answers with the highest score first">votes</a>
+
+            </div>
+        </div>    
+    </div>    
+
+
+
+
+  
+<a name="93090"></a>
+<div id="answer-93090" class="answer accepted-answer" data-answerid="93090">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input value="93090" type="hidden">
+    <a class="vote-up-off" title="This answer is useful (click again to undo)">up vote</a>
+    <span class="vote-count-post ">3</span>
+    <a class="vote-down-off" title="This answer is not useful (click again to undo)">down vote</a>
+    
+
+            <span class="vote-accepted-on load-accepted-answer-date" title="loading when this answer was accepted...">accepted</span>
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text"><p>It really boils down to integration by parts.. the <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-12-Frame" class="MathJax"><nobr><span style="width: 0.617em; display: inline-block;" id="MathJax-Span-142" class="math"><span style="display: inline-block; position: relative; width: 0.522em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.936em, 1000em, 2.734em, -0.508em); top: -2.551em; left: 0em;"><span id="MathJax-Span-143" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-144" class="mi">n</span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 0.651em; vertical-align: -0.077em;"></span></span></nobr></span><script id="MathJax-Element-12" type="math/tex">n</script>th Fourier coefficient of <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-13-Frame" class="MathJax"><nobr><span style="width: 1.55em; display: inline-block;" id="MathJax-Span-145" class="math"><span style="display: inline-block; position: relative; width: 1.333em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(0.775em, 1000em, 2.793em, -0.402em); top: -2.145em; left: 0em;"><span id="MathJax-Span-146" class="mrow"><span id="MathJax-Span-147" class="texatom"><span id="MathJax-Span-148" class="mrow"><span style="padding-left: 0.12em; padding-right: 0.12em;" id="MathJax-Span-149" class="mfrac"><span style="display: inline-block; position: relative; width: 1.106em; height: 0px;"><span style="position: absolute; clip: rect(1.456em, 1000em, 2.581em, -0.511em); top: -2.826em; left: 50%; margin-left: -0.493em;"><span id="MathJax-Span-150" class="mrow"><span id="MathJax-Span-151" class="msubsup"><span style="display: inline-block; position: relative; width: 0.688em; height: 0px;"><span style="position: absolute; clip: rect(1.604em, 1000em, 2.444em, -0.511em); top: -2.261em; left: 0em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-152" class="mi">d<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.019em;"></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; top: -2.435em; left: 0.404em;"><span style="font-size: 50%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-153" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.009em;"></span></span><span style="display: inline-block; width: 0px; height: 2.145em;"></span></span></span></span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-154" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.103em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(1.541em, 1000em, 2.444em, -0.511em); top: -1.796em; left: 50%; margin-left: -0.464em;"><span id="MathJax-Span-155" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-156" class="mi">d<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.019em;"></span></span><span id="MathJax-Span-157" class="msubsup"><span style="display: inline-block; position: relative; width: 0.571em; height: 0px;"><span style="position: absolute; clip: rect(1.701em, 1000em, 2.443em, -0.495em); top: -2.261em; left: 0em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-158" class="mi">t<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.013em;"></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; top: -2.349em; left: 0.286em;"><span style="font-size: 50%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-159" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.009em;"></span></span><span style="display: inline-block; width: 0px; height: 2.145em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(0.855em, 1000em, 1.275em, -0.522em); top: -1.321em; left: 0em;"><span style="border-left: 1.106em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.25px; vertical-align: 0em;"></span><span style="display: inline-block; width: 0px; height: 1.101em;"></span></span></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.145em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 2.054em; vertical-align: -0.611em;"></span></span></nobr></span><script id="MathJax-Element-13" type="math/tex">{d^k f \over dt^k}</script> is given by <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-14-Frame" class="MathJax"><nobr><span style="width: 4.217em; display: inline-block;" id="MathJax-Span-160" class="math"><span style="display: inline-block; position: relative; width: 3.652em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.189em, 1000em, 2.932em, -0.474em); top: -2.551em; left: 0em;"><span id="MathJax-Span-161" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-162" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-163" class="mi">i</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-164" class="mi">n</span><span id="MathJax-Span-165" class="msubsup"><span style="display: inline-block; position: relative; width: 0.771em; height: 0px;"><span style="position: absolute; clip: rect(1.701em, 1000em, 2.902em, -0.493em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral;" id="MathJax-Span-166" class="mo">)</span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.664em; left: 0.348em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-167" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.012em;"></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span><span id="MathJax-Span-168" class="texatom"><span id="MathJax-Span-169" class="mrow"><span id="MathJax-Span-170" class="munderover"><span style="display: inline-block; position: relative; width: 0.584em; height: 0px;"><span style="position: absolute; clip: rect(1.699em, 1000em, 2.932em, -0.669em); top: -2.551em; left: 0.029em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-171" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.146em;"></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; clip: rect(1.715em, 1000em, 2.428em, -0.498em); top: -3.077em; left: 0.12em;"><span style="font-family: STIXGeneral;" id="MathJax-Span-172" class="mo">^</span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span></span></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-173" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-174" class="mi">n</span><span style="font-family: STIXGeneral;" id="MathJax-Span-175" class="mo">)</span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.738em; vertical-align: -0.305em;"></span></span></nobr></span><script id="MathJax-Element-14" type="math/tex">(in)^k \hat{f}(n)</script>, which you prove by integrating by parts <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-15-Frame" class="MathJax"><nobr><span style="width: 0.55em; display: inline-block;" id="MathJax-Span-176" class="math"><span style="display: inline-block; position: relative; width: 0.464em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.694em, 1000em, 2.736em, -0.508em); top: -2.551em; left: 0em;"><span id="MathJax-Span-177" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-178" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.017em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 0.931em; vertical-align: -0.079em;"></span></span></nobr></span><script id="MathJax-Element-15" type="math/tex">k</script> times. If <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-16-Frame" class="MathJax"><nobr><span style="width: 0.483em; display: inline-block;" id="MathJax-Span-179" class="math"><span style="display: inline-block; position: relative; width: 0.406em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.699em, 1000em, 2.932em, -0.669em); top: -2.551em; left: 0em;"><span id="MathJax-Span-180" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-181" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.146em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.151em; vertical-align: -0.305em;"></span></span></nobr></span><script id="MathJax-Element-16" type="math/tex">f</script> is <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-17-Frame" class="MathJax"><nobr><span style="width: 1.35em; display: inline-block;" id="MathJax-Span-182" class="math"><span style="display: inline-block; position: relative; width: 1.159em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.095em, 1000em, 2.337em, -0.456em); top: -2.145em; left: 0em;"><span id="MathJax-Span-183" class="mrow"><span id="MathJax-Span-184" class="msubsup"><span style="display: inline-block; position: relative; width: 1.175em; height: 0px;"><span style="position: absolute; clip: rect(1.711em, 1000em, 2.743em, -0.456em); top: -2.551em; left: 0em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-185" class="mi">C<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.022em;"></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.654em; left: 0.752em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-186" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.012em;"></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.145em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.161em; vertical-align: -0.087em;"></span></span></nobr></span><script id="MathJax-Element-17" type="math/tex">C^k</script>, then the Fourier coefficients of the continuous function <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-18-Frame" class="MathJax"><nobr><span style="width: 1.55em; display: inline-block;" id="MathJax-Span-187" class="math"><span style="display: inline-block; position: relative; width: 1.333em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(0.775em, 1000em, 2.793em, -0.402em); top: -2.145em; left: 0em;"><span id="MathJax-Span-188" class="mrow"><span id="MathJax-Span-189" class="texatom"><span id="MathJax-Span-190" class="mrow"><span style="padding-left: 0.12em; padding-right: 0.12em;" id="MathJax-Span-191" class="mfrac"><span style="display: inline-block; position: relative; width: 1.106em; height: 0px;"><span style="position: absolute; clip: rect(1.456em, 1000em, 2.581em, -0.511em); top: -2.826em; left: 50%; margin-left: -0.493em;"><span id="MathJax-Span-192" class="mrow"><span id="MathJax-Span-193" class="msubsup"><span style="display: inline-block; position: relative; width: 0.688em; height: 0px;"><span style="position: absolute; clip: rect(1.604em, 1000em, 2.444em, -0.511em); top: -2.261em; left: 0em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-194" class="mi">d<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.019em;"></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; top: -2.435em; left: 0.404em;"><span style="font-size: 50%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-195" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.009em;"></span></span><span style="display: inline-block; width: 0px; height: 2.145em;"></span></span></span></span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-196" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.103em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(1.541em, 1000em, 2.444em, -0.511em); top: -1.796em; left: 50%; margin-left: -0.464em;"><span id="MathJax-Span-197" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-198" class="mi">d<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.019em;"></span></span><span id="MathJax-Span-199" class="msubsup"><span style="display: inline-block; position: relative; width: 0.571em; height: 0px;"><span style="position: absolute; clip: rect(1.701em, 1000em, 2.443em, -0.495em); top: -2.261em; left: 0em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-200" class="mi">t<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.013em;"></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; top: -2.349em; left: 0.286em;"><span style="font-size: 50%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-201" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.009em;"></span></span><span style="display: inline-block; width: 0px; height: 2.145em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(0.855em, 1000em, 1.275em, -0.522em); top: -1.321em; left: 0em;"><span style="border-left: 1.106em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.25px; vertical-align: 0em;"></span><span style="display: inline-block; width: 0px; height: 1.101em;"></span></span></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.145em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 2.054em; vertical-align: -0.611em;"></span></span></nobr></span><script id="MathJax-Element-18" type="math/tex">{d^k f \over dt^k}</script> go to zero by the Riemann-Lebesgue lemma, so you get that <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-19-Frame" class="MathJax"><nobr><span style="width: 3.95em; display: inline-block;" id="MathJax-Span-202" class="math"><span style="display: inline-block; position: relative; width: 3.42em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.189em, 1000em, 2.932em, -0.455em); top: -2.551em; left: 0em;"><span id="MathJax-Span-203" class="mrow"><span id="MathJax-Span-204" class="texatom"><span id="MathJax-Span-205" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-206" class="mo">|</span></span></span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-207" class="mi">n</span><span id="MathJax-Span-208" class="msubsup"><span style="display: inline-block; position: relative; width: 0.597em; height: 0px;"><span style="position: absolute; clip: rect(1.701em, 1000em, 2.739em, -0.455em); top: -2.551em; left: 0em;"><span id="MathJax-Span-209" class="texatom"><span id="MathJax-Span-210" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-211" class="mo">|</span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; top: -2.664em; left: 0.174em;"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-212" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.012em;"></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span></span></span><span id="MathJax-Span-213" class="texatom"><span id="MathJax-Span-214" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-215" class="mo">|</span></span></span><span id="MathJax-Span-216" class="texatom"><span id="MathJax-Span-217" class="mrow"><span id="MathJax-Span-218" class="munderover"><span style="display: inline-block; position: relative; width: 0.584em; height: 0px;"><span style="position: absolute; clip: rect(1.699em, 1000em, 2.932em, -0.669em); top: -2.551em; left: 0.029em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-219" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.146em;"></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; clip: rect(1.715em, 1000em, 2.428em, -0.498em); top: -3.077em; left: 0.12em;"><span style="font-family: STIXGeneral;" id="MathJax-Span-220" class="mo">^</span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span></span></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-221" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-222" class="mi">n</span><span style="font-family: STIXGeneral;" id="MathJax-Span-223" class="mo">)</span><span id="MathJax-Span-224" class="texatom"><span id="MathJax-Span-225" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-226" class="mo">|</span></span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.738em; vertical-align: -0.305em;"></span></span></nobr></span><script id="MathJax-Element-19" type="math/tex">|n|^k|\hat{f}(n)|</script> goes to zero or that <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-20-Frame" class="MathJax"><nobr><span style="width: 2.483em; display: inline-block;" id="MathJax-Span-227" class="math"><span style="display: inline-block; position: relative; width: 2.145em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.189em, 1000em, 2.932em, -0.455em); top: -2.551em; left: 0em;"><span id="MathJax-Span-228" class="mrow"><span id="MathJax-Span-229" class="texatom"><span id="MathJax-Span-230" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-231" class="mo">|</span></span></span><span id="MathJax-Span-232" class="texatom"><span id="MathJax-Span-233" class="mrow"><span id="MathJax-Span-234" class="munderover"><span style="display: inline-block; position: relative; width: 0.584em; height: 0px;"><span style="position: absolute; clip: rect(1.699em, 1000em, 2.932em, -0.669em); top: -2.551em; left: 0.029em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-235" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.146em;"></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span><span style="position: absolute; clip: rect(1.715em, 1000em, 2.428em, -0.498em); top: -3.077em; left: 0.12em;"><span style="font-family: STIXGeneral;" id="MathJax-Span-236" class="mo">^</span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span></span></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-237" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-238" class="mi">n</span><span style="font-family: STIXGeneral;" id="MathJax-Span-239" class="mo">)</span><span id="MathJax-Span-240" class="texatom"><span id="MathJax-Span-241" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-242" class="mo">|</span></span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.738em; vertical-align: -0.305em;"></span></span></nobr></span><script id="MathJax-Element-20" type="math/tex">|\hat{f}(n)|</script> is <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-21-Frame" class="MathJax"><nobr><span style="width: 2.75em; display: inline-block;" id="MathJax-Span-243" class="math"><span style="display: inline-block; position: relative; width: 2.377em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.48em, 1000em, 3.28em, -0.495em); top: -2.551em; left: 0em;"><span id="MathJax-Span-244" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-245" class="mi">o</span><span style="font-family: STIXGeneral;" id="MathJax-Span-246" class="mo">(</span><span id="MathJax-Span-247" class="texatom"><span id="MathJax-Span-248" class="mrow"><span style="padding-left: 0.12em; padding-right: 0.12em;" id="MathJax-Span-249" class="mfrac"><span style="display: inline-block; position: relative; width: 0.99em; height: 0px;"><span style="position: absolute; clip: rect(1.609em, 1000em, 2.435em, -0.443em); top: -2.68em; left: 50%; margin-left: -0.174em;"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-250" class="mn">1</span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(1.461em, 1000em, 2.445em, -0.474em); top: -1.716em; left: 50%; margin-left: -0.435em;"><span id="MathJax-Span-251" class="mrow"><span id="MathJax-Span-252" class="texatom"><span id="MathJax-Span-253" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-254" class="mo">|</span></span></span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-255" class="mi">n</span><span id="MathJax-Span-256" class="msubsup"><span style="display: inline-block; position: relative; width: 0.401em; height: 0px;"><span style="position: absolute; clip: rect(1.609em, 1000em, 2.445em, -0.474em); top: -2.261em; left: 0em;"><span id="MathJax-Span-257" class="texatom"><span id="MathJax-Span-258" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-259" class="mo">|</span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; top: -2.43em; left: 0.116em;"><span style="font-size: 50%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-260" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.009em;"></span></span><span style="display: inline-block; width: 0px; height: 2.145em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(0.855em, 1000em, 1.275em, -0.522em); top: -1.321em; left: 0em;"><span style="border-left: 0.99em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.25px; vertical-align: 0em;"></span><span style="display: inline-block; width: 0px; height: 1.101em;"></span></span></span></span></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-261" class="mo">)</span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.803em; vertical-align: -0.705em;"></span></span></nobr></span><script id="MathJax-Element-21" type="math/tex">o({1 \over |n|^k})</script>.</p>
+
+<p>If you have a small discontinuity in the <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-22-Frame" class="MathJax"><nobr><span style="width: 0.55em; display: inline-block;" id="MathJax-Span-262" class="math"><span style="display: inline-block; position: relative; width: 0.464em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.694em, 1000em, 2.736em, -0.508em); top: -2.551em; left: 0em;"><span id="MathJax-Span-263" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-264" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.017em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 0.931em; vertical-align: -0.079em;"></span></span></nobr></span><script id="MathJax-Element-22" type="math/tex">k</script>th derivative, you might get a small error term like <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-23-Frame" class="MathJax"><nobr><span style="width: 3.017em; display: inline-block;" id="MathJax-Span-265" class="math"><span style="display: inline-block; position: relative; width: 2.609em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.48em, 1000em, 3.743em, -0.492em); top: -2.551em; left: 0em;"><span id="MathJax-Span-266" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-267" class="mi">ϵ</span><span id="MathJax-Span-268" class="texatom"><span id="MathJax-Span-269" class="mrow"><span style="padding-left: 0.12em; padding-right: 0.12em;" id="MathJax-Span-270" class="mfrac"><span style="display: inline-block; position: relative; width: 1.917em; height: 0px;"><span style="position: absolute; clip: rect(1.609em, 1000em, 2.435em, -0.443em); top: -2.68em; left: 50%; margin-left: -0.174em;"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-271" class="mn">1</span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(0.997em, 1000em, 2.445em, -0.474em); top: -1.253em; left: 50%; margin-left: -0.899em;"><span id="MathJax-Span-272" class="mrow"><span id="MathJax-Span-273" class="texatom"><span id="MathJax-Span-274" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-275" class="mo">|</span></span></span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-276" class="mi">n</span><span id="MathJax-Span-277" class="msubsup"><span style="display: inline-block; position: relative; width: 1.328em; height: 0px;"><span style="position: absolute; clip: rect(1.609em, 1000em, 2.445em, -0.474em); top: -2.261em; left: 0em;"><span id="MathJax-Span-278" class="texatom"><span id="MathJax-Span-279" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-280" class="mo">|</span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; top: -2.603em; left: 0.116em;"><span id="MathJax-Span-281" class="texatom"><span id="MathJax-Span-282" class="mrow"><span style="font-size: 50%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-283" class="mi">k<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.009em;"></span></span><span style="font-size: 50%; font-family: STIXGeneral;" id="MathJax-Span-284" class="mo">−</span><span id="MathJax-Span-285" class="texatom"><span id="MathJax-Span-286" class="mrow"><span style="padding-left: 0.12em; padding-right: 0.12em;" id="MathJax-Span-287" class="mfrac"><span style="display: inline-block; position: relative; width: 0.352em; height: 0px;"><span style="position: absolute; clip: rect(1.633em, 1000em, 2.319em, -0.466em); top: -2.439em; left: 50%; margin-left: -0.116em;"><span style="font-size: 50%; font-family: STIXGeneral;" id="MathJax-Span-288" class="mn">1</span><span style="display: inline-block; width: 0px; height: 2.145em;"></span></span><span style="position: absolute; clip: rect(1.633em, 1000em, 2.319em, -0.507em); top: -1.763em; left: 50%; margin-left: -0.116em;"><span style="font-size: 50%; font-family: STIXGeneral;" id="MathJax-Span-289" class="mn">2</span><span style="display: inline-block; width: 0px; height: 2.145em;"></span></span><span style="position: absolute; clip: rect(0.855em, 1000em, 1.275em, -0.522em); top: -1.196em; left: 0em;"><span style="border-left: 0.352em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.25px; vertical-align: 0em;"></span><span style="display: inline-block; width: 0px; height: 1.101em;"></span></span></span></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.145em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.261em;"></span></span><span style="position: absolute; clip: rect(0.855em, 1000em, 1.275em, -0.522em); top: -1.321em; left: 0em;"><span style="border-left: 1.917em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.25px; vertical-align: 0em;"></span><span style="display: inline-block; width: 0px; height: 1.101em;"></span></span></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 2.335em; vertical-align: -1.237em;"></span></span></nobr></span><script id="MathJax-Element-23" type="math/tex">\epsilon {1 \over |n|^{k-{1 \over 2}}}</script> just to give an example, and as the discontinuity goes to zero the <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-24-Frame" class="MathJax"><nobr><span style="width: 0.55em; display: inline-block;" id="MathJax-Span-290" class="math"><span style="display: inline-block; position: relative; width: 0.464em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.936em, 1000em, 2.736em, -0.492em); top: -2.551em; left: 0em;"><span id="MathJax-Span-291" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-292" class="mi">ϵ</span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 0.653em; vertical-align: -0.079em;"></span></span></nobr></span><script id="MathJax-Element-24" type="math/tex">\epsilon</script> will go to zero... but for any <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-25-Frame" class="MathJax"><nobr><span style="width: 2.617em; display: inline-block;" id="MathJax-Span-293" class="math"><span style="display: inline-block; position: relative; width: 2.261em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.701em, 1000em, 2.749em, -0.492em); top: -2.551em; left: 0em;"><span id="MathJax-Span-294" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-295" class="mi">ϵ</span><span style="font-family: STIXGeneral; padding-left: 0.313em;" id="MathJax-Span-296" class="mo">&gt;</span><span style="font-family: STIXGeneral; padding-left: 0.313em;" id="MathJax-Span-297" class="mn">0</span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 0.938em; vertical-align: -0.094em;"></span></span></nobr></span><script id="MathJax-Element-25" type="math/tex">\epsilon > 0</script> it will still be the dominant term if <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-26-Frame" class="MathJax"><nobr><span style="width: 1.083em; display: inline-block;" id="MathJax-Span-298" class="math"><span style="display: inline-block; position: relative; width: 0.928em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.701em, 1000em, 2.739em, -0.455em); top: -2.551em; left: 0em;"><span id="MathJax-Span-299" class="mrow"><span id="MathJax-Span-300" class="texatom"><span id="MathJax-Span-301" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-302" class="mo">|</span></span></span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-303" class="mi">n</span><span id="MathJax-Span-304" class="texatom"><span id="MathJax-Span-305" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-306" class="mo">|</span></span></span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 0.927em; vertical-align: -0.083em;"></span></span></nobr></span><script id="MathJax-Element-26" type="math/tex">|n|</script>
+ is large enough. So slowly changing the function will gradually make 
+this term go away in one sense, but it will still dominate in another 
+sense regardless of what <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-27-Frame" class="MathJax"><nobr><span style="width: 0.55em; display: inline-block;" id="MathJax-Span-307" class="math"><span style="display: inline-block; position: relative; width: 0.464em; height: 0px; font-size: 115%;"><span style="position: absolute; clip: rect(1.936em, 1000em, 2.736em, -0.492em); top: -2.551em; left: 0em;"><span id="MathJax-Span-308" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-309" class="mi">ϵ</span></span><span style="display: inline-block; width: 0px; height: 2.551em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 0.653em; vertical-align: -0.079em;"></span></span></nobr></span><script id="MathJax-Element-27" type="math/tex">\epsilon</script> is.</p>
+</div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="http://math.stackexchange.com/a/93090/43729" title="short permalink to this answer" class="short-link" id="link-post-93090">share</a><span class="lsep">|</span><a href="http://math.stackexchange.com/posts/93090/edit" class="suggest-edit-post" title="revise and improve this post">edit</a><span class="lsep">|</span><a id="flag-post-93090" href="#" title="flag this post for serious problems or moderator attention">flag</a></div>                    </td>
+            
+
+
+    <td class="post-signature" align="right">   
+       
+
+    
+
+    <div class="user-info ">
+        <div class="user-action-time">
+                                        answered <span title="2011-12-21 01:40:40Z" class="relativetime">Dec 21 '11 at 1:40</span>
+        </div>
+        <div class="user-gravatar32">
+            <a href="http://math.stackexchange.com/users/3035/zarrax"><div class=""><img src="Intuition%20behind%20decay%20of%20Fourier%20coefficients%20-%20Mathematics%20Stack%20Exchange_files/783cae7718c4ea62d289ffc22782b9e6.png" alt="" height="32" width="32"></div></a>
+        </div>
+        <div class="user-details">
+            <a href="http://math.stackexchange.com/users/3035/zarrax">Zarrax</a><br>
+            <span class="reputation-score" title="reputation score 19780" dir="ltr">19.8k</span><span title="1 gold badge"><span class="badge1"></span><span class="badgecount">1</span></span><span title="17 silver badges"><span class="badge2"></span><span class="badgecount">17</span></span><span title="64 bronze badges"><span class="badge3"></span><span class="badgecount">64</span></span>
+        </div>
+    </div>
+
+    </td>
+    </tr>
+    </tbody></table>
+</td>
+        </tr>
+
+
+
+<tr>
+<td class="votecell"></td>
+<td>
+    <div id="comments-93090" class="comments dno">
+        <table>
+        <tbody>
+        
+            <tr><td></td><td></td></tr>
+        
+        </tbody>
+    
+        <tfoot>
+            <tr>
+                <td></td>
+                <td class="comment-form"><form id="add-comment-93090"></form></td>
+            </tr>
+        </tfoot>
+    
+        </table>
+    </div>
+    <a id="comments-link-93090" class="comments-link" data-comments-count="0" title="ask author for clarification about this post">add comment</a>
+</td>
+</tr>
+    </tbody></table>
+</div>
+    <a name="new-answer"></a>
+    <form id="post-form" action="/questions/93066/answer/submit" method="post" class="post-form">
+        <input id="post-id" value="93066" type="hidden">
+        <h2 class="space">Your Answer</h2>
+
+
+        <script type="text/javascript">
+            StackExchange.ifUsing("editor", function () {
+                return StackExchange.using("mathjaxEditing", function () {
+                    StackExchange.MarkdownEditor.creationCallbacks.add(function (editor, postfix) {
+                        StackExchange.mathjaxEditing.prepareWmdForMathJax(editor, postfix, [["$", "$"], ["\\\\(","\\\\)"]]);
+                    });
+                });
+            }, "mathjax-editing");
+        </script>
+
+    
+<script type="text/javascript">
+    StackExchange.ready(function() {
+        initTagRenderer("".split(" "), "".split(" "));
+         
+        prepareEditor({
+            heartbeatType: 'answer',
+            bindNavPrevention: true,
+            postfix: "",
+noCode: true,            onDemand: false,
+            discardSelector: ".discard-answer"
+            
+        });
+        
+
+    });  
+</script>
+
+
+<div id="post-editor" class="post-editor">
+
+    <div style="position: relative;">     
+        <div class="wmd-container">
+            <div id="wmd-button-bar" class="wmd-button-bar"><ul class="wmd-button-row" id="wmd-button-row"><li title="Strong &lt;strong&gt; Ctrl+B" id="wmd-bold-button" style="left: 0px;" class="wmd-button"><span style="background-position: 0px 0px;"></span></li><li title="Emphasis &lt;em&gt; Ctrl+I" id="wmd-italic-button" style="left: 25px;" class="wmd-button"><span style="background-position: -20px 0px;"></span></li><li id="wmd-spacer1" class="wmd-spacer wmd-spacer1"></li><li title="Hyperlink &lt;a&gt; Ctrl+L" id="wmd-link-button" style="left: 75px;" class="wmd-button"><span style="background-position: -40px 0px;"></span></li><li title="Blockquote &lt;blockquote&gt; Ctrl+Q" id="wmd-quote-button" style="left: 100px;" class="wmd-button"><span style="background-position: -60px 0px;"></span></li><li title="Preformatted text &lt;pre&gt;&lt;code&gt; Ctrl-K" id="wmd-code-button" style="left: 125px;" class="wmd-button"><span style="background-position: -80px 0px;"></span></li><li title="Image &lt;img&gt; Ctrl+G" id="wmd-image-button" style="left: 150px;" class="wmd-button"><span style="background-position: -100px 0px;"></span></li><li id="wmd-spacer2" class="wmd-spacer wmd-spacer2"></li><li title="Numbered List &lt;ol&gt; Ctrl+O" id="wmd-olist-button" style="left: 200px;" class="wmd-button"><span style="background-position: -120px 0px;"></span></li><li title="Bulleted List &lt;ul&gt; Ctrl+U" id="wmd-ulist-button" style="left: 225px;" class="wmd-button"><span style="background-position: -140px 0px;"></span></li><li title="Heading &lt;h1&gt;/&lt;h2&gt; Ctrl+H" id="wmd-heading-button" style="left: 250px;" class="wmd-button"><span style="background-position: -160px 0px;"></span></li><li title="Horizontal Rule &lt;hr&gt; Ctrl+R" id="wmd-hr-button" style="left: 275px;" class="wmd-button"><span style="background-position: -180px 0px;"></span></li><li id="wmd-spacer3" class="wmd-spacer wmd-spacer3"></li><li title="Undo - Ctrl+Z" id="wmd-undo-button" style="left: 325px;" class="wmd-button"><span style="background-position: -200px -20px;"></span></li><li title="Redo - Ctrl+Shift+Z" id="wmd-redo-button" style="left: 350px;" class="wmd-button"><span style="background-position: -220px -20px;"></span></li><li title="Markdown Editing Help" style="right: 0px;" id="wmd-help-button" class="wmd-button wmd-help-button"><span style="background-position: -240px 0px;"></span></li></ul></div>
+            <textarea id="wmd-input" class="wmd-input processed" name="post-text" cols="92" rows="15" tabindex="101" data-min-length=""></textarea>
+        <div style="margin-right: 0px;" class="grippie"></div></div>
+    </div>
+
+    <div class="fl" style="margin-top: 8px; height:24px;">&nbsp;</div>
+    <div id="draft-saved" class="draft-saved community-option fl" style="margin-top: 8px; height:24px; display:none;">draft saved</div>
+
+    <div id="draft-discarded" class="draft-discarded community-option fl" style="margin-top: 8px; height:24px; display:none;">draft discarded</div>
+
+    <div class="community-option">
+        <input id="communitymode" name="communitymode" type="checkbox">
+        <label for="communitymode" title="Marking an answer community wiki encourages others to edit it by lowering the reputation barrier required to edit. However, you will not gain any upvote reputation from it. This cannot be undone.">community wiki</label>
+    </div>
+
+
+    <div id="wmd-preview" class="wmd-preview"></div>
+    <div></div>
+    <div class="edit-block">
+        <input id="fkey" name="fkey" value="284ca47b8566a9575118568fee565bff" type="hidden">
+        <input id="author" name="author" type="text">
+    </div>
+</div>
+        <div style="position: relative;"> 
+        </div>
+           
+            <div class="form-submit cbt">
+            <input id="submit-button" value="Post Your Answer" tabindex="110" type="submit">
+            <a href="#" class="discard-answer dno">discard</a>
+        </div>
+    </form>
+
+
+
+        <h2 class="bottom-notice">
+                Not the answer you're looking for? 
+            Browse other questions tagged <a href="http://math.stackexchange.com/questions/tagged/fourier-analysis" class="post-tag" title="show questions tagged 'fourier-analysis'" rel="tag">fourier-analysis</a> <a href="http://math.stackexchange.com/questions/tagged/fourier-series" class="post-tag" title="show questions tagged 'fourier-series'" rel="tag">fourier-series</a> 
+                or <a href="http://math.stackexchange.com/questions/ask">ask your own question</a>.
+        </h2>
+</div>
+</div>
+<div id="sidebar" class="show-votes">
+        <div class="module question-stats">
+        <p class="label-key">tagged</p>
+        <div class="tagged"><a href="http://math.stackexchange.com/questions/tagged/fourier-analysis" class="post-tag" title="show questions tagged 'fourier-analysis'" rel="tag">fourier-analysis</a>&nbsp;<span class="item-multiplier"><span class="item-multiplier-x">×</span>&nbsp;<span class="item-multiplier-count">1260</span></span><br>
+<a href="http://math.stackexchange.com/questions/tagged/fourier-series" class="post-tag" title="show questions tagged 'fourier-series'" rel="tag">fourier-series</a>&nbsp;<span class="item-multiplier"><span class="item-multiplier-x">×</span>&nbsp;<span class="item-multiplier-count">499</span></span><br>
+</div>
+        <table id="qinfo">
+            <tbody><tr>
+                <td><p class="label-key">asked</p></td>
+                <td style="padding-left:10px"><p class="label-key" title="2011-12-21 00:06:14Z"><b>1 year ago</b></p></td>
+            </tr>
+            <tr>
+                <td><p class="label-key">viewed</p></td>
+
+                <td style="padding-left:10px">
+                    <p class="label-key">
+                        <b>524 times</b>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td><p class="label-key">active</p></td>
+                <td style="padding-left:10px"><p class="label-key"><b><a href="http://math.stackexchange.com/questions/93066/intuition-behind-decay-of-fourier-coefficients?lastactivity" class="lastactivity-link" title="2011-12-21 02:38:56Z">1 year ago</a></b></p></td>
+            </tr>
+        </tbody></table>
+    </div>
+    
+<div class="module community-bulletin" data-tracker="cb=1">
+    <h4>Community Bulletin</h4>
+    <div class="related">
+        <div class="spacer">
+            <div class="bulletin-item-type"><a href="http://blog.stackoverflow.com/?cb=1" class="event-date" target="_blank">blog</a></div>
+            <div class="bulletin-item-content">
+                <a href="http://blog.stackoverflow.com/2013/06/podcast-49-the-one-where-we-edited-out-the-title-reference/?cb=1" class="question-hyperlink" target="_blank">Podcast #49 – The One Where We Edited Out The Title Reference</a>
+            </div>
+            <br class="cbt">
+        </div>
+        <div class="spacer">
+            <div class="bulletin-item-type"><a href="http://meta.math.stackexchange.com/?cb=1" class="event-date" target="_blank">meta</a></div>
+            <div class="bulletin-item-content">
+                <a href="http://meta.math.stackexchange.com/questions/9834/point-difference-between-upvotes-and-downvotes?cb=1" class="question-hyperlink" target="_blank">Point difference between upvotes and downvotes</a>
+            </div>
+            <br class="cbt">
+        </div>
+        <div class="spacer">
+            <div class="bulletin-item-type"><a href="http://meta.math.stackexchange.com/?cb=1" class="event-date" target="_blank">meta</a></div>
+            <div class="bulletin-item-content">
+                <a href="http://meta.math.stackexchange.com/questions/9798/the-non-existent-retag-button?cb=1" class="question-hyperlink" target="_blank">The (non-existent?) retag button</a>
+            </div>
+            <br class="cbt">
+        </div>
+        <div class="spacer">
+            <div class="bulletin-item-type"><a href="http://meta.math.stackexchange.com/?cb=1" class="event-date" target="_blank">meta</a></div>
+            <div class="bulletin-item-content">
+                <a href="http://meta.math.stackexchange.com/questions/9672/2013-election-results-congratulations-to-the-new-moderators?cb=1" class="question-hyperlink" target="_blank">2013 Election Results: Congratulations to the new moderators!</a>
+            </div>
+            <br class="cbt">
+        </div>
+    </div>
+</div>    
+    
+
+<style type="text/css">
+    .ads { margin-left: 60px; }
+    .ad-container { width: 220px; height: 250px; margin-right: 20px; margin-bottom: 20px; }
+    .ad-container .ad { height: 250px; }
+    .ad-container .footer-container { overflow: hidden; height: 30px; position: relative; top: -30px; }
+    .ad-container .footer-container .footer { font-family: Arial,Helvetic,Sans-Serif; font-size: 12px; text-align: center; padding-top: 9px; background-color: #000; color: #EFF; opacity: 0.9; filter: alpha(opacity=90); top: 30px; height: 30px; position: relative; }
+    .ad-container a:hover { text-decoration: underline; }
+    #adzerk2 { height: 250px; }
+</style>
+<script type="text/javascript">
+    StackExchange.ready(function () {
+        $(".ad-container").hover(
+            function () {
+                $(".ad-container .footer-container .footer").stop(true, true).animate({ top: "0px" }, "fast");
+            },
+            function () {
+                $(".ad-container .footer-container .footer").animate({ top: "30px" }, "fast");
+            });
+    });
+</script>
+    <script type="text/javascript">
+        var z = document.createElement("script"); z.type = "text/javascript"; z.async = true; z.src = 'http://engine.adzerk.net/z/12057/adzerk2_2_17_76?keywords=x-host-math.stackexchange.com'; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(z, s);
+    </script>
+    <div class="everyonelovesstackoverflow" id="adzerk2">
+    </div>  
+
+      
+    
+    <div class="module sidebar-related">
+        <h4 id="h-related">Related</h4>
+        <div class="related" data-tracker="rq=1">
+            <div class="spacer">
+<a href="http://math.stackexchange.com/q/30744?rq=1" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted default">3</div>
+</a>
+<a href="http://math.stackexchange.com/questions/30744/one-more-question-about-decay-of-fourier-coefficients?rq=1" class="question-hyperlink">One more question about decay of Fourier coefficients</a>
+</div>
+<div class="spacer">
+<a href="http://math.stackexchange.com/q/51217?rq=1" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted default">4</div>
+</a>
+<a href="http://math.stackexchange.com/questions/51217/exponential-decay-of-laplace-coefficients?rq=1" class="question-hyperlink">Exponential Decay of Laplace Coefficients</a>
+</div>
+<div class="spacer">
+<a href="http://math.stackexchange.com/q/140158?rq=1" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes default">1</div>
+</a>
+<a href="http://math.stackexchange.com/questions/140158/fast-fourier-transform-mathbf-tildea-mathbfaei-theta-mathbfk?rq=1" class="question-hyperlink">Fast Fourier Transform <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-28-Frame" class="MathJax"><nobr><span style="width: 5.854em; display: inline-block;" id="MathJax-Span-310" class="math"><span style="display: inline-block; position: relative; width: 4.781em; height: 0px; font-size: 122%;"><span style="position: absolute; clip: rect(1.37em, 1000em, 2.812em, -0.606em); top: -2.596em; left: 0em;"><span id="MathJax-Span-311" class="mrow"><span id="MathJax-Span-312" class="texatom"><span id="MathJax-Span-313" class="mrow"><span id="MathJax-Span-314" class="texatom"><span id="MathJax-Span-315" class="mrow"><span id="MathJax-Span-316" class="munderover"><span style="display: inline-block; position: relative; width: 0.751em; height: 0px;"><span style="position: absolute; clip: rect(1.701em, 1000em, 2.801em, -0.606em); top: -2.596em; left: 0em;"><span style="font-family: STIXGeneral; font-weight: bold;" id="MathJax-Span-317" class="mi">A</span><span style="display: inline-block; width: 0px; height: 2.596em;"></span></span><span style="position: absolute; clip: rect(2.058em, 1000em, 2.628em, -0.586em); top: -3.283em; left: 0.102em;"><span style="font-family: STIXGeneral; font-weight: bold;" id="MathJax-Span-318" class="mo">~</span><span style="display: inline-block; width: 0px; height: 2.596em;"></span></span></span></span></span></span></span></span><span style="font-family: STIXGeneral; padding-left: 0.313em;" id="MathJax-Span-319" class="mo">=</span><span style="padding-left: 0.313em;" id="MathJax-Span-320" class="texatom"><span id="MathJax-Span-321" class="mrow"><span style="font-family: STIXGeneral; font-weight: bold;" id="MathJax-Span-322" class="mi">A</span></span></span><span id="MathJax-Span-323" class="msubsup"><span style="display: inline-block; position: relative; width: 1.988em; height: 0px;"><span style="position: absolute; clip: rect(1.95em, 1000em, 2.812em, -0.584em); top: -2.596em; left: 0em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-324" class="mi">e</span><span style="display: inline-block; width: 0px; height: 2.596em;"></span></span><span style="position: absolute; top: -2.685em; left: 0.478em;"><span id="MathJax-Span-325" class="texatom"><span id="MathJax-Span-326" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-327" class="mi">i</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-328" class="mi">θ<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.01em;"></span></span><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-329" class="mo">(</span><span id="MathJax-Span-330" class="texatom"><span id="MathJax-Span-331" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral; font-weight: bold;" id="MathJax-Span-332" class="mi">k</span></span></span><span style="font-size: 70.7%; font-family: STIXGeneral;" id="MathJax-Span-333" class="mo">)</span></span></span><span style="display: inline-block; width: 0px; height: 2.322em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.596em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.425em; vertical-align: -0.097em;"></span></span></nobr></span><script id="MathJax-Element-28" type="math/tex">\mathbf{\tilde{A}}=\mathbf{A}e^{i \theta(\mathbf{k})}</script></a>
+</div>
+<div class="spacer">
+<a href="http://math.stackexchange.com/q/154165?rq=1" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes default">0</div>
+</a>
+<a href="http://math.stackexchange.com/questions/154165/fourier-coefficients-of-periodic-function?rq=1" class="question-hyperlink">Fourier Coefficients of periodic function</a>
+</div>
+<div class="spacer">
+<a href="http://math.stackexchange.com/q/292954?rq=1" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes default">1</div>
+</a>
+<a href="http://math.stackexchange.com/questions/292954/calculation-of-the-fourier-series-of-ft-eit-alpha-and-ft-t?rq=1" class="question-hyperlink">Calculation of the Fourier series of <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-29-Frame" class="MathJax"><nobr><span style="width: 5.021em; display: inline-block;" id="MathJax-Span-334" class="math"><span style="display: inline-block; position: relative; width: 4.098em; height: 0px; font-size: 122%;"><span style="position: absolute; clip: rect(1.565em, 1000em, 3.008em, -0.762em); top: -2.596em; left: 0em;"><span id="MathJax-Span-335" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-336" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.146em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-337" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-338" class="mi">t<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.018em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-339" class="mo">)</span><span style="font-family: STIXGeneral; padding-left: 0.313em;" id="MathJax-Span-340" class="mo">=</span><span style="padding-left: 0.313em;" id="MathJax-Span-341" class="msubsup"><span style="display: inline-block; position: relative; width: 1.373em; height: 0px;"><span style="position: absolute; clip: rect(1.95em, 1000em, 2.812em, -0.584em); top: -2.596em; left: 0em;"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-342" class="mi">e</span><span style="display: inline-block; width: 0px; height: 2.596em;"></span></span><span style="position: absolute; top: -2.685em; left: 0.478em;"><span id="MathJax-Span-343" class="texatom"><span id="MathJax-Span-344" class="mrow"><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-345" class="mi">i</span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-346" class="mi">t<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.013em;"></span></span><span style="font-size: 70.7%; font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-347" class="mi">α</span></span></span><span style="display: inline-block; width: 0px; height: 2.322em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.596em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.426em; vertical-align: -0.336em;"></span></span></nobr></span><script id="MathJax-Element-29" type="math/tex">f(t)=e^{it\alpha}</script> and <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-30-Frame" class="MathJax"><nobr><span style="width: 4.188em; display: inline-block;" id="MathJax-Span-348" class="math"><span style="display: inline-block; position: relative; width: 3.415em; height: 0px; font-size: 122%;"><span style="position: absolute; clip: rect(1.713em, 1000em, 3.008em, -0.762em); top: -2.596em; left: 0em;"><span id="MathJax-Span-349" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-350" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.146em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-351" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-352" class="mi">t<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.018em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-353" class="mo">)</span><span style="font-family: STIXGeneral; padding-left: 0.313em;" id="MathJax-Span-354" class="mo">=</span><span style="padding-left: 0.313em;" id="MathJax-Span-355" class="texatom"><span id="MathJax-Span-356" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-357" class="mo">|</span></span></span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-358" class="mi">t<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.018em;"></span></span><span id="MathJax-Span-359" class="texatom"><span id="MathJax-Span-360" class="mrow"><span style="font-family: STIXGeneral;" id="MathJax-Span-361" class="mo">|</span></span></span></span><span style="display: inline-block; width: 0px; height: 2.596em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.246em; vertical-align: -0.336em;"></span></span></nobr></span><script id="MathJax-Element-30" type="math/tex">f(t)=|t|</script></a>
+</div>
+<div class="spacer">
+<a href="http://math.stackexchange.com/q/340429?rq=1" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes default">3</div>
+</a>
+<a href="http://math.stackexchange.com/questions/340429/intuition-behind-fourier-coefficients?rq=1" class="question-hyperlink">Intuition behind Fourier coefficients</a>
+</div>
+<div class="spacer">
+<a href="http://math.stackexchange.com/q/341066?rq=1" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes default">1</div>
+</a>
+<a href="http://math.stackexchange.com/questions/341066/fourier-series-on-a-2-torus?rq=1" class="question-hyperlink">Fourier Series on a 2-Torus</a>
+</div>
+<div class="spacer">
+<a href="http://math.stackexchange.com/q/351866?rq=1" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted default">2</div>
+</a>
+<a href="http://math.stackexchange.com/questions/351866/decay-of-fourier-coefficients-and-smoothness?rq=1" class="question-hyperlink">Decay of Fourier Coefficients and Smoothness</a>
+</div>
+<div class="spacer">
+<a href="http://math.stackexchange.com/q/371333?rq=1" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted default">0</div>
+</a>
+<a href="http://math.stackexchange.com/questions/371333/exponential-form-of-fourier-series?rq=1" class="question-hyperlink">Exponential Form of Fourier Series</a>
+</div>
+<div class="spacer">
+<a href="http://math.stackexchange.com/q/374221?rq=1" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted default">3</div>
+</a>
+<a href="http://math.stackexchange.com/questions/374221/fourier-series-of-fx-x?rq=1" class="question-hyperlink">Fourier Series of <span class="MathJax_Preview"></span><span style="" aria-readonly="true" role="textbox" id="MathJax-Element-31-Frame" class="MathJax"><nobr><span style="width: 4.021em; display: inline-block;" id="MathJax-Span-362" class="math"><span style="display: inline-block; position: relative; width: 3.279em; height: 0px; font-size: 122%;"><span style="position: absolute; clip: rect(1.713em, 1000em, 3.008em, -0.762em); top: -2.596em; left: 0em;"><span id="MathJax-Span-363" class="mrow"><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-364" class="mi">f<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.146em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-365" class="mo">(</span><span style="font-family: STIXGeneral; font-style: italic;" id="MathJax-Span-366" class="mi">x<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span><span style="font-family: STIXGeneral;" id="MathJax-Span-367" class="mo">)</span><span style="font-family: STIXGeneral; padding-left: 0.313em;" id="MathJax-Span-368" class="mo">=</span><span style="font-family: STIXGeneral; font-style: italic; padding-left: 0.313em;" id="MathJax-Span-369" class="mi">x<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.596em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.246em; vertical-align: -0.336em;"></span></span></nobr></span><script id="MathJax-Element-31" type="math/tex">f(x) = x</script></a>
+</div>
+
+        </div>
+    </div>
+</div>
+
+<div id="feed-link">
+    <div id="feed-link-text"><a href="http://math.stackexchange.com/feeds/question/93066" title="feed of this question and its answers"><span class="feed-icon"></span>question feed</a></div>
+</div>
+<script type="text/javascript">
+StackExchange.ready(function(){$.get('/posts/93066/ivc/5784');});
+</script>
+<noscript>
+    <div><img src="/posts/93066/ivc/5784" class="dno" alt="" width="0" height="0"></div>
+</noscript></div>
+
+
+        </div>
+    </div>
+    <div id="footer" class="categories">
+        <div class="footerwrap">
+            <div id="footer-menu">
+                <div class="top-footer-links">
+                        <a href="http://math.stackexchange.com/about">about</a>
+                    <a href="http://math.stackexchange.com/help">help</a>
+                    <a href="http://blog.stackexchange.com/?blb=1">blog</a>
+                        <a href="http://chat.stackexchange.com/">chat</a>
+                    <a href="http://data.stackexchange.com/">data</a>
+                    <a href="http://stackexchange.com/legal">legal</a>
+                    <a href="http://stackexchange.com/legal/privacy-policy">privacy policy</a>
+                    <a href="http://stackexchange.com/about/hiring">jobs</a>
+                    <a href="http://stackexchange.com/about/contact">advertising info</a>
+
+                    <a onclick='StackExchange.switchMobile("on", "/questions/93066/intuition-behind-decay-of-fourier-coefficients")'>mobile</a>
+                    <b><a href="http://math.stackexchange.com/contact">contact us</a></b>
+                        <b><a href="http://meta.math.stackexchange.com/">feedback</a></b>
+                </div>
+                <div id="footer-sites">
+                <table>
+    <tbody><tr>
+            <th colspan="3">
+                Technology
+            </th>
+            <th>
+                Life / Arts
+            </th>
+            <th>
+                Culture / Recreation
+            </th>
+            <th>
+                Science
+            </th>
+            <th>
+                Other
+            </th>
+    </tr>
+    <tr>
+            <td>
+                <ol>
+                        <li><a href="http://stackoverflow.com/" title="professional and enthusiast programmers">Stack Overflow</a></li>
+                        <li><a href="http://serverfault.com/" title="professional system and network administrators">Server Fault</a></li>
+                        <li><a href="http://superuser.com/" title="computer enthusiasts and power users">Super User</a></li>
+                        <li><a href="http://webapps.stackexchange.com/" title="power users of web applications">Web Applications</a></li>
+                        <li><a href="http://askubuntu.com/" title="Ubuntu users and developers">Ask Ubuntu</a></li>
+                        <li><a href="http://webmasters.stackexchange.com/" title="pro webmasters">Webmasters</a></li>
+                        <li><a href="http://gamedev.stackexchange.com/" title="professional and independent game developers">Game Development</a></li>
+                        <li><a href="http://tex.stackexchange.com/" title="users of TeX, LaTeX, ConTeXt, and related typesetting systems">TeX - LaTeX</a></li>
+                            </ol></td><td><ol>
+                        <li><a href="http://programmers.stackexchange.com/" title="professional programmers interested in conceptual questions about software development">Programmers</a></li>
+                        <li><a href="http://unix.stackexchange.com/" title="users of Linux, FreeBSD and other Un*x-like operating systems.">Unix &amp; Linux</a></li>
+                        <li><a href="http://apple.stackexchange.com/" title="power users of Apple hardware and software">Ask Different (Apple)</a></li>
+                        <li><a href="http://wordpress.stackexchange.com/" title="WordPress developers and administrators">WordPress Answers</a></li>
+                        <li><a href="http://gis.stackexchange.com/" title="cartographers, geographers and GIS professionals">Geographic Information Systems</a></li>
+                        <li><a href="http://electronics.stackexchange.com/" title="electronics and electrical engineering professionals, students, and enthusiasts">Electrical Engineering</a></li>
+                        <li><a href="http://android.stackexchange.com/" title="enthusiasts and power users of the Android operating system">Android Enthusiasts</a></li>
+                        <li><a href="http://security.stackexchange.com/" title="IT security professionals">IT Security</a></li>
+                            </ol></td><td><ol>
+                        <li><a href="http://dba.stackexchange.com/" title="database professionals who wish to improve their database skills and learn from others in the community">Database Administrators</a></li>
+                        <li><a href="http://drupal.stackexchange.com/" title="Drupal developers and administrators">Drupal Answers</a></li>
+                        <li><a href="http://sharepoint.stackexchange.com/" title="SharePoint enthusiasts">SharePoint</a></li>
+                        <li><a href="http://ux.stackexchange.com/" title="user experience researchers and experts">User Experience</a></li>
+                        <li><a href="http://mathematica.stackexchange.com/" title="users of Mathematica">Mathematica</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#technology" class="more">
+                                more (14)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://photo.stackexchange.com/" title="professional, enthusiast and amateur photographers">Photography</a></li>
+                        <li><a href="http://scifi.stackexchange.com/" title="science fiction and fantasy enthusiasts">Science Fiction &amp; Fantasy</a></li>
+                        <li><a href="http://cooking.stackexchange.com/" title="professional and amateur chefs">Seasoned Advice (cooking)</a></li>
+                        <li><a href="http://diy.stackexchange.com/" title="contractors and serious DIYers">Home Improvement</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#lifearts" class="more">
+                                more (13)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://english.stackexchange.com/" title="linguists, etymologists, and serious English language enthusiasts">English Language &amp; Usage</a></li>
+                        <li><a href="http://skeptics.stackexchange.com/" title="scientific skepticism">Skeptics</a></li>
+                        <li><a href="http://judaism.stackexchange.com/" title="those who base their lives on Jewish law and tradition and anyone interested in learning more">Mi Yodeya (Judaism)</a></li>
+                        <li><a href="http://travel.stackexchange.com/" title="road warriors and seasoned travelers">Travel</a></li>
+                        <li><a href="http://christianity.stackexchange.com/" title="committed Christians, experts in Christianity and those interested in learning more">Christianity</a></li>
+                        <li><a href="http://gaming.stackexchange.com/" title="passionate videogamers on all platforms">Arqade (gaming)</a></li>
+                        <li><a href="http://bicycles.stackexchange.com/" title="people who build and repair bicycles, people who train cycling, or commute on bicycles">Bicycles</a></li>
+                        <li><a href="http://rpg.stackexchange.com/" title="gamemasters and players of tabletop, paper-and-pencil role-playing games">Role-playing Games</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#culturerecreation" class="more">
+                                more (21)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://math.stackexchange.com/" title="people studying math at any level and professionals in related fields">Mathematics</a></li>
+                        <li><a href="http://stats.stackexchange.com/" title="statisticians, data analysts, data miners and data visualization experts">Cross Validated (stats)</a></li>
+                        <li><a href="http://cstheory.stackexchange.com/" title="theoretical computer scientists and researchers in related fields">Theoretical Computer Science</a></li>
+                        <li><a href="http://physics.stackexchange.com/" title="active researchers, academics and students of physics">Physics</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#science" class="more">
+                                more (7)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://stackapps.com/" title="apps, scripts, and development with the Stack Exchange API">Stack Apps</a></li>
+                        <li><a href="http://meta.stackoverflow.com/" title="meta-discussion of the Stack Exchange family of Q&amp;A websites">Meta Stack Overflow</a></li>
+                        <li><a href="http://area51.stackexchange.com/" title="proposing new sites in the Stack Exchange network">Area 51</a></li>
+                        <li><a href="http://careers.stackoverflow.com/">Stack Overflow Careers</a></li>
+                    
+                </ol>
+            </td>
+    </tr>
+</tbody></table>
+                </div>
+            </div>
+
+            <div id="copyright">
+                site design / logo © 2013 stack exchange inc; 
+                user contributions licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license">cc-wiki</a> 
+                with <a href="http://blog.stackoverflow.com/2009/06/attribution-required/" rel="license">attribution required</a>
+            </div>
+            <div id="footer-flair">
+                <a href="http://creativecommons.org/licenses/by-sa/3.0/" class="cc-wiki-link"></a>
+            </div>
+            <div id="svnrev">
+                rev 2013.6.10.733
+            </div>
+            
+        </div>
+    </div>
+    <noscript>
+        <div id="noscript-warning">Mathematics Stack Exchange works best with JavaScript enabled<img src="http://pixel.quantserve.com/pixel/p-c1rF4kxgLUzNc.gif" alt="" class="dno"></div>
+    </noscript>
+    <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-5620270-24']);
+        _gaq.push(['_setDomainName','.stackexchange.com']);
+        _gaq.push(['_setCustomVar', 1, 'tags', '|fourier-analysis|fourier-series|']); 
+        _gaq.push(['_setCustomVar', 2, 'accountid', '438664',2]); 
+_gaq.push(['_trackPageview']);
+    var _qevents = _qevents || [];
+    (function(){
+        var s=document.getElementsByTagName('script')[0];
+        var ga=document.createElement('script');
+        ga.type='text/javascript';
+        ga.async=true;
+        ga.src='http://www.google-analytics.com/ga.js';
+        s.parentNode.insertBefore(ga,s);
+        var sc=document.createElement('script');
+        sc.type='text/javascript';
+        sc.async=true;
+        sc.src='http://edge.quantserve.com/quant.js'; 
+        s.parentNode.insertBefore(sc,s);
+    })();
+    </script>
+    <script type="text/javascript">
+        _qevents.push({ qacct: "p-c1rF4kxgLUzNc" });
+    </script>        
+    
+
+<div style="position: absolute; visibility: hidden; top: 0px; left: 0px; width: auto; padding: 0px; border: 0px none; margin: 0px; white-space: nowrap; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; font-size: 40px; font-weight: normal; font-style: normal; font-size-adjust: none; font-family: 'STIXSizeOneSym',sans-serif;" id="MathJax_Font_Test">ˆ</div></body></html>
