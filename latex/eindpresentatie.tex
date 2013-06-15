@@ -21,25 +21,20 @@
 \section{Intro}
 
 \frame{
-  \frametitle{Begeleider: Rob Stevenson}
-  \begin{columns}
-    \begin{column}{0.5\linewidth}
-      \begin{itemize}
-      \item De `Wavelet' in de naam
-      \item Numerieke analayse $\rightarrow$ benaderen van functies
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.5\linewidth}
-      \includegraphics[width=\linewidth]{robbierobrob.jpg}
-    \end{column}
-  \end{columns}
+  \frametitle{Recap}
+  \begin{itemize}
+  \item Project bij Rob Stevensson
+  \item JPEG-2000
+  \item Successor van JPEG $\implies$ Fourier
+  \item Discreet signaal (in 1, 2 of 3 dimensies)
+  \end{itemize}
 }
 
 \frame{
-  \frametitle{Fourier Transformatie (Recap)}
+  \frametitle{Fourier Transformatie}
   \begin{columns}
     \begin{column}{0.75\linewidth}
-      \[ \left\{ e^{i k 2 \pi x}: k \in \mathbb{N}_0 \right\} \]
+      \[ \left\{ \phi_k(x) = e^{i k 2 \pi x}: k \in \mathbb{N}_0 \right\} \]
       \[ f = \sum \langle f, \phi_k \rangle \phi_k\text{, met $\phi_k$ genormaliseerd } \]
 
       \begin{itemize}
@@ -60,7 +55,7 @@
   \frametitle{Wavelet Transformatie}
   \begin{columns}
     \begin{column}{0.4\linewidth}
-      %\includegraphics[width=\linewidth]{4wavelets.jpg}
+      \includegraphics[width=\linewidth]{4wavelets.jpg}
     \end{column}
     \begin{column}{0.6\linewidth}
       \begin{itemize}
@@ -68,80 +63,161 @@
       \item Kleinere drager $\implies$ discontinuiteiten alleen locaal zichtbaar
       \item Vari\"eteit aan families en klassen
       \item Schalingsfunctie $\phi_\lambda$ en Waveletfunctie $\psi_\lambda$
+      \item JPEG-2000
       \end{itemize}
     \end{column}
   \end{columns}
 }
 
 \frame{
-  \frametitle{Haarwavelet / Daubechies Wavelet}
-  \begin{itemize}
-    \item Simpelste Wavelet
-    \item Schalings en wavelet functie oder watever
-    \item 
-  \end{itemize}
+  \frametitle{Wavelet Transformatie}
+  \begin{columns}
+    \begin{column}{0.6\linewidth}
+      \begin{itemize}
+      \item Mallat, approximatie algoritme van functie
+      \item Op zoek naar $a_\lambda = \langle f, \phi_\lambda \rangle$
+      \item Recursieve relatie: $\phi(x) = \sum_k h_k \phi(2x-k)$
+      \end{itemize}
+\bigskip
+      Mallat:
+      \begin{eqnarray*}
+        a_{i+1}[n] = \sum_k h[k-2n]a_j[k] \\
+        d_{i+1}[n] = \sum_k g[k-2n]a_j[k]
+      \end{eqnarray*}
+    \end{column}
+    \begin{column}{0.4\linewidth}
+      \includegraphics[width=\linewidth]{V_0V_1.png}
+    \end{column}
+  \end{columns}
 }
 
 \frame{
-  \frametitle{Wavelet Transformatie}
-  \begin{itemize}
-    \item Discrete functie van lengte $N = 2^n$
-    \item op zoek naar $\langle f, \psi_\lambda \rangle$
-    \item $f \in V_n$ met $V_n$ ruimte van stuksgewijs constante functies op $2^n$ segmenten (dus $V_0 \subset V_1 \subset \ldots$)
-    \item Bouw $W_i \perp V_i$ zo dat $V_{i+1} = V_i \oplus W_i \implies V_n = V_0 \oplus W_0 \oplus \ldots \oplus W_{n-1}$
-    \item Per constructie $V_i = span\{\phi_{i,n} : n \in \mathbb{Z}\}$
-  \end{itemize}
+  \frametitle{Schema van Algoritme}
+  \includegraphics[width=\linewidth]{mallat.png}
 }
 
 \frame{
   \frametitle{Voorbeeld met Haar}
   \begin{columns}
+    \vspace{-20pt} 
     \begin{column}{0.5\linewidth}
-      Hier moet plaatje bij van wavelet.\\
+      \vspace{-20pt}
+      
       De Haarwavelet heeft filters:
       \begin{itemize}
       \item $h = \frac 1 2 \sqrt 2 \cdot (-1,1)$
       \item $g = \frac 1 2 \sqrt 2 \cdot (1,1)$
       \end{itemize}
-      Signaal : $a_0 = (1,2,1,2,3,4,3,4)$ \\ 
-      
-      $a_1 = \frac 1 2 \sqrt 2 \cdot (3,3,7,7)$
-      $d_1 = \frac 1 2 \sqrt 2 \cdot (-1,-1,-1,-1)$
-      
-      $a_2 = (3,7)$
-      $d_2 = (0,0)$
+\bigskip
+      Signaal : $a_0 = (1,2,1,2,3,4,3,4)$ \\
 
-      $a_3 = \frac12\sqrt2\cdot (10)$
+      $a_1 = \frac 1 2 \sqrt 2 \cdot (3,3,7,7)$\\
+      $d_1 = \frac 1 2 \sqrt 2 \cdot (-1,-1,-1,-1)$\\
+
+      $a_2 = (3,7)$\\
+      $d_2 = (0,0)$\\
+
+      $a_3 = \frac12\sqrt2\cdot (10)$\\
       $d_3 = \frac12\sqrt2\cdot (-4)$
-      \end{column}
-    \begin{column}{0.5\linewidth}
-      \centering (Kijk hier naar)
-      \begin{eqnarray*}
-        a_{i+1}[n] = \sum_k h[k-2n]a_j[k] \\
-        d_{i+1}[n] = \sum_k g[k-2n]a_j[k] 
-      \end{eqnarray*}
     \end{column}
-  \end{columns}
-
+    \begin{column}{0.6\linewidth}
+      \centering
+      \begin{columns}
+        \begin{column}{0.4\linewidth}
+          \includegraphics[width=\linewidth]{HaarWavelet_Psi.jpg}
+        \end{column}
+        \begin{column}{0.4\linewidth}
+          \includegraphics[width=\linewidth]{HaarWavelet_Phi.jpg}
+        \end{column}
+      \end{columns}
+      \begin{eqnarray*}
+        a_{i+1}[n] = \sum_k h[k-2n]a_i[k] \\
+        d_{i+1}[n] = \sum_k g[k-2n]a_i[k]
+      \end{eqnarray*}
+      
   Uiteindelijk getransformeerde wordt:
   $\frac12\sqrt2\cdot(10,-4,0,0,-1,-1,-1,-1)$
+
+    \end{column}
+  \end{columns}
+}
+
+\frame{
+  \frametitle{Daubechies (4)}
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+      \begin{itemize}
+        \item Grotere drager $\implies$ slechter met discontinuiteiten
+        \item Langere filter
+        \item Gaat beter om met locale gladheid
+        \item Subjectief: minder hoekig beeld
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \includegraphics[width=0.8\linewidth]{daubechies.png}
+    \end{column}
+  \end{columns}
 }
 
 \section{Plaatjes}
 
 \frame{
   \frametitle{LoodRecht (Plaatjes)}
-  (mallacdecompositie.jpg)
-  \begin{itemize}
-    \item Generalisering naar meer dimensies
-    \item Mallat-decompositie.txt
-    \item 
-  \end{itemize}
+\begin{columns}
+  \begin{column}{0.6\linewidth}
+    \begin{itemize}
+    \item Generalisatie naar meer dimensies
+    \item \'e\'en approximatie kwadrant en drie detail kwadranten
+    \item Tweedimensionale functies maken:
+      \[\begin{array}{c|c}
+        \phi \otimes \phi & \psi \otimes \phi \\\hline
+        \phi \otimes \psi & \psi \otimes \psi
+      \end{array}\]
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.5\linewidth}
+    \includegraphics[width=\linewidth]{mallat-schema.png}
+  \end{column}
+\end{columns}
 }
 
 \frame{
-  \frametitle{Voorbeelden}
-  Hier komen: Gentoo op verschillende compressie niveau's met FFT / Haar / DB2
+  \frametitle{Voorbeelden (20\%)}
+  \begin{table}
+    \begin{tabular}{ c c }
+      \includegraphics[width=0.3\linewidth]{gentoo.png} &
+      \includegraphics[width=0.3\linewidth]{gentoo_new_20p.png} \\
+
+      \includegraphics[width=0.3\linewidth]{gentoo_20_haar.png} &
+      \includegraphics[width=0.3\linewidth]{gentoo_20_db2.png} 
+    \end{tabular}
+  \end{table}
+}
+
+\frame{
+  \frametitle{Voorbeelden (8\%)}
+  \begin{table}
+    \begin{tabular}{ c c }
+      \includegraphics[width=0.3\linewidth]{gentoo.png} &
+      \includegraphics[width=0.3\linewidth]{gentoo_new_8p.png} \\
+
+      \includegraphics[width=0.3\linewidth]{gentoo_08_haar.png} &
+      \includegraphics[width=0.3\linewidth]{gentoo_08_db2.png} 
+    \end{tabular}
+  \end{table}
+}
+
+\frame{
+  \frametitle{Voorbeelden (1\%)}
+  \begin{table}
+    \begin{tabular}{ c c }
+      \includegraphics[width=0.3\linewidth]{gentoo.png} &
+      \includegraphics[width=0.3\linewidth]{gentoo_new_1p.png} \\
+
+      \includegraphics[width=0.3\linewidth]{gentoo_01_haar_smooth.png} &
+      \includegraphics[width=0.3\linewidth]{gentoo_01_db2_smooth.png} 
+    \end{tabular}
+  \end{table}
 }
 
 \section{Filmpjes}
@@ -149,57 +225,73 @@
 \frame{
   \frametitle{Filmpjes $\implies$ 3D signaal}
   \begin{itemize}
-    \item Natuurlijke voortzetting van Mallat-decompositie
-    \item Voorbeeldtjes
+  \item Natuurlijke voortzetting van Mallat-decompositie
+  \item Opeenvolgende frames op vatten als 3de dimensie
   \end{itemize}
 }
 
 \frame{
   \frametitle{Maar toen...}
-  vergelijkingMallat-vs-Tensor.jpg
   \begin{itemize}
-    \item Vermoeden van Rob over filmpjes
-    \item Tensor decompositie i.p.v. Mallat decompositie
-    \item HTML magicks
+  \item Vermoeden van Rob over filmpjes
+  \item Tensor decompositie i.p.v. Mallat decompositie
+  \item Potentieel beter bij weinig dicontinuiteiten
   \end{itemize}
+  \centering
+  \includegraphics[width=0.5\linewidth]{mallat-vs-tensor.png} 
 }
 
 \section{Wat nu?}
 
 \frame{
   \frametitle{Inhoudsopgave}
-  \itemize{
+  \begin{itemize}
 
   \item Deel over Fourier
 
-    \itemize{
+    \begin{itemize}
     \item[-] Analyse van Discrete Fourier Transform
     \item[-] Fast Fourier Transform algoritme
     \item[-] Toepassing van FFT op plaatjes/geluid w/e
-    }
+    \end{itemize}
 
   \item Deel over Wavelets
 
-    \itemize{
+    \begin{itemize}
     \item[-] Theoretische beschouwing van wavelets
     \item[-] Toepassing van Wavelets $\implies$ DWT
     \item[-] Analyse van de DWT
     \item[-] Toepassing van DWT op plaatjes/geluid
     \item[-] Tensor product en filmpjes
-    }
+    \end{itemize}
 
   \item Vergelijkend deel Wavelets vs. Fourier + Results
-  }
+  \end{itemize}
 }
 
 \frame{
   \frametitle{Wat nog moet gebeuren}
   \itemize{
-    \item Kijken naar convergentie eigenschappen van de fout
-    \item Afronden van wat we nu hebben
-    \item Eventueel nog iets interessants onderzoeken
-    \item Code opschonen
+  \item Kijken naar convergentie eigenschappen van de fout
+  \item Afronden van wat we nu hebben
+  \item Eventueel nog iets interessants onderzoeken
+  \item Code opschonen
   }
+}
+
+\frame{
+   Recursieve relatie door geneste ruimtes:
+   \bigskip
+
+   Laat $V_i = span\{\phi_{i,n} : n \in \mathbb{Z}\},\quad W_i = span\{\psi_{i,n}:n \in \mathbb{Z}\}$
+
+   $V_{i+1} = V_i \oplus W_i \implies V_n = V_0 \oplus W_0 \oplus \ldots \oplus W_{n-1}$
+   \bigskip
+
+   Dus $\phi_i$ en $\psi_i$ te schrijven zijn in termen van $\phi_{i+1}$.\\
+   Ook $\psi_i$ zijn een basis voor $V_n$
+
+  \end{itemize}
 }
 
 \end{document}
