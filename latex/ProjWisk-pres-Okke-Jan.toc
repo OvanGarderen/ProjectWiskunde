@@ -1,4 +1,4 @@
-\beamer@endinputifotherversion {3.10pt}
+\beamer@endinputifotherversion {3.20pt}
 \beamer@sectionintoc {1}{Theorie}{2}{0}{1}
 \beamer@sectionintoc {2}{Begeleider}{4}{0}{2}
 \beamer@sectionintoc {3}{Project}{5}{0}{3}

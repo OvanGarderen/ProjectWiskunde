@@ -60,14 +60,14 @@
   \frametitle{Wavelet Transformatie}
   \begin{columns}
     \begin{column}{0.4\linewidth}
-      \includegraphics[width=\linewidth]{4wavelets.jpg}
+      %\includegraphics[width=\linewidth]{4wavelets.jpg}
     \end{column}
     \begin{column}{0.6\linewidth}
       \begin{itemize}
       \item Weer othonormale basis
       \item Kleinere drager $\implies$ discontinuiteiten alleen locaal zichtbaar
       \item Vari\"eteit aan families en klassen
-      \item
+      \item Schalingsfunctie $\phi_\lambda$ en Waveletfunctie $\psi_\lambda$
       \end{itemize}
     \end{column}
   \end{columns}
@@ -85,7 +85,11 @@
 \frame{
   \frametitle{Wavelet Transformatie}
   \begin{itemize}
-  \item TODO
+    \item Discrete functie van lengte $N = 2^n$
+    \item op zoek naar $\langle f, \psi_\lambda \rangle$
+    \item $f \in V_n$ met $V_n$ ruimte van stuksgewijs constante functies op $2^n$ segmenten (dus $V_0 \subset V_1 \subset \ldots$)
+    \item Bouw $W_i \perp V_i$ zo dat $V_{i+1} = V_i \oplus W_i \implies V_n = V_0 \oplus W_0 \oplus \ldots \oplus W_{n-1}$
+    \item Per constructie $V_i = span\{\phi_{i,n} : n \in \mathbb{Z}\}$
   \end{itemize}
 }
 
