@@ -1,6 +1,7 @@
 \documentclass[11pt]{amsart}
 \usepackage[demo]{graphicx}
 \usepackage{subfigure}
+\usepackage{parcolumns}
 
 \usepackage[dutch]{babel}
 \usepackage{a4wide}
@@ -122,26 +123,57 @@ Het volgende niveau wordt uitgevoerd met de rij $y_l$ (dus met de helft van de l
 
 Hiermee wordt ook direct het inverse algoritme duidelijk. Gegeven een verzameling rijen $\{y_h, y_{lh}, y_{llh}, \ldots, y_{l^nh}, y_{l^nl}\}$ kunnen we in elke stap het originele signaal $x[n]$ terugvinden door, gegeven de $y_l, y_h$ van die stap:
 \[
-	y^*_{l}[n] = \begin{cases} y_{l}[n/2] \text{ als } n \mod{2} \equiv 0 \\ 0 \text{ anders}; \end{cases}
+	y^*_{l}[n] = \begin{cases} y_{l}[n/2] &\text{als } n \mod{2} \equiv 0 \\ 0 &\text{anders}; \end{cases}
 \]
 \[
-	y^*_{h}[n] = \begin{cases} y_{h}[n/2] \text{ als } n \mod{2} \equiv 0 \\ 0 \text{ anders}. \end{cases}
+	y^*_{h}[n] = \begin{cases} y_{h}[n/2] &\text{ als } n \mod{2} \equiv 0 \\ 0 &\text{anders}. \end{cases}
 \]
 \[
-	x[n] = \sum_{k=-\infty}^\infty y^*_{l}[k]g^*[n-k] + \sum_{k=-\infty}^\infty y^*_{h}[k]h^*[n-k]
+	x[n] = \sum_{k=-\infty}^\infty y^*_{l}[k]g^*[n-k] + \sum_{k=-\infty}^\infty y^*_{h}[k]h^*[n-k].
 \]
-
+Herhaald toepassen van dit geeft het originele signaal terug\footnote{Mits er onderweg geen verlies van preciesie plaats heeft gevonden.}.
 \end{algoritme}
 
-discontinuiteiten -> matplotlib.
+Een klein voorbeeld. De meest simpele Wavelet is de Haarwavelet, uitgevonden door Alfred Haar in 1909. De term Wavelet werd echter pas veel later genoemd.
 
-Filter
+De Haarwavelet is als volgt gedefinieerd:
+\[
+	\psi(x) = \begin{cases} 1 & \text{als } x \in [0,\frac{1}{2}] \\ -1 & \text{als } x \in [\frac{1}{2},1] \\ 0 & \text{anders.} \end{cases}
+\]
+\[
+	\phi(x) = \begin{cases} 1 & \text{als } x \in [0,1] \\ 0 & \text{anders.} \end{cases}
+\]
+De filters die we hierbij vinden worden dus
+\[
+	h[n] = (-\frac{1}{2}\sqrt{2},\frac{1}{2}\sqrt{2}); g[n] = (\frac{1}{2}\sqrt{2},\frac{1}{2}\sqrt{2}); h^*[n] = (\frac{1}{2}\sqrt{2},-\frac{1}{2}\sqrt{2}); g[n] = (\frac{1}{2}\sqrt{2},\frac{1}{2}\sqrt{2}).
+\]
 
-\section{Discrete Wavelet Transformation en Fast}
-Recursief toepassen (plaatje), approximation \& detail coeffs.
+Stel we hebben een signaal $(1,2,1,2,3,4,3,4)$. Dan vinden we met de eerste stap
+\[
+	y_l = \frac{1}{2}\sqrt{2}\cdot(3,3,7,7); y_h = \frac{1}{2}\sqrt{2}\cdot(-1,-1,-1,-1)
+\]
+en daarna
+\[
+	y_{ll} = (3, 7); y_{lh} = (0, 0)
+\]
+en daarna
+\[
+	y_{lll} = \frac{1}{2}\sqrt{2}(10); y_{llh} = \frac{1}{2}\sqrt{2}(-4).
+\]
 
-\section{Compression}
-plaatje met matplotlib
+Ons uiteindelijke getransformeerde signaal wordt
+\[
+	y = (y_{lll},y_{llh},y_{lh},y_{h}) = \frac{1}{2}\sqrt{2}(10, -4, 0, 0, -1, -1, -1, -1).
+\]
+
+\section{Compressie}
+Wanneer we nu deze verzameling $\{y_h, y_{lh}, y_{llh}, \ldots, y_{l^nh}, y_{l^nl}\}$ `aan elkaar plakken' tot een rij $y[n]$ met dezelfde lengte als het oorspronkelijke signaal kunnen we op dezelfde wijze als bij de Fouriertransformatie co\"effici\"enten die kleiner zijn dan een bepaalde waarde $\e$ weggooien. Dit kan natuurlijk op twee manieren: 
+\begin{itemize}
+\item Laat $\e$ vast en bepaal daarmee hoeveel er weggegooid wordt;
+\item Laat het compressieniveau\footnote{de fractie nog overgebleven co\"effici\"enten} $p \in (0,1]$ vast en bepaal een $\e_p$ aan de hand hiervan.
+\end{itemize}
+
+Wij hebben in onze implementatie gekozen voor de tweede optie
 
 \section{In meer dimensies}
 
