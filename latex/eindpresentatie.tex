@@ -23,24 +23,24 @@
 \frame{
   \frametitle{Recap}
   \begin{itemize}
-  \item Project bij Rob Stevensson
-  \item JPEG-2000
-  \item Successor van JPEG $\implies$ Fourier
-  \item Discreet signaal (in 1, 2 of 3 dimensies)
+  \item Project bij Rob Stevenson
+  \item Originele JPEG $\implies$ Fouriertransformatie
+  \item JPEG-2000 $\implies$ Wavelets
+  \item Discreet signaal?
   \end{itemize}
 }
 
 \frame{
-  \frametitle{Fourier Transformatie}
+  \frametitle{Fouriertransformatie}
   \begin{columns}
     \begin{column}{0.75\linewidth}
       \[ \left\{ \phi_k(x) = e^{i k 2 \pi x}: k \in \mathbb{N}_0 \right\} \]
       \[ f = \sum \langle f, \phi_k \rangle \phi_k\text{, met $\phi_k$ genormaliseerd } \]
 
       \begin{itemize}
-      \item Functie schrijven in de Fourier-basis
-      \item co\"efficienten kleiner dan $\epsilon$``weggooien"
-      \item signaal reconstrueren adhv kleinere set co\"efficienten
+      \item Functie schrijven in de Fourierbasis
+      \item Co\"effici\"enten kleiner dan $\epsilon$ ``weggooien"
+      \item Signaal reconstrueren adhv kleinere set co\"effici\"enten
       \end{itemize}
     \end{column}
     \begin{column}{0.25\linewidth}
@@ -52,7 +52,7 @@
 \section{Wavelets}
 
 \frame{
-  \frametitle{Wavelet Transformatie}
+  \frametitle{Wavelettransformatie}
   \begin{columns}
     \begin{column}{0.4\linewidth}
       \includegraphics[width=\linewidth]{4wavelets.jpg}
@@ -62,7 +62,7 @@
       \item Weer othonormale basis
       \item Kleinere drager $\implies$ discontinuiteiten alleen locaal zichtbaar
       \item Vari\"eteit aan families en klassen
-      \item Schalingsfunctie $\phi_\lambda$ en Waveletfunctie $\psi_\lambda$
+      \item Schalingsfunctie $\phi$ en Waveletfunctie $\psi$
       \item JPEG-2000
       \end{itemize}
     \end{column}
@@ -70,22 +70,26 @@
 }
 
 \frame{
-  \frametitle{Wavelet Transformatie}
+  \frametitle{Discrete Wavelettransformatie}
   \begin{columns}
     \begin{column}{0.6\linewidth}
       \begin{itemize}
-      \item Mallat, approximatie algoritme van functie
       \item Op zoek naar $a_\lambda = \langle f, \phi_\lambda \rangle$
-      \item Recursieve relatie: $\phi(x) = \sum_k h_k \phi(2x-k)$
+      \item Mallat: algoritme voor approximatie van functie
+      \item Recursieve relaties: 
+		\[\phi(x) = \textstyle\sum_k h_k \phi(2x-k)\]
+		\[\psi(x) = \textstyle\sum_k g_k \phi(2x-k)\]
       \end{itemize}
 \bigskip
       Mallat:
       \begin{eqnarray*}
-        a_{i+1}[n] = \sum_k h[k-2n]a_j[k] \\
-        d_{i+1}[n] = \sum_k g[k-2n]a_j[k]
+        a_{i+1}[n] = \textstyle\sum_k h[k-2n]a_j[k] \\
+        d_{i+1}[n] = \textstyle\sum_k g[k-2n]a_j[k]
       \end{eqnarray*}
     \end{column}
     \begin{column}{0.4\linewidth}
+	\centering{Haar:}\\
+	~\\
       \includegraphics[width=\linewidth]{V_0V_1.png}
     \end{column}
   \end{columns}
@@ -143,7 +147,7 @@
 }
 
 \frame{
-  \frametitle{Daubechies (4)}
+  \frametitle{Daubechies 4 (ook wel Daubechies 2)}
   \begin{columns}
     \begin{column}{0.5\linewidth}
       \begin{itemize}
@@ -162,17 +166,17 @@
 \section{Plaatjes}
 
 \frame{
-  \frametitle{LoodRecht (Plaatjes)}
+  \frametitle{2-dimensionaal signaal (Plaatjes)}
 \begin{columns}
   \begin{column}{0.6\linewidth}
     \begin{itemize}
-    \item Generalisatie naar meer dimensies
-    \item \'e\'en approximatie kwadrant en drie detail kwadranten
+    \item E\'en approximatiekwadrant en drie detailkwadranten
     \item Tweedimensionale functies maken:
       \[\begin{array}{c|c}
         \phi \otimes \phi & \psi \otimes \phi \\\hline
         \phi \otimes \psi & \psi \otimes \psi
       \end{array}\]
+    \item Generalisatie naar meer dimensies
     \end{itemize}
   \end{column}
   \begin{column}{0.5\linewidth}
@@ -225,8 +229,8 @@
 \frame{
   \frametitle{Filmpjes $\implies$ 3D signaal}
   \begin{itemize}
-  \item Natuurlijke voortzetting van Mallat-decompositie
-  \item Opeenvolgende frames op vatten als 3de dimensie
+  \item Natuurlijke voortzetting van Mallatdecompositie
+  \item Opeenvolgende frames opvatten als 3e dimensie
   \end{itemize}
 }
 
@@ -234,7 +238,7 @@
   \frametitle{Maar toen...}
   \begin{itemize}
   \item Vermoeden van Rob over filmpjes
-  \item Tensor decompositie i.p.v. Mallat decompositie
+  \item Tensorproduct i.p.v. Mallatdecompositie
   \item Potentieel beter bij weinig dicontinuiteiten
   \end{itemize}
   \centering
@@ -251,8 +255,8 @@
 
     \begin{itemize}
     \item[-] Analyse van Discrete Fourier Transform
-    \item[-] Fast Fourier Transform algoritme
-    \item[-] Toepassing van FFT op plaatjes/geluid w/e
+    \item[-] Fast Fourier Transform-algoritme
+    \item[-] Toepassing van FFT op plaatjes/geluid
     \end{itemize}
 
   \item Deel over Wavelets
@@ -262,21 +266,21 @@
     \item[-] Toepassing van Wavelets $\implies$ DWT
     \item[-] Analyse van de DWT
     \item[-] Toepassing van DWT op plaatjes/geluid
-    \item[-] Tensor product en filmpjes
+    \item[-] Tensorproduct en filmpjes
     \end{itemize}
 
-  \item Vergelijkend deel Wavelets vs. Fourier + Results
+  \item Vergelijkend deel Wavelets vs. Fourier en Resultaten
   \end{itemize}
 }
 
 \frame{
   \frametitle{Wat nog moet gebeuren}
-  \itemize{
-  \item Kijken naar convergentie eigenschappen van de fout
+  \begin{itemize}
+  \item Kijken naar convergentie-eigenschappen van de fout (hoe goed is de benadering theoretisch)
   \item Afronden van wat we nu hebben
   \item Eventueel nog iets interessants onderzoeken
   \item Code opschonen
-  }
+  \end{itemize}
 }
 
 \frame{
