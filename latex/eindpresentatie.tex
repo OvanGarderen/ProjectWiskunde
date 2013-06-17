@@ -28,25 +28,33 @@
   \item JPEG-2000 $\implies$ Wavelets
   \item Discreet signaal?
   \end{itemize}
+  \begin{columns}
+	\begin{column}{.3\textwidth}
+	  \includegraphics[width=\textwidth]{plaatje.jpg}% picture filename
+	\end{column}
+	\begin{column}{.5\textwidth}
+	  $\left[ \begin{array}{rrrrrr}
+		250 & 237 & 215 & 209 & 218 & 238 \\
+		237 & 194 & 138 & 109 & 136 & 195 \\
+		217 & 133 &  45 &  15 &  46 & 135 \\
+		204 & 103 &  14 &   0 &  14 & 105 \\
+		215 & 128 &  36 &  11 &  38 & 128 \\
+		233 & 186 & 120 &  91 & 120 & 185 \\
+	  \end{array}\right]$
+	\end{column}
+\end{columns}
 }
 
 \frame{
   \frametitle{Fouriertransformatie}
-  \begin{columns}
-    \begin{column}{0.75\linewidth}
-      \[ \left\{ \phi_k(x) = e^{i k 2 \pi x}: k \in \mathbb{N}_0 \right\} \]
-      \[ f = \sum \langle f, \phi_k \rangle \phi_k\text{, met $\phi_k$ genormaliseerd } \]
-
-      \begin{itemize}
-      \item Functie schrijven in de Fourierbasis
-      \item Co\"effici\"enten kleiner dan $\epsilon$ ``weggooien"
-      \item Signaal reconstrueren adhv kleinere set co\"effici\"enten
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.25\linewidth}
-      \includegraphics[width=\linewidth]{Sample2.jpg}
-    \end{column}
-  \end{columns}
+  \[ \left\{ \phi_k(x) = e^{i k 2 \pi x}: k \in \mathbb{N}_0 \right\} \]
+  \[ f = \sum \langle f, \phi_k \rangle \phi_k\text{, met $\phi_k$ genormaliseerd } \]
+  
+  \begin{itemize}
+  \item Functie schrijven in de Fourierbasis
+  \item Co\"effici\"enten kleiner dan $\epsilon$ ``weggooien"
+  \item Signaal reconstrueren adhv kleinere set co\"effici\"enten
+  \end{itemize}
 }
 
 \section{Wavelets}
@@ -60,7 +68,8 @@
     \begin{column}{0.6\linewidth}
       \begin{itemize}
       \item Weer othonormale basis
-      \item Kleinere drager $\implies$ discontinuiteiten alleen locaal zichtbaar
+\[ \left\{\psi_{i,j}(x) = \frac{1}{\sqrt{2^i}}\psi\left(\frac{x - 2^ij}{2^i}\right)\right\} \]
+      \item Kleinere drager $\implies$ discontinu\"iteiten alleen locaal zichtbaar
       \item Vari\"eteit aan families en klassen
       \item Schalingsfunctie $\phi$ en Waveletfunctie $\psi$
       \item JPEG-2000
@@ -74,22 +83,21 @@
   \begin{columns}
     \begin{column}{0.6\linewidth}
       \begin{itemize}
-      \item Op zoek naar $a_\lambda = \langle f, \phi_\lambda \rangle$
-      \item Mallat: algoritme voor approximatie van functie
+      \item Geneste rij ruimtes
       \item Recursieve relaties: 
 		\[\phi(x) = \textstyle\sum_k h_k \phi(2x-k)\]
 		\[\psi(x) = \textstyle\sum_k g_k \phi(2x-k)\]
+      \item Op zoek naar $a_\lambda = \langle f, \phi_\lambda \rangle, d_\lambda = \langle f,\psi_\lambda\rangle$
       \end{itemize}
-\bigskip
       Mallat:
       \begin{eqnarray*}
-        a_{i+1}[n] = \textstyle\sum_k h[k-2n]a_j[k] \\
-        d_{i+1}[n] = \textstyle\sum_k g[k-2n]a_j[k]
+        a_{(j-1,n)} = \textstyle\sum_k h_{k-2n}a_{(j,k)} \\
+        d_{(j-1,n)} = \textstyle\sum_k g_{k-2n}a_{(j,k)}
       \end{eqnarray*}
     \end{column}
     \begin{column}{0.4\linewidth}
 	\centering{Haar:}\\
-	~\\
+	\bigskip
       \includegraphics[width=\linewidth]{V_0V_1.png}
     \end{column}
   \end{columns}
@@ -109,20 +117,20 @@
       
       De Haarwavelet heeft filters:
       \begin{itemize}
-      \item $h = \frac 1 2 \sqrt 2 \cdot (-1,1)$
-      \item $g = \frac 1 2 \sqrt 2 \cdot (1,1)$
+      \item $h = \frac 1 2 \sqrt 2 \cdot (1,1)$
+      \item $g = \frac 1 2 \sqrt 2 \cdot (-1,1)$
       \end{itemize}
 \bigskip
-      Signaal : $a_0 = (1,2,1,2,3,4,3,4)$ \\
+      Signaal : $a_3 = (1,2,1,2,3,4,3,4)$ \\
 
-      $a_1 = \frac 1 2 \sqrt 2 \cdot (3,3,7,7)$\\
-      $d_1 = \frac 1 2 \sqrt 2 \cdot (-1,-1,-1,-1)$\\
+      $a_2 = \frac 1 2 \sqrt 2 \cdot (3,3,7,7)$\\
+      $d_2 = \frac 1 2 \sqrt 2 \cdot (-1,-1,-1,-1)$\\
 
-      $a_2 = (3,7)$\\
-      $d_2 = (0,0)$\\
+      $a_1 = (3,7)$\\
+      $d_1 = (0,0)$\\
 
-      $a_3 = \frac12\sqrt2\cdot (10)$\\
-      $d_3 = \frac12\sqrt2\cdot (-4)$
+      $a_0 = \frac12\sqrt2\cdot (10)$\\
+      $d_0 = \frac12\sqrt2\cdot (-4)$
     \end{column}
     \begin{column}{0.6\linewidth}
       \centering
@@ -135,8 +143,8 @@
         \end{column}
       \end{columns}
       \begin{eqnarray*}
-        a_{i+1}[n] = \sum_k h[k-2n]a_i[k] \\
-        d_{i+1}[n] = \sum_k g[k-2n]a_i[k]
+        a_{(j-1,n)} = \textstyle\sum_k h_{k-2n}a_{(j,k)} \\
+        d_{(j-1,n)} = \textstyle\sum_k g_{k-2n}a_{(j,k)}
       \end{eqnarray*}
       
   Uiteindelijk getransformeerde wordt:
@@ -151,9 +159,9 @@
   \begin{columns}
     \begin{column}{0.5\linewidth}
       \begin{itemize}
-        \item Grotere drager $\implies$ slechter met discontinuiteiten
         \item Langere filter
-        \item Gaat beter om met locale gladheid
+        \item[$\implies$] slechter met discontinu\"iteiten
+        \item[$\implies$] Gaat beter om met locale gladheid
         \item Subjectief: minder hoekig beeld
       \end{itemize}
     \end{column}
@@ -187,13 +195,17 @@
 
 \frame{
   \frametitle{Voorbeelden (20\%)}
+  \centering
   \begin{table}
-    \begin{tabular}{ c c }
+    \begin{tabular}{ c c c c}
+      Origineel &
       \includegraphics[width=0.3\linewidth]{gentoo.png} &
-      \includegraphics[width=0.3\linewidth]{gentoo_new_20p.png} \\
-
+      \includegraphics[width=0.3\linewidth]{gentoo_new_20p.png} &
+      Fourier \\
+      Haar &
       \includegraphics[width=0.3\linewidth]{gentoo_20_haar.png} &
-      \includegraphics[width=0.3\linewidth]{gentoo_20_db2.png} 
+      \includegraphics[width=0.3\linewidth]{gentoo_20_db2.png} &
+      Daubechies 2
     \end{tabular}
   \end{table}
 }
@@ -201,12 +213,15 @@
 \frame{
   \frametitle{Voorbeelden (8\%)}
   \begin{table}
-    \begin{tabular}{ c c }
+    \begin{tabular}{ c c c c}
+      Origineel &
       \includegraphics[width=0.3\linewidth]{gentoo.png} &
-      \includegraphics[width=0.3\linewidth]{gentoo_new_8p.png} \\
-
+      \includegraphics[width=0.3\linewidth]{gentoo_new_8p.png} &
+      Fourier \\
+      Haar &
       \includegraphics[width=0.3\linewidth]{gentoo_08_haar.png} &
-      \includegraphics[width=0.3\linewidth]{gentoo_08_db2.png} 
+      \includegraphics[width=0.3\linewidth]{gentoo_08_db2.png} &
+      Daubechies 2
     \end{tabular}
   \end{table}
 }
@@ -214,12 +229,15 @@
 \frame{
   \frametitle{Voorbeelden (1\%)}
   \begin{table}
-    \begin{tabular}{ c c }
+    \begin{tabular}{ c c c c}
+      Origineel &
       \includegraphics[width=0.3\linewidth]{gentoo.png} &
-      \includegraphics[width=0.3\linewidth]{gentoo_new_1p.png} \\
-
+      \includegraphics[width=0.3\linewidth]{gentoo_new_1p.png} &
+      Fourier \\
+      Haar &
       \includegraphics[width=0.3\linewidth]{gentoo_01_haar_smooth.png} &
-      \includegraphics[width=0.3\linewidth]{gentoo_01_db2_smooth.png} 
+      \includegraphics[width=0.3\linewidth]{gentoo_01_db2_smooth.png} &
+      Daubechies 2
     \end{tabular}
   \end{table}
 }
@@ -239,7 +257,7 @@
   \begin{itemize}
   \item Vermoeden van Rob over filmpjes
   \item Tensorproduct i.p.v. Mallatdecompositie
-  \item Potentieel beter bij weinig dicontinuiteiten
+  \item Potentieel beter bij weinig discontinu\"iteiten
   \end{itemize}
   \centering
   \includegraphics[width=0.5\linewidth]{mallat-vs-tensor.png} 
@@ -284,16 +302,20 @@
 }
 
 \frame{
-   Recursieve relatie door geneste ruimtes:
+  \frametitle{Preciezere beschrijving}
+   Recursieve relatie door geneste ruimtes $V_0 \subset V_1 \subset \ldots \subset L_2$:
    \bigskip
 
-   Laat $V_i = span\{\phi_{i,n} : n \in \mathbb{Z}\},\quad W_i = span\{\psi_{i,n}:n \in \mathbb{Z}\}$
+   $V_i := span\{\phi_{i,j} : j \in \mathbb{Z}\},\quad V_{i+1} \supset W_i \perp V_i$.
+   %$ = span\{\psi_{i,j}:j \in \mathbb{Z}\}$
 
-   $V_{i+1} = V_i \oplus W_i \implies V_n = V_0 \oplus W_0 \oplus \ldots \oplus W_{n-1}$
+   $V_{i+1} = V_i \oplus W_i \implies V_n = V_0 \oplus W_0 \oplus \ldots \oplus W_{n-1}.$\\
+   Construeer $\psi_{i,j}$ zo dat $W_i = span\{\psi_{i,j}\}$:
    \bigskip
 
-   Dus $\phi_i$ en $\psi_i$ te schrijven zijn in termen van $\phi_{i+1}$.\\
-   Ook $\psi_i$ zijn een basis voor $V_n$
+   $\phi_{i,j}$ te schrijven zijn in termen van $\phi_{i+1,k}$ want $V_i \subset V_{i+1}$.\\
+   $\psi_{i,j}$ ook want $W_i \subset V_{i+1}$.\\
+   %Ook $\psi_i$ zijn een basis voor $V_n$
 }
 
 \end{document}
