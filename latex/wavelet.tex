@@ -25,13 +25,103 @@
 \begin{document}
 
 \section{Intro}
+De Fouriertransformatie bestaat al honderden jaren en is een grote speler geworden in de \emph{signal processing}. Een groot nadeel van deze transformatie is dat zij slecht reageert op discontinue signalen.
+
+In de loop van de vorige eeuw is een nieuwe transformatie ontstaan met een eigenschap die de Fouriertransformatie nooit kende. Deze noemt men nu ook wel de Wavelettransformatie.
+
+Een wavelet is simpelweg een functie die voldoet aan
+\[
+  \int_{-\infty}^{\infty} \psi(t) dt = 0.
+\]
+Met deze functie $\psi$ kunnen we een familie functies $\psi_{u,s}$ bouwen door middel van schaling en translatie:
+\[
+  \psi_{u,s}(t) := \frac{1}{\sqrt{s}} \psi\left(\frac{t-u}{s}\right).
+\]
+
+Deze familie geeft aanleiding tot een Wavelettransformatie $W_f$ van $f$:
+\[
+  W_f(u,s) = \int_{-\infty}^\infty f(t) \psi^*_{u,s}(t) dt.
+\]
+
+Het is nu mogelijk om wavelets te construeren die met deze schaling en translatie een basis voor de $L_2$ vormen. Over het algemeen kijken we dan naar
+\[
+  \Psi := \left\{ \psi_{j,n}(t) = \frac{1}{\sqrt{2^j}} \psi\left( \frac{t - 2^jn}{2^j}\right) : (j,n) \in \Z^2 \right\}.
+\]
+De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er een orthogonale (en dus een orthonormale) basis gevormd wordt. 
+
+Figuurtje van voorbeeld TODODOO.
+
+Het gevolg is nu dat we elke voldoend nette\footnote{Deze functie moet wel in $L_2$ zitten natuurlijk.} functie kunnen schrijven in deze basis:
+\[
+  f(t) = \sum_{j=-\infty}^{\infty} \sum_{n=-\infty}^{\infty} \langle f, \psi_{j,n} \rangle \psi_{j,n}(t),
+\]
+waarbij $\langle \cdot, \cdot \rangle$ het standaardinproduct op de $L_2$ aangeeft.
+
+Het grote nadeel van de Fouriertransformatie maakt compressie van discrete signalen moeilijk. Veel van deze wavelets worden nu z\'o geconstrueerd dat dit probleem (deels) verholpen wordt. We zijn namelijk op zoek naar een wavelet die een eindige drager heeft. Het blijkt dat deze bestaat en dat er zelfs een hele grote verzameling wavelets is, elk met eigen gewilde eigenschappen.
+
+Omdat wij naar de toepassing van wavelets binnen de beeldcompressie bekijken, zijn we natuurlijk vooral ge\"interesseerd in het discrete geval. We kijken dus naar de benadering van $f$ op een TODO. Dit geeft aanleiding tot een rij geneste ruimtes die uiteindelijk naar de $L_2$ toe gaat
+\begin{equation}
+  \label{multires}
+  \{0\} \ldots \subset V_0 \subset V_1 \subset \ldots \subset L_2
+\end{equation}
+genaamd een multiresolutie.
+\subsection{Multiresolutie}
+Een rij geneste ruimtes $\{ V_j: j \in \Z \}$ zoals in \eqref{multires} heet een multiresolutie wanneer voldaan wordt aan de volgende eigenschappen:
+\[
+\begin{array}{c}
+  \forall j, k: f(t) \in V_j \implies f(t - 2^j k) \in V_j; \\
+  \forall j: V_{j+1} \subset V_j; \\
+  \forall j: f(t) \in V_j \iff f(t/2) \in V_{j+1}; \\
+  \cap_{j=-\infty}^{\infty} V_{j} = \{0\}; \\
+  \cup_{j=-\infty}^{\infty} V_j = L_2. \\
+  TODO: \text{ Er is $\phi$ zo dat $\{ \phi(t-n): n \in \Z \}$ een Rieszbasis voor $V_0$ is.}
+\end{array}
+\]
+
+Als voorbeeld bekijken we een multiresolutie van stuksgewijs constante functies. De ruimte $V_j$ wordt hiermee de verzameling van alle $g(t) \in L_2$ die constant zijn voor $t \in [n 2^j, (n+1)2^j)$ met $n \in \Z$. De basisfunctie $\phi$ voor $V_0$ wordt in dit geval $\phi(t) = 1_{[0,1]}$.
+
+\section{Schalingsfuncties}
+Gegeven zo'n Rieszbasis voor $V_0$ willen we graag een orthonormale basis voor $V_j$ construeren. 
+TODO: gaan we dit bewijzen? -> stelling 7.1 Mallat
+Deze $\theta$ geeft een $\phi$ volgens Mallat. Wanneer we nu defini\"eren
+\[
+  \phi_{j,n}(t) := \frac{1}{\sqrt{2^j}} \phi\left( \frac{t-n}{2^j} \right),
+\]
+is $\{ \phi_{j,n}: n \in \Z \}$ een orthonormale basis voor $V_j$.
+
+\subsection{Benadering} TODO.
+
+Met de multiresolutie uit het eerdere voorbeeld kunnen we vinden dat $\{\theta(t-n): n \in \Z \}$ al een orthonormale basis is voor $V_0$, met als gevolg dat $\phi = \theta$.
+
+\section{Filters}
+TODO intro.
+
+Per definitie van de multiresolutie weten we dat $V_j \subset V_{j-1}$. In het bijzonder geldt dat $2^{-1/2}\phi(t/2) \in V_1 \subset V_0$ en omdat $\{ \phi(t-n): n \in \Z\}$ een orthonormale basis voor $V_0$ is, kunnen we $2^{-1/2} \phi(t/2)$ nu schrijven als
+\[
+  \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^{\infty} \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle \phi(t-n).
+\]
+Deze inproducten hebben een speciale naam, want de rij $\{h[n]: n \in \Z\}$ met
+\[
+  h[n] := \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle
+\]
+wordt nu ook wel de \emph{filter} van $\phi$ genoemd. Andersom, gegeven een $h[n]$ die voldoet aan een aantal voorwaarden, is er een schalingsfunctie $\phi \in L^2(\R)$ waarvoor $h[n]$ de filter is. THEOREM 7.2 TODO?
+
+Om weer terug te komen bij het doorlopende voorbeeld $\phi(t) = 1_{[0,1]}$, vinden we in dit geval dat
+\[
+  h[n] = \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle = \begin{cases} \frac{1}{\sqrt{2}} & \text{ als } n \in \{0,1\} \\ 0 & \text{ anders.} \end{cases}
+\]
+
+\section{Eindelijk: wavelets}
+
+\iffalse
+\section{Intro}
 Het grote nadeel van de Fouriertransformatie is dat een enkele discontinu\"iteit grote gevolgen heeft voor de mate van afname van de co\"effici\"enten. Dit betekent dat compressie in deze gevallen moeilijk wordt. De Waveletbasis is wat anders: elke basisfunctie heeft een compacte drager. Zie de figuur.
 \begin{figure}[h]
 \subfigure[Impressie van een aantal Fourierbasiselementen]{\includegraphics[width=.4\linewidth]{Fourier_basis.jpg}}
 \subfigure[Een aantal Morlet-Wavelet basiselementen]{\includegraphics[width=.4\linewidth]{Wavelet_basis.jpg}}
 \end{figure}
 
-Het gevolg is dat bij Wavelets discontinu\"iteiten in slechts een deel van de basisfuncties `zichtbaar' zijn. De co\"effici\"enten van de andere basisfuncties nemen op deze manier nog steeds netjes af.
+Het gevolg is dat bij Wavelets een discontinu\"iteit in slechts een deel van de basisfuncties `zichtbaar' zijn. De co\"effici\"enten van de andere basisfuncties nemen op deze manier nog steeds netjes af.
 
 Vanaf nu zullen we (voor het continue geval) aannemen dat een functie/signaal in $L_2$ leeft. Dit is een Hilbertruimte. Laat $\Psi$ een orthonormale basis voor deze ruimte. Als nu een functie $f$ in deze ruimte geschreven wordt in $\Psi$:
 \[
@@ -191,5 +281,6 @@ Terminology: PSNR, implementatie (snippets)
 \section{discussion}
 
 BRONNEN
+\fi
 
 \end{document}
