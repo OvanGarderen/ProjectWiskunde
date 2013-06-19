@@ -9,6 +9,8 @@
 
 \newtheorem*{vraag}{Vraag}
 \newtheorem*{uitwerking}{Uitwerking}
+\newtheorem*{lemma}{Lemma}
+\newtheorem*{stelling}{Stelling}
 \newtheorem*{algoritme}{Algoritme}
 
 \newcommand{\R}{\mathbb{R}}
@@ -43,7 +45,7 @@ Deze familie geeft aanleiding tot een Wavelettransformatie $W_f$ van $f$:
   W_f(u,s) = \int_{-\infty}^\infty f(t) \psi^*_{u,s}(t) dt.
 \]
 
-Het is nu mogelijk om wavelets te construeren die met deze schaling en translatie een basis voor de $L_2$ vormen. Over het algemeen kijken we dan naar
+Het is nu mogelijk om wavelets te construeren die met deze schaling en translatie een basis voor de $L_2(\R)$ vormen. Over het algemeen kijken we dan naar
 \[
   \Psi := \left\{ \psi_{j,n}(t) = \frac{1}{\sqrt{2^j}} \psi\left( \frac{t - 2^jn}{2^j}\right) : (j,n) \in \Z^2 \right\}.
 \]
@@ -51,18 +53,18 @@ De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er
 
 Figuurtje van voorbeeld TODODOO.
 
-Het gevolg is nu dat we elke voldoend nette\footnote{Deze functie moet wel in $L_2$ zitten natuurlijk.} functie kunnen schrijven in deze basis:
+Het gevolg is nu dat we elke voldoend nette\footnote{Deze functie moet wel in $L_2(\R)$ zitten natuurlijk.} functie kunnen schrijven in deze basis:
 \[
   f(t) = \sum_{j=-\infty}^{\infty} \sum_{n=-\infty}^{\infty} \langle f, \psi_{j,n} \rangle \psi_{j,n}(t),
 \]
-waarbij $\langle \cdot, \cdot \rangle$ het standaardinproduct op de $L_2$ aangeeft.
+waarbij $\langle \cdot, \cdot \rangle$ het standaardinproduct op de $L_2(\R)$ aangeeft.
 
 Het grote nadeel van de Fouriertransformatie maakt compressie van discrete signalen moeilijk. Veel van deze wavelets worden nu z\'o geconstrueerd dat dit probleem (deels) verholpen wordt. We zijn namelijk op zoek naar een wavelet die een eindige drager heeft. Het blijkt dat deze bestaat en dat er zelfs een hele grote verzameling wavelets is, elk met eigen gewilde eigenschappen.
 
-Omdat wij naar de toepassing van wavelets binnen de beeldcompressie bekijken, zijn we natuurlijk vooral ge\"interesseerd in het discrete geval. We kijken dus naar de benadering van $f$ op een TODO. Dit geeft aanleiding tot een rij geneste ruimtes die uiteindelijk naar de $L_2$ toe gaat
+Omdat wij naar de toepassing van wavelets binnen de beeldcompressie bekijken, zijn we natuurlijk vooral ge\"interesseerd in het discrete geval. We kijken dus naar de benadering van $f$ op een TODO. Dit geeft aanleiding tot een rij geneste ruimtes die uiteindelijk naar de $L_2(\R)$ toe gaat
 \begin{equation}
   \label{multires}
-  \{0\} \ldots \subset V_0 \subset V_1 \subset \ldots \subset L_2
+  \{0\} \ldots \subset V_0 \subset V_1 \subset \ldots \subset L_2(\R)
 \end{equation}
 genaamd een multiresolutie.
 \subsection{Multiresolutie}
@@ -72,13 +74,13 @@ Een rij geneste ruimtes $\{ V_j: j \in \Z \}$ zoals in \eqref{multires} heet een
   \forall j, k: f(t) \in V_j \implies f(t - 2^j k) \in V_j; \\
   \forall j: V_{j+1} \subset V_j; \\
   \forall j: f(t) \in V_j \iff f(t/2) \in V_{j+1}; \\
-  \cap_{j=-\infty}^{\infty} V_{j} = \{0\}; \\
-  \cup_{j=-\infty}^{\infty} V_j = L_2. \\
-  TODO: \text{ Er is $\phi$ zo dat $\{ \phi(t-n): n \in \Z \}$ een Rieszbasis voor $V_0$ is.}
+  \cap_{j=-\infty}^{\infty} V_{j} = \lim_{j\to\infty} V_j = \{0\}; \\
+  \cup_{j=-\infty}^{\infty} V_j = \lim_{j\to-\infty} V_j = L_2(\R). \\
+  TODO: \text{ Er is $\theta$ zo dat $\{ \theta(t-n): n \in \Z \}$ een Rieszbasis voor $V_0$ is.}
 \end{array}
 \]
 
-Als voorbeeld bekijken we een multiresolutie van stuksgewijs constante functies. De ruimte $V_j$ wordt hiermee de verzameling van alle $g(t) \in L_2$ die constant zijn voor $t \in [n 2^j, (n+1)2^j)$ met $n \in \Z$. De basisfunctie $\phi$ voor $V_0$ wordt in dit geval $\phi(t) = 1_{[0,1]}$.
+Als voorbeeld bekijken we een multiresolutie van stuksgewijs constante functies. De ruimte $V_j$ wordt hiermee de verzameling van alle $g(t) \in L_2(\R)$ die constant zijn voor $t \in [n 2^j, (n+1)2^j)$ met $n \in \Z$. De basisfunctie $\theta$ voor $V_0$ wordt in dit geval $\theta(t) = 1_{[0,1]}$.
 
 \section{Schalingsfuncties}
 Gegeven zo'n Rieszbasis voor $V_0$ willen we graag een orthonormale basis voor $V_j$ construeren. 
@@ -89,7 +91,11 @@ Deze $\theta$ geeft een $\phi$ volgens Mallat. Wanneer we nu defini\"eren
 \]
 is $\{ \phi_{j,n}: n \in \Z \}$ een orthonormale basis voor $V_j$.
 
-\subsection{Benadering} TODO.
+\subsection{Benadering} De orthogonale projectie van $f$ op $V_j$ is, zoals we weten, de beste benadering van $f$ in $V_j$. Deze is nu te vinden door
+\[
+	P_{V_j} f = \sum_{n=-\infty}^\infty \langle f, \phi_{j,n} \rangle \phi_{j,n}.
+\]
+De co\"effici\"enten $a_j[n] = \langle f, \phi_{j,n} \rangle$ geven ons op deze manier een discrete benadering van $f$ op resolutie $2^{-j}$. TODO: convolutie hierbij?
 
 Met de multiresolutie uit het eerdere voorbeeld kunnen we vinden dat $\{\theta(t-n): n \in \Z \}$ al een orthonormale basis is voor $V_0$, met als gevolg dat $\phi = \theta$.
 
@@ -104,183 +110,231 @@ Deze inproducten hebben een speciale naam, want de rij $\{h[n]: n \in \Z\}$ met
 \[
   h[n] := \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle
 \]
-wordt nu ook wel de \emph{filter} van $\phi$ genoemd. Andersom, gegeven een $h[n]$ die voldoet aan een aantal voorwaarden, is er een schalingsfunctie $\phi \in L^2(\R)$ waarvoor $h[n]$ de filter is. THEOREM 7.2 TODO?
+wordt nu ook wel de \emph{filter} van $\phi$ genoemd. TODO: low-pass filter intro? Andersom, gegeven een $h[n]$ die voldoet aan een aantal voorwaarden, is er een schalingsfunctie $\phi \in L^2(\R)$ waarvoor $h[n]$ de filter is. THEOREM 7.2 TODO?
 
-Om weer terug te komen bij het doorlopende voorbeeld $\phi(t) = 1_{[0,1]}$, vinden we in dit geval dat
+Om weer terug te komen bij het doorlopende voorbeeld $\phi(t) = 1_{[0,1)}$, vinden we in dit geval dat
 \[
   h[n] = \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle = \begin{cases} \frac{1}{\sqrt{2}} & \text{ als } n \in \{0,1\} \\ 0 & \text{ anders.} \end{cases}
 \]
 
 \section{Eindelijk: wavelets}
+We weten dat $V_j$ bevat is in $V_{j-1}$. Laat nu $W_j$ het orthogonale complement van $V_j$ in $V_{j-1}$:
+\[
+	W_j \oplus V_j = V_{j-1}.
+\]
+De projectie van $f$ op $V_{j-1}$ kan dus geschreven worden als som van projecties:
+\[
+	P_{V_{j-1}} f = P_{V_j} f + P_{W_j} f.
+\]
+Omdat $V_j \subset V_{j-1}$ is alle informatie over $f$ die beschikbaar is in $V_j$, ook beschikbaar in $V_{j-1}$. Ook is het goed mogelijk dat door deze grovere benadering, informatie zoek gaat. Deze `details' worden op die manier zichtbaar in $P_{W_j} f$.
 
-\iffalse
-\section{Intro}
-Het grote nadeel van de Fouriertransformatie is dat een enkele discontinu\"iteit grote gevolgen heeft voor de mate van afname van de co\"effici\"enten. Dit betekent dat compressie in deze gevallen moeilijk wordt. De Waveletbasis is wat anders: elke basisfunctie heeft een compacte drager. Zie de figuur.
-\begin{figure}[h]
-\subfigure[Impressie van een aantal Fourierbasiselementen]{\includegraphics[width=.4\linewidth]{Fourier_basis.jpg}}
-\subfigure[Een aantal Morlet-Wavelet basiselementen]{\includegraphics[width=.4\linewidth]{Wavelet_basis.jpg}}
-\end{figure}
+Het kan bewezen worden (Mallat 7.3) dat, gegeven een schalingsfunctie $\phi$ (en daarmee een filter $h$) er een functie $\psi$ bestaat zo dat 
+\[
+	\left\{ \psi_{j,n}(t) := \frac{1}{\sqrt{2}} \psi\left(\frac{t-2^jn}{2^j}\right) : n \in \Z \right\}
+\] een orthonormale basis is voor $W_j$ en $\{ \psi_{j,n}: (j,n) \in \Z^2 \}$ een basis voor $L_2(\R)$. Deze functie is zo een orthogonale wavelet, omdat $W_j \perp V_j$.
+Omdat nu $W_j \subset V_{j-1}$ en dus in het bijzonder $2^{-1/2} \psi(t/2) \in W_1 \subset V_0$ en omdat $\{ \phi(t-n): n \in \Z \}$ een orthonormale basis is voor $V_0$, kunnen we ook $2^{-1/2}\psi(t/2)$ in termen schrijven als:
+\[
+	\frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^{\infty} \left\langle \frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle \phi(t-n).
+\]
+Ook deze inproducten hebben een speciale naam: de rij $g[n]$ met
+\[
+	g[n] := \left\langle \frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle
+\]
+wordt nu ook wel de filter van $\psi$ genoemd. TODO: high-pass filter. In het bijzonder geldt dat TODO:bewijzen?
+\[
+	g[n] = (-1)^{1-n}h[1-n].
+\]
 
-Het gevolg is dat bij Wavelets een discontinu\"iteit in slechts een deel van de basisfuncties `zichtbaar' zijn. De co\"effici\"enten van de andere basisfuncties nemen op deze manier nog steeds netjes af.
+Zoals nu wel duidelijk geworden is, wordt met een filter $h$ (die voldoet aan bepaalde eigenschappen die we hier verder niet zullen behandelen) een schalingsfunctie $\phi$ en een filter $g$ met waveletfunctie $\psi$ geconstrueerd.
 
-Vanaf nu zullen we (voor het continue geval) aannemen dat een functie/signaal in $L_2$ leeft. Dit is een Hilbertruimte. Laat $\Psi$ een orthonormale basis voor deze ruimte. Als nu een functie $f$ in deze ruimte geschreven wordt in $\Psi$:
+Als laatste keren we nog een enkele keer terug naar het voorbeeld waarin $\phi(t) = 1_{[0,1)}$. We vinden met de gelijkheden uit voorgaande paragrafen dat
+\[
+\frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^{\infty} (-1)^{1-n}h[1-n] \phi(t-n),
+\]
+en omdat $h = \{ 0 \to \frac{1}{\sqrt{2}}; 1 \to \frac{1}{\sqrt{2}} \}$ zoals we eerder vonden, herschrijft dit tot
+\[
+\frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right) = \frac{1}{\sqrt{2}}\left(\phi(t-1) - \phi(t)\right)
+\]
+met als gevolg dat
+\[
+	\psi(t) = \begin{cases} -1 & \text{ als } t \in [0,1/2) \\ 1 & \text{ als } t \in [1/2,1) \\ 0 & \text{ anders.} \end{cases}
+\]
+
+Deze wavelet $\psi$ wordt ook wel de Haarwavelet genoemd en is uitgevonden voor Alfred Haar in 1909, hoewel het onderzoeksgebied van de wavelets toen nog niet bestond. In het vervolg zullen we nog verdere aandacht aan deze wavelet besteden.
+
+\section{In de praktijk}
+Bij het kiezen of vinden van een wavelet is men over het algemeen op zoek naar bepaalde eigenschappen. Voor compressie zijn we op zoek naar een wavelet die voor bepaalde klassen functies een klein aantal grote co\"effici\"enten en een groot aantal kleine teweeg brengt: een soort concentratie van de co\"effici\"enten. Dit wordt vooral bepaald door drie factoren: gladheid van $f$ (waar we niks aan kunnen doen), de grootte van de drager (welke hierna aan bod komt) en de zogenaamde orde van de wavelet.
+
+Wanneer de waveletfunctie loodrecht staat ($\langle \psi, q\rangle = 0$) op alle polynomen van graad $p-1$ of lager, spreken we van een wavelet van orde $p$. Dit komt overeen met te zeggen dat
+\[
+	\int_{-\infty}^\infty x^k \psi(x) dx = 0 \text{ voor } k \in \{ 0, \ldots p-1 \}.
+\]
+
+Gevolg van deze eigenschap is dat we van de functie $f$ elk polynoom van graad $p-1$ af mogen trekken zonder een verschil in inproduct:
+\[
+	\langle f, \psi_{j,n} \rangle = \langle f - q, \psi_{j,n} \rangle \text{ voor $q$ een polynoom van graad $p-1$}. 
+\]
+Intu\"itief is deze eigenschap natuurlijk gewild: we winnen immers een heel stel keuzevrijheden. We zullen dit argument in een volgende sectie formaliseren.
+
+In de vorige sectie spraken we het verlangen uit om een wavelet met eindige drager te vinden zodat discontinu\"iteiten alleen lokaal zichtbaar zijn. We zullen hier de dragers van $h[n], \psi$ en $\phi$ aan elkaar relateren.
+
+
+\subsection{Compacte drager} De schalingsfunctie $\phi$ heeft een compacte drager dan en slechts dan als $h[n]$ een compacte drager heeft, en deze zijn hetzelfde. Als de drager van $\phi$ gelijk is aan $[N_1,N_2]$ dan is de drager van $\psi$ gelijk aan $[(N_1 - N_2 + 1)/2, (N_2 - N_1 + 1)/2]$.
+\begin{proof}[Bewijs 1] Als $\phi$ een compacte drager heeft dan $h[n]$ ook: we weten dat
+\[
+	h[n] = \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle,
+\]
+er kunnen maar eindig veel $n$ ongelijk nul zijn. Omgekeerd, als $h[n] \not= 0$ voor eindig veel $n$, dan zien we
+\begin{equation}
+\label{phi_t2}
+	\frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^\infty h[n] \phi(t-n)
+\end{equation}
+ TODO: pag 966 van Daubechies "orthonormal bases of compactly supported wavelets".
+
+Om deze dragers gelijk te krijgen, stel dat de drager van $h[n]$ gelijk $[N_1,N_2]$ is, en die van $\phi$ $[K_1, K_2]$. De drager van $\phi(t/2)$ is $[2K_1, 2K_2]$ en de drager van de rechterzijde van $\ref{phi_t2}$ is $[N_1 + K_1, N_2 + K_2]$. We concluderen dat $K_1 = N_1$ en $K_2 = N_2$.
+\end{proof}
+\begin{proof}[Bewijs 2]
+Kijk nu naar
+\[
+\frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^{\infty} g[n] \phi(t-n) = \sum_{n=-\infty}^{\infty} (-1)^{1-n}h[-1-n] \phi(t-n).
+\]
+Met de informatie uit het begin van de stelling kunnen we de drager van de rechterkant vinden: $[N_1 - N_2 + 1, N_2 - N_1 + 1]$. De functie $\psi(t/2)$ is nu precies een dilatie met factor twee dus de drager van $\psi(t)$ moet wel gelijk zijn aan $[(N_1 - N_2 + 1)/2, (N_2 - N_1 + 1)/2]$.
+\end{proof}
+
+\subsection{Daubechieswavelets}
+Hoewel de constructie van de Daubechieswavelet buiten het spectrum van dit artikel valt\footnote{Voor een goede beschrijving van deze constructie, zie [TODO ref van Mallat].}, willen we toch een kort licht schijnen op deze speciale familie van wavelets. Deze worden gemaakt met de noties eerder, namelijk dat we de drager willen minimaliseren maar de orde maximaliseren. Daubechies heeft bewezen [TODO ref] dat een filter $h$ met orde $p$, minimaal een drager van lengte $2p$ moet hebben. 
+
+De Daubechieswavelet van orde $p$ nu, heeft precies een filter van lengte $2p$. In het bijzonder is de Haarwavelet de eerste in de familie van Daubechieswavelets.
+
+TODO picca van Daubechies wavelets
+
+\section{Fast Wavelet Transform}
+TODO schrijven dit
+probeer dit er in te stoppen (als dat niet al duidelijk wordt)?
+\[
+	V_{-J} = V_0 \oplus W_0 \oplus \ldots \oplus W_{1-J}
+\]
+noem ook convolutie
+
+\section{Analyse van de Fast Wavelet Transform}
+Met de theoretische beschouwing van wavelets en de Fast Wavelet Transform achter de rug, kunnen we wat verder kijken naar practische obstakels.
+
+\subsection{Eindige signalen} 
+Een van de eerste aannames die we tot nu toe steeds maakten is die van de oneindige signalen. Wanneer echter de functie $f$ een compacte drager heeft, worden een aantal zaken wat lastiger. Neem als eerste aan dat de drager van $f$ gewoon $[0,1]$ is.\footnote{Door translatie en dilatie kan elk signaal met compacte basis omgevormd worden tot een signaal met drager in $[0,1]$. We verliezen hier dus geen algemeenheid.}
+
+In dit geval kunnen we alle $V_j$ met $j > 0$ buiten beschouwing laten, omdat de resolutie in deze ruimte te laag is om nog interessante informatie over $f$ te bieden. We hebben op deze manier een rij geneste ruimtes
+\[
+V_0 \subset V_{-1} \subset \ldots.
+\]
+Wanneer we nu een benadering van $f$ maken op resolutie $2^{-J}$ (door bijvoorbeeld een Fast Wavelet Transform), bekijken we
+\[
+	V_0 \subset V_{-1} \subset \ldots \subset V_{-J}.
+\]
+Een discreet signaal van lengte $2^{-J}$ kan zo perfect `benaderd' worden in een waveletbasis op resolutie $2^{-J}$ en dit is precies waarom de Fast Wavelet Transform zo veel gebruikt wordt bij het analyseren van discrete signalen.
+
+\subsection{Signaaluitbreiding}
+Een probleem waar we in het geval van eindige signalen nog meer mee te maken krijgen is dat het algoritme niet goed omgaat met de randen. De convolutie moet nu ineens \emph{buiten het definitiegebied} van het signaal `kijken'. Eerder in sectie [TODO] hebben we al gezien hoe signalen naar een tweemacht uitgebreid kunnen worden. Precies dezelfde methoden kunnen gebruikt worden om het signaal nog verder uit te breiden. 
+
+Om niet te veel tijd te verliezen met het ondersteunen van meerdere mogelijkheden hebben wij er voor gekozen om periodic padding op alle signalen toe te passen. Dit omdat de zogenaamde \emph{circulaire convolutie} ingebouwd zit in de bibliotheek die wij gebruikt hebben.
+
+\subsection{Complexiteit van het algoritme}
+Als de lengte van de filter $h$ gelijk is aan $K$, en de lengte van het originele signaal $a_L$ gelijk is aan $N = 2^{-L}$, kunnen we voor $j \in \{L, \ldots, 0\}$ zien dat $a_j$ en $d_j$ beide $2^{-j}$ elementen bevatten. Nu kunnen $a_{j+1}$ en $d_{j+1}$ gemaakt worden door $2^{-j}K$ operaties zodat elke stap van het algoritme $2^{-j} \cdot K$ operaties kost. Dan kost het hele algoritme
+\[
+	\sum_{j=L}^0 2^{-j} \cdot K = K \sum_{j=L}^0 2^{-j} = K \cdot (2^{1-L} - 1) < 2 \cdot K 2^{-L} = 2KN
+\]
+operaties. Dus deze DWT is een $\mathcal{O}(KN)$ algoritme. Ook de complexiteit van de inverse wordt op dezelfde manier van orde $KN$. 
+
+\section{Meer dimensies}
+TODO schrijven
+Iets met $\psi \otimes \psi$ etc.
+TODO tensor.
+
+\section{Analyse van de fout van de benadering}
+Laat een signaal $f$ in $L_2([0,1])$ leven. Dit is een complete inproductruimte. 
+
+\subsection{Mallatdecompositie}
+Laat $\{ \psi_{j,n}: (j,n) \in \Z^2 \}$ de orthonormale basis voor $L_2(\R) \supset L_2([0,1])$. Dan is er een (orthonormale) basis $\Psi \subset \{ \psi_{j,n}: (j,n) \in \Z^2 \}$ die een basis voor $L_2([0,1])$ zal zijn. Noem een basiselement van $\Psi$ nu niet meer $\psi_{j,n}$ maar $\psi_\lambda$ en laat $|\lambda| = j$.
+
+\begin{lemma}
+Als nu een functie $f$ in deze ruimte geschreven wordt in $\Psi$:
 \[
 f = \sum_{\lambda} \langle f, \psi_\lambda \rangle \psi_\lambda,
 \]
 dan geldt
 \[
-||f||^2 = \sum_{\lambda} | \langle f, \psi_\lambda \rangle |^2,
+||f||^2 = \sum_{\lambda} | \langle f, \psi_\lambda \rangle |^2.
 \]
-omdat
+\end{lemma}
+\begin{proof}[Bewijs]
+We hebben te maken met een complete inproductruimte dus
 \[
 ||f||^2 = \langle f, f \rangle = \left\langle \sum_{\lambda} \langle f, \psi_\lambda \rangle \psi_\lambda, \sum_{\mu} \langle f, \psi_\mu \rangle \psi_\mu \right\rangle = \sum_{\lambda} \sum_{\mu} \left\langle \langle f, \psi_\lambda \rangle \psi_\lambda, \langle f, \psi_\mu \rangle \psi_\mu \right \rangle
 \]
 \[
  = \sum_\lambda \sum_\mu \langle f, \psi_\lambda \rangle \overline{\langle f, \psi_\mu \rangle}\langle \psi_\lambda, \psi_\mu \rangle = \sum_\lambda \sum_\mu \langle f, \psi_\lambda \rangle \overline{\langle f, \psi_\mu \rangle} \delta_{\lambda \mu} = \sum_\lambda \langle f, \psi_\lambda \rangle \overline{\langle f, \psi_\lambda \rangle} = \sum_\lambda |\langle f, \psi_\lambda \rangle |^2.
 \]
+\end{proof}
 
-Vanaf nu zullen we aannemen dat elke functie in $L_2$ leeft, dus dat $\int |f(x)|^2 dx$ begrensd is. Verder noemen we de gehele ruimte $\Omega$.
+Verder zullen we vanaf nu aannemen dat $\psi$ een compacte drager heeft (zoals we in de praktijk altijd willen) en van orde $p$ is.
 
-Een wavelet geeft aanleiding tot een verzameling basisfuncties met een aantal eigenschappen. De eerste eigenschap is dat ze samen een orthogonale basis
-\[
-\{ \psi_\lambda: \lambda = (l,j)\text{ met } l \in \N,j \in \Z \}\]
- vormen. Dit betekent dat 
-\[
-\langle \psi_{\lambda_1}, \psi_{\lambda_2} \rangle = \delta_{\lambda_1, \lambda_2}
-\]
- waarbij 
-\[
-\langle f, g\rangle = \underset{\Omega}{\int} f(x) \overline{g(x)} dx,
-\]
-met $\overline{g(x)}$ de complex geconjugeerde van $g(x)$.
-
-De tweede eigenschap hebben we al genoemd en is dat deze basisfuncties een compacte drager $S_\lambda$ hebben. Deze basisfuncties worden vaak opgeschreven als $\psi_\lambda = \psi_{l,j}$. De $l$ geeft hierbij de schaling aan en $j$ de verschuiving. Gegeven een Waveletfunctie $\psi$ kunnen we de basisfunctie $\psi_\lambda$ maken door:
-\[
-	\psi_\lambda(x) = 2^{j/2} \psi(2^jx - k).
-\]
-
-Naast deze twee eigenschappen heeft elke wavelet een zogenaamde orde. Wanneer de waveletfunctie loodrecht staat $\langle \psi, q\rangle = 0$ op alle polynomen van graad $p-1$ of lager, spreken we van een wavelet van orde $p$.\footnote{Veel wavelets worden ontworpen met de wil om de orde zo groot mogelijk te maken. Daubechies, Coiflets en Symlets zijn alle drie voorbeelden hiervan.} Dit komt overeen met te zeggen dat
-\[
-	\int_{-\infty}^\infty x^k \psi(x) dx = 0 \text{ voor } k \in \{ 0, \ldots p-1 \}.
-\]
-
-Gevolg van deze eigenschap is dat we $|\langle f, \psi_\lambda\rangle |$ als volgt om kunnen schrijven:
+\begin{stelling}[Fout van Mallatdecompositie]
+Wanneer $f$ voldoet aan de eigenschappen (hoe vaak continu? TODO) die boven staan (TODO) en een $n$-dimensionaal signaal is, zal de reconstructiefout bij een Mallatdecompositie met $N$ wavelets van orde $n^{p/2} K^{-p/n}$ zijn.
+\end{stelling}
+\begin{proof}
+Gevolg van deze eigenschappen is dat we $|\langle f, \psi_\lambda\rangle |$ als volgt om kunnen schrijven:
 \[
 	|\langle f, \psi_\lambda \rangle | = |\langle f-q, \psi_\lambda \rangle | \text{ voor elk polynoom $q$ van graad $p-1$ of lager,} 
 \]
 zodat
 \[
-	|\langle f-q, \psi_\lambda \rangle | \leq ||f-q||_\Omega \cdot ||\psi_\lambda||_\Omega.
+	|\langle f-q, \psi_\lambda \rangle | \leq ||f-q|| \cdot ||\psi_\lambda||.
 \]
 
-
-De continue Wavelettransformatie van een signaal $f(x)$ wordt nu als volgt:
+De norm van deze functies is de $L_2$-norm, welke bepaald wordt door een integraal over $[0,1]$. Omdat $\psi_\lambda$ een compacte drager $S_\lambda$ heeft, is het laatste product net zo goed te beschouwen als integraal over $S_\lambda$:
 \[
-	F(\lambda) = \underset{\Omega}{\int} f(x) \overline{\psi_\lambda(x)} dx = \langle f, \psi_\lambda \rangle.
+	||f-q|| \cdot ||\psi_\lambda|| = ||f-q||_{S_\lambda} \cdot ||\psi_\lambda||_{S_\lambda} = ||f-q||_{S_\lambda},
 \]
+omdat $\psi_\lambda$ per constructie norm 1 heeft.
 
-\subsection{Discrete geval}
-Omdat wij het discrete geval bekijken, zullen we kijken naar signalen die als $n$-dimensionale rij $f[k_1,\ldots,k_n]$ geschreven kunnen worden. Daarnaast stellen we voor het gemak dat $k_i$ een tweemacht is die voor elke $i$ hetzelfde is.\footnote{Het geval waarin dit niet zo is is speciaal. Over het algemeen wordt het signaal dan met specifieke waardes aangevuld. Wij gaan hier niet verder op in.} Zo krijgen we dus een $n$-dimensionale ruimte van `roosterpunten'.
+Lokaal kunnen we $f$ echter redelijk goed benaderen door middel van een polynoom van graad $p-1$, namelijk de eerste $p$ termen van de Taylorontwikkeling. Per definitie van deze Taylorontwikkeling weten we nu dat de restterm, $f(x)-q(x) \in \mathcal{O}(h^p)$ met $h$ de diameter van $S$.\cite[\S 31.\{3,4\}]{TODOross} Met andere woorden, $||f-q||_{S_\lambda} \in \mathcal{O}(h^p)$. Omdat deze drager gewoon een lijnstukje is met lengte $2^{-|\lambda|}$ is, wordt 
 
-TODO: something something filters.
-
-Discreet gaat dit algoritme een stukje anders. We zullen het eendimensionale algoritme uitleggen en aan de hand daarvan in het vervolg het meerdimensionale geval uitwerken.
-
-\begin{algoritme}[Fast Wavelet Transform]
-Laat $x[n]$ een signaal van lengte $l = 2^k$. Verder zijn de filters $g[n], h[n],g^*[n], h^*[n]$ gegeven. E\'en niveau van de transformatie gaat nu als volgt.
-
-\begin{quote}
-Maak twee nieuwe signalen 
 \[
-y_l^*[n] = (x * g)[n] = \sum_{k=-\infty}^\infty x[k]g[n-k]
+	||f-q||_{S_\lambda} \in \mathcal{O}(2^{-|\lambda| p}).
 \]
+
+Het bewijs tot nu toe is simpel voort te zetten naar een of andere dimensie $n$. Het enige wat echt verandert is de diameter. De drager $S_\lambda$ wordt nu geen lijnstukje maar een kubus met zijdes $2^{-|\lambda|}$ zodat geldt voor de diameter $h$:
 \[
-y_h^*[n] = (x * h)[n] = \sum_{k=-\infty}^\infty x[k]h[n-k]
+	h = \sqrt{\sum_{i=1}^n (2^{-|\lambda|})^2} = \sqrt{n 2^{-2|\lambda|}} = \sqrt{n} 2^{-|\lambda|}.
 \]
-door het oorspronkelijke signaal te colvolueren met beide filters. Vervolgens wordt er ge\emph{subsampled} met een factor twee:
+
+Uiteindelijk krijgen we dat $||f-q||_{S_\lambda} \in \mathcal{O}(n^{p/2} 2^{-|\lambda|p})$.
+
+TODO -- Wanneer $f$ glad genoeg is, krijgt men de beste benadering door alle $\lambda$ met $|\lambda|$ tot een bepaald niveau, zeg $M$, te pakken. Bekijk de fout:
 \[
-y_l[n] = y_l^*[2n]
+	\left\| f - \sum_{|\lambda| \leq M} \langle f, \psi_\lambda \rangle \psi_\lambda \right\|_\Omega = \sum_{|\lambda| > M} | \langle f, \psi_\lambda \rangle |^2 \in \mathcal{O}\left(\sum_{|\lambda| > M} n^{p/2} 2^{-|\lambda|p} \right) = \mathcal{O}(n^{p/2}2^{-Mp}),
 \]
+waarbij het laatste isteken voortkomt uit
 \[
-y_h[n] = y_h^*[2n].
+	\sum_{k=M+1}^\infty n^{p/2} \, 2^{- kp} = n^{p/2} \frac{2^{-Mp}}{2^p-1}
 \]
-De rij $y_h$ heet nu de \emph{detail}rij, en $y_l$ de \emph{approximatie}rij.
-\end{quote}
-Het volgende niveau wordt uitgevoerd met de rij $y_l$ (dus met de helft van de lengte waar we mee begonnen). Dit kan worden herhaald tot de lengte van de approximatierij 1 is. In een plaatje:
-\begin{figure}[h]
-\includegraphics{filter_bank_kankerzuur.jpg}
-\end{figure}
+en de notie dat $p$ constant is voor een keuze van de wavelet.
 
-Hiermee wordt ook direct het inverse algoritme duidelijk. Gegeven een verzameling rijen $\{y_h, y_{lh}, y_{llh}, \ldots, y_{l^nh}, y_{l^nl}\}$ kunnen we in elke stap het originele signaal $x[n]$ terugvinden door, gegeven de $y_l, y_h$ van die stap:
+Voor elke dimensie van de ruimte zitten er $\mathcal{O}(2^M)$ basisfuncties in ``alle $\lambda$ met $|\lambda| \leq M$''. We hebben $n$ dimensies, dus er zijn $2^{Mn} = K $ wavelets die zorgen voor een fout van $\mathcal{O}(n^{p/2} 2^{-Mp})$. Omschrijven geeft dat dit overeenkomt met een fout van $\mathcal{O}(n^{p/2} K^{-p/n})$.
+\end{proof}
+
+\subsection{Tensorproduct}
+Doordat een waveletfunctie $\psi_{j,k}$ op een niveau $j$ een element is van $W_j \perp V_j$ staat deze loodrecht op elk element uit $V_j$.
+Schrijf dus $P_{V_j} : L_2([0,1]) \rightarrow V_j$ voor de projectie-afbeelding die een
+functie $f$ afbeeldt op zijn orthogonale projectie in de ruimte $V_j$.
+
+\begin{lemma}
+Voor het inproduct tussen $\psi_{j,k}$ en $f$ geldt nu:
 \[
-	y^*_{l}[n] = \begin{cases} y_{l}[n/2] &\text{als } n \mod{2} \equiv 0 \\ 0 &\text{anders}; \end{cases}
+  \langle f , \phi_{j,k} \rangle = \langle f - P_{V_j}(f) , \psi{j,k} \rangle.
 \]
-\[
-	y^*_{h}[n] = \begin{cases} y_{h}[n/2] &\text{ als } n \mod{2} \equiv 0 \\ 0 &\text{anders}. \end{cases}
-\]
-\[
-	x[n] = \sum_{k=-\infty}^\infty y^*_{l}[k]g^*[n-k] + \sum_{k=-\infty}^\infty y^*_{h}[k]h^*[n-k].
-\]
-Herhaald toepassen van dit geeft het originele signaal terug\footnote{Mits er onderweg geen verlies van preciesie plaats heeft gevonden.}.
-\end{algoritme}
-
-Een klein voorbeeld. De meest simpele Wavelet is de Haarwavelet, uitgevonden door Alfred Haar in 1909. De term Wavelet werd echter pas veel later genoemd.
-
-De Haarwavelet is als volgt gedefinieerd:
-\[
-	\psi(x) = \begin{cases} 1 & \text{als } x \in [0,\frac{1}{2}] \\ -1 & \text{als } x \in [\frac{1}{2},1] \\ 0 & \text{anders.} \end{cases}
-\]
-\[
-	\phi(x) = \begin{cases} 1 & \text{als } x \in [0,1] \\ 0 & \text{anders.} \end{cases}
-\]
-De filters die we hierbij vinden worden dus
-\[
-	h[n] = (-\frac{1}{2}\sqrt{2},\frac{1}{2}\sqrt{2}); g[n] = (\frac{1}{2}\sqrt{2},\frac{1}{2}\sqrt{2}); h^*[n] = (\frac{1}{2}\sqrt{2},-\frac{1}{2}\sqrt{2}); g[n] = (\frac{1}{2}\sqrt{2},\frac{1}{2}\sqrt{2}).
-\]
-
-Stel we hebben een signaal $(1,2,1,2,3,4,3,4)$. Dan vinden we met de eerste stap
-\[
-	y_l = \frac{1}{2}\sqrt{2}\cdot(3,3,7,7); y_h = \frac{1}{2}\sqrt{2}\cdot(-1,-1,-1,-1)
-\]
-en daarna
-\[
-	y_{ll} = (3, 7); y_{lh} = (0, 0)
-\]
-en daarna
-\[
-	y_{lll} = \frac{1}{2}\sqrt{2}(10); y_{llh} = \frac{1}{2}\sqrt{2}(-4).
-\]
-
-Ons uiteindelijke getransformeerde signaal wordt
-\[
-	y = (y_{lll},y_{llh},y_{lh},y_{h}) = \frac{1}{2}\sqrt{2}(10, -4, 0, 0, -1, -1, -1, -1).
-\]
-
-\section{Compressie}
-Wanneer we nu deze verzameling $\{y_h, y_{lh}, y_{llh}, \ldots, y_{l^nh}, y_{l^nl}\}$ `aan elkaar plakken' tot een rij $y[n]$ met dezelfde lengte als het oorspronkelijke signaal kunnen we op dezelfde wijze als bij de Fouriertransformatie co\"effici\"enten die kleiner zijn dan een bepaalde waarde $\e$ weggooien. Dit kan natuurlijk op twee manieren: 
-\begin{itemize}
-\item Laat $\e$ vast en bepaal daarmee hoeveel er weggegooid wordt;
-\item Laat het compressieniveau\footnote{de fractie nog overgebleven co\"effici\"enten} $p \in (0,1]$ vast en bepaal een $\e_p$ aan de hand hiervan.
-\end{itemize}
-
-Wij hebben in onze implementatie gekozen voor de tweede optie
-
-\section{In meer dimensies}
-
-\subsection{Mallat versus Tensor}
-Plaatje
-
-\section{Results}
-Terminology: PSNR, implementatie (snippets)
-
-\subsection{pt 1: plaatjes}
-\subsection{pt 2: filmpjes}
-
------
-
-\section{discussion}
-
-BRONNEN
-\fi
+\end{lemma}
+\begin{proof}[Bewijs]
+Onze waveletfunctie staat loodrecht op elk element uit $V_j$ dus ook op $P_{V_j}(f)$. Dus $\langle P_{V_j}(f), \psi_{j,k} \rangle = 0$. Per definitie van het inproduct moet de gelijkheid nu gelden.
+\end{proof}
 
 \end{document}

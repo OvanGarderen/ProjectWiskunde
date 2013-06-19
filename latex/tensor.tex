@@ -26,11 +26,11 @@
 \section{Afschatting Tensor co\"efficienten}
 Doordat de wavelet functie op een niveau $\abso{\lambda}$ een element is van $W_{\abso{\lambda}-1}$
 staat deze loodrecht op elk element uit $V_{\abso{\lambda}-1}$.
-Schrijf dus $Q_{z} : L_2([0,1]) \rightarrow V_z$ Voor de (lineaire) projectie-afbeelding die een
-functie $f$ afbeeldt op zijn projectie in de ruimte $V_z$.
+Schrijf dus $P_{V_j} : L_2([0,1]) \rightarrow V_j$ voor de projectie-afbeelding die een
+functie $f$ afbeeldt op zijn orthogonale projectie in de ruimte $V_j$.
 Dan geldt dat het inproduct tussen de wavelet functie en $f$ ook in andere vorm is te schrijven:
 \eq{
-  \langle f , \phi_\abso{\lambda} \rangle = \langle (I - Q_{\abso{\lambda}-1})(f) , \phi_\abso{\lambda} \rangle 
+  \langle f , \phi_\abso{\lambda} \rangle = \langle f - P_{V_j}(f) , \phi_\abso{\lambda} \rangle.
 }
 We zullen dit gebruiken om de inproducten tussen f en een tensor product af te schatten. \bigskip
 
@@ -53,6 +53,5 @@ op niveau $M$, zodat het aantal wavelets
 %$N \in \O((M+1)\cdot2^M )$
 $N \in \O(2^M)$
 
-Daarmee is de orde van de fout in termen van het aantal gebruikte wavelets van orde $\O(N^{-d})
-
+Daarmee is de orde van de fout in termen van het aantal gebruikte wavelets van orde $\O(N^{-d})$.
 \end{document}
