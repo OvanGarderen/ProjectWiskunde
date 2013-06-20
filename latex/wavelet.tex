@@ -1,6 +1,7 @@
 \documentclass[11pt]{amsart}
 \usepackage[demo]{graphicx}
 \usepackage{subfigure}
+\usepackage{amssymb}
 \usepackage{parcolumns}
 
 \usepackage[dutch]{babel}
@@ -212,7 +213,7 @@ TODO picca van Daubechies wavelets
 TODO schrijven dit
 probeer dit er in te stoppen (als dat niet al duidelijk wordt)?
 \[
-	V_{-J} = V_0 \oplus W_0 \oplus \ldots \oplus W_{1-J}
+	V_{-J} = V_0 \oplus W_0 \oplus \cdots \oplus W_{1-J}
 \]
 noem ook convolutie
 
@@ -250,70 +251,80 @@ Iets met $\psi \otimes \psi$ etc.
 TODO tensor.
 
 \section{Analyse van de fout van de benadering}
-Laat een signaal $f$ in $L_2([0,1])$ leven. Dit is een complete inproductruimte. 
+Laat een signaal $f$ in $L_2([0,1]^n)$ leven. Dit is een complete inproductruimte. 
 
 \subsection{Mallatdecompositie}
-Laat $\{ \psi_{j,n}: (j,n) \in \Z^2 \}$ de orthonormale basis voor $L_2(\R) \supset L_2([0,1])$. Dan is er een (orthonormale) basis $\Psi \subset \{ \psi_{j,n}: (j,n) \in \Z^2 \}$ die een basis voor $L_2([0,1])$ zal zijn. Noem een basiselement van $\Psi$ nu niet meer $\psi_{j,n}$ maar $\psi_\lambda$ en laat $|\lambda| = j$.
+Laat $\Psi := \{ \psi_{j,n}: (j,n) \in \nabla \}$ een orthonormale waveletbasis voor $L_2([0,1])$. Volgens lemma 3.1.7 van REFTODO tammo is nu
+\[
+  \boldsymbol{\Psi} := \Psi \otimes \cdots \otimes \Psi = \{ \boldsymbol{\psi_{j,n}} := \psi_{j_1,n_1} \otimes \cdots \otimes \psi_{j_n,k_n}: \psi_{j_i,k_i} \in \Psi \}
+\]
+met $\boldsymbol{j,n} := ((j_1,k_1),\ldots,(j_n,k_n)) \in \boldsymbol{\nabla} := \nabla^n$ een basis voor $L_2([0,1]^n)$.
 
 \begin{lemma}
-Als nu een functie $f$ in deze ruimte geschreven wordt in $\Psi$:
+Als nu een functie $f$ in deze ruimte geschreven wordt in $\boldsymbol{\Psi}$:
 \[
-f = \sum_{\lambda} \langle f, \psi_\lambda \rangle \psi_\lambda,
+f = \sum_{\boldsymbol{j,n}} \langle f, \boldsymbol{\psi_{j,n}} \rangle \boldsymbol{\psi_{j,n}},
 \]
 dan geldt
 \[
-||f||^2 = \sum_{\lambda} | \langle f, \psi_\lambda \rangle |^2.
+||f||^2 = \sum_{\boldsymbol{j,n}} | \langle f, \boldsymbol{\psi_{j,n}} \rangle |^2.
 \]
 \end{lemma}
 \begin{proof}[Bewijs]
-We hebben te maken met een complete inproductruimte dus
+We hebben te maken met een Hilbertruimte dus
 \[
-||f||^2 = \langle f, f \rangle = \left\langle \sum_{\lambda} \langle f, \psi_\lambda \rangle \psi_\lambda, \sum_{\mu} \langle f, \psi_\mu \rangle \psi_\mu \right\rangle = \sum_{\lambda} \sum_{\mu} \left\langle \langle f, \psi_\lambda \rangle \psi_\lambda, \langle f, \psi_\mu \rangle \psi_\mu \right \rangle
+||f||^2 = \langle f, f \rangle = \left\langle \sum_{\boldsymbol{j,n}} \langle f, \boldsymbol{\psi_{j,n}} \rangle \boldsymbol{\psi_{j,n}}, \sum_{\boldsymbol{l,m}} \langle f, \boldsymbol{\psi_{l,m}} \rangle \boldsymbol{\psi_{l,m}} \right\rangle = \sum_{\boldsymbol{j,n}} \sum_{\boldsymbol{l,m}} \left\langle \langle f, \boldsymbol{\psi_{j,n}} \rangle \boldsymbol{\psi_{j,n}}, \langle f, \boldsymbol{\psi_{l,m}} \rangle \boldsymbol{\psi_{l,m}} \right \rangle
 \]
 \[
- = \sum_\lambda \sum_\mu \langle f, \psi_\lambda \rangle \overline{\langle f, \psi_\mu \rangle}\langle \psi_\lambda, \psi_\mu \rangle = \sum_\lambda \sum_\mu \langle f, \psi_\lambda \rangle \overline{\langle f, \psi_\mu \rangle} \delta_{\lambda \mu} = \sum_\lambda \langle f, \psi_\lambda \rangle \overline{\langle f, \psi_\lambda \rangle} = \sum_\lambda |\langle f, \psi_\lambda \rangle |^2.
+ = \sum_{\boldsymbol{j,n}} \sum_{\boldsymbol{l,m}} \langle f, \boldsymbol{\psi_{j,n}} \rangle \overline{\langle f, \boldsymbol{\psi_{l,m}} \rangle}\langle \boldsymbol{\psi_{j,n}}, \boldsymbol{\psi_{l,m}} \rangle = \sum_{\boldsymbol{j,n}} \sum_{\boldsymbol{l,m}} \langle f, \boldsymbol{\psi_{j,n}} \rangle \overline{\langle f, \boldsymbol{\psi_{l,m}} \rangle} \delta_{\boldsymbol{j,l}} \delta_{\boldsymbol{k,m}} 
+\]
+\[ = \sum_{\boldsymbol{j,n}} \langle f, \boldsymbol{\psi_{j,n}} \rangle \overline{\langle f, \boldsymbol{\psi_{j,n}} \rangle} = \sum_{\boldsymbol{j,n}} |\langle f, \boldsymbol{\psi_{j,n}} \rangle |^2.
 \]
 \end{proof}
 
-Verder zullen we vanaf nu aannemen dat $\psi$ een compacte drager heeft (zoals we in de praktijk altijd willen) en van orde $p$ is.
+Verder zullen we vanaf nu aannemen dat $\boldsymbol\psi$ een compacte drager heeft (zoals we in de praktijk altijd willen) en van orde $p$ is.
+
+TODO kankerzooi i dun goofed
 
 \begin{stelling}[Fout van Mallatdecompositie]
 TODO: $f C^{p}$ of $C^{p-1}$?
-Wanneer $f$ een $p$ keer differenti\"eerbare functie is in $n$ dimensies (variabelen), zal de reconstructiefout bij een Mallatdecompositie met $N$ wavelets van orde $n^{p/2} K^{-p/n}$ zijn.
+Wanneer $f \in H^p(\Omega)$ met $\Omega = [0,1]^n$, zal de reconstructiefout bij een Mallatdecompositie met $N$ wavelets hoogstens proportioneel met $N^{-p/n}$ zijn.
 \end{stelling}
 \begin{proof}
+  \iffalse
 Bekijk $f$ even als een functie in 1 variabele. Het geval van meer variabelen is een stuk technischer maar niet interessanter.
-Als gevolg van de orde $p$ van de wavelet vinden we dat we $|\langle f, \psi_\lambda\rangle |$ als volgt om kunnen schrijven:
+Als gevolg van de orde $p$ van de wavelet vinden we dat we $|\langle f, \psi_{j,n}\rangle |$ als volgt om kunnen schrijven:
 \[
-	|\langle f, \psi_\lambda \rangle | = |\langle f-q, \psi_\lambda \rangle | \text{ voor elk polynoom $q$ van graad $p-1$ of lager,} 
+	|\langle f, \psi_{j,n} \rangle | = |\langle f-q, \psi_{j,n} \rangle | \text{ voor elk polynoom $q$ van graad $p-1$ of lager,} 
 \]
 zodat
 \[
-	|\langle f-q, \psi_\lambda \rangle | \leq ||f-q|| \cdot ||\psi_\lambda||.
+	|\langle f-q, \psi_{j,n} \rangle | \leq ||f-q|| \cdot ||\psi_{j,n}||.
 \]
 
-De norm van deze functies $f-q$ en $\psi_\lambda$ is de $L_2$-norm, welke bepaald wordt door een integraal over $[0,1]$. Omdat $\psi_\lambda$ een compacte drager $S_\lambda$ heeft, is het laatste product net zo goed te beschouwen als integraal over $S_\lambda$:
+De norm van deze functies $f-q$ en $\psi_{j,n}$ is de $L_2$-norm, welke bepaald wordt door een integraal over $[0,1]$. Omdat $\psi_{j,n}$ een compacte drager $S_{j,n}$ heeft, is het laatste product net zo goed te beschouwen als integraal over $S_{j,n}$:
 \[
-	||f-q|| \cdot ||\psi_\lambda|| = ||f-q||_{S_\lambda} \cdot ||\psi_\lambda||_{S_\lambda} = ||f-q||_{S_\lambda},
+	||f-q|| \cdot ||\psi_{j,n}|| = ||f-q||_{S_{j,n}} \cdot ||\psi_{j,n}||_{S_{j,n}} = ||f-q||_{S_{j,n}},
 \]
-omdat $\psi_\lambda$ per constructie norm 1 heeft.
+omdat $\psi_{j,n}$ per constructie norm 1 heeft.
 
-Lokaal kunnen we $f$ echter redelijk goed benaderen door middel van een polynoom van graad $p-1$, namelijk de eerste $p$ termen van de Taylorontwikkeling. Per definitie van deze Taylorontwikkeling weten we nu dat de restterm, $f(x)-q(x) \in \mathcal{O}(h^p)$ met $h$ de diameter van $S$.\cite[\S 31.\{3,4\}]{TODOross} Met andere woorden, $||f-q||_{S_\lambda} \in \mathcal{O}(h^p)$. Omdat deze drager gewoon een lijnstukje is met lengte $2^{-|\lambda|}$ is, wordt 
+Lokaal kunnen we $f$ echter redelijk goed benaderen door middel van een polynoom van graad $p-1$, namelijk de eerste $p$ termen van de Taylorontwikkeling. Per definitie van deze Taylorontwikkeling weten we nu dat de restterm, $f(x)-q(x) \simeq h^p||f||_{S_{j,n}}$ met $h$ de diameter van $S$.\cite[\S 31.\{3,4\}]{TODOross} Met andere woorden, $||f-q||_{S_{j,n}} \simeq h^p ||f||_{S_{j,n}}$. Omdat deze drager gewoon een lijnstukje is met lengte $2^{-j}$ is, wordt 
 
 \[
-	||f-q||_{S_\lambda} \in \mathcal{O}(2^{-|\lambda| p}).
-\]
-
-Het bewijs tot nu toe is simpel voort te zetten naar een of andere dimensie $n$. Het enige wat echt verandert is de diameter. De drager $S_\lambda$ wordt nu geen lijnstukje maar een kubus met zijdes $2^{-|\lambda|}$ zodat geldt voor de diameter $h$:
-\[
-	h = \sqrt{\sum_{i=1}^n (2^{-|\lambda|})^2} = \sqrt{n 2^{-2|\lambda|}} = \sqrt{n} 2^{-|\lambda|}.
+	||f-q||_{S_{j,n}} \simeq 2^{-jp} ||f||_{S_{j,n}}.
 \]
 
-Uiteindelijk krijgen we dat $||f-q||_{S_\lambda} \in \mathcal{O}(n^{p/2} 2^{-|\lambda|p})$.
-
-Men krijgt nu de beste benadering door alle $\lambda$ met $|\lambda|$ tot een bepaald niveau, zeg $M$, te pakken. Bekijk de fout:
+Het bewijs tot nu toe is simpel voort te zetten naar een of andere dimensie $n$. Het enige wat echt verandert is de diameter. De drager $S_{j,n}$ wordt nu geen lijnstukje maar een kubus met zijdes $2^{-j}$ zodat geldt voor de diameter $h$:
 \[
-	\left\| f - \sum_{|\lambda| \leq M} \langle f, \psi_\lambda \rangle \psi_\lambda \right\|_\Omega = \sum_{|\lambda| > M} | \langle f, \psi_\lambda \rangle |^2 \in \mathcal{O}\left(\sum_{|\lambda| > M} n^{p/2} 2^{-|\lambda|p} \right) = \mathcal{O}(n^{p/2}2^{-Mp}),
+	h = \sqrt{\sum_{i=1}^n (2^{-j})^2} = \sqrt{n 2^{-2j}} = \sqrt{n} 2^{-j}.
+\]
+
+
+Uiteindelijk krijgen we dat $||f-q||_{S_{j,n}} \simeq n^{p/2} 2^{-jp} ||f||_{S{j,n}}$.
+
+Men krijgt nu de beste benadering door alle ${j,n}$ met $|{j,n}|$ tot een bepaald niveau, zeg $M$, te pakken. Bekijk de fout:
+\[
+	\left\| f - \sum_{|{j,n}| \leq M} \langle f, \psi_{j,n} \rangle \psi_{j,n} \right\|_\Omega = \sum_{|{j,n}| > M} | \langle f, \psi_{j,n} \rangle |^2 \in \mathcal{O}\left(\sum_{|{j,n}| > M} n^{p/2} 2^{-|{j,n}|p} \right) = \mathcal{O}(n^{p/2}2^{-Mp}),
 \]
 waarbij het laatste isteken voortkomt uit
 \[
@@ -321,65 +332,103 @@ waarbij het laatste isteken voortkomt uit
 \]
 en de notie dat $p$ constant is voor een keuze van de wavelet.
 
-Voor elke dimensie van de ruimte zitten er $\mathcal{O}(2^M)$ basisfuncties in ``alle $\lambda$ met $|\lambda| \leq M$''. We hebben $n$ dimensies, dus er zijn $2^{Mn} = K $ wavelets die zorgen voor een fout van $\mathcal{O}(n^{p/2} 2^{-Mp})$. Omschrijven geeft dat dit overeenkomt met een fout van $\mathcal{O}(n^{p/2} K^{-p/n})$.
+Voor elke dimensie van de ruimte zitten er $\mathcal{O}(2^M)$ basisfuncties in ``alle ${j,n}$ met $|{j,n}| \leq M$''. We hebben $n$ dimensies, dus er zijn $2^{Mn} = K $ wavelets die zorgen voor een fout van $\mathcal{O}(n^{p/2} 2^{-Mp})$. Omschrijven geeft dat dit overeenkomt met een fout van $\mathcal{O}(n^{p/2} K^{-p/n})$.
+\fi
+We maken gebruik van de zogenaamde Jacksonongelijkheid (TODO ref) die zegt dat //http://www.ams.org/journals/bull/1960-66-02/S0002-9904-1960-10426-0/S0002-9904-1960-10426-0.pdf
+\[
+  \inf_{q \in \mathbb{P}_{p-1}} ||f - q||_{L_2(\Omega)} \simeq 2^{-jp} ||f||_{H^p(\Omega)}
+\]
+wanneer $f \in H^p(\Omega)$.
+
+Men krijgt nu de beste benadering door alle ${j,n}$ met $|{j,n}|$ tot een bepaald niveau, zeg $M$, te pakken. Bekijk de fout:
+\[
+	\left\| f - \sum_{|{j,n}| \leq M} \langle f, \psi_{j,n} \rangle \psi_{j,n} \right\|_{L_2(\Omega)} = \sum_{|{j,n}| > M} | \langle f, \psi_{j,n} \rangle |^2 \simeq \sum_{j > M} 2^{-jp} \simeq 2^{-Mp},
+\]
+waarbij het laatste isteken voortkomt uit
+\[
+	\sum_{k=M+1}^\infty 2^{- kp} = \frac{2^{-Mp}}{2^p-1}
+\]
+en de notie dat $p$ constant is voor een keuze van de wavelet.
+
+Voor elke dimensie van de ruimte zitten er $\mathcal{O}(2^M)$ basisfuncties in ``alle ${j,n}$ met $j \leq M$''. We hebben $n$ dimensies, dus er zijn $2^{Mn} = N $ wavelets die zorgen voor een fout van $2^{-Mp}$. Omschrijven geeft dat dit overeenkomt met een fout van $N^{-p/n})$.
 \end{proof}
 
 \subsection{Tensorproduct}
-Doordat een waveletfunctie $\psi_{j,k}$ op een niveau $j$ een element is van $W_j \perp V_j$ staat deze loodrecht op elk element uit $V_j$.
-Schrijf dus $P_{V_j} : L_2([0,1]) \rightarrow V_j$ voor de projectie-afbeelding die een
-functie $f$ afbeeldt op zijn orthogonale projectie in de ruimte $V_j$.
-
-\begin{lemma}
-Voor het inproduct tussen $\psi_{j,k}$ en $f$ geldt nu:
+Laat $\Psi := \{ \psi_{j,n}: (j,n) \in \nabla \}$ een orthonormale waveletbasis voor $L_2([0,1])$. Volgens lemma 3.1.7 van REFTODO tammo is nu
 \[
-  \langle f , \psi_{j,k} \rangle = \langle f - P_{V_j}(f) , \psi_{j,k} \rangle.
+  \boldsymbol{\Psi} := \Psi \otimes \cdots \otimes \Psi = \{ \boldsymbol{\psi_{j,n}} := \psi_{j_1,n_1} \otimes \cdots \otimes \psi_{j_n,k_n}: \psi_{j_i,k_i} \in \Psi \}
+\]
+met $\boldsymbol{j,n} := ((j_1,k_1),\ldots,(j_n,k_n)) \in \boldsymbol{\nabla} := \nabla^n$ een basis voor $L_2([0,1]^n)$. Laat vervolgens $I_M := \{ l \in \N^n_0: ||l||_1 \leq M \}$ en maak de \emph{sparse grid index set} $\boldsymbol{\nabla}_M := \{ \boldsymbol{(j,n)} \in \boldsymbol{\nabla}: \boldsymbol{j} \in I_M \}$.
+
+\begin{lemma}{\cite[P3.2.3]{tammo}}
+  Voor $f \in H^p([0,1]^n)$ geldt dat de fout van de benadering op basis van de sparse set index set $\boldsymbol{\nabla}_M$ hoogstens voldoet aan
+\[
+  \left\| f - \sum_{\boldsymbol{(j,n)} \in \boldsymbol{\nabla}_M} \langle f, \boldsymbol{\psi_{j,n}} \rangle \boldsymbol{\psi_{j,n}} \right\|_{L_2([0,1]^n)} \lesssim 2^{-pM} M^{(n-1)/2} \| f \|_{H^p([0,1]^n)}
 \]
 \end{lemma}
-\begin{proof}[Bewijs]
-Onze waveletfunctie staat loodrecht op elk element uit $V_j$ dus ook op $P_{V_j}(f)$. Dus $\langle P_{V_j}(f), \psi_{j,k} \rangle = 0$. Per definitie van het inproduct moet de gelijkheid nu gelden.
-\end{proof}
 
+Het aantal elementen in deze verzameling $\boldsymbol{\nabla}_M$ nu, kunnen we vinden.
+\begin{lemma}{\cite[L3.3.1]{tammo}}
+  Het aantal elementen in $\boldsymbol{\nabla}_M$ is proportioneel met $2^M M^{n-1}$.
+\end{lemma}
+
+\begin{lemma}
+  Wanneer er voor twee functies $f, g$ geldt dat $f(J) \lesssim J^{-p}\log_2(J)^\mu$ en $g(J) = \log_2(J)^\nu J =: N$, dan
+  \[
+    (f \circ g^{-1})(N) \lesssim N^{-p} \log_2{N}^{\mu + \nu p}.
+  \]
+  TODO: bewijs klopt (nog) niet
+\end{lemma}
+\iffalse
+\begin{proof}[Bewijs]
+  We weten dat $g(J) = N$ dus $g^{-1}(N) = J$. Dan
+  \[
+    (f \circ g^{-1})(N) = f(J) \simeq J^{-p}\log_2(J)^{\mu}.
+  \]
+  Omdat verder $J \log_2(J)^\nu = N$, geldt $J^{-1} = N^{-1}\log_2(J)^\nu$. Vul dit in in bovenstaande om te krijgen
+  \[
+    f(J) \simeq N^{-s} \log_2(J)^{\nu s} \log_2(J)^\mu = N^{-s} \log_2(J)^{\nu s + \mu}????
+  \]
+\end{proof}
+\fi
+
+Met bovenstaande drie lemma's is het nu mogelijk een goede afschatting te maken. 
 \begin{stelling}[Fout van het Tensorproduct]
-Wanneer $\psi$ een wavelet van orde $p$ is en $f$ een functie in twee veranderlijken waarvoor geldt dat
-\[
-	\sum_{i,j \leq p} ||d^i_1d^j_2f||^2 < \infty,
-\]
-dan, bij een benadering gebruikmakend van $N$ wavelets, vinden we een fout van orde $N^-d$.
+  Laat $f \in H^p([0,1]^n)$ en $N = \#\boldsymbol{\nabla}_M$. Dan:
+  \[
+    \left\| f - \sum_{\boldsymbol{(j,n)} \in \boldsymbol{\nabla}_M} \langle f, \boldsymbol{\psi_{j,n}} \rangle \boldsymbol{\psi_{j,n}} \right\|_{L_2([0,1]^n)} \lesssim N^{-p} \log_2(N)^{(n-1)(1/2 + p)} \| f \|_{H^p([0,1]^n)}.
+  \]
 \end{stelling}
+\begin{proof}
+  Gebruik het tweede lemma om te vinden dat $N \simeq M^{n-1}2^M$. Nu vinden we via het eerste lemma dat
+  \[
+    \left\| f - \sum_{\boldsymbol{(j,n)} \in \boldsymbol{\nabla}_M} \langle f, \boldsymbol{\psi_{j,n}} \rangle \boldsymbol{\psi_{j,n}} \right\|_{L_2([0,1]^n)} \lesssim M^{(n-1)/2}2^{-Mp}\| f \|_{H^p([0,1]^n)}
+  \]
+  zodat
+  \[
+    \left\| f - \sum_{\boldsymbol{(j,n)} \in \boldsymbol{\nabla}_M} \langle f, \boldsymbol{\psi_{j,n}} \rangle \boldsymbol{\psi_{j,n}} \right\|_{L_2([0,1]^n)} \Bigg/\| f \|_{H^p([0,1]^n)} \lesssim M^{(n-1)/2}2^{-Mp}.
+  \]
 
-\begin{proof}[Bewijs]
-Bekijk de wavelet in $2$ dimensies die is verkregen door het Tensorproduct te nemen
-van $\psi_{j,k}$ met $\psi_{l,m}$. We willen nu iets zeggen over
-\[
-	\langle f, \psi_{j,k} \otimes \psi_{l,m} \rangle = \langle (f - P_{V_j}(f))\otimes(f - P_{V_l}(f)), \psi_{j,k} \otimes \psi_{l,m} \rangle.
-\]
-
-We kunnen met Cauchy-Schwarz een afschatting vinden:
-\[
-	\langle (f - P_{V_j}(f))\otimes(f - P_{V_l}(f)), \psi_{j,k} \otimes \psi_{l,m} \rangle^2 \leq ||(f - P_{V_j}(f))\otimes(f - P_{V_l}(f))|| \cdot ||\psi_{j,k} \otimes \psi_{l,m}||,
-\]
-en met de notie dat de norm van het Tensorproduct gewoon het product van de normen is, vinden we
-\[
-	||(f - P_{V_j}(f))\otimes(f - P_{V_l}(f))|| \cdot ||\psi_{j,k} \otimes \psi_{l,m}|| = ||(f - P_{V_j}(f))|| \cdot ||(f - P_{V_l}(f))|| \cdot ||\psi_{j,k} || \cdot || \psi_{l,m}||,
-\]
-wat gelijk is aan
-\[
-	||(f - P_{V_j}(f))|| \cdot ||(f - P_{V_l}(f))|| \cdot ||\psi_{j,k} || \cdot || \psi_{l,m}|| = ||(f - P_{V_j}(f))|| \cdot ||(f - P_{V_l}(f))||
-\]
-per constructie van de basis.
-
-TODO: $H_d$-norm uitvinden.
-
-Alleen, over $||(f - P_{V_j}(f))||$ kunnen we iets zeggen. Dit is namelijk gewoon $2^{-jp}$. Dus
-\[
-||(f - P_{V_j}(f))|| \cdot ||(f - P_{V_l}(f))|| = 2^{-jp}2^{-lp} = 2^{-(j+l)p}.
-\]
-
-TODO -- We krijgen nu de beste benadering wanneer we alle (2-dimensionale) wavelets $\psi_{j_1,k_1}, \psi_{j_2,k_2}$ behouden zodat $j+l$ kleiner dan een of ander niveau $M$ is. 
-
-TODO TODO
+  We willen graag lemma drie toepassen. Door
+  \[
+    J^{-p}\log_2(J)^\mu = M^{(n-1)/2} 2^{-Mp}
+  \]
+  volgt $J = 2^m$ en $\mu = (n-1)/2$. Door
+  \[
+    N = M^{n-1}2^M = \log_2(J)^\nu J = 2^M M^\nu
+  \] volgt $\nu = n-1$. TODO: wat is $f$ en $g$?
 \end{proof}
 
-Het gevolg van deze stelling is duidelijk: wanneer we te maken hebben met gladde functies, geeft het Tensorproduct een betere benadering dan de Mallatdecompositie.
+We vinden dus dat voor een voldoend gladde $f$, de Mallatdecompositie hoogstens een convergentiesnelheid $N^{-p/n}$ bereikt, terwijl het Tensorproduct theoretisch een snelheid $N^{-p} \log_2(N)^{(n-1)(p+1/2)}$ bereikt. Let op dat voor $n=1$ de twee convergentiesnelheden beide $N^{-p}$ zijn.
 
+In de praktijk hebben we echter nooit te maken met compleet continue functies. Gevolg is dat deze stellingen niet helemaal opgaan. Niet \emph{helemaal}, omdat per constructie van onze wavelet, de basis compact is en dus `zoomen we in' op de functie. Lokaal is de mogelijkheid dat $f$ glad genoeg is ineens een stuk meer in zicht.
+
+Precies dit gevolg zullen we ook zien wanneer we de twee composities gaan vergelijken.
+
+\begin{thebibliography}{9}
+
+\bibitem{tammo}
+Tammo Jan Dijkstra,
+\emph{Adaptive tensor product wavelet methods for solving PDEs}, 2009
+\end{thebibliography}
 \end{document}
