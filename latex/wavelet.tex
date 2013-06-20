@@ -278,10 +278,12 @@ We hebben te maken met een complete inproductruimte dus
 Verder zullen we vanaf nu aannemen dat $\psi$ een compacte drager heeft (zoals we in de praktijk altijd willen) en van orde $p$ is.
 
 \begin{stelling}[Fout van Mallatdecompositie]
-Wanneer $f$ voldoet aan de eigenschappen (hoe vaak continu? TODO) die boven staan (TODO) en een $n$-dimensionaal signaal is, zal de reconstructiefout bij een Mallatdecompositie met $N$ wavelets van orde $n^{p/2} K^{-p/n}$ zijn.
+TODO: $f C^{p}$ of $C^{p-1}$?
+Wanneer $f$ een $p$ keer differenti\"eerbare functie is in $n$ dimensies (variabelen), zal de reconstructiefout bij een Mallatdecompositie met $N$ wavelets van orde $n^{p/2} K^{-p/n}$ zijn.
 \end{stelling}
 \begin{proof}
-Gevolg van deze eigenschappen is dat we $|\langle f, \psi_\lambda\rangle |$ als volgt om kunnen schrijven:
+Bekijk $f$ even als een functie in 1 variabele. Het geval van meer variabelen is een stuk technischer maar niet interessanter.
+Als gevolg van de orde $p$ van de wavelet vinden we dat we $|\langle f, \psi_\lambda\rangle |$ als volgt om kunnen schrijven:
 \[
 	|\langle f, \psi_\lambda \rangle | = |\langle f-q, \psi_\lambda \rangle | \text{ voor elk polynoom $q$ van graad $p-1$ of lager,} 
 \]
@@ -290,7 +292,7 @@ zodat
 	|\langle f-q, \psi_\lambda \rangle | \leq ||f-q|| \cdot ||\psi_\lambda||.
 \]
 
-De norm van deze functies is de $L_2$-norm, welke bepaald wordt door een integraal over $[0,1]$. Omdat $\psi_\lambda$ een compacte drager $S_\lambda$ heeft, is het laatste product net zo goed te beschouwen als integraal over $S_\lambda$:
+De norm van deze functies $f-q$ en $\psi_\lambda$ is de $L_2$-norm, welke bepaald wordt door een integraal over $[0,1]$. Omdat $\psi_\lambda$ een compacte drager $S_\lambda$ heeft, is het laatste product net zo goed te beschouwen als integraal over $S_\lambda$:
 \[
 	||f-q|| \cdot ||\psi_\lambda|| = ||f-q||_{S_\lambda} \cdot ||\psi_\lambda||_{S_\lambda} = ||f-q||_{S_\lambda},
 \]
@@ -309,7 +311,7 @@ Het bewijs tot nu toe is simpel voort te zetten naar een of andere dimensie $n$.
 
 Uiteindelijk krijgen we dat $||f-q||_{S_\lambda} \in \mathcal{O}(n^{p/2} 2^{-|\lambda|p})$.
 
-TODO -- Wanneer $f$ glad genoeg is, krijgt men de beste benadering door alle $\lambda$ met $|\lambda|$ tot een bepaald niveau, zeg $M$, te pakken. Bekijk de fout:
+Men krijgt nu de beste benadering door alle $\lambda$ met $|\lambda|$ tot een bepaald niveau, zeg $M$, te pakken. Bekijk de fout:
 \[
 	\left\| f - \sum_{|\lambda| \leq M} \langle f, \psi_\lambda \rangle \psi_\lambda \right\|_\Omega = \sum_{|\lambda| > M} | \langle f, \psi_\lambda \rangle |^2 \in \mathcal{O}\left(\sum_{|\lambda| > M} n^{p/2} 2^{-|\lambda|p} \right) = \mathcal{O}(n^{p/2}2^{-Mp}),
 \]
@@ -330,11 +332,54 @@ functie $f$ afbeeldt op zijn orthogonale projectie in de ruimte $V_j$.
 \begin{lemma}
 Voor het inproduct tussen $\psi_{j,k}$ en $f$ geldt nu:
 \[
-  \langle f , \phi_{j,k} \rangle = \langle f - P_{V_j}(f) , \psi{j,k} \rangle.
+  \langle f , \psi_{j,k} \rangle = \langle f - P_{V_j}(f) , \psi_{j,k} \rangle.
 \]
 \end{lemma}
 \begin{proof}[Bewijs]
 Onze waveletfunctie staat loodrecht op elk element uit $V_j$ dus ook op $P_{V_j}(f)$. Dus $\langle P_{V_j}(f), \psi_{j,k} \rangle = 0$. Per definitie van het inproduct moet de gelijkheid nu gelden.
 \end{proof}
+
+\begin{stelling}[Fout van het Tensorproduct]
+Wanneer $\psi$ een wavelet van orde $p$ is en $f$ een functie in twee veranderlijken waarvoor geldt dat
+\[
+	\sum_{i,j \leq p} ||d^i_1d^j_2f||^2 < \infty,
+\]
+dan, bij een benadering gebruikmakend van $N$ wavelets, vinden we een fout van orde $N^-d$.
+\end{stelling}
+
+\begin{proof}[Bewijs]
+Bekijk de wavelet in $2$ dimensies die is verkregen door het Tensorproduct te nemen
+van $\psi_{j,k}$ met $\psi_{l,m}$. We willen nu iets zeggen over
+\[
+	\langle f, \psi_{j,k} \otimes \psi_{l,m} \rangle = \langle (f - P_{V_j}(f))\otimes(f - P_{V_l}(f)), \psi_{j,k} \otimes \psi_{l,m} \rangle.
+\]
+
+We kunnen met Cauchy-Schwarz een afschatting vinden:
+\[
+	\langle (f - P_{V_j}(f))\otimes(f - P_{V_l}(f)), \psi_{j,k} \otimes \psi_{l,m} \rangle^2 \leq ||(f - P_{V_j}(f))\otimes(f - P_{V_l}(f))|| \cdot ||\psi_{j,k} \otimes \psi_{l,m}||,
+\]
+en met de notie dat de norm van het Tensorproduct gewoon het product van de normen is, vinden we
+\[
+	||(f - P_{V_j}(f))\otimes(f - P_{V_l}(f))|| \cdot ||\psi_{j,k} \otimes \psi_{l,m}|| = ||(f - P_{V_j}(f))|| \cdot ||(f - P_{V_l}(f))|| \cdot ||\psi_{j,k} || \cdot || \psi_{l,m}||,
+\]
+wat gelijk is aan
+\[
+	||(f - P_{V_j}(f))|| \cdot ||(f - P_{V_l}(f))|| \cdot ||\psi_{j,k} || \cdot || \psi_{l,m}|| = ||(f - P_{V_j}(f))|| \cdot ||(f - P_{V_l}(f))||
+\]
+per constructie van de basis.
+
+TODO: $H_d$-norm uitvinden.
+
+Alleen, over $||(f - P_{V_j}(f))||$ kunnen we iets zeggen. Dit is namelijk gewoon $2^{-jp}$. Dus
+\[
+||(f - P_{V_j}(f))|| \cdot ||(f - P_{V_l}(f))|| = 2^{-jp}2^{-lp} = 2^{-(j+l)p}.
+\]
+
+TODO -- We krijgen nu de beste benadering wanneer we alle (2-dimensionale) wavelets $\psi_{j_1,k_1}, \psi_{j_2,k_2}$ behouden zodat $j+l$ kleiner dan een of ander niveau $M$ is. 
+
+TODO TODO
+\end{proof}
+
+Het gevolg van deze stelling is duidelijk: wanneer we te maken hebben met gladde functies, geeft het Tensorproduct een betere benadering dan de Mallatdecompositie.
 
 \end{document}
