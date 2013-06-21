@@ -5,6 +5,12 @@
 \usepackage{algpseudocode}
 \usepackage{algorithmicx}
 
+\makeatletter
+%replaces : \def\@endtheorem{\endtrivlist\@endpefalse }
+% with:
+%\def\@endtheorem{\endtrivlist}
+\makeatother
+
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
@@ -40,6 +46,7 @@
 \newcommand{\inpr}[2]{\langle #1 , #2 \rangle}
 \setlength\parindent{0pt}
 
+\newcommand{\DFT}{\text{DFT}}
 \newcommand{\dpii}{{2\pi i}}
 
 \parskip = \baselineskip
@@ -114,7 +121,6 @@ Zo zullen we uiteindelijk tot de \emph{Discrete Fourier Transform} decompositie 
 }
 Als zijnde de discrete Fourier-basis met basisvectoren $s_k$.
 \end{definitie}
-\vspace{-10pt}
 Met deze basis in de hand kunnen we vervolgens de discrete Fourier getransformeerde (DFT) van een signaal schrijven als de vector van (complexe) inproducten van dit signaal met de DFT-basisfuncties. Laat voor een signaal $x$ van lengte $n$ de DFT (aangeduid met $X$) gegeven zijn door:
 \eq{
   X[k] = \tfrac{1}{n} \inpr{x}{s_k} \quad k\in\{0..n\}
@@ -125,89 +131,99 @@ Ook defini\"eren we de een operatie op zulke vectoren $X$ en beweren dat deze ee
 }
 We zullen nu enkele bewijzen geven om de term `Discrete Fourier Basis' te ondersteunen.
 
-\subsection*{Orthonormaliteit van de basisvectoren}
-We zullen bewijzen dat de verzameling $S_n$ een orthogonale basis is voor $\R^n$. Bekijk hiervoor een inproduct tussen twee
-willekeurig gekozen elementen van deze verzameling:
-\eq{
-  \inpr{s_k}{s_j} = \sum_{m\leq n} s_k[m]\cdot \overline{s_j[m]} = \sum_{m\leq n} e^{\dpii\cdot m (k-j)/n} =
-  \begin{cases}
-    0 \quad \text{als } k\neq j\\
-    n \quad \text{als } k = j
-  \end{cases}
-}
+\begin{stelling}[Fourier-Basis]
+  De vectoren $s_k$ zoals gedefinieerd voor de verzameling $S_k$ staan onderling loodrecht onder het complexe
+  inproduct en $S_k$ is dus een complexe basis voor $\C^n$.
+\end{stelling}
+\begin{proof}[Bewijs]
+  Bekijk het complexe inproduct tussen twee willekeurig gekozen elementen van deze verzameling:
+  \eq{
+    \inpr{s_k}{s_j} = \sum_{m\leq n} s_k[m]\cdot \overline{s_j[m]} = \sum_{m\leq n} e^{\dpii\cdot m (k-j)/n} =
+    \begin{cases}
+      0 \quad \text{als } k\neq j\\
+      n \quad \text{als } k = j
+    \end{cases}
+  }
+  Dus staan de vectoren van $S_n$ onderling loodrecht, zodat deze een complexe ruimte opspannen van dimensie $n$.
+\end{proof}
 
-\subsection*{Limiet naar continue geval}
 Om de claim te ondersteunen dat de DFT methode een echte discretisatie is van de continue Fourier-transformatie willen we bewijzen dat dit algoritme voor een steeds fijnere selectie van waardes van een functie in de limiet hetzelfde resultaat geeft als de continue Fourier transformatie. 
 Zoals gebruikelijk bij het overschakelen van een discrete naar een continue setting, kunnen we dit doen 
 door de definitie van de Riemann integraal toe te passen op de sommatie die voor handen ligt.
 
+\begin{stelling}[Limiet van discrete Fourier-transformatie]
+  Gegeven een interval $[a,b]$ en een functie $f\in L_2([a,b])$. 
+  Voor een discretisatie van $f$ in $n$ gelijke
+  intervallen zodat de discrete $f$ precies \'e\'en waarde uit elk interval inneemt geldt dat de discrete
+  Fourier-getransformeerde limiteert naar de algemene Fourier-getransformeerde wanneer $n\to\infty$
+\end{stelling} 
 \begin{proof}[Bewijs]
-Gegeven een interval $[a,b]$ en een functie $f \in L_2([a.b)$ kunnen we een partitie P maken in $n$ gelijke delen.
-We nemen $P$ als de punten $a<\tfrac{na + b-a}{n}<\ldots<\tfrac{na + j(b-a)}{n}<\ldots<b$.
-We discretiseren onze functie $f$ door uit elk interval van de partitie de volgende randwaarde te pakken:
-$f[j] = f(\frac{b-a}{n}j + a)$.
-De DFT van de functie $f$ wordt dan gegeven door het inproduct te nemen met de DFT-basisfuncties:
-$F[k] = \frac1n\sum_{j\leq n} f[j] \cdot s_k[j]$
-We schrijven dit om in termen van onze partitie, met de identificatie $n\cdot\tfrac{x-a}{b-a} = j$ waarmee we 
-de continue variable $x\in[a,b]$ omschrijven naar zijn discrete tegenhanger en krijgen zo:
+Gegeven een interval $[a,b]$ kunnen we een partitie $P$ maken in $n$ gelijke delen, ofwel laat $P=\{a=t_0,t_1,..,t_n=b\}$ met $t_j = \tfrac{na + j(b-a)}{n}$.
+We discretiseren onze functie $f$ door uit elk interval $[t_{j-1},t_{j}]$ van de partitie de waarde in $x_j = t_j - c_j(\tfrac{b-a}{n})$ te nemen met $c_j \in [0,1]$, ofwel
+$f[j] = f(\frac{b-a}{n}(j-c_j) + a)$.
+De DFT van de discrete functie $f[]$ wordt dan gegeven door het inproduct te nemen met de DFT-basisfuncties:
+$F[k] = \frac1n\sum_{j\leq n} f[j] \cdot \overline{s_k}[j]$
+We schrijven dit om in termen van onze partitie, met de identificatie $n\cdot\tfrac{x_j-a}{b-a} + c_j= j$ 
+waarmee we de continue variable $x_j\in[a,b]$ omschrijven naar zijn discrete tegenhanger en krijgen zo:
 \eq{
-  F[k] =& \frac{1}{n} \sum_{x \in P} f[n\cdot\tfrac{x-a}{b-a}]\cdot s_k[n\cdot\tfrac{x-a}{b-a}] \\
-       =& \frac{1}{n} \sum_{x \in P} f(x)\cdot e^{\dpii \cdot k \tfrac{x-a}{b-a}} \\
-       =&  \frac{1}{\sqrt{b-a}}\sum_{x \in P} f(x)\cdot \phi_k(x) \frac{b-a}{n}}
+  F[k] =& \frac{1}{n} \sum_{j \leq n} f[j]\cdot \overline{s_k}[n\cdot\tfrac{x_j-a}{b-a} + c_j] \\
+       =& \frac{1}{n} \sum_{j \leq n} f(x_j)\cdot 
+       e^{-\dpii \cdot k \tfrac{x-a}{b-a}} \cdot e^{-\dpii \cdot k c_j/n} \\
+       =&  \frac{1}{\sqrt{b-a}}\sum_{j \leq n} f(x_j)\cdot \overline{\phi}_k(x_j) \cdot\frac{b-a}{n} 
+\cdot e^{-\dpii \cdot k c_j/n}
 }
-We merken op dat de factor $\frac{b-a}{n}$ precies de grootte is van ons interval en dat we het geheel
+We merken op dat $c_j$ begrensd dus we weten dat de limiet van 
+$e^{-\dpii\cdot k c_j/n}$ voor $n\to\infty$ gelijk is aan $1$ voor elke $j$. 
+Dan is de limiet voor $F[k]$ gelijk aan de limiet van de overige factoren in de sommatie.
+We merken op dat de term $\frac{b-a}{n}$ precies de grootte is van ons interval en dat we het geheel
 omgeschreven hebben in termen van onze continue functies $f$ en $\phi_k$.
 Omdat het product $f\cdot\phi_k$ integreerbaar is moet voor elke partitie $P$ met 
-waarden in punten $x$ uit elk interval deze sommatie convergeren naar de integraal
+waarden in punten $x_j$ uit elk interval deze sommatie convergeren naar de integraal
 \eq{
-  \frac{1}{\sqrt{b-a}} \int_{[a,b]} f(x) \phi_k(x) dx
+  \frac{1}{\sqrt{b-a}} \int_{[a,b]} f(x) \overline{\phi}_k(x) dx
 }
 wanneer we de maaswijdte ($\tfrac{b-a}{n}$) naar $0$ laten gaan. Dit is duidelijk het geval wanneer we de limiet $n\to\infty$ nemen. Daarmee is de DFT een goede discretisatie van de Fourier getransformeerde. 
 \end{proof}
  
-\subsection*{Inverteerbaarheid van de DFT}
 Voor de werking van het DFT algoritme als signaal-compressie algoritme is het van belang dat er een 
 inverse algoritme bestaat dat het getransformeerde ingangs-signaal weer terugtransformeert 
-zonder verlies van informatie.
+zonder verlies van informatie. We zullen nu bewijzen dat dit mogelijk is door de DFT en iDFT te gebruiken.
 
+\begin{stelling}[inverteerbaarheid van de DFT]
+  De samenstelling van de inverse Discrete Fourier-transformatie met de Discrete Fourier-transformatie is
+  gelijk aan de identiteit.
+\end{stelling}
 \begin{proof}[Bewijs]
-We zullen bewijzen dat de DFT en iDFT elkaars inversen zijn.
 We bekijken daarvoor een signaal $x\in\R^n$ dat met de DFT methode getransformeerd wordt in een vector $X\in\C^n$.
-Hierbij hoort dan de discrete Fourier-basis $S_n$ met basisvectoren $s_k$. 
-
-Hiermee zijn de discrete Fourier transformatie en zijn inverse gedefini\"eerd door:
+Hierbij hoort de discrete Fourier-basis $S_n$ met basisvectoren $s_k$. 
+De discrete Fourier transformatie en zijn inverse zijn gedefini\"eerd door:
 \eq{
-  X_k = \tfrac 1 n \langle x, s_k \rangle \quad\quad \text{(DFT)}\\
-  x_j =  \langle X, \repr{s_j} \rangle \quad\quad\text{(iDFT)}
+  X[k]      =& \tfrac 1 n \langle x, s_k \rangle \quad\quad \text{(DFT)}\\
+  \hat x[j] =&  \langle X, \repr{s_j} \rangle \quad\quad\text{(iDFT)}
 }
 Om te bewijzen dat de iDFT de DFT inverteert voldoet het om de iDFT uit te schrijven in termen van $x$ 
 door $X$ in te vullen volgens de formule van de DFT. Uitschrijven hiervan geeft:
 \eq{
-  \hat x_j =&  \langle X , \repr{s_j} \rangle \\
-      =&  \sum_{i=1}^n X_i\cdot \overline{\repr{s_j}[i]} \\
-      =&  \sum_{i=1}^n \tfrac1n\inpr{x}{s_i} \overline{\repr{s_j}[i]} \\
+  \hat x[j] =&  \langle X , \repr{s_j} \rangle \\
+      =&  \sum_{i=1}^n X[i]\cdot \overline{\repr{s_j}}[i] \\
+      =&  \sum_{i=1}^n \tfrac1n\inpr{x}{s_i} \overline{\repr{s_j}}[i] \\
       =& \langle x , \frac1n \sum_{i=1}^n s_i \repr{s_j}[i] \rangle
 }
-Rest ons nog om aan te tonen dat deze sommatie over de transformatie-vectoren een eenheids-vector oplevert, 
-namelijk dat
+We schrijven nu de sommatie in de tweede term van het inproduct (die een vector van lengte $n$ representeert) uit in zijn componenten. 
+Merk op dat de discrete Fourier-basisvectoren zo gedefinieerd zijn dat $s_k[m] = s_m[k]$. 
+We verwisselen de indices in blokhaken met die in het subscript van $s$ en verkrijgen daarmee
 \eq{
-  \frac1n \sum_{i=1}^n s_i \repr{s_j}[i] =& e_j
-}
-Hiervoor schrijven we de sommatie (die een vector van lengte $n$ representeert) uit in zijn componenten. 
-Merk nu op dat de discrete Fourier-basisvectoren zo gedefinieerd zijn dat $s_k[m] = s_m[k]$. 
-We verwisselen dus de indices in blokhaken met die in het subscript van $s$ en verkrijgen daarmee
-\eq{
-  \frac1n \sum_{i=1}^n s_i[m] \repr{s_j}[i] = \frac1n \sum_{i=1}^n s_m[i] \overline{s_j[i]} 
+  \frac1n \sum_{i=1}^n s_i[m] \repr{s_j}[i] = \frac1n \sum_{i=1}^n s_m[i] \overline{s_j}[i] 
 =\tfrac1n \inpr{s_m}{s_j} = \begin{cases}0\quad\text{als }m\neq j\\1\quad\text{als }m=j\end{cases}.\\
 }
 Hier gebruiken we dus de eerdere vergelijking voor het inproduct van twee basisfuncties.
 We gebruiken deze eigenschap van de sommatie om ons eerder inproduct uit te schrijven. 
 We hebben nu een gelijkheid
 \eq{
-  \hat x_j = \inpr{x,e_j} = x_j
+  \hat x_j = \inpr{x}{e_j} = x_j
 }
-Door de iDFT toe te passen op het resultaat van de DFT zullen we dus altijd het origineel terug krijgen,
-dus de iDFT inverteert de DFT
+Door de iDFT toe te passen op het resultaat van de DFT zullen we altijd het origineel terug krijgen,
+dus de iDFT samengesteld met de DFT geeft een identiteit.
 \end{proof}
 
 %-----------------------------------------------------------------------------------------------------------------
@@ -218,17 +234,17 @@ voor praktische toepassingen in de weg. Daarom is er een alternatief algoritme, 
 
 %%%%%
 \begin{algo}[Fast Fourier Transform]
-Gegeven zij een input signaal $x$ van lengte $2^n$, dan geeft het algoritme $\FFT$ 
-een lijst terug van waardes $X$ van lengte $2^n$ als volgt:
+Gegeven zij een input signaal $x$ van lengte $n=2^m$, dan geeft het algoritme $\FFT$ 
+een lijst terug van waardes $X$ van lengte $n=2^m$ als volgt:
 
-Als $n=0$ dan geeft de $\FFT$ de lijst (van \'e\'en element) direct terug:
+Als $m=0$ dan geeft de $\FFT$ de lijst (van \'e\'en element) direct terug:
 \eq{
 X = x
 }
-Wanneer $n\neq0$ splitsen we de lijst $x$ op in lijsten $\e,o$ van zijn even en oneven indices:
+Wanneer $m\neq0$ splitsen we de lijst $x$ op in lijsten $\e,o$ van zijn even en oneven indices:
 \eq{
-  \e_k   =& x_{2k}   &\quad \text{voor } k < 2^{n-1}\\
-   o_k   =& x_{2k+1} &\quad \text{voor } k < 2^{n-1}
+  \e[k]   =& x[2k]   &\quad \text{voor } k < n/2\\
+   o[k]   =& x[2k+1] &\quad \text{voor } k < n/2
 }
 Vervolgens voeren we hierop het $\FFT$ algoritme uit om de volgende lijsten te verkrijgen:
 \eq{
@@ -237,36 +253,43 @@ Vervolgens voeren we hierop het $\FFT$ algoritme uit om de volgende lijsten te v
 }
 Hiermee wordt de output van het algoritme geconstrueerd als volgt:
 \eq{
-  X_k = \left\{\begin{array}{llll}
-    E_k         &+& e^{-i2\pi k2^{-n}} O_k &  k< 2^{n-1} \\
-    E_{(k-2^{n-1})} &-& e^{-i2\pi (k-2^{n-1})2^{-n}} O_{(k-2^{n-1})} &  k\geq N/2 
+  X[k] = \left\{\begin{array}{llll}
+    E[k]         &+& e^{-\dpii k/n}\cdot O[k] &  k< n/2 \\
+    E[k-n/2] &-& e^{-\dpii (k-n/2)/n}\cdot O[k-n/2] &  k\geq n/2 
   \end{array}\right.
 }
 \end{algo}
 %%%%%
 
 Dit is dus een recursief gedefinieerd algoritme dat een signaal meermaals halveert en in zichzelf terugvoert.
-Ook is het gegarandeerd dat dit algoritme afloopt vanwege de conditie op $n=0$ samen met de halvering van de input bij elke stap. Een belangrijke voorwaarde voor de relevantie van de FFT is nu dat het algoritme hetzelfde resultaat geeft als het DFT algoritme en dit zullen we nu dan ook bewijzen. 
+Het is gegarandeerd dat dit algoritme afloopt vanwege de conditie op $n=0$ samen met de halvering van de input bij elke stap. Een belangrijke voorwaarde voor de relevantie van de FFT is nu dat het algoritme hetzelfde resultaat geeft als het DFT algoritme en dit zullen we nu dan ook bewijzen. 
 
+\begin{stelling}[]
+  Het uitvoeren van het Fast Fourier Transform algoritme op een dataset van lengte $n=2^m$ geeft
+  dezelfde getransformeerde als de discrete Fourier-tranformatie.
+\end{stelling}
 \begin{proof}[Bewijs]
 We gebruiken hier een inductie bewijs met inductie naar $n$, onze aanname is dat het FFT algoritme voor $x$ van lengte $n=2^m$ gelijk is aan de DFT van $x$, ofwel
 \eq{
-  X_k = \sum^{N}_{k=1} x_j \cdot e^{-2\pi i \cdot jk/n}
+  X[k] = \sum^{N}_{k=1} x[j] \cdot e^{-2\pi i \cdot jk/n}
 }
-Dit geldt duidelijkerwijs wanneer $m=0$, onze basistap, hier hebben we namelijk:
+Dit geldt duidelijkerwijs wanneer $m=0$, onze basistap. Hiervoor geldt namelijk:
 \eq{
-  X_k = x_k = x_1 = \sum^{2^0}_{k=1} x_j \cdot e^{-2\pi i \cdot 1/2^0}
+  X[k] = x[k] = x[1] = \sum^{2^0}_{k=1} x[j] \cdot e^{-2\pi i \cdot 1/2^0}
 }
 Vervolgens passen we inductie toe naar $m$ door onze aanname voor $m-1$ te gebruiken,
-we vullen hiermee $E_k$ en $O_k$ in de vergelijking voor $X_k$ in, deze hebben immers lengte $n=2^{m-1}$.
+we vullen hiermee $E[k]$ en $O[k]$ in de vergelijking voor $X[k]$ in, deze hebben immers lengte $n=2^{m-1}$.
 \eq{
-  X_k = \left\{\begin{array}{llll}
-    \sum^{n/2}_{j=1} \e_j \cdot e^{-2\pi i \cdot kj \cdot 2/n} &+& 
+  X[k] = \left\{\begin{array}{llll}
+    \sum^{n/2}_{j=1} \e[j] 
+    \cdot e^{-2\pi i \cdot kj \cdot 2/n} &+& 
     e^{-2\pi i \cdot k/n}
-    \sum^{n/2}_{j=1} o_j \cdot e^{-2\pi i\cdot kj \cdot 2/n} &  k< n/2 \\
-    \sum^{n/2}_{j=1} \e_j \cdot e^{-2\pi i\cdot (k-n/2) j\cdot 2/n} &-& 
+    \sum^{n/2}_{j=1} o[j] 
+    \cdot e^{-2\pi i\cdot kj \cdot 2/n} &  k< n/2 \\
+    \sum^{n/2}_{j=1} \e[j] 
+    \cdot e^{-2\pi i\cdot (k-n/2) j\cdot 2/n} &-& 
     e^{-2\pi i\cdot (k-n/2)/n}
-    \sum^{n/2}_{j=1} o_j \cdot e^{-2\pi i\cdot (k-n/2)j\cdot 2/n} &  k\geq n/2 
+    \sum^{n/2}_{j=1} o[j] \cdot e^{-2\pi i\cdot (k-n/2)j\cdot 2/n} &  k\geq n/2 
   \end{array}\right.
 }
 We merken op dat we de e-machten in het tweede geval kunnen vereenvoudigen volgens
@@ -276,42 +299,66 @@ We merken op dat we de e-machten in het tweede geval kunnen vereenvoudigen volge
 = -e^{-2\pi i\cdot k/n},
 }
 waardoor het gevalsonderscheid wegvalt, aangezien beide vergelijkingen nu identiek zijn.
-We verkrijgen $X_k$ als sommatie over de lijsten $e$ en $o$, we vullen de relatie voor $e,o$ met $x$ in, en nemen de factor voor de oneven indices mee in de sommatie.
+We verkrijgen $X[k]$ als sommatie over de lijsten $e$ en $o$, we vullen de relatie voor $e,o$ met $x$ in, en nemen de factor voor de oneven indices mee in de sommatie.
 \eq{
-  X_k = \sum^{n/2}_{j=1} x_{2j} \cdot e^{-2\pi i\cdot k (2j)/n} + 
-    \sum^{n/2}_{j=1} x_{2j+1} \cdot e^{-2\pi i\cdot k (2j+1)/n} 
-    = \sum^n_{j=1} x_j \cdot e^{-2\pi i\cdot k j/n}
+  X[k] = \sum^{n/2}_{j=1} x[2j] \cdot e^{-2\pi i\cdot k (2j)/n} + 
+    \sum^{n/2}_{j=1} x[2j+1] \cdot e^{-2\pi i\cdot k (2j+1)/n} 
+    = \sum^n_{j=1} x[j] \cdot e^{-2\pi i\cdot k j/n}
 }
 Dit bewijst dat de FFT hetzelfde resultaat levert als het DFT algoritme, het bewijs voor de gelijkheid van de iDFT en de inverse FFT is 
 hetzelfde wanneer men de substitutie $-2\pi i \rightarrow 2\pi i$ uitvoert.
 \end{proof}
 
 \begin{opmerk}
-We hebben hier aangenomen, en zullen deze aanname ook doorzetten, dat de lengte van het ingangssignaal een macht van $2$ is, dit is een belangrijke
-eigenschap waar de variant van het FFT algoritme dat hier gebruikt wordt door werkt. Deze smaak van FFT wordt
+We hebben hier telkens aangenomen, en zullen deze aanname ook doorzetten, 
+dat de lengte van het ingangssignaal een macht van $2$ is, dit is een belangrijke
+eigenschap waar de variant van het FFT algoritme dat hier gebruikt wordt door werkt. Deze versie van FFT wordt
 de Radix-2 Decimation In Time van het Cooley-Tukey FFT algoritme genoemd. Algemenere vormen van het algoritme
-zijn ook mogelijk maar om niet al te veel te dralen bij de implementatie is dit simpel gehouden.
-(Eventuele verschillen in afmetingen worden dan opgelost met signaalextensie.
+worden ook toegepast in geoptimaliseerde algoritmes maar om de implementatie te versimpelen 
+is voor Radix-2 gekozen.Eventuele verschillen in afmetingen tussen een signaal en 
+een 2-macht zijn opgelost met signaalextensie.
 \end{opmerk}
 
 %-----------------------------------------------------------------------------------------------------------------
 \subsection*{Complexiteit van de Fast Fourier Transform}
 Hoewel het vanuit een puur wiskundig oogpunt wellicht minder relevant is, is de complexiteit van een algoritme 
 als een factor van belangrijk praktisch nut. De complexiteit vertaalt namelijk direct naar 
-de looptijd van het algoritme. We zullen daarom bewijzen dat de complexiteit van de FFT 
-een element is van $\O(n \log n)$. Ook is daarmee de complexiteit van de iFFT vastgesteld aangezien deze hetzelfde schema volgt met andere co\"efficienten. 
+de looptijd van het algoritme. We hebben hier een stelling uit de complexiteits theorie nodig, voor het bewijs zie Akra-Bazzi \cite{akra-bazzi}
 
+\begin{stelling}[Akkra-Bazzi]
+    Zij $T(n)$ recurrente betrekking van de vorm
+    \[
+    T(n) = \begin{cases}
+      c &\text{ als } n \leq d \\
+      a T(n/b) + f(n) &\text{ anders} \\
+    \end{cases},
+    \]
+    waarbij $a,b,d\in\N$, $c\in\R$ en $f$ een functie $f:\N\rightarrow\R$ die voldoet aan 
+    \eq{
+  \exists k \in \N \,:\, f(n) \in \theta(n^{\log a/\log b} \log^k n).
+    }
+    Dan wordt de orde van $T(n)$ gegeven door:
+    \eq{
+      T(n) \in \theta(n^{\log a / \log b} \log^{k+1}n).
+    }
+\end{stelling}
+Dit is een speciaal geval van de stelling die op ons algoritme van toepassing is.
+We beschouwen hier $T(n)$ als het aantal stappen dat een machine nodig heeft om het algoritme uit te voeren.
+Deze stelling is voldoende om een uitspraak te kunnen doen over de complexiteit 
+\begin{stelling}[Complexiteit van de FFT]
+  Het Fast Fourier Transform algoritme heeft een tijds-complexiteit $\O(n\log n)$ voor input van lengte $n=2^m$ 
+\end{stelling} 
 \begin{proof}[Bewijs]
 We schrijven het FFT algoritme in pseudocode.
 
 \begin{algorithmic}
 \Function{FFT}{$x$}
-\State $n \gets \text{lengte}(x)$ \Comment Assumptie: $n = 2^m$ voor een $m$, oftewel $n$ is een tweemacht
+\State $n \gets \text{lengte}(x)$ \Comment Assumptie: $n = 2^m$ voor een $m$
 \If {$n == 1$}
 	\State{$X \gets x$}
 \Else
-	\State $E \gets FFT(x[0::2])$ \Comment{Pak alle even indices}
-	\State $O \gets FFT(x[1::2])$ \Comment{Pak alle oneven indices}
+	\State $E \gets FFT(x[0::2])$ \Comment{FFT op even indices}
+	\State $O \gets FFT(x[1::2])$ \Comment{FFT oneven indices}
 	\For{$i = 0$ to $n-1$}
 		\If{$i < n/2$}
 			\State $X[i] \gets E[i] + e^{-2i \pi k/n} \cdot O[i]$
@@ -324,7 +371,7 @@ We schrijven het FFT algoritme in pseudocode.
 \EndFunction
 \end{algorithmic}
 
-Dit algoritme is recursief, dus kunnen we de complexiteit schrijven door middel van een recurente betrekking. Laat hiervoor $T(n)$ het aantal berekeningen zijn dat het algoritme kost bij een invoersignaal van lengte $n$. We een gevals onderscheid: als de lijst lengte $1$ heeft geven we deze direct terug (1 berekening), en anders gaan we de recursie in. Bij een lijst van lengte $>1$ splitsen we de lijst op in de even en oneven entries en voeren we op beiden weer het FFT algoritme uit, vervolgens voeren we nog $n$ maal een vast aantal berekeningen (= c berekeningen) uit om tot het eindresultaat te komen. In formulevorm geeft dit de volgende \emph{recurrente betrekking}
+Dit algoritme is recursief, dus kunnen we de complexiteit schrijven door middel van een recurrente betrekking. Laat hiervoor $T(n)$ het aantal berekeningen zijn dat het algoritme kost bij een invoersignaal van lengte $n$. We maken een gevalsonderscheid: als de lijst lengte $1$ heeft geven we deze direct terug (1 berekening). Bij een lijst van lengte $>1$ splitsen we de lijst op in de even en oneven entries en voeren we op beiden weer het FFT algoritme uit, vervolgens voeren we nog $n$ maal een vast aantal berekeningen (= c berekeningen) uit om tot het eindresultaat te komen. In formulevorm geeft dit de \emph{recurrente betrekking}
 \[
 T(n) = \begin{cases}
     1 &\text{ als } n = 1 \\
@@ -337,26 +384,6 @@ f \in \theta(g) \Leftrightarrow \exists c \in \R_+: \lim_{n \to \infty} \frac{f(
 \]
 Zonder verder al te veel in te gaan op de implicaties die $\theta$ heeft op het gedrag van de FFT gebruiken we dan dat in ieder geval geldt dat $f \in \theta(g)$ impliceert dat $f \in \O(g)$. 
 De stelling die voor dit probleem van belang is, is de vereenvoudigde stelling van \emph{Akkra-Bazzi}.
-
-%%%%%
-\begin{stelling}[Akkra-Bazzi]
-Zij $T(n)$ recurrente betrekking van de vorm
-\[
-T(n) = \begin{cases}
-  c &\text{ als } n \leq d \\
-  a T(n/b) + f(n) &\text{ anders} \\
-\end{cases},
-\]
-waarbij $a,b,d\in\N$, $c\in\R$ en $f$ een functie $f:\N\rightarrow\R$ die voldoet aan 
-\eq{
-  \exists k \in \N \,:\, f(n) \in \theta(n^{\log a/\log b} \log^k n).
-}
-Dan wordt de orde van $T(n)$ gegeven door:
-\eq{
-  T(n) \in \theta(n^{\log a / \log b} \log^{k+1}n).
-}
-\end{stelling}
-%%%%%
 
 De recurrente betrekking voor de complexiteit van de FFT is inderdaad van dezelfde vorm als die van $T(n)$ in bovenstaande stelling.
 Laat hiervoor namelijk $a=b=2$, $c=d=1$ en $f$ de functie die $n\mapsto n$ dan voldoet $f$ aan:
@@ -377,25 +404,53 @@ Het idee hierbij is om het tensorproduct te nemen van meerdere bases.
 Gegeven zij een signaalruimte van de vorm
 $\R^{n_1} \times \R^{n_2} \times \ldots \times \R^{n_m}$, we vatten dit op als
 een $m$-dimensionaal discreet signaal waarbij de $i$-de orthogonale richting een lengte $n_i$ heeft.
-Dan definieeren we de multidimensionale discrete Fourier-basis behorende bij deze signaalruimte als
+Dan definieeren we de multidimensionale discrete Fourier-`basis' behorende bij deze signaalruimte als
 \eq{
-  S^m = S_{n_1}\otimes S_{n_2} \otimes \ldots \otimes S_{n_m} = 
-  \left\{s^ = (s_{k_1},s_{k_2},\ldots,s_{k_m}) \largediv s_{k_i} \in S_{n_i} \right\}
+  S_{\bold n}= S_{n_1}\otimes S_{n_2} \otimes \ldots \otimes S_{n_m} = 
+  \left\{s_{\bold k}[{\bold j}]  = s_{k_1}[j_1]\cdot s_{k_2}[j_2]\cdot\ldots\cdot s_{k_m}[j_m] 
+  \largediv s_{k_i} \in S_{n_i}, j_i \in \{1..n_i\} \right\}
 }
-
+Met basisvectoren $s_{\bold k}$, waar $\bold k$ een indexvector uit $\{0..n_1\}\times\ldots\times\{0..n_m\}$
 \end{definitie}
 
 Wanneer we nu een $m$-dimensionaal signaal bekijken van lengte $n_1$ bij $n_2$ etc., dan kunnen we
-hierop een multidimensionale Fourier transformatie op definieren door:
+hierop een multidimensionale Fourier transformatie op definieren door het inproduct te generaliseren naar 
+onze $m$-dimensionale signaalruimte.
 \eq{
-  (X_1,X_2,\ldots,X_m) = 
-  (\sum_{j_1} \ldots \sum_{j_m} \inpr{s_{}}{}
-  )
+  X[\bold k] = \tfrac{1}{\bold n}\sum_{\bold j = \bold 1}^{\bold n} x[\bold j] \overline{s_{\bold k}}[{\bold j}] =
+  \left(\prod_{i\leq m} \tfrac{1}{n_i}\right) \cdot \sum_{j_1=1}^{n_1} \ldots \sum_{j_m=1}^{n_m} x[j_1,\ldots,j_m] \cdot 
+  e^{-\dpii\cdot k_m \cdot j_m /n_m } \cdot \ldots \cdot e^{-\dpii\cdot k_1 \cdot j_1 /n_1 } 
 }
-TODO: WTF man dit is echt een stuk moeilijker dan ik in mn hoofd had, ik zal nog eens kijken naar tensoren enzo
-in principe zou je daar wel iets over moeten kunnen zeggen denk ik.
-Iets over mappings over rijen en kolommen en andere vormen maar ik weet niet hoe het schaalt naar dimensie $m$
+Een eigenschap van deze definitie is dat het simpel is om te schrijven is naar het gewone DFT/FFT geval wanneer
+we ons richten op een enkele co\"ordinaat. We noteren hier $\DFT_m$ voor de DFT functie die een $m$-dimensionaal ingangssignaal transformeert. Dan kunnen we een recursieve definitie geven:
+\begin{definitie}[Recursieve Multidimensionale Discrete Fourier Transformatie]
+Definieer $\DFT_0$ als de identiteit op $\R^{n_1}$.
+We definieeren dan een DFT van orde $m$ (notatie $\DFT_m$) als een transformatie 
+$\R^{n_1}\times\ldots\times\R^{n_m} \to \C^{n_1}\times\ldots\times\C^{n_m}$ aan de hand van het beeld $X$ van een $m$-dimensionaal ingangssignaal $x$:
+\eq{
+  X[k_1,\ldots,k_m] = \tfrac{1}{n_m}\sum_{j_m=1}^{n_m} \DFT_{m-1}(x[j_m])[k_1,\ldots,k_{m-1}] \cdot s_{k_m}[j_m]  
+}
+Hier staat de notatie $x[j_m]$ voor een $(m-1)$-dimensionaal signaal dat we verkrijgen door de co\"ordinaat
+in de $m$-de richting vast te zetten.
+\end{definitie}
+Dit is duidelijk dezelfde definitie als eerder gegeven in termen van herhaalde sommatie. Voor $m=1$ staat er immers de gewone DFT en voor hogere machten schaalt dit met een factor $\tfrac{1}{n}$ en een extra sommatie.
+Het voordeel van deze definitie is dat het makkelijk om te schrijven is naar een algoritme dat 
+herhaald $\DFT$ toepast.
+Dit gebeurt door middel van een subroutine die een aantal $\DFT_{m-1}(x[j_m])$ berekent en deze teruggeeft als
+een vector $X_{m-1}$ over $j_m$, dan is de $DFT_m$ te implementeren als een subroutine die voor elke 
+$k_1\leq n_1,\ldots,k_{m-1}\leq n_{m-1}$ de berekening $\DFT(X_{m-1}[k_1,\ldots,k_{m-1}])$ uitvoert.
+Algemener voert de subroutine die $DFT_t$ voor een $m$-dimensionaal signaal geeft de volgende berekening uit.
 
+\begin{algo}[Multidimensionaal DFT Algoritme]
+Gegeven is een $m$-dimensionale input $x$ en een huidig level $t$, nu wordt de output $X_t$ gegeven door:
+\eq{
+  X_{t+1}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m] = \DFT(X_{t}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m]) \\
+  \text{voor } k_1\leq n_1, \ldots ,k_{t-1}\leq n_{t-1}, k_{t+1}\leq n_{t+1}, \ldots k_m \leq n_m
+}
+Waarbij we de randvoorwaarde $X_0 = x$ gebruiken.
+\end{algo}
+Dit Algoritme wordt aangesproken met input $x$ en level $t=m$ en spreekt zichzelf vervolgens aan met input $x$
+en level $t'=t-1$. 
 %-----------------------------------------------------------------------------------------------------------------
 \section{Compressie van Beeldmateriaal onder FFT}
 TODO: een klein lulverhaaltje hier en daar, even uitleggen wat er nodig is enzo hoeft niet heel lang te zijn
@@ -450,4 +505,19 @@ TODO: bla bla bla discreet $\to$ continu voor grote dataset, verder nog een defi
 Leldeux
 
 TODO: uhm, een beetje lullen over de code die we geschreven hebben
+
+
+\section{Biblio}
+
+\begin{thebibliography}{11}
+
+\bibitem{akra-bazzi}
+  Mohamad Akra, Louay Bazzi,
+  \emph{On the solution of linear recurrence equations}.
+  Computational Optimization and Applications, 
+  10(2):195 - 210,
+  1998.
+
+\end{thebibliography}
+
 \end{document}
