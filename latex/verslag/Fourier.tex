@@ -7,8 +7,44 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsthm}
-\usepackage{color}
+
 \usepackage{parcolumns}
+
+% PYTHON CODE
+\usepackage{listings}
+\usepackage{color}
+
+\usepackage{caption}
+
+\DeclareCaptionFont{black}{ \color{black} }
+\DeclareCaptionFormat{listing}{
+  \parbox{\textwidth}{\hfill#3}
+}
+\captionsetup[lstlisting]{ format=listing, textfont=black, singlelinecheck=false, margin=0pt, font={footnotesize} }
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  frame=single,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  captionpos=b,
+  tabsize=3
+}
+%PYTHON CODE
 
 \usepackage[dutch]{babel}
 \usepackage{a4wide}
@@ -77,6 +113,7 @@ overtuigendere manier om `nette' functies te beschrijven /
 multiresolutie in de tijd
 
 TODO: Periodieke functies zijn ook wel te beschrijven door slechts naar \'e\'en fase te kijken.
+
 De basisfuncties waarmee we een functie karakteriseren bij Fourier-analyse worden gegeven door de complexe
 $e$-machten.
 \begin{definitie}[Fourier-Basis] Zij gegeven een interval $[a,b]$, en bekijk de functie ruimte $L_2([a,b])$. Laat de verzameling $F_{[a,b]}$ gedefinieerd zijn door:
@@ -497,7 +534,7 @@ $\O( \sum_{i=1}^m n_i \prod_{j=1}^m n_j)$ voor de MDFT.
 %-----------------------------------------------------------------------------------------------------------------
 \section{Compressie van Beeldmateriaal onder FFT}
 
-TODO: een klein lulverhaaltje hier en daar, even uitleggen wat er nodig is enzo hoeft niet heel lang te zijn
+TODO: een klein introverhaaltje over compressie
 
 \subsection{Verwachte ontwikkeling van de fout}
 Het is zowel van praktisch nut als wiskundig interessant om het convergentie-gedrag te bepalen 
@@ -506,7 +543,7 @@ kwantificeren hoe goed een functie te benaderen is met een eindige subset van de
 We trachten daarom te bewijzen dat er een algebra\"isch verband bestaat tussen de fout en de frequentie
 van de wavelets en bovendien een exponentieel verband tussen de fout en de `gladheid' van de functie.
 
-Voor dit bewijs zullen we het Lemma van Riemann-Lebesgue gebruiken: TODO-bewijs of referentie.
+Voor dit bewijs zullen we het Lemma van Riemann-Lebesgue gebruiken: 
 \begin{lemm}[Riemann-Lebesque]
 Wanneer $g \in L_1(\R)$, dan geldt \cite{fourier-fout}
 \eq{
@@ -579,13 +616,63 @@ dat de orde van de fout gelijk is aan de orde van het grootste co\"efficient:
 }
 \subsection{De fout in discrete geval}
 
-TODO: discreet $\to$ continu voor grote dataset, verder nog een definitie van smooth geven op discrete functies
+TODO: discreet $\to$ continu voor grote dataset, maak een definitie van smooth op discrete functies
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{Implementatie van Fourier Transformatie in Python}
-Leldeux
+TODO: introductie verhaaltje
 
-TODO: uhm, een beetje lullen over de code die we geschreven hebben
+\subsection{Fast Fourier Transform Implementatie}
+TODO: even kijken of we dit zo moeten doen of dat we beter alles kunnen referen
+
+De python code die gebruikt is om het FFT algoritme in te programmeren volgt precies het schema van Pseudocode
+zoals beschreven in een vorige sectie.
+
+\begin{lstlisting}[caption=FFT algoritme in Python, voert de pseudocode uit zoals in sectie (TODO)]
+def FFT( xs ):
+    N = len(xs)
+    if N <= 1:                  # randconditie
+        return xs
+    else:
+        even = FFT(xs[0::2])    # voer FFT uit op even indices
+        odd  = FFT(xs[1::2])    # voer FFT uit op oneven indices
+
+        return [0.5*( even[k] + exp(-2j*pi*k/N)*odd[k] ) for k in range(N/2)] + [0.5*( even[k] - exp(-2j*pi*k/N)*odd[k] ) for k in range(N/2)]
+\end{lstlisting}
+
+Hierbij dient uitgelegd te worden dat de $[x \text{ for } y] + [z \text{ for } w]$ notatie twee lijsten construeert en achter elkaar zet. Dit algoritme werkt, zoals eerder beschreven enkel op signalen waarvan de lengte
+$N$ een macht van $2$ is. We hebben daarom signaalextensie toe moeten passen door middel van zero-padding
+om het programma ook op andersvormige signalen te laten werken.
+
+\begin{lstlisting}[caption=Zero-Padding algoritme in Python, voegt nullen toe tot een tweemacht is bereikt]
+def Zero_Padding( xs ):
+    N_old = len(xs)
+    N_new = 2**ceil(log(N_old,2))         # rond logaritme af voor kleinste tweemacht
+    return [xs[k] if (k < N_old) else 0 for k in range(N_new)]
+\end{lstlisting}
+
+Vervolgens hebben we deze code toegepast in twee dimensies. We maken hier gebruik van de definitie van het
+MFFT algoritme, dat grofweg zegt dat een meerdimensionaal algoritme kan worden geconstrueerd door herhaald 
+het 1-dimensionale geval toe te passen. Voor 2 dimensies in het bijzonder betekent dit dat we simpelweg 
+FFT konden toepassen op rijen en kolommen.
+
+\begin{lstlisting}[caption=2-Dimensionaal FFT algoritme]
+def FFT_2D( xss ):
+    xss = map(FFT, xss)     # voer FFT uit op rijen
+
+    xss_t = transpose(xss)     # verwissel rijen met kolommen
+    xss_t = map(FFT, xss_t)  # voer FFT uit op kolommen
+    xss = transpose(xss_t)     # maak verwisseling ongedaan 
+
+    return xss
+\end{lstlisting}
+Hier is de python-functie \emph{map} gebruikt die ruwweg gedefinieerd is als 
+$\text{map}(f,x) = [f(y) \text{ for } y \text{ in } x]$
+Met het oog op duidelijkheid is hier de Zero-Padding fase weggelaten, 
+dit algoritme verwacht nu nog een $2^n \times 2^m$ matrix.
+Dit is echter gemakkelijk te implementeren door Zero\_Padding toe te passen op rijen en kolommen.
+
+TODO: meer implementatie specifieke details includen
 
 
 \begin{thebibliography}{11}
