@@ -1,9 +1,20 @@
-\documentclass[11pt]{amsart}
+%We moeten even beslissen welke van de twee we willen gebruiken
+\documentclass[11pt]{report}
+%\documentclass[11pt]{amsart} 
+\usepackage[demo]{graphicx}
+\usepackage{subfigure}
 
-\usepackage{amssymb, amsmath}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{color}
+\usepackage{parcolumns}
+
+\usepackage[dutch]{babel}
 \usepackage{a4wide}
 \usepackage{algpseudocode}
 \usepackage{algorithmicx}
+\usepackage[square,super]{natbib}
 
 \makeatletter
 %replaces : \def\@endtheorem{\endtrivlist\@endpefalse }
@@ -45,15 +56,20 @@
 \newcommand{\largediv}{\,\big|\,}
 \newcommand{\Ldnorm}[1]{{||#1||_{L_2}}}
 \newcommand{\inpr}[2]{\langle #1 , #2 \rangle}
-\setlength\parindent{0pt}
-
 \newcommand{\DFT}{\text{DFT}}
 \newcommand{\dpii}{{2\pi i}}
+\newcommand{\abso}[1]{{\left| #1 \right|}}
 
+\setlength\parindent{0pt}
 \parskip = \baselineskip
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{1}
 
 \begin{document}
-\section{Een inleiding in Fourier}
+\tableofcontents 
+\newpage
+\chapter{Fourier}
+
 Studie van signalenperiodieke functies / 
 een manier om een functie te ontbinden in terugkerende patronen /
 karakteristiek van functie in termen van bepaalde frequenties /
@@ -61,8 +77,6 @@ overtuigendere manier om `nette' functies te beschrijven /
 multiresolutie in de tijd
 
 TODO: Periodieke functies zijn ook wel te beschrijven door slechts naar \'e\'en fase te kijken.
-
-\subsection*{De Fourier Basis}
 De basisfuncties waarmee we een functie karakteriseren bij Fourier-analyse worden gegeven door de complexe
 $e$-machten.
 \begin{definitie}[Fourier-Basis] Zij gegeven een interval $[a,b]$, en bekijk de functie ruimte $L_2([a,b])$. Laat de verzameling $F_{[a,b]}$ gedefinieerd zijn door:
@@ -321,10 +335,11 @@ een 2-macht zijn opgelost met signaalextensie.
 \end{opmerk}
 
 %-----------------------------------------------------------------------------------------------------------------
-\subsection*{Complexiteit van de Fast Fourier Transform}
+\subsection{Complexiteit van de Fast Fourier Transform}
 Hoewel het vanuit een puur wiskundig oogpunt wellicht minder relevant is, is de complexiteit van een algoritme 
 als een factor van belangrijk praktisch nut. De complexiteit vertaalt namelijk direct naar 
-de looptijd van het algoritme. We hebben hier een stelling uit de complexiteits theorie nodig, voor het bewijs zie Akra-Bazzi \cite{akra-bazzi}
+de looptijd van het algoritme. We hebben hier de volgende stelling uit de complexiteits theorie nodig. 
+\footnote{Dit is een speciaal geval van de stelling, voor de volledige stelleing en het bewijs zie \cite{akra-bazzi}}
 
 \begin{stelling}[Akkra-Bazzi]
     Zij $T(n)$ recurrente betrekking van de vorm
@@ -343,7 +358,6 @@ de looptijd van het algoritme. We hebben hier een stelling uit de complexiteits 
       T(n) \in \theta(n^{\log a / \log b} \log^{k+1}n).
     }
 \end{stelling}
-Dit is een speciaal geval van de stelling die op ons algoritme van toepassing is.
 We beschouwen hier $T(n)$ als het aantal stappen dat een machine nodig heeft om het algoritme uit te voeren.
 Deze stelling is voldoende om een uitspraak te kunnen doen over de complexiteit 
 \begin{stelling}[Complexiteit van de FFT]
@@ -422,9 +436,9 @@ onze $m$-dimensionale signaalruimte.
   \left(\prod_{i\leq m} \tfrac{1}{n_i}\right) \cdot \sum_{j_1=1}^{n_1} \ldots \sum_{j_m=1}^{n_m} x[j_1,\ldots,j_m] \cdot 
   e^{-\dpii\cdot k_m \cdot j_m /n_m } \cdot \ldots \cdot e^{-\dpii\cdot k_1 \cdot j_1 /n_1 } 
 }
-Een eigenschap van deze definitie is dat het simpel is om te schrijven is naar het gewone DFT/FFT geval wanneer
-we ons richten op een enkele co\"ordinaat. We noteren hier $\DFT_m$ voor de DFT functie die een $m$-dimensionaal ingangssignaal transformeert. Dan kunnen we een recursieve definitie geven:
-\begin{definitie}[Recursieve Multidimensionale Discrete Fourier Transformatie]
+We zullen echter een andere definitie gebruiken die equivalent is aan deze method, maar recursief gedefinieerd.
+We noteren deze transformatie als $\DFT_m$, een functie die een $m$-dimensionaal ingangssignaal transformeert.
+\begin{definitie}[Multidimensionale Discrete Fourier Transformatie]
 Definieer $\DFT_0$ als de identiteit op $\R^{n_1}$.
 We definieeren dan een DFT van orde $m$ (notatie $\DFT_m$) als een transformatie 
 $\R^{n_1}\times\ldots\times\R^{n_m} \to \C^{n_1}\times\ldots\times\C^{n_m}$ aan de hand van het beeld $X$ van een $m$-dimensionaal ingangssignaal $x$:
@@ -447,23 +461,23 @@ we schrijven het algoritme met output $X_t$ als:
 Waarbij we de randvoorwaarde $X_0 = x$ gebruiken. We beweren dat dit algoritme de multidimensionale Fourier transformatie van een $m$-dimensionaal signaal geeft.
 \end{algo}
 \begin{proof}[Bewijs]
-Om dit te bewijzen volstaat het om te bewijzen dat
+Om te bewijzen dat dit de MDFT geeft volstaat het om aan te tonen dat
 \eq{
-  X_t = \DFT(X_{t-1}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m])[k_t] = 
+  X_t [k_1,\ldots,k_m] = 
   \sum_{j_t = 1}^{n_t}\DFT_{t-1}(x[j_t,k_{t+1},\ldots,k_m])[k_1,\ldots,k_{t-1}] \cdot s_{k_t}[j_t]
 }
-Wanneer dit geldt voor elke $t$ dan geldt dit namelijk in het bijzonder voor het geval $t=m$, dan impliceert 
-dit namelijk dat $X_m$ gegeven wordt voor de formule voor de MDFT.
+Wanneer dit geldt voor elke $t$ dan geldt dit namelijk in het bijzonder voor het geval $t=m$, 
+zodat $X_m$ gegeven wordt voor de formule voor de MDFT.
 
 Laat $t=1$ dan geldt:
 \eq{
-  X_1 = \DFT(X_0[k_2,\ldots,k_m])[k_1] =& DFT(x[k_2,\ldots,k_m][k_1] \\
-=&  \sum_{j_1=1}^{n_1} x[j_1,k_2,\ldots,k_m]\cdot s_{k_1}[j_1] \\
+  X_1[k_1,\ldots,k_m] =& \DFT(X_0[k_2,\ldots,k_m])[k_1] \\
+ =&  \sum_{j_1=1}^{n_1} x[j_1,k_2,\ldots,k_m]\cdot s_{k_1}[j_1] \\
  =& \sum_{j_1=1}^{n_1} \DFT_0(x[j_1,k_2,\ldots,k_m])\cdot s_{k_1}[j_1]
 }
-Nu geldt verder voor $t>1$, vanwege de definitie van MDFT:
+Nu geldt verder voor $t>1$:
 \eq{
-  X_t[k_t] =& DFT(X_{t-1}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m])[k_t] \\
+  X_t[k_1,\ldots,k_m] =& DFT(X_{t-1}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m])[k_t] \\
            =& \sum_{j_t =1}^{n_t} X_{t-1}[k_1,\ldots,k_{t-1},j_t,k_{t+1},\ldots,k_m] \cdot s_{k_t}[j_t] \\
            =& \sum_{j_t =1}^{n_t} 
            \sum_{j_{t-1} = 1}^{n_{t-1}}
@@ -485,7 +499,7 @@ $\O( \sum_{i=1}^m n_i \prod_{j=1}^m n_j)$ voor de MDFT.
 
 TODO: een klein lulverhaaltje hier en daar, even uitleggen wat er nodig is enzo hoeft niet heel lang te zijn
 
-\subsection*{Verwachte ontwikkeling van de fout}
+\subsection{Verwachte ontwikkeling van de fout}
 Het is zowel van praktisch nut als wiskundig interessant om het convergentie-gedrag te bepalen 
 van de Fourier-transformatie. Met het convergentie gedrag voor continue functies kunnen we immers
 kwantificeren hoe goed een functie te benaderen is met een eindige subset van de Fourier-getransformeerde.
@@ -494,41 +508,78 @@ van de wavelets en bovendien een exponentieel verband tussen de fout en de `glad
 
 Voor dit bewijs zullen we het Lemma van Riemann-Lebesgue gebruiken: TODO-bewijs of referentie.
 \begin{lemm}[Riemann-Lebesque]
-Wanneer $g \in L^1(\R)$, dan geldt
-\[
+Wanneer $g \in L_1(\R)$, dan geldt \cite{fourier-fout}
+\eq{
 	G(z) = \left|\int_{-\infty}^\infty g(t) e^{- 2 \pi i z t} dt\right| \to 0 \text{ voor } z \to \infty.
-\]
+}
 \end{lemma}
 
+\begin{stelling}[Daling van de co\"efficienten]
+  Laat $f \in L_2([a,b])$, stel er is een $n$ z\'o dat $f$ is $C^n$ en voor $0\leq j\leq n$ geldt dat $f^{(j)}(a) = f^{(j)}(b)$. Dan geldt dat de $k$-de entry van de Fourier-getransformeerde $\hat f[k]$ in absolute waarde
+  daalt met $k$ volgens $\O(|k|^{-n})$
+\end{stelling}
 \begin{proof}[Bewijs]
-Laat $f \in L_2[0,1]$. Stel $f$ is $C^n$ en periodiek (voor alle afgeleides $f^{(j)}$ geldt $f^{(j)}(1) = f^{(j)}(0)$). Dan kunnen we iets zeggen over de mate van daling in de co\"effici\"enten.
-
-Wij willen graag iets zeggen over $\langle f, \psi_k\rangle$, de $k$-de co\"effici\"ent van onze Fourierbasis. Dan:
-\[
-	|\langle f, \psi_k \rangle| = \left|\int_0^1 f(x) e^{- 2 \pi i k x} dx\right| = \left|\left[ f(x) \cdot \frac{-1}{2 \pi i k} e^{- 2 \pi i k x} \right]_0^1\right| + \left|\frac{1}{2 \pi i k}\right| \left|\int_0^1 f'(x) e^{-2 \pi i k x} dx \right|
-\]
-\[
-	= | f(1) \cdot 1 - f(0) \cdot 1| + \frac{1}{2 \pi k} \left| \int_0^1 f'(x) e^{-2 \pi i k x} dx \right| = \frac{1}{2 \pi |k|} \left| \int_0^1 f'(x) e^{-2 \pi i k x} dx \right|.
-\]
-Omdat $f$ nu $C^n$ is, kunnen we dit herhaald toepassen, we verkrijgen daarmee
-\[
-	\frac{1}{2 \pi k} \left| \int_0^1 f(x) e^{-2 \pi i k x} dx \right| = (2 \pi |k|)^{-n}\left| \int_0^1 f^{(n)}(x) e^{- 2 \pi i k x} dx \right|.
-\]
-Vermenigvuldig beide kanten met $(2 \pi |k|)^n$ om te vinden dat
-\[
-	(2 \pi |k|)^n |\langle f, \psi_k \rangle| = \left| \int_0^1 f^{(n)}(x) e^{- 2 \pi i k x} dx \right|.
-\]
-We willen graag het lemma van Riemann-Lebesgue toepassen op de rechterkant. Merk daartoe op dat omdat $f \in C^n$, $f^{(n)}$ continu op $[0,1]$ dus neemt hier een maximum en een minimum aan. Daarmee is de integraal van $|f|$ begrensd en dus is $f\in L_1[0,1]$. Maar een functie die integreerbaar is op $[0,1]$ en daarbuiten nul, is integreerbaar op $\R$. Dus we mogen Riemann-Lebesgue gebruiken om te zien dat
-\[
-	(2 \pi |k|)^n |\langle f, \psi_k \rangle| \to 0 \text{ als } |k| \to \infty \Rightarrow \langle f, \psi_k \rangle \in o((2 \pi |k|)^{-n}) \subset O((2 \pi |k|)^{-n}) = O(|k|^{-n}),
-\]
-oftewel een algebraische afname van de co\"efficienten .
+  Laat $f \in L_2([a,b])$ zodat $f$ voldoet aan de voorwaarden in de stelling voor een bepaalde $n$. 
+  De Fourier-getransformeerde van $f$ wordt gegeven door:
+  \eq{
+    \hat f [k] = \tfrac{1}{\sqrt{b-a}} \inpr{f}{\phi_k}
+  }
+  De constante in deze vergelijking heeft geen invloed op de orde, dus richten we ons op het inproduct. 
+  We schrijven dit uit tot een integraal en voeren vervolgens, omdat $f$ differentieerbaar is, partie\"ele
+  integratie uit.
+  \eq{
+    \abso{\inpr{f}{\phi_k}} 
+    =& \abso{\int_a^b f(x) e^{- 2 \pi i k \tfrac{x-a}{b-a}} dx}
+    = \abso{\tfrac{b-a}{2 \pi i k}\left[ f(x) \cdot  e^{- 2 \pi i k \tfrac{x-a}{b-a}} \right]_a^b} 
+    + \abso{\frac{b-a}{2 \pi i k}\right| \left|\int_0^1 f'(x) e^{-2 \pi i k \tfrac{x-a}{b-a}} dx} \\
+    =& \abso{ f(b) \cdot 1 - f(a) \cdot 1} + \frac{b-a}{2 \pi \abso{k}} 
+    \abso{ \int_a^b f'(x) e^{-2 \pi i k \tfrac{x-a}{b-a}} dx }
+    = \tfrac{b-a}{2 \pi |k|} \left| \int_a^b f'(x) e^{-2 \pi i k \tfrac{x-a}{b-a}} dx \right|.
+  }
+  Hier hebben we gebruikt dat alle afgeleiden van $0$ tot $n$ periodiek zijn.
+  Omdat $f$ nu $C^n$ is en de afgeleiden weer periodiek zijn kunnen we dit herhaald toepassen,
+  we verkrijgen daarmee
+  \[
+  \left| \int_a^b f(x) e^{-2 \pi i k \tfrac{x-a}{b-a}} dx \right| 
+  = (\tfrac{2 \pi}{b-a} |k|)^{-n}\left| \int_a^b f^{(n)}(x) e^{- 2 \pi i k \tfrac{x-a}{b-a}} dx \right|.
+  \]
+  Vermenigvuldig beide kanten met $(\tfrac{2 \pi}{b-a} |k|)^n$ om te vinden dat
+  \[
+  (\tfrac{2 \pi}{b-a} |k|)^n \abso{\inpr{f}{\phi_k}} 
+  = \abso{\int_a^b f^{(n)}(x) e^{- 2 \pi i k \tfrac{x-a}{b-a}} dx}.
+  \]
+  We willen graag het lemma van Riemann-Lebesgue toepassen op de rechterkant. 
+  Merk daartoe op dat omdat $f \in C^n$, $f^{(n)}$ continu op $[a,b]$ 
+  dus neemt hier een maximum en een minimum aan. 
+  Daarmee is de integraal van $|f|$ begrensd en dus is $f\in L_1([a,b])$. 
+  Maar een functie die integreerbaar is op $[a,b]$ en daarbuiten nul, is integreerbaar op $\R$. 
+  Dus we mogen Riemann-Lebesgue gebruiken om te zien dat
+  \[
+  (\tfra{2 \pi}{b-a} |k|)^n \abso{\inpr{f}{\phi_k}} \to 0 \text{ als } |k| \to \infty 
+  \]
+  Maar dit betekent precies dat $\abso{\inpr{f}{\phi_k}} \in  O((\tfrac{2 \pi}{b-a} |k|)^{-n}) = O(|k|^{-n})$
 \end{proof}
-TODO: hier nog een corollary bij schrijven om de coefficienten aan de fout gelijk te praten.
 
-\subsection*{De fout in discrete geval}
+De analyse van de co\"efficienten die we hier gegeven hebben vertaalt direct naar de fout die we krijgen
+bij reconstructie van een Fourier-getransformeerde functie wanneer we een gelimiteerde dataset gebruiken.
+Schrijf namelijk $F$ voor de terug getransformeerde met een dataset waarbij $k$ gelimiteerd is, en $f$ voor
+de perfecte reconstructie. Dan hebben we de relatie:
+\eq{
+  \Ldnorm{ f - F }^2 =& 
+  \abso{\int_a^b \left (\sum_{k=1}^\infty \hat f [k] \phi_k(x) 
+    - \sum_{k=1}^{m-1} \hat f[k] \phi_k(x) \right)^2\dx } \\
+  =& \abso{\int_a^b \left( \sum_{k=m}^\infty \hat f [k] \phi_k(x) \right)^2\dx } \\
+  \leq& \abso{\sum_{k=m}^\infty \hat f^2 [k] \cdot \int_a^b \phi_k^2(x) \dx}
+  \leq \sum_{k=m}^\infty \abso{\hat f[k]}^2
+}
+Omdat de orde van deze vergelijking in termen van $m$ bepaald wordt door de grootste term kunnen we zeggen 
+dat de orde van de fout gelijk is aan de orde van het grootste co\"efficient:
+\eq{
+  ||f-F||_{L_2([a,b])} \in \O\left(\abso{\hat f[m]}\right) = \O(m^{-n})
+}
+\subsection{De fout in discrete geval}
 
-TODO: bla bla bla discreet $\to$ continu voor grote dataset, verder nog een definitie van smooth geven op discrete functies
+TODO: discreet $\to$ continu voor grote dataset, verder nog een definitie van smooth geven op discrete functies
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{Implementatie van Fourier Transformatie in Python}
@@ -536,8 +587,6 @@ Leldeux
 
 TODO: uhm, een beetje lullen over de code die we geschreven hebben
 
-
-\section{Biblio}
 
 \begin{thebibliography}{11}
 
@@ -547,6 +596,12 @@ TODO: uhm, een beetje lullen over de code die we geschreven hebben
   Computational Optimization and Applications, 
   10(2):195 - 210,
   1998.
+
+\bibitem{fourier-fout}
+  Bochner S., Chandrasekharan K. 
+  \emph{Fourier Transforms}. 
+  Princeton University Press.
+  1949.
 
 \end{thebibliography}
 

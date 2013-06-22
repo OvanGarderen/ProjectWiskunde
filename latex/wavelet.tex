@@ -9,6 +9,7 @@
 \usepackage[dutch]{babel}
 \usepackage{a4wide}
 %\setlength{\parindent}{0pt}
+\usepackage{color}
 
 \theoremstyle{plain}
 \newtheorem{lemma}{Lemma}
@@ -44,7 +45,7 @@ In de loop van de vorige eeuw is een nieuwe transformatie ontstaan met een eigen
 \begin{definitie}
 Een wavelet is simpelweg een functie $\psi: \R \to \R$ die voldoet aan
 \[
-  \int_{-\infty}^{\infty} \psi(t) dt = 0.
+z  \int_{-\infty}^{\infty} \psi(t) dt = 0.
 \]
 Met deze functie $\psi$ kunnen we een familie functies $\psi_{u,s}$ bouwen door middel van schaling en translatie:
 \[
@@ -329,11 +330,17 @@ Neem als voorbeeld weer $V_j$ de ruimte van stuksgewijs constante functies op he
 	\phi^2(x_1,x_2) = \phi(x_1)\phi(x_2) = \begin{cases} 1 & \text{ als } x_1 \in [0,1)\text{ en }x_2 \in [0,1) \\ 0 & \text{ anders.} \end{cases}
 \]
 
-\subsection{Tweedimensionale Waveletfuncties} We weten dat $V_j^2$ bevat is in $V_{j-1}^2$. We bekijken het orthogonale complement $W_j^2 \perp V_j^2$:
+\subsection{Tweedimensionale Waveletfuncties}
+TODO: kijk even wat je hiervan vind, ik heb alle changes rood gemaakt.
+\bigskip
+
+\noindent
+We weten dat $V_j^2$ bevat is in $V_{j-1}^2$. 
+We bekijken het orthogonale complement ${\color{red} U_j} \perp V_j^2$:
 \[
-	V_j^2 \oplus W_j^2 = V_{j-1}^2.
+	V_j^2 \oplus U_j = V_{j-1}^2.
 \]
-Om nu een orthogonale waveletbasis voor $W_j$ en (dus) $L^2(\R^2)$ te vinden, gaan we als volgt te werk.
+Om nu een orthogonale waveletbasis voor ${\color{red} U_j}$ en (dus) $L^2(\R^2)$ te vinden, gaan we als volgt te werk.
 \begin{stelling}[{\cite{mallat}[T7.24]}]
 Laat $\phi$ een schalingsfunctie en $\psi$ de bijhorende wavelet die en basis voor de $L^2(\R)$ voortbrengt. Maak drie wavelets
 \[
@@ -344,24 +351,25 @@ en laat voor $k \in \{1,2,3\}$ nu
 	\psi^k_{j,n}(x) = \frac{1}{2^j} \psi^k\left( \frac{x_1 - 2^j n_1}{2^j}, \frac{x_2 - 2^j n_2}{2^j} \right).
 \]
 
-Dan is $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis voor $W_j^2$ en $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \Z \}$ een basis voor $L^2(\R^2)$.
+Dan is $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis voor ${\color{red} U_j}$ 
+en $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \Z \}$ een basis voor $L^2(\R^2)$.
 \end{stelling}
 \begin{proof}[Bewijs]
 We weten
 \[
-	V_{j-1}^2 = V_j^2 \oplus W_j^2 \implies V_{j-1} \otimes V_{j-1} = ( V_j \otimes V_j ) \oplus W_j^2.
+	V_{j-1}^2 = V_j^2 \oplus {\color{red} U_j} \implies V_{j-1} \otimes V_{j-1} = ( V_j \otimes V_j ) \oplus {\color{red} U_j}.
 \]
 Vul nu $V_{j-1} = V_j \oplus W_j$ in om te vinden
 \[
-	( V_j \oplus W_j ) \otimes (V_j \oplus W_j ) = (V_j \otimes V_j) \oplus (W_j \otimes W_j) 
+	( V_j \oplus W_j ) \otimes (V_j \oplus W_j ) = (V_j \otimes V_j) \oplus {\color{red} U_j} %hier stond dus:(W_j \otimes W_j) 
 \]
 \[
-	\implies (V_j \otimes V_j) \oplus (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = (V_j \otimes V_j) \oplus W_j^2
+	\implies (V_j \otimes V_j) \oplus (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = (V_j \otimes V_j) \oplus {\color{red} U_j}
 \]
 \[
-	\implies (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = W_j^2.
+	\implies (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = {\color{red} U_j}.
 \]
-Nu is het duidelijk dat $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis is voor $W_j^2$. Omdat nu
+Nu is het duidelijk dat $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis is voor ${\color{red} U_j}$. Omdat nu
 \[
 	L^2(\R^2) = \bigoplus_{j=-\infty}^\infty W_j
 \]
