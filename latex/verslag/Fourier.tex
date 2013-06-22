@@ -27,6 +27,7 @@
 \newtheorem*{stelling}{Stelling}
 \newtheorem*{algo}{Algoritme}
 \newtheorem*{definitie}{Definitie}
+\newtheorem*{gevolg}{Gevolg}
 
 \theoremstyle{remark}
 \newtheorem*{opmerk}{Opmerking}
@@ -436,23 +437,52 @@ in de $m$-de richting vast te zetten.
 Dit is duidelijk dezelfde definitie als eerder gegeven in termen van herhaalde sommatie. Voor $m=1$ staat er immers de gewone DFT en voor hogere machten schaalt dit met een factor $\tfrac{1}{n}$ en een extra sommatie.
 Het voordeel van deze definitie is dat het makkelijk om te schrijven is naar een algoritme dat 
 herhaald $\DFT$ toepast.
-Dit gebeurt door middel van een subroutine die een aantal $\DFT_{m-1}(x[j_m])$ berekent en deze teruggeeft als
-een vector $X_{m-1}$ over $j_m$, dan is de $DFT_m$ te implementeren als een subroutine die voor elke 
-$k_1\leq n_1,\ldots,k_{m-1}\leq n_{m-1}$ de berekening $\DFT(X_{m-1}[k_1,\ldots,k_{m-1}])$ uitvoert.
-Algemener voert de subroutine die $DFT_t$ voor een $m$-dimensionaal signaal geeft de volgende berekening uit.
-
 \begin{algo}[Multidimensionaal DFT Algoritme]
-Gegeven is een $m$-dimensionale input $x$ en een huidig level $t$, nu wordt de output $X_t$ gegeven door:
+Gegeven is een $m$-dimensionale input $x$ en een huidig level $t$, 
+we schrijven het algoritme met output $X_t$ als:
 \eq{
-  X_{t+1}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m] = \DFT(X_{t}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m]) \\
+  X_{t}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m] = \DFT(X_{t-1}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m]) \\
   \text{voor } k_1\leq n_1, \ldots ,k_{t-1}\leq n_{t-1}, k_{t+1}\leq n_{t+1}, \ldots k_m \leq n_m
 }
-Waarbij we de randvoorwaarde $X_0 = x$ gebruiken.
+Waarbij we de randvoorwaarde $X_0 = x$ gebruiken. We beweren dat dit algoritme de multidimensionale Fourier transformatie van een $m$-dimensionaal signaal geeft.
 \end{algo}
-Dit Algoritme wordt aangesproken met input $x$ en level $t=m$ en spreekt zichzelf vervolgens aan met input $x$
-en level $t'=t-1$. 
+\begin{proof}[Bewijs]
+Om dit te bewijzen volstaat het om te bewijzen dat
+\eq{
+  X_t = \DFT(X_{t-1}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m])[k_t] = 
+  \sum_{j_t = 1}^{n_t}\DFT_{t-1}(x[j_t,k_{t+1},\ldots,k_m])[k_1,\ldots,k_{t-1}] \cdot s_{k_t}[j_t]
+}
+Wanneer dit geldt voor elke $t$ dan geldt dit namelijk in het bijzonder voor het geval $t=m$, dan impliceert 
+dit namelijk dat $X_m$ gegeven wordt voor de formule voor de MDFT.
+
+Laat $t=1$ dan geldt:
+\eq{
+  X_1 = \DFT(X_0[k_2,\ldots,k_m])[k_1] =& DFT(x[k_2,\ldots,k_m][k_1] \\
+=&  \sum_{j_1=1}^{n_1} x[j_1,k_2,\ldots,k_m]\cdot s_{k_1}[j_1] \\
+ =& \sum_{j_1=1}^{n_1} \DFT_0(x[j_1,k_2,\ldots,k_m])\cdot s_{k_1}[j_1]
+}
+Nu geldt verder voor $t>1$, vanwege de definitie van MDFT:
+\eq{
+  X_t[k_t] =& DFT(X_{t-1}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m])[k_t] \\
+           =& \sum_{j_t =1}^{n_t} X_{t-1}[k_1,\ldots,k_{t-1},j_t,k_{t+1},\ldots,k_m] \cdot s_{k_t}[j_t] \\
+           =& \sum_{j_t =1}^{n_t} 
+           \sum_{j_{t-1} = 1}^{n_{t-1}}
+           \DFT_{t-2}(x[j_{t-1},k_t,\ldots,k_m])[k_1,\ldots,k_{t-2}] \cdot s_{k_{t-1}}[j_{t-1}]
+                         \cdot s_{k_t}[j_t] \\
+=&  \sum_{j_t = 1}^{n_t}\DFT_{t-1}(x[j_t,k_{t+1},\ldots,k_m])[k_1,\ldots,k_{t-1}] \cdot s_{k_t}[j_t]
+}
+Waarbij we opeenvolgend onze de inductieaanname gebruiken en vervolgens de definitie van de MDFT.
+Hiermee geldt de relatie dus ook voor $X_m$, zodat dit algoritme de MDFT geeft.
+\end{proof}
+
+Een belangrijk gevolg is nu dat het algoritme in termen van de DFT direct vertaalt naar een multidimentionaal algoritme voor de FFT, beiden geven immers dezelfde output. 
+Wanneer we overal de functie DFT vervangen door FFT dan geeft dit de Multidimentionale Fast Fourier Transform.
+De complexiteit van zo'n algoritme is $\O( \sum_{i=1}^m \log(n_i) \prod_{j=1}^m n_j)$ t.o.v.
+$\O( \sum_{i=1}^m n_i \prod_{j=1}^m n_j)$ voor de MDFT.
+
 %-----------------------------------------------------------------------------------------------------------------
 \section{Compressie van Beeldmateriaal onder FFT}
+
 TODO: een klein lulverhaaltje hier en daar, even uitleggen wat er nodig is enzo hoeft niet heel lang te zijn
 
 \subsection*{Verwachte ontwikkeling van de fout}
@@ -462,9 +492,6 @@ kwantificeren hoe goed een functie te benaderen is met een eindige subset van de
 We trachten daarom te bewijzen dat er een algebra\"isch verband bestaat tussen de fout en de frequentie
 van de wavelets en bovendien een exponentieel verband tussen de fout en de `gladheid' van de functie.
 
-\begin{proof}[Bewijs]
-Laat $f \in L_2[0,1]$. Stel $f$ is $C^n$ en periodiek (voor alle afgeleides $f^{(j)}$ geldt $f^{(j)}(1) = f^{(j)}(0)$). Dan kunnen we iets zeggen over de mate van daling in de co\"effici\"enten.
-
 Voor dit bewijs zullen we het Lemma van Riemann-Lebesgue gebruiken: TODO-bewijs of referentie.
 \begin{lemm}[Riemann-Lebesque]
 Wanneer $g \in L^1(\R)$, dan geldt
@@ -472,6 +499,9 @@ Wanneer $g \in L^1(\R)$, dan geldt
 	G(z) = \left|\int_{-\infty}^\infty g(t) e^{- 2 \pi i z t} dt\right| \to 0 \text{ voor } z \to \infty.
 \]
 \end{lemma}
+
+\begin{proof}[Bewijs]
+Laat $f \in L_2[0,1]$. Stel $f$ is $C^n$ en periodiek (voor alle afgeleides $f^{(j)}$ geldt $f^{(j)}(1) = f^{(j)}(0)$). Dan kunnen we iets zeggen over de mate van daling in de co\"effici\"enten.
 
 Wij willen graag iets zeggen over $\langle f, \psi_k\rangle$, de $k$-de co\"effici\"ent van onze Fourierbasis. Dan:
 \[
