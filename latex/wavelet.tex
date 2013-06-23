@@ -331,17 +331,13 @@ Neem als voorbeeld weer $V_j$ de ruimte van stuksgewijs constante functies op he
 \]
 
 \subsection{Tweedimensionale Waveletfuncties}
-TODO: kijk even wat je hiervan vind, ik heb alle changes rood gemaakt.
-\bigskip
-
-\noindent
 We weten dat $V_j^2$ bevat is in $V_{j-1}^2$. 
-We bekijken het orthogonale complement ${\color{red} U_j} \perp V_j^2$:
+We bekijken het orthogonale complement $\boldsymbol{U}_j \perp V_j^2$:
 \[
 	V_j^2 \oplus U_j = V_{j-1}^2.
 \]
-Om nu een orthogonale waveletbasis voor ${\color{red} U_j}$ en (dus) $L^2(\R^2)$ te vinden, gaan we als volgt te werk.
-\begin{stelling}[{\cite{mallat}[T7.24]}]
+Om nu een orthogonale waveletbasis voor $\boldsymbol{U}_j$ en (dus) $L^2(\R^2)$ te vinden, gaan we als volgt te werk.
+\begin{stelling}[{\cite[T7.24]{mallat}}]
 Laat $\phi$ een schalingsfunctie en $\psi$ de bijhorende wavelet die en basis voor de $L^2(\R)$ voortbrengt. Maak drie wavelets
 \[
 	\psi^1(x) = \phi(x_1)\psi(x_2) \quad \psi^2(x) = \psi(x_1) \phi(x_2) \quad \psi^3(x) = \psi(x_1)\psi(x_2)
@@ -351,27 +347,27 @@ en laat voor $k \in \{1,2,3\}$ nu
 	\psi^k_{j,n}(x) = \frac{1}{2^j} \psi^k\left( \frac{x_1 - 2^j n_1}{2^j}, \frac{x_2 - 2^j n_2}{2^j} \right).
 \]
 
-Dan is $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis voor ${\color{red} U_j}$ 
+Dan is $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis voor $\boldsymbol{U}_j$ 
 en $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \Z \}$ een basis voor $L^2(\R^2)$.
 \end{stelling}
 \begin{proof}[Bewijs]
 We weten
 \[
-	V_{j-1}^2 = V_j^2 \oplus {\color{red} U_j} \implies V_{j-1} \otimes V_{j-1} = ( V_j \otimes V_j ) \oplus {\color{red} U_j}.
+	V_{j-1}^2 = V_j^2 \oplus \boldsymbol{U}_j \implies V_{j-1} \otimes V_{j-1} = ( V_j \otimes V_j ) \oplus \boldsymbol{U}_j.
 \]
 Vul nu $V_{j-1} = V_j \oplus W_j$ in om te vinden
 \[
-	( V_j \oplus W_j ) \otimes (V_j \oplus W_j ) = (V_j \otimes V_j) \oplus {\color{red} U_j} %hier stond dus:(W_j \otimes W_j) 
+	( V_j \oplus W_j ) \otimes (V_j \oplus W_j ) = (V_j \otimes V_j) \oplus \boldsymbol{U}_j %hier stond dus:(W_j \otimes W_j) 
 \]
 \[
-	\implies (V_j \otimes V_j) \oplus (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = (V_j \otimes V_j) \oplus {\color{red} U_j}
+	\implies (V_j \otimes V_j) \oplus (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = (V_j \otimes V_j) \oplus \boldsymbol{U}_j
 \]
 \[
-	\implies (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = {\color{red} U_j}.
+	\implies (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = \boldsymbol{U}_j.
 \]
-Nu is het duidelijk dat $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis is voor ${\color{red} U_j}$. Omdat nu
+Nu is het duidelijk dat $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis is voor $\boldsymbol{U}_j$. Omdat nu
 \[
-	L^2(\R^2) = \bigoplus_{j=-\infty}^\infty W_j
+	L^2(\R^2) = \bigoplus_{j=-\infty}^\infty \boldsymbol{U}_j
 \]
 is $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \Z \}$ een basis voor $L^2(\R^2)$.
 \end{proof}
@@ -632,48 +628,3 @@ St\'ephane Mallat,
 http://www.ams.org/journals/bull/1960-66-02/S0002-9904-1960-10426-0/S0002-9904-1960-10426-0.pdf
 \end{thebibliography}
 \end{document}
-
-
-  \iffalse
-Bekijk $f$ even als een functie in 1 variabele. Het geval van meer variabelen is een stuk technischer maar niet interessanter.
-Als gevolg van de orde $p$ van de wavelet vinden we dat we $|\langle f, \psi_{j,n}\rangle |$ als volgt om kunnen schrijven:
-\[
-	|\langle f, \psi_{j,n} \rangle | = |\langle f-q, \psi_{j,n} \rangle | \text{ voor elk polynoom $q$ van graad $p-1$ of lager,} 
-\]
-zodat
-\[
-	|\langle f-q, \psi_{j,n} \rangle | \leq ||f-q|| \cdot ||\psi_{j,n}||.
-\]
-
-De norm van deze functies $f-q$ en $\psi_{j,n}$ is de $L_2$-norm, welke bepaald wordt door een integraal over $[0,1]$. Omdat $\psi_{j,n}$ een compacte drager $S_{j,n}$ heeft, is het laatste product net zo goed te beschouwen als integraal over $S_{j,n}$:
-\[
-	||f-q|| \cdot ||\psi_{j,n}|| = ||f-q||_{S_{j,n}} \cdot ||\psi_{j,n}||_{S_{j,n}} = ||f-q||_{S_{j,n}},
-\]
-omdat $\psi_{j,n}$ per constructie norm 1 heeft.
-
-Lokaal kunnen we $f$ echter redelijk goed benaderen door middel van een polynoom van graad $p-1$, namelijk de eerste $p$ termen van de Taylorontwikkeling. Per definitie van deze Taylorontwikkeling weten we nu dat de restterm, $f(x)-q(x) \simeq h^p||f||_{S_{j,n}}$ met $h$ de diameter van $S$.\cite[\S 31.\{3,4\}]{TODOross} Met andere woorden, $||f-q||_{S_{j,n}} \simeq h^p ||f||_{S_{j,n}}$. Omdat deze drager gewoon een lijnstukje is met lengte $2^{-j}$ is, wordt 
-
-\[
-	||f-q||_{S_{j,n}} \simeq 2^{-jp} ||f||_{S_{j,n}}.
-\]
-
-Het bewijs tot nu toe is simpel voort te zetten naar een of andere dimensie $n$. Het enige wat echt verandert is de diameter. De drager $S_{j,n}$ wordt nu geen lijnstukje maar een kubus met zijdes $2^{-j}$ zodat geldt voor de diameter $h$:
-\[
-	h = \sqrt{\sum_{i=1}^n (2^{-j})^2} = \sqrt{n 2^{-2j}} = \sqrt{n} 2^{-j}.
-\]
-
-
-Uiteindelijk krijgen we dat $||f-q||_{S_{j,n}} \simeq n^{p/2} 2^{-jp} ||f||_{S{j,n}}$.
-
-Men krijgt nu de beste benadering door alle ${j,n}$ met $|{j,n}|$ tot een bepaald niveau, zeg $M$, te pakken. Bekijk de fout:
-\[
-	\left\| f - \sum_{|{j,n}| \leq M} \langle f, \psi_{j,n} \rangle \psi_{j,n} \right\|_\Box = \sum_{|{j,n}| > M} | \langle f, \psi_{j,n} \rangle |^2 \in \mathcal{O}\left(\sum_{|{j,n}| > M} n^{p/2} 2^{-|{j,n}|p} \right) = \mathcal{O}(n^{p/2}2^{-Mp}),
-\]
-waarbij het laatste isteken voortkomt uit
-\[
-	\sum_{k=M+1}^\infty n^{p/2} \, 2^{- kp} = n^{p/2} \frac{2^{-Mp}}{2^p-1}
-\]
-en de notie dat $p$ constant is voor een keuze van de wavelet.
-
-Voor elke dimensie van de ruimte zitten er $\mathcal{O}(2^M)$ basisfuncties in ``alle ${j,n}$ met $|{j,n}| \leq M$''. We hebben $n$ dimensies, dus er zijn $2^{Mn} = K $ wavelets die zorgen voor een fout van $\mathcal{O}(n^{p/2} 2^{-Mp})$. Omschrijven geeft dat dit overeenkomt met een fout van $\mathcal{O}(n^{p/2} K^{-p/n})$.
-\fi

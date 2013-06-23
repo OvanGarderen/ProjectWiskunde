@@ -1,0 +1,1303 @@
+%We moeten even beslissen welke van de twee we willen gebruiken
+\documentclass[11pt]{report}
+%\documentclass[11pt]{amsart} 
+\usepackage[demo]{graphicx}
+\usepackage{subfigure}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\usepackage{parcolumns}
+
+% PYTHON CODE
+\usepackage{listings}
+\usepackage{color}
+
+\usepackage{caption}
+
+\DeclareCaptionFont{black}{ \color{black} }
+\DeclareCaptionFormat{listing}{
+  \parbox{\textwidth}{\hfill#3}
+}
+\captionsetup[lstlisting]{ format=listing, textfont=black, singlelinecheck=false, margin=0pt, font={footnotesize} }
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  frame=single,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  captionpos=b,
+  tabsize=3
+}
+%PYTHON CODE
+
+\usepackage[dutch]{babel}
+\usepackage{a4wide}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx}
+\usepackage[square,super]{natbib}
+
+\makeatletter
+%replaces : \def\@endtheorem{\endtrivlist\@endpefalse }
+% with:
+%\def\@endtheorem{\endtrivlist}
+\makeatother
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\e}{\epsilon}
+\renewcommand{\O}{\mathcal{O}}
+
+\newcommand{\FFT}{\text{FFT}}
+
+
+\theoremstyle{plain}
+\newtheorem*{lemm}{Lemma}
+\newtheorem*{stelling}{Stelling}
+\newtheorem*{algo}{Algoritme}
+\newtheorem*{definitie}{Definitie}
+
+\theoremstyle{remark}
+\newtheorem*{gevolg}{Gevolg}
+\newtheorem*{opmerk}{Opmerking}
+\newtheorem*{voorbeeld}{Voorbeeld}
+
+\newcommand{\eq}[1]{\begin{eqnarray*} #1 \end{eqnarray*}}
+\newcommand{\mogelijkheden}[1]{\begin{cases} #1 \end{cases}}
+\newcommand{\repr}[1]{{#1}^{\!\!-1}}
+
+\newcommand{\coefficient}{co\"effici\"ent}
+\newcommand{\coefficienten}{co\"effici\"enten}
+
+\newcommand{\dx}{\text{d}x}
+\newcommand{\dy}{\text{d}y}
+\newcommand{\dz}{\text{d}z}
+\newcommand{\largediv}{\,\big|\,}
+\newcommand{\Ldnorm}[1]{{||#1||_{L_2}}}
+\newcommand{\inpr}[2]{\langle #1 , #2 \rangle}
+\newcommand{\DFT}{\text{DFT}}
+\newcommand{\dpii}{{2\pi i}}
+\newcommand{\abso}[1]{{\left| #1 \right|}}
+
+\setlength\parindent{0pt}
+\parskip = \baselineskip
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{1}
+
+\title{JPEG-2000: de wondere wereld van Wavelets}
+\date{\today}
+\author{Jan Westerdiep \and Ogier van Garderen}
+
+\begin{document}
+\maketitle
+\tableofcontents 
+\newpage
+\chapter{Intro}
+\section{Signaaluitbreiding}
+Beide algoritmes kunnen enkel omgaan met signalen die een tweemacht lang zijn. Om te zorgen dat een willekeurig signaal ook getransformeerd kan worden, moet het dus uitgebreid worden voorbij zijn definitiegebied. De meeste bronnen onderscheiden de volgende manieren om het signaal uit te breiden. Laat $x_1, x_2, \ldots x_n$ het signaal.
+\begin{description}
+	\item[Zero-padding] $x' = 0, \ldots, 0| x_1, x_2, \ldots, x_n| 0, \ldots, 0$. Het gevolg van deze uitbreiding is dat het signaal niet langer continu hoeft te zijn op de randen;
+	\item[Constant padding] $x' = x_1, \ldots, x_1| x_1, x_2, \ldots, x_n| x_n, \ldots, x_n$. Het gevolg is nu dat het signaal geen continue afgeleide meer hoeft te hebben; 
+	\item[Symmetric padding] $x' = x_n, \ldots, x_1| x_1, x_2, \ldots, x_n| x_n, \ldots, x_1$. Het gevolg is nu dat het signaal geen continue afgeleide meer hoeft te hebben; 
+	\item[Periodic padding] $x' = x_1, \ldots, x_n| x_1, x_2, \ldots, x_n| x_1, \ldots, x_n$. Het nieuwe signaal hoeft wederom niet continu te worden.
+\end{description}
+Wij hebben ervoor gekozen om signalen uit te breiden door middel van zero-padding.
+
+\chapter{Fourier}
+
+Studie van signalenperiodieke functies / 
+een manier om een functie te ontbinden in terugkerende patronen /
+karakteristiek van functie in termen van bepaalde frequenties /
+overtuigendere manier om `nette' functies te beschrijven /
+multiresolutie in de tijd
+
+TODO: Periodieke functies zijn ook wel te beschrijven door slechts naar \'e\'en fase te kijken.
+
+De basisfuncties waarmee we een functie karakteriseren bij Fourieranalyse worden gegeven door de complexe
+$e$-machten.
+\begin{definitie}[FourierBasis] Zij gegeven een interval $[a,b]$, en bekijk de functieruimte $L_2([a,b])$. Laat de verzameling $F_{[a,b]}$ gedefinieerd zijn door:
+\eq{
+  F_{[a,b]} := \left\{ \phi_k(x) = \tfrac{1}{\sqrt{b-a}} e^{2 \pi i \cdot k \frac{x-a}{b-a}} \largediv k \in \N_0 \right\}
+}
+Dan noemen we $F_{[a,b]}$ de Fourier`basis' van $L_2([a,b])$
+\end{definitie}
+Merk op dat hier het woord \emph{basis} nog tussen aanhalingstekens staat want we zullen eerst moeten bewijzen dat deze
+verzameling ook echte een (complexe) orthonormale basis vormt voor $L_2([a,b])$.
+
+Ten eerste zullen we zien dat alle elementen van $F_{[a,b]}$ orthonormaal zijn t.o.v. het complexe inproduct van functies en zijn ge\"induceerde norm:
+\eq{
+  \inpr{\phi_k}{\phi_j} = \frac{1}{(b-a)}\int_{[a,b]} e^{\frac{2\pi i}{b-a} x k} 
+                                                             e^{-\frac{2\pi i }{b-a} x j} \dx
+                        = \frac{1}{2\pi}\int_{[0,2\pi]} e^{iy(k-j)} \dy =
+                          \begin{cases}
+                            \,0&\quad \text{als } k\neq j, \\
+                            \,1&\quad \text{als } k=j.
+                          \end{cases}
+}
+Hieruit volgt dat de elementen van $F_{[a,b]}$ een orthonormale basis vormen voor de ruimte $\tilde F = \text{span}(F_{[a,b]})$.
+We willen nu bewijzen dat de re\"ele projectie van deze ruimte dicht ligt in de re\"ele functieruimte $L_2([a,b])$. 
+We zullen hier eerst een aantal handige definities voor introduceren.
+
+\begin{definitie}[Fouriergetransformeerde]
+Zij gegeven een functie $f\in L_2({[a,b]})$, schrijf dan een vector $\hat f \in \C^\infty$ met entries gedefinieerd volgens (hier aangegeven met blokhaken):
+\eq{
+  \hat f [n] = \frac{1}{\sqrt{b-a}} \cdot \inpr{f}{\phi_n} = \frac{1}{b-a} \int_{[a,b]} f(x) \cdot e^{-2 \pi i \cdot k \frac{x-a}{b-a}}\dx.
+}
+We noemen $\hat f$ de Fouriergetransformeerde van $f$.
+\end{definitie}
+
+TODO: Bewijzen dat alle re\"ele functies in de ruimte opgespannen door de Fourier-basis dicht liggen in $L_2$.
+
+TODO: Bewijzen dat de continue reconstructie perfect is wanneer $f \in C^1$
+
+%\eq{
+%  \int_{[a,b]} f(x) e^{q(x)} dx \leq \Ldnorm{f}\Ldnorm{e^{q(x)}} 
+%}
+
+%-----------------------------------------------------------------------------------------------------------------
+\section{De \emph{Discrete Fourier Transform}}
+Zoals we gezien hebben in het vorige hoofdstuk kan de Fouriertransformatie gebruikt worden om continue signalen te karakteriseren voor verschillende frequenties. Een groot gebied binnen de signaalanalyse is echter van discrete aard aangezien hier toch veelal digitale instrumenten voor worden gebruikt. De toepassingen waar wij op zoek zijn liggen ook in dit digitale domein (JPEG is immers een beeldcompressie-algoritme) en dus zal ons verslag zich verder afspelen in deze discrete setting.
+
+Om discrete signalen te analyseren lijkt het in eerste instantie voor de hand te liggen om het discrete signaal als stapfunctie te bekijken, deze is immers ook kwadratisch integreerbaar. Dit leidt echter tot ongewenste resultaten, zoals is te zien aan de reconstructie van een blokgolf door middel van Fouriertransformatie. Erger nog, elke eindige som van continue functies is weer continu dus voor een perfecte reconstructie van een discreet signaal is met deze methode altijd een oneindige rij \coefficient en nodig. Bovendien is het moeilijk om uit deze \coefficient en relevante informatie te destilleren over de aard van het signaal.
+
+In plaats van de discrete signalen in te bedden in $L_2$ zullen we een discreet analogon gebruiken om de Fouriertransformatie van praktisch nut te laten zijn in de analyse van discrete signalen. 
+Hiervoor zullen we de Fourier-basis moeten discretiseren en ons moeten richten op de ruimte $\R^n$.
+We doen dit op zo'n manier dat deze discretisatie in de limiet naar het continue geval overgaat. 
+Zo zullen we uiteindelijk tot de \emph{Discrete Fourier Transform} komen.
+
+\begin{definitie}[Discrete Fourierbasis] Gegeven de ruimte $\R^n$, definieer dan de verzameling
+\eq{
+  S_n := \left\{ s_k [j] = e^{\dpii k j/n } \largediv k,j \in \{0, \ldots, n-1\} \right\}
+}
+Als zijnde de discrete Fourierbasis met basisvectoren $s_k$.
+\end{definitie}
+Met deze basis in de hand kunnen we vervolgens de discrete Fouriergetransformeerde (DFT) van een signaal schrijven als de vector van (complexe) inproducten van dit signaal met de DFT-basisfuncties. Laat voor een signaal $x$ van lengte $n$ de DFT (aangeduid met $X$) gegeven zijn door:
+\eq{
+  X[k] = \tfrac{1}{n} \inpr{x}{s_k} \quad k\in\{0, \ldots ,n-1\}
+}
+Ook defini\"eren we een operatie op zulke vectoren $X$ en beweren dat deze een inverse DFT -- ook wel iDFT -- voorstelt (dit bewijs volgt weldra in een volgende sectie). De iDFT wordt gegeven door
+\eq{
+  x[j] = \inpr{X}{s_j^{-1}} \quad j\in \{0, \ldots, n-1\}
+}
+We zullen nu enkele bewijzen geven om de term `Discrete Fourierbasis' te ondersteunen.
+
+\begin{stelling}[Fourierbasis]
+  De vectoren $s_k$ zoals gedefinieerd voor de verzameling $S_k$ staan onderling loodrecht onder het complexe
+  inproduct en $S_k$ is dus een complexe basis voor $\C^n$.
+\end{stelling}
+\begin{proof}[Bewijs]
+  Bekijk het complexe inproduct tussen twee willekeurig gekozen elementen van deze verzameling:
+  \eq{
+    \inpr{s_k}{s_j} = \sum_{m\leq n} s_k[m]\cdot \overline{s_j[m]} = \sum_{m\leq n} e^{\dpii\cdot m (k-j)/n} =
+    \begin{cases}
+      0 \quad \text{als } k\neq j\\
+      n \quad \text{als } k = j
+    \end{cases}
+  }
+  Dus staan de vectoren van $S_n$ onderling loodrecht, zodat deze een complexe ruimte opspannen van dimensie $n$.
+\end{proof}
+
+Om de claim te ondersteunen dat de DFT-methode een echte discretisatie is van de continue Fouriertransformatie willen we bewijzen dat dit algoritme voor een steeds fijnere selectie van waardes van een functie in de limiet hetzelfde resultaat geeft als de continue Fouriertransformatie. 
+
+Zoals gebruikelijk bij het overschakelen van een discrete naar een continue setting, kunnen we dit doen 
+door de definitie van de Riemann integraal toe te passen op de sommatie die voor handen ligt.
+
+\begin{stelling}[Limiet van discrete Fourier-transformatie]
+  Gegeven een interval $[a,b]$ en een functie $f\in L_2([a,b])$. 
+  Voor een discretisatie van $f$ in $n$ gelijke
+  intervallen zodat de discrete $f$ precies \'e\'en waarde uit elk interval inneemt geldt dat de discrete
+  Fouriergetransformeerde limiteert naar de algemene Fouriergetransformeerde wanneer $n\to\infty$.
+\end{stelling} 
+\begin{proof}[Bewijs]
+Gegeven een interval $[a,b]$ kunnen we een partitie $P$ maken in $n$ gelijke delen, ofwel laat $P=\{a=t_0,t_1,..,t_n=b\}$ met $t_j = \tfrac{na + j(b-a)}{n}$.
+We discretiseren onze functie $f$ door uit elk interval $[t_{j-1},t_{j}]$ van de partitie de waarde in $x_j = t_j - c_j(\tfrac{b-a}{n})$ te nemen met $c_j \in [0,1]$, ofwel
+$f[j] = f(\frac{b-a}{n}(j-c_j) + a)$.
+De DFT van de discrete functie $f[\cdot]$ wordt dan gegeven door het inproduct te nemen met de DFT-basisfuncties:
+\[
+F[k] = \frac1n\sum_{j\leq n} f[j] \cdot \overline{s_k}[j].
+\]
+We schrijven dit om in termen van onze partitie, met de identificatie $n\cdot\tfrac{x_j-a}{b-a} + c_j= j$ 
+waarmee we de continue variable $x_j\in[a,b]$ omschrijven naar zijn discrete tegenhanger en krijgen zo:
+\eq{
+  F[k] =& \frac{1}{n} \sum_{j \leq n} f[j]\cdot \overline{s_k}[n\cdot\tfrac{x_j-a}{b-a} + c_j] \\
+       =& \frac{1}{n} \sum_{j \leq n} f(x_j)\cdot 
+       e^{-\dpii \cdot k \tfrac{x-a}{b-a}} \cdot e^{-\dpii \cdot k c_j/n} \\
+       =&  \frac{1}{\sqrt{b-a}}\sum_{j \leq n} f(x_j)\cdot \overline{\phi}_k(x_j) \cdot\frac{b-a}{n} 
+\cdot e^{-\dpii \cdot k c_j/n}
+}
+We merken op dat $c_j$ begrensd dus we weten dat de limiet van 
+$e^{-\dpii\cdot k c_j/n}$ voor $n\to\infty$ gelijk is aan $1$ voor elke $j$. 
+Dan is de limiet voor $F[k]$ gelijk aan de limiet van de overige factoren in de sommatie.
+We merken op dat de term $\frac{b-a}{n}$ precies de grootte is van ons interval en dat we het geheel
+omgeschreven hebben in termen van onze continue functies $f$ en $\phi_k$.
+Omdat het product $f\cdot\phi_k$ integreerbaar is moet voor elke partitie $P$ met 
+waarden in punten $x_j$ uit elk interval deze sommatie convergeren naar de integraal
+\eq{
+  \frac{1}{\sqrt{b-a}} \int_{[a,b]} f(x) \overline{\phi}_k(x) dx
+}
+wanneer we de maaswijdte ($\tfrac{b-a}{n}$) naar $0$ laten gaan. Dit is duidelijk het geval wanneer we de limiet $n\to\infty$ nemen. Daarmee is de DFT een goede discretisatie van de Fouriergetransformeerde. 
+\end{proof}
+ 
+Voor de werking van het DFT algoritme als signaalcompressie-algoritme is het van belang dat er een 
+inverse algoritme bestaat dat het getransformeerde inputsignaal weer terugtransformeert 
+zonder verlies van informatie. We zullen nu bewijzen dat dit mogelijk is door de DFT en iDFT te gebruiken.
+
+\begin{stelling}[Inverteerbaarheid van de DFT]
+  De samenstelling van de inverse Discrete Fouriertransformatie met de Discrete Fouriertransformatie is
+  gelijk aan de identiteit.
+\end{stelling}
+\begin{proof}[Bewijs]
+We bekijken daarvoor een signaal $x\in\R^n$ dat met de DFT methode getransformeerd wordt in een vector $X\in\C^n$.
+Hierbij hoort de discrete Fourier-basis $S_n$ met basisvectoren $s_k$. 
+De discrete Fourier transformatie en zijn inverse zijn gedefini\"eerd door:
+\eq{
+  X[k]      =& \tfrac 1 n \langle x, s_k \rangle \quad\quad \text{(DFT)}\\
+  \hat x[j] =&  \langle X, \repr{s_j} \rangle \quad\quad\text{(iDFT)}
+}
+Om te bewijzen dat de iDFT de DFT inverteert voldoet het om de iDFT uit te schrijven in termen van $x$ 
+door $X$ in te vullen volgens de formule van de DFT. Uitschrijven hiervan geeft:
+\eq{
+  \hat x[j] =&  \langle X , \repr{s_j} \rangle \\
+      =&  \sum_{i=1}^n X[i]\cdot \overline{\repr{s_j}}[i] \\
+      =&  \sum_{i=1}^n \tfrac1n\inpr{x}{s_i} \overline{\repr{s_j}}[i] \\
+      =& \langle x , \frac1n \sum_{i=1}^n s_i \repr{s_j}[i] \rangle
+}
+We schrijven nu de sommatie in de tweede term van het inproduct (die een vector van lengte $n$ representeert) uit in zijn componenten. 
+Merk op dat de discrete Fourier-basisvectoren zo gedefinieerd zijn dat $s_k[m] = s_m[k]$. 
+We verwisselen de indices in blokhaken met die in het subscript van $s$ en verkrijgen daarmee
+\eq{
+  \frac1n \sum_{i=1}^n s_i[m] \repr{s_j}[i] = \frac1n \sum_{i=1}^n s_m[i] \overline{s_j}[i] 
+=\tfrac1n \inpr{s_m}{s_j} = \begin{cases}0\quad\text{als }m\neq j\\1\quad\text{als }m=j\end{cases}.\\
+}
+Hier gebruiken we dus de eerdere vergelijking voor het inproduct van twee basisfuncties.
+We gebruiken deze eigenschap van de sommatie om ons eerder inproduct uit te schrijven. 
+We hebben nu een gelijkheid
+\eq{
+  \hat x_j = \inpr{x}{e_j} = x_j
+}
+Door de iDFT toe te passen op het resultaat van de DFT zullen we altijd het origineel terug krijgen,
+dus de iDFT samengesteld met de DFT geeft een identiteit.
+\end{proof}
+
+%-----------------------------------------------------------------------------------------------------------------
+\section{De Fast Fourier Transform}
+De snelheid van het DFT algoritme valt in de praktijk nogal tegen, het nemen van $n$ inproducten over vectoren 
+van lengte $n$ heeft namelijk een tijdscomplexiteit van $\O(n^2)$. Dit staat de directe implementatie van de DFT 
+voor praktische toepassingen in de weg. Daarom is er een alternatief algoritme, de \emph{Fast Fourier Transform}.  \bigskip
+
+%%%%%
+\begin{algo}[Fast Fourier Transform]
+Gegeven zij een inputsignaal $x$ van lengte $n=2^m$, dan geeft het algoritme $\FFT$ 
+een lijst terug van waardes $X$ van lengte $n=2^m$ als volgt:
+
+Als $m=0$ dan geeft de $\FFT$ de lijst (van \'e\'en element) direct terug:
+\eq{
+X = x.
+}
+Wanneer $m\neq0$ splitsen we de lijst $x$ op in lijsten $\e,o$ van zijn even en oneven indices:
+\eq{
+  \e[k]   =& x[2k]   &\quad \text{voor } k < n/2\\
+   o[k]   =& x[2k+1] &\quad \text{voor } k < n/2
+}
+Vervolgens voeren we hierop het $\FFT$ algoritme uit om de volgende lijsten te verkrijgen:
+\eq{
+  E =& \FFT(\e) \\
+  O =& \FFT(o)
+}
+Hiermee wordt de output van het algoritme geconstrueerd als volgt:
+\eq{
+  X[k] = \left\{\begin{array}{llll}
+    E[k]         &+& e^{-\dpii k/n}\cdot O[k] &  k< n/2 \\
+    E[k-n/2] &-& e^{-\dpii (k-n/2)/n}\cdot O[k-n/2] &  k\geq n/2 
+  \end{array}\right.
+}
+\end{algo}
+%%%%%
+
+Dit is dus een recursief gedefinieerd algoritme dat een signaal meermaals halveert en in zichzelf terugvoert.
+Het is gegarandeerd dat dit algoritme afloopt vanwege de conditie op $n=0$ samen met de halvering van de input bij elke stap. Een belangrijke voorwaarde voor de relevantie van de FFT is nu dat het algoritme hetzelfde resultaat geeft als het DFT algoritme en dit zullen we nu dan ook bewijzen. 
+
+\begin{stelling}[]
+  Het uitvoeren van het Fast Fourier Transform algoritme op een dataset van lengte $n=2^m$ geeft
+  dezelfde getransformeerde als de discrete Fouriertranformatie.
+\end{stelling}
+\begin{proof}[Bewijs]
+We gebruiken hier een inductief bewijs met inductie naar $n$. Onze aanname is dat het FFT-algoritme voor $x$ van lengte $n=2^m$ gelijk is aan de DFT van $x$, ofwel
+\eq{
+  X[k] = \sum^{N}_{k=1} x[j] \cdot e^{-2\pi i \cdot jk/n}
+}
+Dit geldt duidelijkerwijs wanneer $m=0$, onze basistap. Hiervoor geldt namelijk:
+\eq{
+  X[k] = x[k] = x[1] = \sum^{2^0}_{k=1} x[j] \cdot e^{-2\pi i \cdot 1/2^0}
+}
+Vervolgens passen we inductie toe naar $m$ door onze aanname voor $m-1$ te gebruiken,
+we vullen hiermee $E[k]$ en $O[k]$ in de vergelijking voor $X[k]$ in, deze hebben immers lengte $n=2^{m-1}$.
+\eq{
+  X[k] = \left\{\begin{array}{llll}
+    \sum^{n/2}_{j=1} \e[j] 
+    \cdot e^{-2\pi i \cdot kj \cdot 2/n} &+& 
+    e^{-2\pi i \cdot k/n}
+    \sum^{n/2}_{j=1} o[j] 
+    \cdot e^{-2\pi i\cdot kj \cdot 2/n} &  k< n/2 \\
+    \sum^{n/2}_{j=1} \e[j] 
+    \cdot e^{-2\pi i\cdot (k-n/2) j\cdot 2/n} &-& 
+    e^{-2\pi i\cdot (k-n/2)/n}
+    \sum^{n/2}_{j=1} o[j] \cdot e^{-2\pi i\cdot (k-n/2)j\cdot 2/n} &  k\geq n/2 
+  \end{array}\right.
+}
+We merken op dat we de e-machten in het tweede geval kunnen vereenvoudigen volgens
+\eq{
+  e^{-2\pi i\cdot (k-n/2)j \cdot 2/n} 
+  = - e^{-2\pi i\cdot kj\cdot 2/n} \quad,\quad e^{-2\pi i\cdot(k-n/2)/n} 
+= -e^{-2\pi i\cdot k/n},
+}
+waardoor het gevalsonderscheid wegvalt, aangezien beide vergelijkingen nu identiek zijn.
+We verkrijgen $X[k]$ als sommatie over de lijsten $e$ en $o$, we vullen de relatie voor $e,o$ met $x$ in, en nemen de factor voor de oneven indices mee in de sommatie.
+\eq{
+  X[k] = \sum^{n/2}_{j=1} x[2j] \cdot e^{-2\pi i\cdot k (2j)/n} + 
+    \sum^{n/2}_{j=1} x[2j+1] \cdot e^{-2\pi i\cdot k (2j+1)/n} 
+    = \sum^n_{j=1} x[j] \cdot e^{-2\pi i\cdot k j/n}
+}
+Dit bewijst dat de FFT hetzelfde resultaat levert als het DFT algoritme, het bewijs voor de gelijkheid van de iDFT en de inverse FFT is 
+hetzelfde wanneer men de substitutie $-2\pi i \rightarrow 2\pi i$ uitvoert.
+\end{proof}
+
+\begin{opmerk}
+We hebben hier telkens aangenomen, en zullen deze aanname ook doorzetten, 
+dat de lengte van het ingangssignaal een macht van $2$ is. Dit is een belangrijke
+eigenschap waar de variant van het FFT-algoritme dat hier gebruikt wordt door werkt. Deze versie van FFT wordt
+de Radix-2 Decimation In Time van het Cooley-Tukey FFT algoritme genoemd. Algemenere vormen van het algoritme
+worden ook toegepast in geoptimaliseerde algoritmes maar om de implementatie te versimpelen 
+is voor Radix-2 gekozen. Eventuele verschillen in afmetingen tussen een signaal en 
+een 2-macht zijn opgelost met signaalextensie, zoals eerder beschreven.
+\end{opmerk}
+
+%-----------------------------------------------------------------------------------------------------------------
+\subsection{Complexiteit van de Fast Fourier Transform}
+Hoewel het vanuit een puur wiskundig oogpunt wellicht minder relevant is, is de complexiteit van een algoritme 
+als een factor van belangrijk praktisch nut. De complexiteit vertaalt namelijk direct naar 
+de looptijd van het algoritme. We hebben hier de volgende stelling uit de complexiteitstheorie nodig. 
+\footnote{Dit is een speciaal geval van de stelling, voor de volledige stelleing en het bewijs zie \cite{akra-bazzi}.}
+
+\begin{stelling}[Akra-Bazzi]
+    Zij $T(n)$ een recurrente betrekking van de vorm
+    \[
+    T(n) = \begin{cases}
+      c &\text{ als } n \leq d \\
+      a T(n/b) + f(n) &\text{ anders}, \\
+    \end{cases}
+    \]
+    waarbij $a,b,d\in\N$, $c\in\R$ en $f$ een functie $f:\N\rightarrow\R$ die voldoet aan 
+    \eq{
+  \exists k \in \N \,:\, f(n) \in \theta(n^{\log a/\log b} \log^k n).
+    }
+    Dan wordt de orde van $T(n)$ gegeven door:
+    \eq{
+      T(n) \in \theta(n^{\log a / \log b} \log^{k+1}n).
+    }
+\end{stelling}
+We beschouwen hier $T(n)$ als het aantal stappen dat een machine nodig heeft om het algoritme uit te voeren.
+Deze stelling is voldoende om een uitspraak te kunnen doen over de complexiteit 
+\begin{stelling}[Complexiteit van de FFT]
+  Het Fast Fourier Transform algoritme heeft een tijds-complexiteit $\O(n\log n)$ voor input van lengte $n=2^m$ 
+\end{stelling} 
+\begin{proof}[Bewijs]
+We schrijven het FFT algoritme in pseudocode.
+
+\begin{algorithmic}
+\Function{FFT}{$x$}
+\State $n \gets \text{lengte}(x)$ \Comment Assumptie: $n = 2^m$ voor een $m$
+\If {$n == 1$}
+	\State{$X \gets x$}
+\Else
+	\State $E \gets FFT(x[0::2])$ \Comment{FFT op even indices}
+	\State $O \gets FFT(x[1::2])$ \Comment{FFT oneven indices}
+	\For{$i = 0$ to $n-1$}
+		\If{$i < n/2$}
+			\State $X[i] \gets E[i] + e^{-2i \pi k/n} \cdot O[i]$
+		\Else
+			\State $X[i] \gets E[i] - e^{-2i \pi k/n} \cdot O[i]$
+		\EndIf
+	\EndFor
+\EndIf
+\State \Return{$X$}
+\EndFunction
+\end{algorithmic}
+
+Dit algoritme is recursief, dus kunnen we de complexiteit schrijven door middel van een recurrente betrekking. Laat hiervoor $T(n)$ het aantal berekeningen zijn dat het algoritme kost bij een invoersignaal van lengte $n$. We maken een gevalsonderscheid: als de lijst lengte $1$ heeft geven we deze direct terug (1 berekening). Bij een lijst van lengte $>1$ splitsen we de lijst op in de even en oneven entries en voeren we op beiden weer het FFT algoritme uit, vervolgens voeren we nog $n$ maal een vast aantal ($c$) berekeningen uit om tot het eindresultaat te komen. In formulevorm geeft dit de \emph{recurrente betrekking}
+\[
+T(n) = \begin{cases}
+    1 &\text{ als } n = 1 \\
+      2\cdot T(n/2) + c\cdot n &\text{ anders}. \\
+\end{cases}
+\]
+We zullen nu bovenstaande (vereenvoudigde) stelling van Akra-Bazzi gebruiken. We rekenen hierbij niet de $\O$ van de FFT uit maar de strictere $\theta$ die gedefinieerd is volgens:
+\[
+f \in \theta(g) \Leftrightarrow \exists c \in \R_+: \lim_{n \to \infty} \frac{f(n)}{g(n)} = c
+\]
+Zonder verder al te veel in te gaan op de implicaties die $\theta$ heeft op het gedrag van de FFT gebruiken we dan dat in ieder geval geldt dat $f \in \theta(g)$ impliceert dat $f \in \O(g)$. 
+
+De recurrente betrekking voor de complexiteit van de FFT is inderdaad van dezelfde vorm als die van $T(n)$ in bovenstaande stelling.
+Laat hiervoor namelijk $a=b=2$, $c=d=1$ en $f$ de functie die $n\mapsto n$ dan voldoet $f$ aan:
+\eq{
+  f(n) \in \theta(n^{\log 2/\log 2} \log^0 n)=\theta(n).
+}
+Dit betekent dat $T(n) \in \theta(n \log n)$ en dus zeker $T(n) \in \O(n \log n)$.
+Hiermee hebben we bewezen dat de FFT en daarmee de iFFT binnen tijdscomplexiteit $\O(n\log n)$ lopen. 
+\end{proof}
+
+%-----------------------------------------------------------------------------------------------------------------
+\section{Discrete Fourier Transform in meer dimensies}
+Een eigenschap van het DFT-algoritme is dat het op een natuurlijke manier uit te breiden is naar hogere dimensies.
+Per extensie daarvan is er een manier om het FFT-algoritme mee te laten schalen, die we ook zullen behandelen.
+Het idee hierbij is om het Tensorproduct te nemen van meerdere bases.
+
+\begin{definitie}[Multidimensionale Discrete Fourierbasis] 
+Gegeven zij een signaalruimte van de vorm
+$\R^{n_1} \times \R^{n_2} \times \ldots \times \R^{n_m}$ welke we opvatten als
+een $m$-dimensionaal discreet signaal waarbij de $i$-de orthogonale richting een lengte $n_i$ heeft.
+Dan defini\"eren we de multidimensionale discrete Fourier`basis' behorende bij deze signaalruimte als
+\eq{
+  S_{\bold n}= S_{n_1}\otimes S_{n_2} \otimes \ldots \otimes S_{n_m} = 
+  \left\{s_{\bold k}[{\bold j}]  = s_{k_1}[j_1]\cdot s_{k_2}[j_2]\cdot\ldots\cdot s_{k_m}[j_m] 
+  \largediv s_{k_i} \in S_{n_i}, j_i \in \{1,\ldots, n_i\} \right\}
+}
+Met basisvectoren $s_{\bold k}$, waar $\bold k$ een indexvector uit $\{0, \ldots, n_1\}\times\ldots\times\{0\ldots, n_m\}$ is.
+\end{definitie}
+
+Wanneer we nu een $m$-dimensionaal signaal bekijken van lengte $n_1$ bij $n_2$ etc., dan kunnen we
+hierop een multidimensionale Fouriertransformatie op defini\"eren door het inproduct te generaliseren naar 
+onze $m$-dimensionale signaalruimte.
+\eq{
+  X[\bold k] = \tfrac{1}{\bold n}\sum_{\bold j = \bold 1}^{\bold n} x[\bold j] \overline{s_{\bold k}}[{\bold j}] =
+  \left(\prod_{i\leq m} \tfrac{1}{n_i}\right) \cdot \sum_{j_1=1}^{n_1} \ldots \sum_{j_m=1}^{n_m} x[j_1,\ldots,j_m] \cdot 
+  e^{-\dpii\cdot k_m \cdot j_m /n_m } \cdot \ldots \cdot e^{-\dpii\cdot k_1 \cdot j_1 /n_1 } 
+}
+We zullen echter een andere definitie gebruiken die equivalent is aan deze method, maar recursief gedefinieerd.
+We noteren deze transformatie als $\DFT_m$, een functie die een $m$-dimensionaal ingangssignaal transformeert.
+\begin{definitie}[Multidimensionale Discrete Fouriertransformatie]
+Definieer $\DFT_0$ als de identiteit op $\R^{n_1}$.
+We defini\"eren dan een DFT van orde $m$ (notatie $\DFT_m$) als een transformatie 
+$\R^{n_1}\times\ldots\times\R^{n_m} \to \C^{n_1}\times\ldots\times\C^{n_m}$ aan de hand van het beeld $X$ van een $m$-dimensionaal ingangssignaal $x$:
+\eq{
+  X[k_1,\ldots,k_m] = \tfrac{1}{n_m}\sum_{j_m=1}^{n_m} \DFT_{m-1}(x[j_m])[k_1,\ldots,k_{m-1}] \cdot s_{k_m}[j_m]  
+}
+Hier staat de notatie $x[j_m]$ voor een $(m-1)$-dimensionaal signaal dat we verkrijgen door de co\"ordinaat
+in de $m$-de richting vast te zetten.
+\end{definitie}
+Dit is duidelijk dezelfde definitie als eerder gegeven in termen van herhaalde sommatie. Voor $m=1$ staat er immers de gewone DFT en voor hogere machten schaalt dit met een factor $\tfrac{1}{n}$ en een extra sommatie.
+Het voordeel van deze definitie is dat het makkelijk om te schrijven is naar een algoritme dat 
+herhaald $\DFT$ toepast.
+\begin{algo}[Multidimensionaal DFT-algoritme]
+Gegeven is een $m$-dimensionale input $x$ en een huidig level $t$, 
+we schrijven het algoritme met output $X_t$ als:
+\eq{
+  X_{t}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m] = \DFT(X_{t-1}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m]) \\
+  \text{voor } k_1\leq n_1, \ldots ,k_{t-1}\leq n_{t-1}, k_{t+1}\leq n_{t+1}, \ldots k_m \leq n_m
+}
+Waarbij we de randvoorwaarde $X_0 = x$ gebruiken. We beweren dat dit algoritme de multidimensionale Fouriertransformatie van een $m$-dimensionaal signaal geeft.
+\end{algo}
+\begin{proof}[Bewijs]
+Om te bewijzen dat dit de MDFT geeft volstaat het om aan te tonen dat
+\eq{
+  X_t [k_1,\ldots,k_m] = 
+  \sum_{j_t = 1}^{n_t}\DFT_{t-1}(x[j_t,k_{t+1},\ldots,k_m])[k_1,\ldots,k_{t-1}] \cdot s_{k_t}[j_t]
+}
+Wanneer dit geldt voor elke $t$ dan geldt dit namelijk in het bijzonder voor het geval $t=m$, 
+zodat $X_m$ gegeven wordt voor de formule voor de MDFT.
+
+Laat $t=1$ dan geldt:
+\eq{
+  X_1[k_1,\ldots,k_m] =& \DFT(X_0[k_2,\ldots,k_m])[k_1] \\
+ =&  \sum_{j_1=1}^{n_1} x[j_1,k_2,\ldots,k_m]\cdot s_{k_1}[j_1] \\
+ =& \sum_{j_1=1}^{n_1} \DFT_0(x[j_1,k_2,\ldots,k_m])\cdot s_{k_1}[j_1]
+}
+Nu geldt verder voor $t>1$:
+\eq{
+  X_t[k_1,\ldots,k_m] =& DFT(X_{t-1}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m])[k_t] \\
+           =& \sum_{j_t =1}^{n_t} X_{t-1}[k_1,\ldots,k_{t-1},j_t,k_{t+1},\ldots,k_m] \cdot s_{k_t}[j_t] \\
+           =& \sum_{j_t =1}^{n_t} 
+           \sum_{j_{t-1} = 1}^{n_{t-1}}
+           \DFT_{t-2}(x[j_{t-1},k_t,\ldots,k_m])[k_1,\ldots,k_{t-2}] \cdot s_{k_{t-1}}[j_{t-1}]
+                         \cdot s_{k_t}[j_t] \\
+=&  \sum_{j_t = 1}^{n_t}\DFT_{t-1}(x[j_t,k_{t+1},\ldots,k_m])[k_1,\ldots,k_{t-1}] \cdot s_{k_t}[j_t]
+}
+Waarbij we opeenvolgend onze de inductieaanname gebruiken en vervolgens de definitie van de MDFT.
+Hiermee geldt de relatie dus ook voor $X_m$, zodat dit algoritme de MDFT geeft.
+\end{proof}
+
+Een belangrijk gevolg is nu dat het algoritme in termen van de DFT direct vertaalt naar een multidimentionaal algoritme voor de FFT: beiden geven immers dezelfde output. 
+Wanneer we overal de functie DFT vervangen door FFT dan geeft dit de Multidimentionale Fast Fourier Transform.
+De complexiteit van zo'n algoritme is $\O( \sum_{i=1}^m \log(n_i) \prod_{j=1}^m n_j)$ t.o.v.
+$\O( \sum_{i=1}^m n_i \prod_{j=1}^m n_j)$ voor de MDFT.
+
+%-----------------------------------------------------------------------------------------------------------------
+\section{Compressie van Beeldmateriaal onder FFT}
+
+TODO: een klein introverhaaltje over compressie
+
+\subsection{Verwachte ontwikkeling van de fout}
+Het is zowel van praktisch nut als wiskundig interessant om het convergentie-gedrag te bepalen 
+van de Fourier-transformatie. Met het convergentie gedrag voor continue functies kunnen we immers
+kwantificeren hoe goed een functie te benaderen is met een eindige subset van de Fourier-getransformeerde.
+We trachten daarom te bewijzen dat er een algebra\"isch verband bestaat tussen de fout en de frequentie
+van de wavelets en bovendien een exponentieel verband tussen de fout en de `gladheid' van de functie.
+
+Voor dit bewijs zullen we het Lemma van Riemann-Lebesgue gebruiken: 
+\begin{lemm}[Riemann-Lebesque{\cite{fourier-fout}}]
+Wanneer $g \in L_1(\R)$, dan geldt 
+\eq{
+	G(z) = \left|\int_{-\infty}^\infty g(t) e^{- 2 \pi i z t} dt\right| \to 0 \text{ voor } z \to \infty.
+}
+\end{lemm}
+
+\begin{stelling}[Daling van de co\"effici\"enten van de Fouriergetransformeerde]
+  Laat $f \in L_2([a,b])$. Stel er is een $n$ z\'o dat $f \in C^n$ en voor $0\leq j\leq n$ geldt dat $f^{(j)}(a) = f^{(j)}(b)$. Dan geldt dat de $k$-de entry van de Fouriergetransformeerde $\hat f[k]$ in absolute waarde
+  daalt met $k$ volgens $\O(|k|^{-n})$.
+\end{stelling}
+\begin{proof}[Bewijs]
+  Laat $f \in L_2([a,b])$ zodat $f$ voldoet aan de voorwaarden in de stelling voor een bepaalde $n$. 
+  De Fourier-getransformeerde van $f$ wordt gegeven door:
+  \eq{
+    \hat f [k] = \tfrac{1}{\sqrt{b-a}} \inpr{f}{\phi_k}.
+  }
+  De constante in deze vergelijking heeft geen invloed op de orde, dus richten we ons op het inproduct. 
+  We schrijven dit uit tot een integraal en voeren vervolgens, omdat $f$ differentieerbaar is, partie\"ele
+  integratie uit.
+  \eq{
+    \abso{\inpr{f}{\phi_k}} 
+    =& \abso{\int_a^b f(x) e^{- 2 \pi i k \tfrac{x-a}{b-a}} dx}
+    = \abso{\tfrac{b-a}{2 \pi i k}\left[ f(x) \cdot  e^{- 2 \pi i k \tfrac{x-a}{b-a}} \right]_a^b} 
+    + \abso{\frac{b-a}{2 \pi i k}\right| \left|\int_0^1 f'(x) e^{-2 \pi i k \tfrac{x-a}{b-a}} dx} \\
+    =& \abso{ f(b) \cdot 1 - f(a) \cdot 1} + \frac{b-a}{2 \pi \abso{k}} 
+    \abso{ \int_a^b f'(x) e^{-2 \pi i k \tfrac{x-a}{b-a}} dx }
+    = \tfrac{b-a}{2 \pi |k|} \left| \int_a^b f'(x) e^{-2 \pi i k \tfrac{x-a}{b-a}} dx \right|.
+  }
+  Hier hebben we gebruikt dat alle afgeleiden van $0$ tot $n$ periodiek zijn.
+  Omdat $f$ nu $C^n$ is en de afgeleiden weer periodiek zijn kunnen we dit herhaald toepassen,
+  we verkrijgen daarmee
+  \[
+  \left| \int_a^b f(x) e^{-2 \pi i k \tfrac{x-a}{b-a}} dx \right| 
+  = (\tfrac{2 \pi}{b-a} |k|)^{-n}\left| \int_a^b f^{(n)}(x) e^{- 2 \pi i k \tfrac{x-a}{b-a}} dx \right|.
+  \]
+  
+  Vermenigvuldig beide kanten met $(\tfrac{2 \pi}{b-a} |k|)^n$ om te vinden dat
+  \[
+  (\tfrac{2 \pi}{b-a} |k|)^n \abso{\inpr{f}{\phi_k}} 
+  = \abso{\int_a^b f^{(n)}(x) e^{- 2 \pi i k \tfrac{x-a}{b-a}} dx}.
+  \]
+  We willen graag het lemma van Riemann-Lebesgue toepassen op de rechterkant. 
+  Merk daartoe op dat omdat $f \in C^n$, $f^{(n)}$ continu op $[a,b]$ 
+  dus neemt hier een maximum en een minimum aan. 
+  Daarmee is de integraal van $|f|$ begrensd en dus is $f\in L_1([a,b])$. 
+  Maar een functie die integreerbaar is op $[a,b]$ en daarbuiten nul, is integreerbaar op $\R$. 
+  Dus we mogen Riemann-Lebesgue gebruiken om te zien dat
+  \[
+  (\tfrac{2 \pi}{b-a} |k|)^n \abso{\inpr{f}{\phi_k}} \to 0 \text{ als } |k| \to \infty.
+  \]
+  Maar dit betekent precies dat $\abso{\inpr{f}{\phi_k}} \in  O((\tfrac{2 \pi}{b-a} |k|)^{-n}) = O(|k|^{-n})$
+\end{proof}
+
+De analyse van de co\"effici\"enten die we hier gegeven hebben vertaalt direct naar de fout die we krijgen
+bij reconstructie van een Fourier-getransformeerde functie wanneer we een gelimiteerde dataset gebruiken.
+Schrijf namelijk $F$ voor de terug getransformeerde met een dataset waarbij $k$ gelimiteerd is, en $f$ voor
+de perfecte reconstructie. Dan hebben we de relatie:
+\eq{
+  \Ldnorm{ f - F }^2 =& 
+  \abso{\int_a^b \left (\sum_{k=1}^\infty \hat f [k] \phi_k(x) 
+    - \sum_{k=1}^{m-1} \hat f[k] \phi_k(x) \right)^2\dx } \\
+  =& \abso{\int_a^b \left( \sum_{k=m}^\infty \hat f [k] \phi_k(x) \right)^2\dx } \\
+  \leq& \abso{\sum_{k=m}^\infty \hat f^2 [k] \cdot \int_a^b \phi_k^2(x) \dx}
+  \leq \sum_{k=m}^\infty \abso{\hat f[k]}^2.
+}
+Omdat de orde van deze vergelijking in termen van $m$ bepaald wordt door de grootste term kunnen we zeggen 
+dat de orde van de fout gelijk is aan de orde van het grootste co\"effici\"ent:
+\eq{
+  ||f-F||_{L_2([a,b])} \in \O\left(\abso{\hat f[m]}\right) = \O(m^{-n})
+}
+\subsection{De fout in discrete geval}
+
+TODO: discreet $\to$ continu voor grote dataset, maak een definitie van smooth op discrete functies
+
+%-----------------------------------------------------------------------------------------------------------------
+\section{Implementatie van Fourier Transformatie in Python}
+TODO: introductie verhaaltje
+
+\subsection{Fast Fourier Transform Implementatie}
+TODO: even kijken of we dit zo moeten doen of dat we beter alles kunnen referen
+
+De python code die gebruikt is om het FFT algoritme in te programmeren volgt precies het schema van Pseudocode
+zoals beschreven in een vorige sectie.
+
+\begin{lstlisting}[caption={FFT algoritme in Python, voert de pseudocode uit zoals in sectie (TODO)}]
+def FFT( xs ):
+    N = len(xs)
+    if N <= 1:                  # randconditie
+        return xs
+    else:
+        even = FFT(xs[0::2])    # voer FFT uit op even indices
+        odd  = FFT(xs[1::2])    # voer FFT uit op oneven indices
+
+        return [0.5*( even[k] + exp(-2j*pi*k/N)*odd[k] ) for k in range(N/2)] + [0.5*( even[k] - exp(-2j*pi*k/N)*odd[k] ) for k in range(N/2)]
+\end{lstlisting}
+
+Hierbij dient uitgelegd te worden dat de $[x \text{ for } y] + [z \text{ for } w]$ notatie twee lijsten construeert en achter elkaar zet. Dit algoritme werkt, zoals eerder beschreven enkel op signalen waarvan de lengte
+$N$ een macht van $2$ is. We hebben daarom signaalextensie toe moeten passen door middel van zero-padding
+om het programma ook op andersvormige signalen te laten werken.
+
+\begin{lstlisting}[caption={Zero-Padding algoritme in Python, voegt nullen toe tot een tweemacht is bereikt}]
+def Zero_Padding( xs ):
+    N_old = len(xs)
+    N_new = 2**ceil(log(N_old,2))         # rond logaritme af voor kleinste tweemacht
+    return [xs[k] if (k < N_old) else 0 for k in range(N_new)]
+\end{lstlisting}
+
+Vervolgens hebben we deze code toegepast in twee dimensies. We maken hier gebruik van de definitie van het
+MFFT algoritme, dat grofweg zegt dat een meerdimensionaal algoritme kan worden geconstrueerd door herhaald 
+het 1-dimensionale geval toe te passen. Voor 2 dimensies in het bijzonder betekent dit dat we simpelweg 
+FFT konden toepassen op rijen en kolommen.
+
+\begin{lstlisting}[caption=2-Dimensionaal FFT algoritme]
+def FFT_2D( xss ):
+    xss = map(FFT, xss)     # voer FFT uit op rijen
+
+    xss_t = transpose(xss)     # verwissel rijen met kolommen
+    xss_t = map(FFT, xss_t)  # voer FFT uit op kolommen
+    xss = transpose(xss_t)     # maak verwisseling ongedaan 
+
+    return xss
+\end{lstlisting}
+Hier is de python-functie \emph{map} gebruikt die ruwweg gedefinieerd is als 
+$\text{map}(f,x) = [f(y) \text{ for } y \text{ in } x]$
+Met het oog op duidelijkheid is hier de Zero-Padding fase weggelaten, 
+dit algoritme verwacht nu nog een $2^n \times 2^m$ matrix.
+Dit is echter gemakkelijk te implementeren door Zero\_Padding toe te passen op rijen en kolommen.
+
+TODO: meer implementatie specifieke details includen
+\chapter{Wavelets}
+De Fouriertransformatie bestaat al honderden jaren en is een grote speler geworden in de \emph{signal processing}. Een groot nadeel van deze transformatie is dat zij slecht reageert op discontinue signalen door de drager van de basisfuncties.
+
+In de loop van de vorige eeuw is een nieuwe transformatie ontstaan met een eigenschap die de Fouriertransformatie nooit kende. Deze noemt men nu ook wel de Wavelettransformatie.
+
+\begin{definitie}
+Een wavelet is simpelweg een functie $\psi: \R \to \R$ die voldoet aan
+\[
+z  \int_{-\infty}^{\infty} \psi(t) dt = 0.
+\]
+Met deze functie $\psi$ kunnen we een familie functies $\psi_{u,s}$ bouwen door middel van schaling en translatie:
+\[
+  \psi_{u,s}(t) := \frac{1}{\sqrt{s}} \psi\left(\frac{t-u}{s}\right).
+\]
+\end{definitie}
+
+Deze familie geeft aanleiding tot een Wavelettransformatie $W_f$ van $f$:
+\[
+  W_f(u,s) = \int_{-\infty}^\infty f(t) \psi^*_{u,s}(t) dt.
+\]
+
+Het is nu mogelijk om wavelets te construeren die met deze schaling en translatie een basis voor de $L_2(\R)$ vormen. Over het algemeen kijken we dan naar
+\[
+  \Psi := \left\{ \psi_{j,n}(t) = \frac{1}{\sqrt{2^j}} \psi\left( \frac{t - 2^jn}{2^j}\right) : (j,n) \in \Z^2 \right\}.
+\]
+De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er een orthogonale (en dus een orthonormale) basis gevormd wordt. 
+
+Figuurtje van voorbeeld TODODOO.
+
+\begin{gevolg}We kunnen een functie $f$ in $L^2(\R)$ schrijven in deze basis:
+\[
+  f(t) = \sum_{j=-\infty}^{\infty} \sum_{n=-\infty}^{\infty} \langle f, \psi_{j,n} \rangle \psi_{j,n}(t),
+\]
+waarbij $\langle \cdot, \cdot \rangle$ het standaardinproduct op de $L_2(\R)$ aangeeft.
+\end{gevolg}
+
+Het grote nadeel van de Fouriertransformatie maakt compressie van discrete signalen moeilijk. Veel van deze wavelets worden nu z\'o geconstrueerd dat dit probleem (deels) verholpen wordt. We zijn namelijk op zoek naar een wavelet die een eindige drager heeft. Het blijkt dat deze bestaat en dat er zelfs een hele grote verzameling wavelets is, elk met eigen gewilde eigenschappen.
+
+Omdat wij naar de toepassing van wavelets binnen de beeldcompressie bekijken, zijn we natuurlijk vooral ge\"interesseerd in het discrete geval. We kijken dus naar de benadering van $f$ op een TODO. Dit geeft aanleiding tot een rij geneste ruimtes die uiteindelijk naar de $L_2(\R)$ toe gaat
+\begin{equation}
+  \label{multires}
+  \{0\} \ldots \subset V_{j+1} \subset V_j \subset V_{j-1} \subset \ldots \subset L_2(\R)
+\end{equation}
+genaamd een multiresolutie.
+\begin{definitie}
+Een rij geneste ruimtes $\{ V_j: j \in \Z \}$ zoals in~\ref{multires} heet een multiresolutie wanneer voldaan wordt aan de volgende eigenschappen:
+\begin{eqnarray}
+  \forall j, k: f(t) \in V_j \implies f(t - 2^j k) \in V_j, \\
+  \forall j: V_{j+1} \subset V_j, \\
+  \forall j: f(t) \in V_j \iff f(t/2) \in V_{j+1}, \\
+  \bigcap_{j=-\infty}^{\infty} V_{j} = \lim_{j\to\infty} V_j = \{0\}, \\
+  \bigcup_{j=-\infty}^{\infty} V_j = \lim_{j\to-\infty} V_j = L_2(\R), \\
+  TODO: \text{ Er is $\theta$ zo dat $\{ \theta(t-n): n \in \Z \}$ een Rieszbasis voor $V_0$ is.}
+\end{eqnarray}
+\end{definitie}
+
+\begin{voorbeeld} We bekijken een multiresolutie van stuksgewijs constante functies. De ruimte $V_j$ wordt hiermee de verzameling van alle $g(t) \in L_2(\R)$ die constant zijn voor $t \in [n 2^j, (n+1)2^j)$ met $n \in \Z$. De basisfunctie $\theta$ voor $V_0$ wordt in dit geval $\theta(t) = 1_{[0,1)}$. \end{voorbeeld}
+
+\section{Schalingsfuncties}
+Gegeven zo'n Rieszbasis voor $V_0$ willen we graag een orthonormale basis voor $V_j$ construeren. 
+\begin{stelling}[{\cite[T7.1]{mallat}}] 
+  Laat $\{ V_j \}$ een multiresolutie en laat $\phi$ de schalingsfunctie waarvan de Fouriergetransformeerde voldoet aan
+  \[
+    \hat{\phi}(\omega) = \frac{\hat{\theta}(\omega)}{\left( \sum_{k=-\infty}^\infty | \hat{\theta}(\omega + 2k \pi) |^2 \right)^{1/2}}.
+  \]
+  Laat verder
+  \[
+    \phi_{j,n}(t) := \frac{1}{\sqrt{2^j}} \phi\left( \frac{t-n}{2^j} \right).
+  \]
+  Dan is $\{ \phi_{j,n}: n \in \Z \}$ een orthonormale basis voor $V_j$.
+\end{stelling}
+We zullen ons verder niet bezighouden met de Fouriergetransformeerde en alleen het gevolg (de orthonormale basis) gebruiken. Hij staat er bij om duidelijk te maken dat deze schalingsfunctie expliciet gevonden kan worden.
+
+\subsection{Benadering} De orthogonale projectie van $f$ op $V_j$ is, zoals we weten, de beste benadering van $f$ in $V_j$. Deze is nu te vinden door
+\[
+	P_{V_j} f = \sum_{n=-\infty}^\infty \langle f, \phi_{j,n} \rangle \phi_{j,n}.
+\]
+De co\"effici\"enten $a_j[n] = \langle f, \phi_{j,n} \rangle$ geven ons op deze manier een discrete benadering van $f$ op resolutie $2^{-j}$.
+
+\begin{voorbeeld}
+  De multiresolutie van stuksgewijs constante functies op de intervallen $[2^jn, 2^j(n+1))$ met $n \in \Z$ heeft als eigenschap dat de Rieszbasis ook direct orthonormaal is. Gevolg is dat $\phi = \theta = 1_{[0,1]}$.
+\end{voorbeeld}
+
+\section{Filters}
+Wanneer we een schalingsfunctie $\phi$ defini\"eren (en dus een $V_0$), ligt de hele multiresolutie eigenlijk vast. We zullen daarom deze schalingsfunctie nader onderzoeken.
+
+Per definitie van de multiresolutie weten we dat $V_j \subset V_{j-1}$. In het bijzonder geldt dat $2^{-1/2}\phi(t/2) \in V_1 \subset V_0$ en omdat $\{ \phi(t-n): n \in \Z\}$ een orthonormale basis voor $V_0$ is, kunnen we $2^{-1/2} \phi(t/2)$ nu schrijven als
+\[
+  \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^{\infty} \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle \phi(t-n).
+\]
+
+\begin{definitie}
+Deze inproducten hebben een speciale naam, want de rij $\{h[n]: n \in \Z\}$ met
+\[
+  h[n] := \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle
+\]
+wordt nu ook wel de \emph{filter} van $\phi$ genoemd.
+\end{definitie}
+\begin{stelling}[{\cite{mallat}[T7.2]}]
+  \label{filter}
+  Laat $\phi \in L^2(\R)$ een schalingsfunctie die ook integreerbaar is. Dan ligt de multiresolutie vast.
+
+  Andersom, als $h[n]$ een filter is zodat $\hat{h}(\omega)$ periodiek $2\pi$ is en continu differentieerbaar in een omgeving van $\omega = 0$ en als daarnaast geldt
+  \begin{align*}
+    \forall \omega \in \R: | \hat{h}(\omega)|^2 + |\hat{h}(\omega + \pi)|^2 = 2, \\
+    \hat{h}(0) = \sqrt{2}, \\
+    \inf_{\omega \in [-\pi/2, \pi,2]} |\hat{h}(\omega)| > 0,
+  \end{align*}
+  dan is de functie $\phi$ waarvan de Fouriergetransformeerde voldoet aan
+  \[
+    \hat{\phi}(\omega) = \prod_{p=1}^\infty \frac{\hat{h}(2^{-p}\omega)}{\sqrt{2}}
+  \]
+  een schalingsfunctie in $L^2(\R)$.
+\end{stelling}
+Wederom zullen we enkel de gevolgen gebruiken: namelijk dat de multiresolutie vast ligt met een goede keuze van $\phi$, en dat voor een goed gekozen $h[n]$, $\phi$ ook vast ligt.
+
+\begin{voorbeeld}
+Bekijk weer het geval $\phi(t) = 1_{[0,1)}$. Dan vinden we dat
+\[
+  h[n] = \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle = \begin{cases} \frac{1}{\sqrt{2}} & \text{ als } n \in \{0,1\} \\ 0 & \text{ anders.} \end{cases}
+\]
+\end{voorbeeld}
+
+\section{Terugkeer van de wavelet}
+We weten dat $V_j$ bevat is in $V_{j-1}$. Laat nu $W_j$ het orthogonale complement van $V_j$ in $V_{j-1}$:
+\[
+	W_j \oplus V_j = V_{j-1}.
+\]
+De projectie van $f$ op $V_{j-1}$ kan dus geschreven worden als som van projecties:
+\[
+	P_{V_{j-1}} f = P_{V_j} f + P_{W_j} f.
+\]
+Omdat $V_j \subset V_{j-1}$ is alle informatie over $f$ die beschikbaar is in $V_j$, ook beschikbaar in $V_{j-1}$. Ook is het goed mogelijk dat door deze grovere benadering, informatie zoek gaat. Deze `details' worden op die manier zichtbaar in $P_{W_j} f$.
+
+Het kan bewezen worden \cite{mallat}[T7.3] dat, gegeven een schalingsfunctie $\phi$ (en daarmee een filter $h$) er een functie $\psi$ bestaat zo dat 
+\[
+	\left\{ \psi_{j,n}(t) := \frac{1}{\sqrt{2}} \psi\left(\frac{t-2^jn}{2^j}\right) : n \in \Z \right\}
+\] een orthonormale basis is voor $W_j$ en $\{ \psi_{j,n}: (j,n) \in \Z^2 \}$ een basis voor $L_2(\R)$. Deze functie is zo een orthogonale wavelet, omdat $W_j \perp V_j$.
+Omdat nu $W_j \subset V_{j-1}$ en dus in het bijzonder $2^{-1/2} \psi(t/2) \in W_1 \subset V_0$ en omdat $\{ \phi(t-n): n \in \Z \}$ een orthonormale basis is voor $V_0$, kunnen we ook $2^{-1/2}\psi(t/2)$ in termen schrijven als:
+\[
+	\frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^{\infty} \left\langle \frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle \phi(t-n).
+\]
+Ook deze inproducten hebben een speciale naam: de rij $g[n]$ met
+\[
+	g[n] := \left\langle \frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle
+\]
+wordt nu ook wel de filter van $\psi$ genoemd. De twee filters zijn gerelateerd aan elkaar volgens de vergelijking
+\[
+	g[n] = (-1)^{1-n}h[1-n].
+\]
+
+Zoals nu wel duidelijk geworden is, wordt met een filter $h$ (die voldoet aan bepaalde eigenschappen: zie stelling~\ref{filter}) een schalingsfunctie $\phi$ en een filter $g$ met waveletfunctie $\psi$ geconstrueerd.
+
+\begin{voorbeeld}
+We keren nog een laatste keer terug naar het voorbeeld waarin $\phi(t) = 1_{[0,1)}$. We vinden met de gelijkheden uit voorgaande paragrafen dat
+\[
+\frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^{\infty} (-1)^{1-n}h[1-n] \phi(t-n),
+\]
+en omdat $h[0] = h[1] = 2^{-1/2}, h[n] = 0$ voor $n \in \Z \setminus \{0,1\}$ zoals we eerder vonden, herschrijft dit tot
+\[
+\frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right) = \frac{1}{\sqrt{2}}\left(\phi(t-1) - \phi(t)\right)
+\]
+met als gevolg dat
+\[
+	\psi(t) = \begin{cases} -1 & \text{ als } t \in [0,1/2) \\ 1 & \text{ als } t \in [1/2,1) \\ 0 & \text{ anders.} \end{cases}
+\]
+
+Deze wavelet $\psi$ wordt ook wel de Haarwavelet genoemd en is uitgevonden voor Alfred Haar in 1909, hoewel het onderzoeksgebied van de wavelets toen nog niet bestond. In het vervolg zullen we nog verdere aandacht aan deze wavelet besteden.
+\end{voorbeeld}
+
+\section{Het kiezen van een wavelet}
+Bij het kiezen of vinden van een wavelet is men over het algemeen op zoek naar bepaalde eigenschappen. Voor compressie zijn we op zoek naar een wavelet die voor bepaalde klassen functies een klein aantal grote co\"effici\"enten en een groot aantal kleine teweeg brengt: een soort concentratie van de co\"effici\"enten. Dit wordt vooral bepaald door drie factoren: gladheid van $f$ (waar we niks aan kunnen doen), de grootte van de drager (welke hierna aan bod komt) en de zogenaamde orde van de wavelet.
+
+\begin{definitie}
+Wanneer de waveletfunctie loodrecht staat ($\langle \psi, q\rangle = 0$) op alle polynomen van graad $p-1$ of lager, spreken we van een wavelet van orde $p$. Dit komt overeen met te zeggen dat
+\[
+	\int_{-\infty}^\infty x^k \psi(x) dx = 0 \text{ voor } k \in \{ 0, \ldots p-1 \}.
+\]
+\end{definitie}
+
+\begin{gevolg}
+Gevolg van deze eigenschap is dat we van de functie $f$ elk polynoom van graad $p-1$ af mogen trekken zonder een verschil in inproduct:
+\[
+	\langle f, \psi_{j,n} \rangle = \langle f - q, \psi_{j,n} \rangle \text{ voor $q$ een polynoom van graad $p-1$}. 
+\]
+Intu\"itief is deze eigenschap natuurlijk gewild: we winnen immers een heel stel keuzevrijheden. We zullen dit argument in een volgende sectie formaliseren.
+\end{gevolg}
+
+Eerder spraken we het verlangen uit om een wavelet met eindige drager te vinden zodat discontinu\"iteiten alleen lokaal zichtbaar zijn. We zullen hier de dragers van $h[n], \psi$ en $\phi$ aan elkaar relateren.
+
+\subsection{Compacte drager} 
+\begin{stelling}[{\cite[P7.2]{mallat}}]
+  De volgende relaties gelden voor de dragers.
+  \begin{enumerate}
+    \item De schalingsfunctie $\phi$ heeft een compacte drager dan en slechts dan als $h[n]$ een compacte drager heeft, en deze zijn hetzelfde.
+    \item Als de drager van $\phi$ gelijk is aan $[N_1,N_2]$ dan is de drager van $\psi$ gelijk aan $[(N_1 - N_2 + 1)/2, (N_2 - N_1 + 1)/2]$.
+  \end{enumerate}
+\end{stelling}
+\begin{proof}[Bewijs 1] Als $\phi$ een compacte drager heeft dan $h[n]$ ook: we weten dat
+\[
+  h[n] = \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle,
+\]
+er kunnen maar eindig veel $n$ ongelijk nul zijn. Omgekeerd, als $h[n] \not= 0$ voor eindig veel $n$, dan zien we
+\begin{equation}
+\label{phi_t2}
+	\frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^\infty h[n] \phi(t-n)
+\end{equation}
+ TODO: pag 966 van Daubechies ``orthonormal bases of compactly supported wavelets".
+
+Om deze dragers gelijk te krijgen, stel dat de drager van $h[n]$ gelijk $[N_1,N_2]$ is, en die van $\phi$ $[K_1, K_2]$. De drager van $\phi(t/2)$ is $[2K_1, 2K_2]$ en de drager van de rechterzijde van $\ref{phi_t2}$ is $[N_1 + K_1, N_2 + K_2]$. We concluderen dat $K_1 = N_1$ en $K_2 = N_2$.
+\end{proof}
+\begin{proof}[Bewijs 2]
+Kijk nu naar
+\[
+\frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^{\infty} g[n] \phi(t-n) = \sum_{n=-\infty}^{\infty} (-1)^{1-n}h[-1-n] \phi(t-n).
+\]
+Met de informatie uit het begin van de stelling kunnen we de drager van de rechterkant vinden: $[N_1 - N_2 + 1, N_2 - N_1 + 1]$. De functie $\psi(t/2)$ is nu precies een dilatie met factor twee dus de drager van $\psi(t)$ moet wel gelijk zijn aan $[(N_1 - N_2 + 1)/2, (N_2 - N_1 + 1)/2]$.
+\end{proof}
+
+\subsection{Daubechieswavelets}
+Hoewel de constructie van de Daubechieswavelet buiten het spectrum van dit artikel valt,\footnote{Voor een goede beschrijving van deze constructie, zie \cite{mallat}.} willen we toch een kort licht schijnen op deze speciale familie van wavelets. Deze worden gemaakt met de noties eerder, namelijk dat we de drager willen minimaliseren maar de orde maximaliseren. Daubechies heeft bewezen [TODO ref] dat een filter $h$ met orde $p$, minimaal een drager van lengte $2p$ moet hebben. 
+
+De Daubechieswavelet van orde $p$ nu, heeft precies een filter van lengte $2p$. In het bijzonder is de Haarwavelet de eerste in de familie van Daubechieswavelets.
+
+Wij hebben in het praktische deel van ons project aandacht besteed aan de zogenaamde Daubechies-2 wavelet die haar naam ontleent aan het feit dat zij van orde 2 is.
+
+TODO picca van Daubechies wavelets
+
+\section{Fast Wavelet Transform}
+TODO schrijven dit
+probeer dit er in te stoppen (als dat niet al duidelijk wordt)?
+\[
+	V_{-J} = V_0 \oplus W_0 \oplus \cdots \oplus W_{1-J}
+\]
+$\boldsymbol{\N oem\, ook\, \C onvolutie}$
+
+\begin{equation}
+\label{approx}
+	a_{j+1}[n] = \sum_{p=-\infty}^\infty h[p-2n] a_j[p] = a_j \star \bar{h}[2n]
+\end{equation}
+\begin{equation}
+\label{detail}
+	d_{j+1}[n] = \sum_{p=-\infty}^\infty g[p-2n] a_j[p] = a_j \star \bar{g}[2n]
+\end{equation}
+
+\subsection{Onze implementatie}
+
+\section{Analyse van de Wavelettransformatie}
+Met de theoretische beschouwing van wavelets en de Fast Wavelet Transform achter de rug, kunnen we wat verder kijken naar practische obstakels.
+
+\subsection{Eindige signalen} 
+Een van de eerste aannames die we tot nu toe steeds maakten is die van de oneindige signalen. Wanneer echter de functie $f$ een compacte drager heeft, worden een aantal zaken wat lastiger. Neem als eerste aan dat de drager van $f$ gewoon $[0,1]$ is.\footnote{Door translatie en dilatie kan elk signaal met compacte basis omgevormd worden tot een signaal met drager in $[0,1]$. We verliezen hier dus geen algemeenheid.} In dit geval zou het kunnen dat de waveletfuncties met een drager die $t=0$ of $t=1$ doorsnijdt, niet meer van een bepaalde orde is. Er zijn in de literatuur oplossingen voor dit probleem gevonden. Hier zullen wij verder niet op in gaan.
+
+Wanneer $f$ leeft in $L^2([0,1])$, kunnen we alle $V_j$ met $j > 0$ buiten beschouwing laten omdat de resolutie in deze ruimte te laag is om nog interessante informatie over $f$ te bieden. We hebben op deze manier een rij geneste ruimtes
+\[
+V_0 \subset V_{-1} \subset \ldots.
+\]
+Wanneer we nu een benadering van $f$ maken op resolutie $2^{-J}$ (door bijvoorbeeld een Fast Wavelet Transform), bekijken we
+\[
+	V_0 \subset V_{-1} \subset \ldots \subset V_{-J}.
+\]
+Een discreet signaal van lengte $2^{-J}$ kan zo perfect `benaderd' worden in een waveletbasis op resolutie $2^{-J}$ en dit is precies waarom de Fast Wavelet Transform zo veel gebruikt wordt bij het analyseren van discrete signalen.
+
+\subsection{Signaaluitbreiding}
+Een probleem waar we in het geval van eindige signalen nog meer mee te maken krijgen is dat de algoritme niet goed omgaat met de randen. De convolutie moet nu ineens \emph{buiten het definitiegebied} van het signaal `kijken'. Eerder in sectie [TODO] hebben we al gezien hoe signalen naar een tweemacht uitgebreid kunnen worden. Precies dezelfde methoden kunnen gebruikt worden om het signaal nog verder uit te breiden. 
+
+Om niet te veel tijd te verliezen met het ondersteunen van meerdere mogelijkheden hebben wij er voor gekozen om periodic padding op alle signalen toe te passen. Dit omdat de zogenaamde \emph{circulaire convolutie} ingebouwd zit in de bibliotheek die wij gebruikt hebben.
+
+\subsection{Complexiteit van de algoritme}
+Als de lengte van de filter $h$ gelijk is aan $K$, en de lengte van het originele signaal $a_L$ gelijk is aan $N = 2^{-L}$, kunnen we voor $j \in \{L, \ldots, 0\}$ zien dat $a_j$ en $d_j$ beide $2^{-j}$ elementen bevatten. Nu kunnen $a_{j+1}$ en $d_{j+1}$ gemaakt worden door $2^{-j}K$ operaties zodat elke stap van de algoritme $2^{-j} \cdot K$ operaties kost. Dan kost het hele algoritme
+\[
+	\sum_{j=L}^0 2^{-j} \cdot K = K \sum_{j=L}^0 2^{-j} = K \cdot (2^{1-L} - 1) < 2 \cdot K 2^{-L} = 2KN
+\]
+operaties. Dus deze DWT is een $\mathcal{O}(KN)$ algoritme. Ook de complexiteit van de inverse wordt op dezelfde manier van orde $KN$. 
+
+\section{Meer dimensies: de Mallatdecompositie}
+Met een orthonormale waveletbasis $\{ \psi_{j,n}: (j,n) \in \Z^2\}$ van $L_2(\R)$ volgt een natuurlijke voortzetting naar twee dimensies door
+\[
+  \{ \psi_{j_1,n_1}(x_1) \psi_{j_2,n_2}(x_2): (j_i,n_i) \in \Z^4 \},
+\]
+welke een orthonormale basis voor $L_2(\R^2)$ is. We zien direct dat we op de $x_1$-as met resolutie $2^{-j_1}$ kijken terwijl de $x_2$-as resolutie $2^{-j_2}$ kent. Mallat vond dit iets om te vermijden \cite{mallat}[\S 7.7] en legt in zijn analyse dan ook de eis $j_1 = j_2 =: j$ op. Wij zullen in het vervolg kijken naar het zogenaamde Tensorproduct, wat de eis $j_1 = j_2$ \emph{niet} oplegt.
+
+Zoals in 1 dimensie is de notie van `resolutie' geformaliseerd in het begrip multiresolutie. De definitie van deze multiresolutie is wederom een natuurlijke voortzetting van het eendimensionale geval. Op deze manier bekijken we een ruimte $V_j^2 = V_j \otimes V_j$. In \cite[\S 7.7]{mallat} wordt nu bewezen dat, gegeven een orthonormale basis $\{ \phi_{j,m}: m \in \Z \}$ voor $V_j$, de verzameling
+\[
+	\{ \phi^2_{j,n} := \phi_{j,n_1} \otimes \phi_{j,n_2}: n \in \Z^2 \}
+\]
+een basis voor $V_j^2$ is.
+
+Neem als voorbeeld weer $V_j$ de ruimte van stuksgewijs constante functies op het interval $[2^j m, 2^j(m+1) )$ voor $m \in \Z$. We vinden voor $V_j^2$ nu de ruimte van vierkantsgewijs constante functies op vierkanten $[2^jn_1, 2^j(n_1+1)) \times [2^jn_2, 2^j(n_2+1))$. De tweedimensionale schalingsfunctie wordt op die manier
+\[
+	\phi^2(x_1,x_2) = \phi(x_1)\phi(x_2) = \begin{cases} 1 & \text{ als } x_1 \in [0,1)\text{ en }x_2 \in [0,1) \\ 0 & \text{ anders.} \end{cases}
+\]
+
+\subsection{Tweedimensionale Waveletfuncties}
+We weten dat $V_j^2$ bevat is in $V_{j-1}^2$. 
+We bekijken het orthogonale complement $\boldsymbol{U}_j \perp V_j^2$:
+\[
+	V_j^2 \oplus U_j = V_{j-1}^2.
+\]
+Om nu een orthogonale waveletbasis voor $\boldsymbol{U}_j$ en (dus) $L^2(\R^2)$ te vinden, gaan we als volgt te werk.
+\begin{stelling}[{\cite[T7.24]{mallat}}]
+Laat $\phi$ een schalingsfunctie en $\psi$ de bijhorende wavelet die en basis voor de $L^2(\R)$ voortbrengt. Maak drie wavelets
+\[
+	\psi^1(x) = \phi(x_1)\psi(x_2) \quad \psi^2(x) = \psi(x_1) \phi(x_2) \quad \psi^3(x) = \psi(x_1)\psi(x_2)
+\]
+en laat voor $k \in \{1,2,3\}$ nu
+\[
+	\psi^k_{j,n}(x) = \frac{1}{2^j} \psi^k\left( \frac{x_1 - 2^j n_1}{2^j}, \frac{x_2 - 2^j n_2}{2^j} \right).
+\]
+
+Dan is $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis voor $\boldsymbol{U}_j$ 
+en $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \Z \}$ een basis voor $L^2(\R^2)$.
+\end{stelling}
+\begin{proof}[Bewijs]
+We weten
+\[
+	V_{j-1}^2 = V_j^2 \oplus \boldsymbol{U}_j \implies V_{j-1} \otimes V_{j-1} = ( V_j \otimes V_j ) \oplus \boldsymbol{U}_j.
+\]
+Vul nu $V_{j-1} = V_j \oplus W_j$ in om te vinden
+\[
+	( V_j \oplus W_j ) \otimes (V_j \oplus W_j ) = (V_j \otimes V_j) \oplus \boldsymbol{U}_j %hier stond dus:(W_j \otimes W_j) 
+\]
+\[
+	\implies (V_j \otimes V_j) \oplus (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = (V_j \otimes V_j) \oplus \boldsymbol{U}_j
+\]
+\[
+	\implies (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = \boldsymbol{U}_j.
+\]
+Nu is het duidelijk dat $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis is voor $\boldsymbol{U}_j$. Omdat nu
+\[
+	L^2(\R^2) = \bigoplus_{j=-\infty}^\infty \boldsymbol{U}_j
+\]
+is $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \Z \}$ een basis voor $L^2(\R^2)$.
+\end{proof}
+
+Met deze kennis in handen zullen we het tweedimensionale geval van de Fast Wavelet Transform formuleren.
+\begin{algo}[Tweedimensionale Fast Wavelet Transform]
+Zoals in het eendimensionale geval, laat $j$ vast. Dan:
+\[
+	a_j[n] := \langle f, \phi^2_{j,n} \rangle \quad d^k_j[n] := \langle f, \psi^k_{j,n} \rangle , k \in \{1,2,3\}.
+\]
+
+Vervolgens, gebruikmakend van vergelijkingen $\ref{approx}$ en $\ref{detail}$, zien we dat (TODO):
+\[
+	a_{j+1}[n] = a_j \star (\bar{h} \otimes \bar{h})[2n];
+\]
+\[
+	d^1_{j+1}[n] = a_j \star (\bar{h} \otimes \bar{g})[2n];
+\]
+\[
+	d^2_{j+1}[n] = a_j \star (\bar{g} \otimes \bar{h})[2n];
+\]
+\[
+	d^3_{j+1}[n] = a_j \star (\bar{g} \otimes \bar{g})[2n],
+\]
+waarbij
+\[
+	g \star (x \otimes y)[n_1,n_2] := \sum_{p_1=-\infty}^\infty x[n_1 - p_1] \sum_{p_2 = -\infty}^\infty y[n_2 - p_2] g[p_1, p_2]
+\]
+een tweedimensionale convolutie defini\"eert.
+
+Andersom geldt dat
+\[
+a_j[n] = \breve{a}_{j+1} \star (h \otimes h)[n] + \breve{d}_{j+1}^1 \star (h \otimes g)[n] + \breve{d}_{j+1}^2 \star (g \otimes h)[n] + \breve{d}_{j+1}^3 \star (g \otimes g)[n]
+\]
+\end{algo}
+
+TODO: ogier schrijf jij dit af?
+
+Wat we steeds doen is de ruimte $V_j^2$ schrijven als $V_{j+1}^2$ met daarbij een aantal orthogonale complementen. Wanneer dit algoritme recursief toegepast wordt, schrijven we $V_{j+1}^2$ ook weer als $V_{j+2}^2$ met orthogonale complementen en zo voort. Dit levert dat
+\[
+	\boldsymbol\Phi = \left\{ \psi^k_{j+1,\cdot}, \psi^k_{j+2,\cdot}, \ldots \psi^k_{L,\cdot}, \phi^2_{L,\cdot}: k \in \{1,2,3\} \right\}
+\]
+een basis is voor $V_j^2$. TODO plaatje. Dit is echter niet de enige basis die we kunnen bouwen voor $V_j^2$ wanneer we recursief tot een niveau $L$ kijken.
+
+\subsection{Meer dan twee dimensies}
+Het $n$-dimensionale geval van de Mallatdecompositie is nog TODOOO
+
+\subsection{Eindige signalen}
+Concreet zullen we echter niet gebruik maken van signalen die leven in $L^2(\R^n)$. We zullen eerder op zoek zijn naar de Wavelettransformatie van een signaal met compacte drager. Neem dus aan dat $f$ leeft in $L^2([0,1]^n)$. Dit $n$-dimensionale eenheidsinterval wordt ook wel met $\Box$ aangegeven. Omdat $\Box \subset \R^n$, kunnen we een waveletbasis voor $L^2(\R^n)$ ook als basis nemen voor $L^2(\Box)$. Maar eigenlijk is dit iets te veel (gezien het feit dat veel basisfuncties hun drager geheel buiten het interval zullen hebben). Daarom wordt de verzameling van indices $\lambda := (j,n)$ van wavelets die drager doorsnijden met $[0,1]$ ook wel $\nabla$ genoemd. Dus $\Psi = \{ \psi_\lambda: \lambda \in \nabla \}$ wordt nu een basis voor $L^2([0,1])$. Defini\"eer $|\lambda| = |(j,n)| = j$ als het niveau.
+Verder zullen we vanaf nu aannemen dat $\boldsymbol\psi$ een compacte drager heeft (zoals we in de praktijk altijd willen) en van orde $p$ is.
+
+TODO: definitie $H^d$ -> Sobolevruimte.
+
+\subsection{Analyse van de fout van een lineaire benadering}
+Bij compressie is men op zoek naar een manier om stukjes data weg te kunnen gooien of te schrijven op zo'n manier dat het minder ruimte inneemt. Wij zijn in het bijzonder ge\"interesseerd naar \emph{hoe dichtbij} we bij perfecte reconstructie zitten wanneer we een vooraf bepaald aantal data opslaan. Er is al uitgebreid onderzoek gedaan naar hoe dit werkt bij de waveletbasis en een aantal resultaten hiervan zullen we opnemen in ons verslag.
+
+Laat $f$ een functie in $L^2(\Box)$ met aftelbare basis $\mathcal{B} = \{ g_m \}$. Dan valt $f$ in deze basis te schrijven als
+\[
+	f = \sum_{m = 0}^\infty \langle f, g_m \rangle g_m.
+\]
+
+\begin{lemm}
+Als nu een functie $f$ in $L^2(\Box)$ geschreven wordt in $\mathcal{B}$ dan geldt
+\[
+	\|f\|^2 = \sum_{m=0}^\infty | \langle f, g_m \rangle |^2.
+\]
+\end{lemm}
+\begin{proof}[Bewijs]
+We hebben te maken met een Hilbertruimte dus
+\[
+\|f\|^2 = \langle f, f \rangle = \left\langle \sum_{m=0}^\infty \langle f, g_m \rangle g_m, \sum_{n=0}^\infty \langle f, g_n \rangle g_n \right\rangle = \sum_{m=0}^\infty \sum_{n=0}^\infty \left\langle \langle f, g_m \rangle g_m, \langle f, g_n \rangle g_n \right \rangle
+\]
+\[
+ = \sum_{m=0}^\infty \sum_{n=0}^\infty \langle f, g_m \rangle \overline{\langle f, g_n \rangle}\langle g_m, g_n \rangle = \sum_{m=0}^\infty \sum_{n=0}^\infty \langle f, g_m \rangle \overline{\langle f, g_n \rangle} \delta_{m,n} 
+\]
+\[ = \sum_{m=0}^\infty \langle f, g_m \rangle \overline{\langle f, g_m \rangle} = \sum_{m=0}^\infty |\langle f, g_m \rangle |^2.
+\]
+\end{proof}
+
+Wanneer we nu niet de hele basis, maar zeg alleen de eerste $N$ elementen pakken, krijgen we een verzameling $\mathcal{B}_N \subset \mathcal{B}$ zodat
+\[
+	f_{\mathcal{B}_N} := \sum_{m = 0}^{N-1} \langle f, g_m \rangle g_m.
+\]
+
+In het bijzonder zijn we nu op zoek naar de \emph{fout} $\| f - f_{\mathcal{B}_N} \|$:
+\[
+	\| f - f_{\mathcal{B}_N} \|^2 = \left\| \sum_{m=0}^\infty\langle f, g_m \rangle g_m - \sum_{m=0}^{N-1}\langle f, g_m \rangle g_m \right\|^2 = \left\| \sum_{m=N}^\infty\langle f, g_m \rangle g_m \right\|^2 = \sum_{m=N}^\infty | \langle f, g_m \rangle |^2.
+\]
+Duidelijk moge zijn dat voor $N \to \infty$, $\| f - f_{\mathcal{B}_N} \|^2 \to 0$.
+
+\subsection{Fout van de Mallatdecompositie}
+Wij zijn op het moment ge\"interesseerd in de Mallat-waveletbasis $\boldsymbol\Phi$. Deze is ook duidelijk aftelbaar dus bovenstaande eigenschap geldt.
+
+Defini\"eer $J_M := \{ l \in \N^n: \| l \|_\infty \leq M \}$. Laat $\boldsymbol\Phi_M := \{ \boldsymbol{\psi}_{\boldsymbol{\lambda}} \in \boldsymbol\Phi: |\boldsymbol\lambda| \in J_M \}$ met $|\boldsymbol\lambda| = (|\lambda_1, \ldots, |\lambda_n|)$ de verzameling basisfuncties tot een niveau $M$.
+
+\begin{stelling}[Fout van Mallatdecompositie]
+Wanneer $f \in H^p(\Box)$, zal de fout $\| f - f_{\mathcal{\boldsymbol\Phi}_M} \|$ bij een Mallatdecompositie met de basisfuncties tot niveau $M$ hoogstens proportioneel met $(\# \boldsymbol\Phi_M)^{-p/n}$ zijn.
+\end{stelling}
+\begin{proof}
+
+We maken gebruik van de zogenaamde Jacksonongelijkheid \cite{jackson} die zegt dat 
+\[
+  \inf_{q \in \mathbb{P}_{p-1}} ||f - q||_{L_2(\Box)} \simeq 2^{-jp} ||f||_{H^p(\Box)}
+\]
+wanneer $f \in H^p(\Box)$.
+
+Voor elke dimensie zitten er $\mathcal{O}(2^M)$ basisfuncties in $\{ \psi_\lambda: |\lambda| \leq M \}$. Er zijn $n$ dimensies dus $2^{Mn} = N (= \# \boldsymbol\Phi)$ basisfuncties in totaal.
+
+Bekijk de fout:
+\[
+  \left\| f - f_{\boldsymbol\Phi_M} \right\|^2_{L_2(\Box)} = \sum_{{\boldsymbol\psi} \in \boldsymbol\Phi \setminus \boldsymbol\Phi_M} | \langle f, \boldsymbol\psi \rangle |^2 \simeq \sum_{|\boldsymbol\lambda| > M} 2^{-|\boldsymbol\lambda|p} \simeq 2^{-Mp},
+\]
+waarbij het laatste isteken voortkomt uit
+\[
+	\sum_{k=M+1}^\infty 2^{- kp} = \frac{2^{-Mp}}{2^p-1}
+\]
+en de notie dat $p$ constant is voor een keuze van de wavelet. De fout is nu $2^{-Mp/2} \simeq 2^{-Mp}$. Omschrijven geeft dat dit overeenkomt met een fout van $N^{-p/n}$.
+\end{proof}
+
+\subsection{Onze implementatie}
+\section{Tensorproduct}
+Herinner de gelijkheid
+\[
+	V_{j} = V_{j+1} \oplus W_{j+1}.
+\]
+Dit kan ook herhaaldelijk toegepast worden:
+\[
+	V_j = V_{j+1} \oplus W_{j+1} = (V_{j+2} \oplus W_{j+2} ) \oplus W_{j+1} = \ldots = V_{L} \oplus W_L \oplus \cdots \oplus W_{j+1}.
+\]
+Dus we kunnen nu $V_j^2$ ook anders schrijven:
+\[
+	V_j^2 = V_j \otimes V_j = (V_{L} \oplus W_L \oplus \cdots \oplus W_{j+1}) \otimes (V_{L} \oplus W_L \oplus \cdots \oplus W_{j+1}).
+\]
+
+Voor $V_L$ was $\{ \phi_{L,k}: k \in \Z \}$ een basis. Voor $W_i$ was $\{ \psi_{i,k}: k \in \Z \}$ een basis. Zo krijgen we dat
+\[
+	\Psi := \{ \phi_{L,\cdot}, \psi_{L,\cdot}, \ldots, \psi_{j+1,\cdot} \}
+\]
+een basis moet zijn voor $V_j$. Uit \cite[T8.5]{tensor_wavelet} vinden we dat $\boldsymbol\Psi := \{ \psi_1 \otimes \psi_2: \psi_1, \psi_2 \in \Psi \}$ een basis is voor $V_j^2$. Dit kunnen we uitschrijven tot
+\[
+  \boldsymbol\Psi = \left\{
+  \begin{array}{cccc}
+    \phi_{L, \cdot} \otimes \phi_{L, \cdot}, & \phi_{L, \cdot} \otimes \psi_{L, \cdot}, & \cdots, & \phi_{L, \cdot} \otimes \psi_{j+1,\cdot}, \\
+    \psi_{L, \cdot} \otimes \phi_{L, \cdot}, & \psi_{L, \cdot} \otimes \psi_{L, \cdot}, & \cdots, & \psi_{L, \cdot} \otimes \psi_{j+1,\cdot} ,\\
+    \vdots \\
+    \psi_{j+1, \cdot} \otimes \psi_{j+1, \cdot}, & \phi_{L, \cdot} \otimes \psi_{L, \cdot}, & \cdots, & \psi_{j+1, \cdot} \otimes \psi_{j+1,\cdot} \\
+  \end{array}\right\}.
+\]
+In onze definitie\footnote{In de literatuur wordt de Mallatdecompositie ook vaak genoeg een Tensorproduct genoemd. Dit is natuurlijk geen verkeerde (hoogstens een verwarrende) naamgeving want de Mallatdecompositie \emph{is} gewoon een Tensorproduct.} is het Tensorproduct nu het schrijven van het (tweedimensionale) signaal in termen van deze basis $\boldsymbol\Psi$. 
+
+\subsection{Meer dan twee dimensies}
+Het moge duidelijk zijn hoe het Tensorproduct schaalt naar meer dimensies. De $\boldsymbol\Psi$ moet hier gewoon niet langer twee basisfuncties maar $n$ basisfuncties pakken. 
+
+\subsection{Fout van het Tensorproduct}
+Volgens \cite[L3.1.7]{tammo} is 
+\[ 
+  \boldsymbol\Psi = \Psi \otimes \cdots \otimes \Psi = \{ \boldsymbol{\psi_\lambda} := \psi_{\lambda_1} \otimes \cdots \otimes \psi_{\lambda_n}: \lambda_i \in \nabla \}
+\]
+met $\boldsymbol\lambda := (\lambda_1, \ldots, \lambda_n) \in \boldsymbol{\nabla} := \nabla^n$ nu een orthogonale basis voor $L^2(\Box)$.
+
+Laat vervolgens $I_M := \{ l \in \N^n_0: ||l||_1 \leq M \}$ en maak de \emph{sparse grid index set} $\boldsymbol{\nabla}_M := \{ \boldsymbol{(j,n)} \in \boldsymbol{\nabla}: \boldsymbol{j} \in I_M \}$.
+
+\begin{lemm}{\cite[P3.2.3]{tammo}}
+  Voor $f \in H^p(\Box)$ geldt dat de fout van de benadering op basis van de sparse grid index set $\boldsymbol{\nabla}_M$ hoogstens voldoet aan
+\[
+  \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim 2^{-pM} M^{(n-1)/2} \| f \|_{H^p(\Box)}
+\]
+\end{lemm}
+
+Het aantal elementen in deze verzameling $\boldsymbol{\nabla}_M$ nu, kunnen we vinden.
+\begin{lemm}{\cite[L3.3.1]{tammo}}
+  Het aantal elementen in $\boldsymbol{\nabla}_M$ is proportioneel met $2^M M^{n-1}$.
+\end{lemm}
+
+\begin{lemm}
+  Wanneer er voor twee functies $f, g$ geldt dat $f(J) \lesssim J^{-p}\log_2(J)^\mu$ en $g(J) = \log_2(J)^\nu J =: N$, dan
+  \[
+    (f \circ g^{-1})(N) \lesssim N^{-p} \log_2{N}^{\mu + \nu p}.
+  \]
+  TODO: bewijs klopt (nog) niet
+\end{lemm}
+\iffalse
+\begin{proof}[Bewijs]
+  We weten dat $g(J) = N$ dus $g^{-1}(N) = J$. Dan
+  \[
+    (f \circ g^{-1})(N) = f(J) \simeq J^{-p}\log_2(J)^{\mu}.
+  \]
+  Omdat verder $J \log_2(J)^\nu = N$, geldt $J^{-1} = N^{-1}\log_2(J)^\nu$. Vul dit in in bovenstaande om te krijgen
+  \[
+    f(J) \simeq N^{-s} \log_2(J)^{\nu s} \log_2(J)^\mu = N^{-s} \log_2(J)^{\nu s + \mu}????
+  \]
+\end{proof}
+\fi
+
+Met bovenstaande drie lemma's is het nu mogelijk een goede afschatting te maken. 
+\begin{stelling}[Fout van het Tensorproduct]
+  Laat $f \in H^p(\Box)$ en $N = \#\boldsymbol{\nabla}_M$. Dan:
+  \[
+    \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim N^{-p} \log_2(N)^{(n-1)(1/2 + p)} \| f \|_{H^p(\Box)}.
+  \]
+\end{stelling}
+\begin{proof}
+  Gebruik het tweede lemma om te vinden dat $N \simeq M^{n-1}2^M$. Nu vinden we via het eerste lemma dat
+  \[
+    \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim M^{(n-1)/2}2^{-Mp}\| f \|_{H^p(\Box)}
+  \]
+  zodat
+  \[
+    \frac{\left\| f - f_{\boldsymbol\nabla_M}  \right\|_{L_2(\Box)}}{\| f \|_{H^p(\Box)}} \lesssim M^{(n-1)/2}2^{-Mp}.
+  \]
+
+  We willen graag lemma drie toepassen. Door
+  \[
+    J^{-p}\log_2(J)^\mu = M^{(n-1)/2} 2^{-Mp}
+  \]
+  volgt $J = 2^m$ en $\mu = (n-1)/2$. Door
+  \[
+    N = M^{n-1}2^M = \log_2(J)^\nu J = 2^M M^\nu
+  \] volgt $\nu = n-1$. TODO: wat is $f$ en $g$?
+\end{proof}
+
+We vinden dus dat voor een voldoend gladde $f$ dat (gebruikend een beperkte hoeveelheid basisfuncties) de Mallatdecompositie hoogstens een convergentiesnelheid $N^{-p/n}$ bereikt, terwijl het Tensorproduct theoretisch een snelheid $N^{-p} \log_2(N)^{(n-1)(p+1/2)}$ bereikt. Let op dat voor $n=1$ de twee convergentiesnelheden beide $N^{-p}$ zijn (omdat beide bases dan gewoon hetzelfde zijn).
+
+In de praktijk hebben we echter nooit te maken met compleet gladde functies. Gevolg is dat deze stellingen niet helemaal opgaan. Niet \emph{helemaal}, omdat per constructie van onze wavelet, de basis compact is en dus `zoomen we in' op de functie. Lokaal is de mogelijkheid dat $f$ glad genoeg is ineens een stuk meer in zicht. Het gevolg is wel dat je op zo'n moment waarschijnlijk lokaal een hoger niveau wil gebruiken. De bewijzen van hierboven zijn op basis van een \emph{niet-adaptieve} deelverzameling, dat wil zeggen dat ze geen rekening houden met lokaal een hoger niveau.
+
+Hoewel de vorige zin misschien klinkt alsof er roet in ons eten gegooid wordt, is het in de praktijk toch goed mogelijk om de gevolgen te zien. Dit zullen we zien wanneer we de twee decomposities zullen gaan vergelijken.
+
+\subsection{Onze implementatie}
+
+\chapter{Resultaten}
+\section{Fouriertransformatie}
+\subsection{Praktische nadelen}
+\subsection{Geluid}
+\subsection{Plaatjes}
+
+\section{Wavelettransformaties d.m.v. Mallatdecompositie}
+\subsection{Geluid}
+\subsection{Plaatjes}
+
+\section{Wavelettransformaties in 3D: film}
+\subsection{Filmpjes met Mallat}
+\subsection{Filmpjes met Tensor}
+
+\chapter{Reflectie en discussie}
+\chapter{Populaire samenvatting}
+
+\begin{thebibliography}{11}
+
+\bibitem{akra-bazzi}
+  Mohamad Akra, Louay Bazzi,
+  \emph{On the solution of linear recurrence equations}.
+  Computational Optimization and Applications, 
+  10(2):195 - 210,
+  1998.
+
+\bibitem{fourier-fout}
+  Bochner S., Chandrasekharan K. 
+  \emph{Fourier Transforms}. 
+  Princeton University Press.
+  1949.
+
+
+\bibitem{tammo}
+Tammo Jan Dijkstra,
+\emph{Adaptive tensor product wavelet methods for solving PDEs}, 2009
+\bibitem{tensor_wavelet}
+http://www.uio.no/studier/emner/matnat/math/MAT-INF2360/v12/tensorwavelet.pdf
+\bibitem{mallat}
+St\'ephane Mallat,
+\emph{A Wavelet Tour of Signal Processing}
+\bibitem{jackson}
+http://www.ams.org/journals/bull/1960-66-02/S0002-9904-1960-10426-0/S0002-9904-1960-10426-0.pdf
+
+\end{thebibliography}
+
+\end{document}
