@@ -33,12 +33,12 @@
   frame=single,
   showstringspaces=false,
   columns=flexible,
-  basicstyle={\small\ttfamily},
-  numbers=none,
-  numberstyle=\tiny\color{gray},
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
+  basicstyle=\small,
+%  numbers=none,
+  numberstyle=\small\color{gray},
+  keywordstyle=\small\color{blue},
+  commentstyle=\small\color{dkgreen},
+  stringstyle=\small\color{mauve},
   breaklines=true,
   breakatwhitespace=true,
   captionpos=b,
@@ -106,54 +106,43 @@
 \newpage
 \chapter{Fourier}
 
-Studie van signalenperiodieke functies / 
-een manier om een functie te ontbinden in terugkerende patronen /
-karakteristiek van functie in termen van bepaalde frequenties /
-overtuigendere manier om `nette' functies te beschrijven /
-multiresolutie in de tijd
+Bij het analyseren van periodieke functies is de Fourier-transformatie het gereedschap bij uitstek.
+Het is een manier om een signaal te karakteriseren aan de hand van een bereik aan frequenties.
+Dit maakt het een overtuigende manier om `nette' periodieke functies te beschrijven.
+We kunnen de eis van periodiciteit ook loslaten als we naar functies op een interval kijken door dit op te vatten
+als \'e\'en fase van een periodieke functie.
 
-TODO: Periodieke functies zijn ook wel te beschrijven door slechts naar \'e\'en fase te kijken.
-
-De basisfuncties waarmee we een functie karakteriseren bij Fourieranalyse worden gegeven door de complexe
-$e$-machten.
-\begin{definitie}[FourierBasis] Zij gegeven een interval $[a,b]$, en bekijk de functieruimte $L_2([a,b])$. Laat de verzameling $F_{[a,b]}$ gedefinieerd zijn door:
+De basisfuncties waarmee we deze analyse uitvoeren worden gegeven door de complexe $e$-machten.
+Hiermee zijn de functies te transformeren naar een vector op $\C$.
+\begin{definitie}[FourierBasis] Zij gegeven een interval $[a,b]$, en bekijk de functieruimte $L_2([a,b])$. 
+Laat de verzameling $F_{[a,b]}$ gedefinieerd zijn door:
 \eq{
-  F_{[a,b]} := \left\{ \phi_k(x) = \tfrac{1}{\sqrt{b-a}} e^{2 \pi i \cdot k \frac{x-a}{b-a}} \largediv k \in \N_0 \right\}
+  F_{[a,b]} := \left\{ \phi_k(x) = \tfrac{1}{\sqrt{b-a}} e^{2 \pi i \cdot k \frac{x-a}{b-a}} \largediv k \in \Z \right\}
 }
 Dan noemen we $F_{[a,b]}$ de Fourier`basis' van $L_2([a,b])$
 \end{definitie}
-Merk op dat hier het woord \emph{basis} nog tussen aanhalingstekens staat want we zullen eerst moeten bewijzen dat deze
-verzameling ook echte een (complexe) orthonormale basis vormt voor $L_2([a,b])$.
-
-Ten eerste zullen we zien dat alle elementen van $F_{[a,b]}$ orthonormaal zijn t.o.v. het complexe inproduct van functies en zijn ge\"induceerde norm:
-\eq{
-  \inpr{\phi_k}{\phi_j} = \frac{1}{(b-a)}\int_{[a,b]} e^{\frac{2\pi i}{b-a} x k} 
-                                                             e^{-\frac{2\pi i }{b-a} x j} \dx
-                        = \frac{1}{2\pi}\int_{[0,2\pi]} e^{iy(k-j)} \dy =
-                          \begin{cases}
-                            \,0&\quad \text{als } k\neq j, \\
-                            \,1&\quad \text{als } k=j.
-                          \end{cases}
-}
-Hieruit volgt dat de elementen van $F_{[a,b]}$ een orthonormale basis vormen voor de ruimte $\tilde F = \text{span}(F_{[a,b]})$.
-We willen nu bewijzen dat de re\"ele projectie van deze ruimte dicht ligt in de re\"ele functieruimte $L_2([a,b])$. 
-We zullen hier eerst een aantal handige definities voor introduceren.
+Merk op dat hier het woord \emph{basis} hier tussen aanhalingstekens staat aangezien de elementen van $F_{[a,b]}$ 
+complexe functies zijn, ze spannen een grotere ruimte op dat nodig voor deze re\"ele analyse.
+We kunnen echter wel degelijk een functie ontbinden in deze Fourierbasis en deze vervolgens bijna-overal reconstrueren.
+We zullen hier een aantal handige definities voor introduceren.
 
 \begin{definitie}[Fouriergetransformeerde]
-Zij gegeven een functie $f\in L_2({[a,b]})$, schrijf dan een vector $\hat f \in \C^\infty$ met entries gedefinieerd volgens (hier aangegeven met blokhaken):
+Zij gegeven een functie $f\in L_2({[a,b]})$, schrijf dan een vector $\hat f : \Z\to\C$ met entries gedefinieerd volgens (hier aangegeven met blokhaken):
 \eq{
   \hat f [n] = \frac{1}{\sqrt{b-a}} \cdot \inpr{f}{\phi_n} = \frac{1}{b-a} \int_{[a,b]} f(x) \cdot e^{-2 \pi i \cdot k \frac{x-a}{b-a}}\dx.
 }
 We noemen $\hat f$ de Fouriergetransformeerde van $f$.
 \end{definitie}
+\begin{definitie}[Inverse Fouriertransformatie]
+  Gegeven een Fouriergetransformeerde $\hat f$ van een functie $f \in L_2([a,b])$ is de reconstructie van $f$ mogelijk volgens:
+  \eq{
+    f(x) = \sum_{k=-\infty}^\infty \hat f [k] \phi_k(x)
+  }
+  In alle $x \in [a,b]$ met uitzondering van een aantal geisoleerde punten. We noemen dit de inverse Fouriertransformatie.
+\end{definitie}
 
-TODO: Bewijzen dat alle re\"ele functies in de ruimte opgespannen door de Fourier-basis dicht liggen in $L_2$.
-
-TODO: Bewijzen dat de continue reconstructie perfect is wanneer $f \in C^1$
-
-%\eq{
-%  \int_{[a,b]} f(x) e^{q(x)} dx \leq \Ldnorm{f}\Ldnorm{e^{q(x)}} 
-%}
+Het kan worden aangetoond dat deze inverse Fouriertransformatie perfecte reconstructie geeft wanneer de functie
+$f$ continu differentieerbaar is.\cite{fourier-rec} We zullen 
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{De \emph{Discrete Fourier Transform}}
@@ -533,14 +522,17 @@ De complexiteit van zo'n algoritme is $\O( \sum_{i=1}^m \log(n_i) \prod_{j=1}^m 
 $\O( \sum_{i=1}^m n_i \prod_{j=1}^m n_j)$ voor de MDFT.
 
 %-----------------------------------------------------------------------------------------------------------------
-\section{Compressie van Beeldmateriaal onder FFT}
+\section{Compressie van signaal onder FFT}
+Tot zover is de Discrete Fourieranalyse besproken aan de hand van perfecte reconstructie, 
+aan de hand van een  complete set co\"efficienten. Het doel van dit project is echter om
+signalen te comprimeren; te reconstrueren aan de hand van een gelimiteerde dataset.
+Om deze analyse te vegemakkelijken, zullen in deze sectie een aantal bewijzen aan bod komen die
+de geinduceerde fout van zo een reconstructie relateren aan de grootte van de dataset.
 
-TODO: een klein introverhaaltje over compressie
-
-\subsection{Verwachte ontwikkeling van de fout}
-Het is zowel van praktisch nut als wiskundig interessant om het convergentie-gedrag te bepalen 
-van de Fourier-transformatie. Met het convergentie gedrag voor continue functies kunnen we immers
-kwantificeren hoe goed een functie te benaderen is met een eindige subset van de Fourier-getransformeerde.
+We zullen het convergentie-gedrag gaan bepalen van de Fourier-transformatie voor functies die $C^k$ zijn.
+We weten immers dat voor differentieerbare functies de Fourieranalyse perfect reconstrueerbaar is.
+Met het convergentie gedrag van deze functies kunnen we dan kwantificeren hoe goed een functie te 
+benaderen is met een eindige subset van de Fourier-getransformeerde.
 We trachten daarom te bewijzen dat er een algebra\"isch verband bestaat tussen de fout en de frequentie
 van de wavelets en bovendien een exponentieel verband tussen de fout en de `gladheid' van de functie.
 
@@ -622,7 +614,24 @@ TODO: discreet $\to$ continu voor grote dataset, maak een definitie van smooth o
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{Implementatie van Fourier Transformatie in Python}
-TODO: introductie verhaaltje
+Met de theoretische basis uit voorgaande secties is de implementatie van het \emph{Fast Fourier Transform} algoritme
+nu aan bod gekomen. In deze sectie zullen we uitwijden over enkele genomen hordes en keuzes, de resultaten volgen
+in een latere sectie.
+
+Voor de implementatie van de Fourier-transformatie is de taal Python gebruikt,
+enkele redenen hiervoor waren:
+\begin{itemize}
+\item Voorzieningen om beeld en geluid te laden m.b.v. het \emph{scipy} pakket.
+  Dit pakket liet ons bijvoorbeeld toe om beelden te laden als matrix van kleurwaarden en deze weer op te slaan
+  nadat we deze gereconstrueerd hadden. Zo hoefden we ons niet te bekommeren om andere beeldcompressie implementaties.
+\item Duidelijke relatie van wiskunde naar code. Python heeft een syntax die een wiskundige manier van denken en werken
+  ondersteunt, in tegenstelling tot meer declaratieve talen zoals \emph{C} of object-georienteerde talen zoals \emph{Java}.
+\item Goede abstractie van onderliggende processen. Python is een geinterpreteerde taal, dit betekent in concreto
+  dat onze programma's draaien op een platform dat de allocatie van geheugen en rekenkracht. Dit vergemakkelijkt
+  de implementatie en zorgt dat er makkelijk veranderingen zijn aan tee brengen in de code zonder het programma te crashen.
+\end{itemize}
+Het enige nadeel dat deze keuze teweeg heeft gebracht is dat de snelheid van al onze algoritmes tegenvalt
+omdat we ons niet bezighouden met kleine optimalisaties en vertrouwen op de Python \emph{interpreter}.
 
 \subsection{Fast Fourier Transform Implementatie}
 TODO: even kijken of we dit zo moeten doen of dat we beter alles kunnen referen
@@ -639,7 +648,8 @@ def FFT( xs ):
         even = FFT(xs[0::2])    # voer FFT uit op even indices
         odd  = FFT(xs[1::2])    # voer FFT uit op oneven indices
 
-        return [0.5*( even[k] + exp(-2j*pi*k/N)*odd[k] ) for k in range(N/2)] + [0.5*( even[k] - exp(-2j*pi*k/N)*odd[k] ) for k in range(N/2)]
+        return [0.5*(even[k] + exp(-2j*pi*k/N)*odd[k]) for k in range(N/2)] + 
+               [0.5*(even[k] - exp(-2j*pi*k/N)*odd[k]) for k in range(N/2)]
 \end{lstlisting}
 
 Hierbij dient uitgelegd te worden dat de $[x \text{ for } y] + [z \text{ for } w]$ notatie twee lijsten construeert en achter elkaar zet. Dit algoritme werkt, zoals eerder beschreven enkel op signalen waarvan de lengte
@@ -660,11 +670,11 @@ FFT konden toepassen op rijen en kolommen.
 
 \begin{lstlisting}[caption=2-Dimensionaal FFT algoritme]
 def FFT_2D( xss ):
-    xss = map(FFT, xss)     # voer FFT uit op rijen
+    xss = map(FFT, xss)        # voer FFT uit op rijen
 
     xss_t = transpose(xss)     # verwissel rijen met kolommen
-    xss_t = map(FFT, xss_t)  # voer FFT uit op kolommen
-    xss = transpose(xss_t)     # maak verwisseling ongedaan 
+    xss_t = map(FFT, xss_t)    # voer FFT uit op kolommen
+    xss   = transpose(xss_t)   # maak verwisseling ongedaan 
 
     return xss
 \end{lstlisting}
@@ -674,13 +684,18 @@ Met het oog op duidelijkheid is hier de Zero-Padding fase weggelaten,
 dit algoritme verwacht nu nog een $2^n \times 2^m$ matrix.
 Dit is echter gemakkelijk te implementeren door Zero\_Padding toe te passen op rijen en kolommen.
 
-TODO: meer implementatie specifieke details includen
-
+TODO :: 
+Dingen die nog moeten.
+\begin{itemize}
+\item Iets over de conversie van matrix naar dictionary en de compressiestap 
+\item Iets over de manier waarop beelden geconstrueerd zijn (0 - 255 en dan 4 kanaals)
+\item Niet uit te breiden naar 3D $\to$ te langzaam.
+\end{itemize}
 
 \begin{thebibliography}{11}
 
 \bibitem{akra-bazzi}
-  Mohamad Akra, Louay Bazzi,
+  Akra M., Bazzi L.
   \emph{On the solution of linear recurrence equations}.
   Computational Optimization and Applications, 
   10(2):195 - 210,
@@ -691,6 +706,13 @@ TODO: meer implementatie specifieke details includen
   \emph{Fourier Transforms}. 
   Princeton University Press.
   1949.
+
+\bibitem{fourier-rec}
+  Carleson L.
+  \emph{On convergence and growth of partial sums of Fourier series}. 
+  Acta Mathematica,
+  116 (1): 135 – 157,
+  1966.
 
 \end{thebibliography}
 
