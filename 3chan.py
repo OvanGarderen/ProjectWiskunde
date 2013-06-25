@@ -27,6 +27,8 @@ def mat3img( data, size ):
     return img
 
 def compress( dicks, mats):
+    import numpy as np
+    mats = np.array(mats)
     return float(len(dicks))/reduce(lambda x, y: x * y, mats.shape)
 
 
@@ -45,7 +47,7 @@ if __name__=="__main__":
     print dim2
 
     print "making dicks"
-    dicks = map(lambda x: mat2dict(x,0.15),encoded)
+    dicks = map(lambda x: mat2dict(x,0.10),encoded)
     
     print len(dicks[0])
     

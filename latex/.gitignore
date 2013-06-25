@@ -1,3 +1,9 @@
 *.pdf
 *.aux
 *.log
+*.toc
+*.nav
+*.out
+*.snm
+\#*\#
+*.sh
