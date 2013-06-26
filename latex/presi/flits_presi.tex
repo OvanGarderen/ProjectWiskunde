@@ -2,7 +2,10 @@
 %\usepackage{beamerthemeAmsterdam}
 \usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage[autoplay,loop]{animate}
+
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{linkcolor=blue,filecolor=red}
 
 \title{JPEG-2000}
 \subtitle{De Wondere Wereld van Wavelets}
@@ -23,7 +26,7 @@
       \includegraphics[width=\textwidth]{cigar.png}
       \hfill
     \end{column}
-\pause
+    \pause
     \begin{column}{0.5\textwidth}
       \hfill
       \includegraphics[width=\textwidth]{cigar_downscale.png}
@@ -74,17 +77,23 @@
 \frame{
 	\frametitle{Fouriertransformatie}
 	\begin{itemize}
-		\item Beginsignaal $f$
-		\item Transformatie is omschrijven naar andere basis (sinussen en cosinussen)
-		\begin{itemize}
-			\item Voorbeeld: $\pi$ schrijven in termen van machten van tien (decimale ontwikkeling)
-		\end{itemize}
-		\item GIFje Fouriertransform.gif?
-		\item Compressie door minst significante termen weg te laten
-		\begin{itemize}
-			\item $\pi \simeq 3.1415$ is `wel precies genoeg'
-		\end{itemize}
-		\item Nadeel: werkt niet goed bij plaatjes met scherpe randen
+	\item Beginsignaal $f$
+	\item Transformatie is omschrijven naar andere basis 
+          \[
+          f = \sum_k \langle f,\phi_k \rangle \phi_k
+          \]
+          \vspace{-15pt}
+        \item Fourier:
+          \[ \phi_k(n) = e^{2\pi i k n /N} = \cos(2\pi kn/N) + i\cdot\sin(2\pi kn/N)\]
+          \vspace{-15pt}
+	  \begin{itemize}
+	  \item Voorbeeld: $\pi$ schrijven in termen van machten van tien (decimale ontwikkeling)
+	  \end{itemize}
+	\item Compressie door minst significante termen weg te laten
+	  \begin{itemize}
+	  \item $\pi \simeq 3.1415$ is `wel precies genoeg'
+	  \end{itemize}
+	\item Nadeel: werkt niet goed bij plaatjes met scherpe randen
 	\end{itemize}
 }
 
@@ -124,18 +133,7 @@
 }
 
 \frame{
-	\animategraphics[width=0.3 \linewidth]{25}{croppedgif/animate_}{0}{127}
-	\animategraphics[width=0.3 \linewidth]{25}{croppedgif_haar/animate_}{0}{127}
-}
-\frame{
-	\animategraphics[width=0.3 \linewidth]{25}{croppedgif/animate_}{0}{127}
-	\animategraphics[width=0.3 \linewidth]{25}{croppedgif_db2/animate_}{0}{127}
-\frame{
-	\animategraphics[width=0.3 \linewidth]{25}{croppedgif/animate_}{0}{127}
-	\animategraphics[width=0.3 \linewidth]{25}{croppedgif_haar_tensor/animate_}{0}{127}
-}
-\frame{
-	\animategraphics[width=0.3 \linewidth]{25}{croppedgif/animate_}{0}{127}
-	\animategraphics[width=0.3 \linewidth]{25}{croppedgif_db2_tensor/animate_}{0}{127}
+	\frametitle{Filmpjes (0.2\%)}
+        \href{pag6b.html}{Link naar gifjes}
 }
 \end{document}
