@@ -2,6 +2,7 @@
 %\usepackage{beamerthemeAmsterdam}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage[autoplay,loop]{animate}
 
 \title{JPEG-2000}
 \subtitle{De Wondere Wereld van Wavelets}
@@ -89,18 +90,46 @@
 
 \frame{
 	\frametitle{Wavelettransformatie}
-	\begin{itemize}
-		\item Weer omschrijven in een andere basis
-		\item Heel veel soorten wavelets
-		\item (Wiskundig wat interessanter: relatief nieuw)
-	\end{itemize}
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\begin{itemize}
+				\item Weer omschrijven in een andere basis
+				\item Heel veel soorten wavelets
+				\item (Wiskundig wat interessanter: relatief nieuw)
+				\item Inzichtelijker -> als in de transform ziet er duidelijk uit (geeft ons weer reden tot een plaatje)
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\includegraphics[width=\textwidth]{wavelets.jpg}\\
+			\includegraphics[width=0.5\textwidth]{cigar_transform_fourier.pdf}
+			\includegraphics[width=0.5\textwidth]{huis_wavelet_transformed.png}
+		\end{column}
+	\end{columns}
 }
 
 \frame{
-	\frametitle{Plaatjens}
+	\frametitle{Voorbeelden (1\%)}
+  \begin{table}
+    \begin{tabular}{c c c c}
+      Downscale &
+      \includegraphics[width=0.3\linewidth]{cigar_downscale.png} &
+      \includegraphics[width=0.3\linewidth]{cigar_fourier.png} &
+      Fourier \\
+      Haar &
+      \includegraphics[width=0.3\linewidth]{cigar_haar.png} &
+      \includegraphics[width=0.3\linewidth]{cigar_db2.png} &
+      Daubechies 2
+    \end{tabular}
+  \end{table}
 }
 
 \frame{
-	\frametitle{Filmpjens}
+	\frametitle{Filmpjes (0.2\%)}
+	\animategraphics[width=0.3 \linewidth]{25}{croppedgif/animate_}{0}{127} \pause
+	\animategraphics[width=0.3 \linewidth]{25}{croppedgif_haar/animate_}{0}{127}
+	\animategraphics[width=0.3 \linewidth]{25}{croppedgif_db2/animate_}{0}{127}\\
+	\pause
+	\animategraphics[width=0.3 \linewidth]{25}{croppedgif_haar_tensor/animate_}{0}{127}
+	\animategraphics[width=0.3 \linewidth]{25}{croppedgif_db2_tensor/animate_}{0}{127}
 }
 \end{document}
