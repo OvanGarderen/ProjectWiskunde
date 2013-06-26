@@ -80,21 +80,16 @@
 	\item Beginsignaal $f$
 	\item Transformatie is omschrijven naar andere basis 
           \[
-          f = \sum_k \langle f,\phi_k \rangle \phi_k
+          f(x) = \sum_k a_k \cos(k x) + b_k \sin(k x)
           \]
-          \vspace{-15pt}
-        \item Fourier:
-          \[ \phi_k(n) = e^{2\pi i k n /N} = \cos(2\pi kn/N) + i\cdot\sin(2\pi kn/N)\]
-          \vspace{-15pt}
-	  \begin{itemize}
-	  \item Voorbeeld: $\pi$ schrijven in termen van machten van tien (decimale ontwikkeling)
-	  \end{itemize}
 	\item Compressie door minst significante termen weg te laten
-	  \begin{itemize}
-	  \item $\pi \simeq 3.1415$ is `wel precies genoeg'
-	  \end{itemize}
 	\item Nadeel: werkt niet goed bij plaatjes met scherpe randen
 	\end{itemize}
+\pause
+        \includegraphics[width=0.25 \textwidth]{sin.png}
+        \includegraphics[width=0.25 \textwidth]{sin_fourier.pdf}
+        \includegraphics[width=0.25 \textwidth]{smiley.png}
+        \includegraphics[width=0.25 \textwidth]{smiley_fourier.pdf}
 }
 
 \frame{
@@ -104,16 +99,21 @@
 			\begin{itemize}
 				\item Weer omschrijven in een andere basis
 				\item Heel veel soorten wavelets
-				\item (Wiskundig wat interessanter: relatief nieuw)
-				\item Inzichtelijker -> als in de transform ziet er duidelijk uit (geeft ons weer reden tot een plaatje)
+				\item Jong onderzoeksgebied dus er is nog veel te ontdekken
+				\item Randen zijn alleen lokaal zichtbaar $\implies$ betere compressie
 			\end{itemize}
 		\end{column}
 		\begin{column}{0.5\textwidth}
 			\includegraphics[width=\textwidth]{wavelets.jpg}\\
-			\includegraphics[width=0.5\textwidth]{cigar_transform_fourier.pdf}
+			\includegraphics[width=0.5\textwidth]{huis.png}
 			\includegraphics[width=0.5\textwidth]{huis_wavelet_transformed.png}
 		\end{column}
 	\end{columns}
+}
+\frame{
+  \frametitle{Lenna}
+  \vspace{18pt}
+  \centering \hspace{-0.5px}~~~~~\includegraphics[height=0.72\textheight]{Lenna.png}
 }
 
 \frame{
@@ -121,19 +121,35 @@
   \begin{table}
     \begin{tabular}{c c c c}
       Downscale &
-      \includegraphics[width=0.3\linewidth]{cigar_downscale.png} &
-      \includegraphics[width=0.3\linewidth]{cigar_fourier.png} &
+      \includegraphics[width=0.3\linewidth]{Lenna_downscale.png} &
+      \includegraphics[width=0.3\linewidth]{Lenna_fourier.png} &
       Fourier \\
       Haar &
-      \includegraphics[width=0.3\linewidth]{cigar_haar.png} &
-      \includegraphics[width=0.3\linewidth]{cigar_db2.png} &
+      \includegraphics[width=0.3\linewidth]{Lenna_haar.png} &
+      \includegraphics[width=0.3\linewidth]{Lenna_db2.png} &
       Daubechies 2
     \end{tabular}
   \end{table}
 }
 
 \frame{
-	\frametitle{Filmpjes (0.2\%)}
+	\frametitle{Filmpjes (2\%)}
         \href{pag6b.html}{Link naar gifjes}
 }
+
+\frame{
+  \begin{table}
+    \begin{tabular}{r c c l}
+      Origineel &
+      \includegraphics[width=0.3\linewidth]{gentoo.png} &
+      \includegraphics[width=0.3\linewidth]{gentoo_new_1p.png} &
+      Fourier \\
+      Haar &
+      \includegraphics[width=0.3\linewidth]{gentoo_01_haar_smooth.png} &
+      \includegraphics[width=0.3\linewidth]{gentoo_01_db2_smooth.png} &
+      Daubechies 2
+    \end{tabular}
+  \end{table}
+}
+
 \end{document}
