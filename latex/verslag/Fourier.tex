@@ -70,11 +70,11 @@
 
 \newcommand{\FFT}{\text{FFT}}
 
-\newtheorem*{lemm}{Lemma}
-\newtheorem*{stelling}{Stelling}
-\newtheorem*{algo}{Algoritme}
-\newtheorem*{definitie}{Definitie}
-\newtheorem*{gevolg}{Gevolg}
+\newtheorem{lemm}{Lemma}
+\newtheorem{stelling}{Stelling}
+\newtheorem{algo}{Algoritme}
+\newtheorem{definitie}{Definitie}
+\newtheorem{gevolg}{Gevolg}
 
 \theoremstyle{remark}
 \newtheorem*{opmerk}{Opmerking}
@@ -105,6 +105,8 @@
 \tableofcontents 
 \newpage
 \chapter{Fourier}
+
+NOOT: meer gekut over C versus R, 
 
 Bij het analyseren van periodieke functies is de Fourier-transformatie het gereedschap bij uitstek.
 Het is een manier om een signaal te karakteriseren aan de hand van een bereik aan frequenties.
@@ -142,7 +144,8 @@ We noemen $\hat f$ de Fouriergetransformeerde van $f$.
 \end{definitie}
 
 Het kan worden aangetoond dat deze inverse Fouriertransformatie perfecte reconstructie geeft wanneer de functie
-$f$ continu differentieerbaar is.\cite{fourier-rec} We zullen 
+$f$ continu differentieerbaar is.\cite{fourier-rec} 
+NOOT: Doe hier iets mee (puntsgewijs of in de 2-norm)
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{De \emph{Discrete Fourier Transform}}
@@ -155,19 +158,25 @@ Hiervoor zullen we de Fourier-basis moeten discretiseren en ons moeten richten o
 We doen dit op zo'n manier dat deze discretisatie in de limiet naar het continue geval overgaat. 
 Zo zullen we uiteindelijk tot de \emph{Discrete Fourier Transform} komen.
 
+NOOT: link met voorafgaande a=1 b=0
+
 \begin{definitie}[Discrete Fourierbasis] Gegeven de ruimte $\R^n$, definieer dan de verzameling
 \eq{
-  S_n := \left\{ s_k [j] = e^{\dpii k j/n } \largediv k,j \in \{0, \ldots, n-1\} \right\}
+  S_n := \left\{ s_k [j] = e^{\dpii k j/n } \largediv k,j \in \{1, \ldots, n\} \right\}
 }
 Als zijnde de discrete Fourierbasis met basisvectoren $s_k$.
 \end{definitie}
+
+NOOT: Orthonormaal + perfecte reconstructie kan korter 
+NOOT: leg uit $s_j^-1 = (s_j[1]^-1,...)$
+
 Met deze basis in de hand kunnen we vervolgens de discrete Fouriergetransformeerde (DFT) van een signaal schrijven als de vector van (complexe) inproducten van dit signaal met de DFT-basisfuncties. Laat voor een signaal $x$ van lengte $n$ de DFT (aangeduid met $X$) gegeven zijn door:
 \eq{
-  X[k] = \tfrac{1}{n} \inpr{x}{s_k} \quad k\in\{0, \ldots ,n-1\}
+  X[k] = \tfrac{1}{n} \inpr{x}{s_k} \quad k\in\{1, \ldots ,n\}
 }
 Ook defini\"eren we een operatie op zulke vectoren $X$ en beweren dat deze een inverse DFT -- ook wel iDFT -- voorstelt (dit bewijs volgt weldra in een volgende sectie). De iDFT wordt gegeven door
 \eq{
-  x[j] = \inpr{X}{s_j^{-1}} \quad j\in \{0, \ldots, n-1\}
+  x[j] = \inpr{X}{s_j^{-1}} \quad j\in \{1, \ldots, n\}
 }
 We zullen nu enkele bewijzen geven om de term `Discrete Fourierbasis' te ondersteunen.
 
@@ -178,7 +187,9 @@ We zullen nu enkele bewijzen geven om de term `Discrete Fourierbasis' te onderst
 \begin{proof}[Bewijs]
   Bekijk het complexe inproduct tussen twee willekeurig gekozen elementen van deze verzameling:
   \eq{
-    \inpr{s_k}{s_j} = \sum_{m\leq n} s_k[m]\cdot \overline{s_j[m]} = \sum_{m\leq n} e^{\dpii\cdot m (k-j)/n} =
+    \inpr{s_k}{s_j} = 
+    \sum_{m=1}^n s_k[m]\cdot \overline{s_j[m]} = 
+    \sum_{m=1}^n e^{\dpii\cdot m (k-j)/n} =
     \begin{cases}
       0 \quad \text{als } k\neq j\\
       n \quad \text{als } k = j
@@ -204,15 +215,18 @@ We discretiseren onze functie $f$ door uit elk interval $[t_{j-1},t_{j}]$ van de
 $f[j] = f(\frac{b-a}{n}(j-c_j) + a)$.
 De DFT van de discrete functie $f[\cdot]$ wordt dan gegeven door het inproduct te nemen met de DFT-basisfuncties:
 \[
-F[k] = \frac1n\sum_{j\leq n} f[j] \cdot \overline{s_k}[j].
+F[k] = \frac1n\sum_{j=1}^n f[j] \cdot \overline{s_k}[j].
 \]
+
+NOOT: Partitie vast nemen.
+
 We schrijven dit om in termen van onze partitie, met de identificatie $n\cdot\tfrac{x_j-a}{b-a} + c_j= j$ 
 waarmee we de continue variable $x_j\in[a,b]$ omschrijven naar zijn discrete tegenhanger en krijgen zo:
 \eq{
-  F[k] =& \frac{1}{n} \sum_{j \leq n} f[j]\cdot \overline{s_k}[n\cdot\tfrac{x_j-a}{b-a} + c_j] \\
-       =& \frac{1}{n} \sum_{j \leq n} f(x_j)\cdot 
+  F[k] =& \frac{1}{n} \sum_{j=1}^n f[j]\cdot \overline{s_k}[n\cdot\tfrac{x_j-a}{b-a} + c_j] \\
+       =& \frac{1}{n} \sum_{j=1}^n f(x_j)\cdot 
        e^{-\dpii \cdot k \tfrac{x-a}{b-a}} \cdot e^{-\dpii \cdot k c_j/n} \\
-       =&  \frac{1}{\sqrt{b-a}}\sum_{j \leq n} f(x_j)\cdot \overline{\phi}_k(x_j) \cdot\frac{b-a}{n} 
+       =&  \frac{1}{\sqrt{b-a}}\sum_{j=1}^n f(x_j)\cdot \overline{\phi}_k(x_j) \cdot\frac{b-a}{n} 
 \cdot e^{-\dpii \cdot k c_j/n}
 }
 We merken op dat $c_j$ begrensd dus we weten dat de limiet van 
@@ -314,7 +328,7 @@ Het is gegarandeerd dat dit algoritme afloopt vanwege de conditie op $n=0$ samen
 \begin{proof}[Bewijs]
 We gebruiken hier een inductief bewijs met inductie naar $n$. Onze aanname is dat het FFT-algoritme voor $x$ van lengte $n=2^m$ gelijk is aan de DFT van $x$, ofwel
 \eq{
-  X[k] = \sum^{N}_{k=1} x[j] \cdot e^{-2\pi i \cdot jk/n}
+  X[k] = \sum^{n}_{k=1} x[j] \cdot e^{-2\pi i \cdot jk/n}
 }
 Dit geldt duidelijkerwijs wanneer $m=0$, onze basistap. Hiervoor geldt namelijk:
 \eq{
@@ -364,16 +378,19 @@ een 2-macht zijn opgelost met signaalextensie, zoals eerder beschreven.
 
 %-----------------------------------------------------------------------------------------------------------------
 \subsection{Complexiteit van de Fast Fourier Transform}
-Hoewel het vanuit een puur wiskundig oogpunt wellicht minder relevant is, is de complexiteit van een algoritme 
-als een factor van belangrijk praktisch nut. De complexiteit vertaalt namelijk direct naar 
-de looptijd van het algoritme. We hebben hier de volgende stelling uit de complexiteitstheorie nodig. 
+Hoewel het vanuit een puur wiskundig oogpunt wellicht minder relevant is, is de complexiteit van een algoritme als een factor van belangrijk praktisch nut. 
+
+NOOT: iedereen moet zich hier druk om maken!!!!11!1!111111
+
+De complexiteit vertaalt namelijk direct naar 
+de looptijd van het algoritme. We hebben hier de volgende stelling uit de complexiteitstheorie nodig.
 \footnote{Dit is een speciaal geval van de stelling, voor de volledige stelleing en het bewijs zie \cite{akra-bazzi}.}
 
 \begin{stelling}[Akra-Bazzi]
     Zij $T(n)$ een recurrente betrekking van de vorm
     \[
     T(n) = \begin{cases}
-      c &\text{ als } n \leq d \\
+      c_0 &\text{ als } n \leq d \\
       a T(n/b) + f(n) &\text{ anders}, \\
     \end{cases}
     \]
@@ -414,11 +431,11 @@ We schrijven het FFT algoritme in pseudocode.
 \EndFunction
 \end{algorithmic}
 
-Dit algoritme is recursief, dus kunnen we de complexiteit schrijven door middel van een recurrente betrekking. Laat hiervoor $T(n)$ het aantal berekeningen zijn dat het algoritme kost bij een invoersignaal van lengte $n$. We maken een gevalsonderscheid: als de lijst lengte $1$ heeft geven we deze direct terug (1 berekening). Bij een lijst van lengte $>1$ splitsen we de lijst op in de even en oneven entries en voeren we op beiden weer het FFT algoritme uit, vervolgens voeren we nog $n$ maal een vast aantal ($c$) berekeningen uit om tot het eindresultaat te komen. In formulevorm geeft dit de \emph{recurrente betrekking}
+Dit algoritme is recursief, dus kunnen we de complexiteit schrijven door middel van een recurrente betrekking. Laat hiervoor $T(n)$ het aantal berekeningen zijn dat het algoritme kost bij een invoersignaal van lengte $n$. We maken een gevalsonderscheid: als de lijst lengte $1$ heeft geven we deze direct terug (1 berekening). Bij een lijst van lengte $>1$ splitsen we de lijst op in de even en oneven entries en voeren we op beiden weer het FFT algoritme uit, vervolgens voeren we nog $n$ maal een vast aantal ($N$) berekeningen uit om tot het eindresultaat te komen. In formulevorm geeft dit de \emph{recurrente betrekking}
 \[
 T(n) = \begin{cases}
     1 &\text{ als } n = 1 \\
-      2\cdot T(n/2) + c\cdot n &\text{ anders}. \\
+    2\cdot T(n/2) + N\cdot n &\text{ anders}. \\
 \end{cases}
 \]
 We zullen nu bovenstaande (vereenvoudigde) stelling van Akra-Bazzi gebruiken. We rekenen hierbij niet de $\O$ van de FFT uit maar de strictere $\theta$ die gedefinieerd is volgens:
@@ -428,7 +445,7 @@ f \in \theta(g) \Leftrightarrow \exists c \in \R_+: \lim_{n \to \infty} \frac{f(
 Zonder verder al te veel in te gaan op de implicaties die $\theta$ heeft op het gedrag van de FFT gebruiken we dan dat in ieder geval geldt dat $f \in \theta(g)$ impliceert dat $f \in \O(g)$. 
 
 De recurrente betrekking voor de complexiteit van de FFT is inderdaad van dezelfde vorm als die van $T(n)$ in bovenstaande stelling.
-Laat hiervoor namelijk $a=b=2$, $c=d=1$ en $f$ de functie die $n\mapsto n$ dan voldoet $f$ aan:
+Laat hiervoor namelijk $a=b=2$, $c_0=d=1$ en $f (n) = N\cdot n$:
 \eq{
   f(n) \in \theta(n^{\log 2/\log 2} \log^0 n)=\theta(n).
 }
@@ -446,27 +463,32 @@ Het idee hierbij is om het Tensorproduct te nemen van meerdere bases.
 Gegeven zij een signaalruimte van de vorm
 $\R^{n_1} \times \R^{n_2} \times \ldots \times \R^{n_m}$ welke we opvatten als
 een $m$-dimensionaal discreet signaal waarbij de $i$-de orthogonale richting een lengte $n_i$ heeft.
-Dan defini\"eren we de multidimensionale discrete Fourier`basis' behorende bij deze signaalruimte als
+Dan defini\"eren we de multidimensionale discrete Fourierbasis behorende bij deze signaalruimte als
 \eq{
   S_{\bold n}= S_{n_1}\otimes S_{n_2} \otimes \ldots \otimes S_{n_m} = 
   \left\{s_{\bold k}[{\bold j}]  = s_{k_1}[j_1]\cdot s_{k_2}[j_2]\cdot\ldots\cdot s_{k_m}[j_m] 
   \largediv s_{k_i} \in S_{n_i}, j_i \in \{1,\ldots, n_i\} \right\}
 }
-Met basisvectoren $s_{\bold k}$, waar $\bold k$ een indexvector uit $\{0, \ldots, n_1\}\times\ldots\times\{0\ldots, n_m\}$ is.
+Met basisvectoren $s_{\bold k}$, waar $\bold k$ een indexvector uit $\{1, \ldots, n_1\}\times\ldots\times\{1\ldots, n_m\}$ is.
 \end{definitie}
+
+NOOT: bewijs dat dit een basis is, want tensor=loodrecht
 
 Wanneer we nu een $m$-dimensionaal signaal bekijken van lengte $n_1$ bij $n_2$ etc., dan kunnen we
 hierop een multidimensionale Fouriertransformatie op defini\"eren door het inproduct te generaliseren naar 
 onze $m$-dimensionale signaalruimte.
 \eq{
   X[\bold k] = \tfrac{1}{\bold n}\sum_{\bold j = \bold 1}^{\bold n} x[\bold j] \overline{s_{\bold k}}[{\bold j}] =
-  \left(\prod_{i\leq m} \tfrac{1}{n_i}\right) \cdot \sum_{j_1=1}^{n_1} \ldots \sum_{j_m=1}^{n_m} x[j_1,\ldots,j_m] \cdot 
+  \left(\prod_{i=1}^m \tfrac{1}{n_i}\right) \cdot \sum_{j_1=1}^{n_1} \ldots \sum_{j_m=1}^{n_m} x[j_1,\ldots,j_m] \cdot 
   e^{-\dpii\cdot k_m \cdot j_m /n_m } \cdot \ldots \cdot e^{-\dpii\cdot k_1 \cdot j_1 /n_1 } 
 }
-We zullen echter een andere definitie gebruiken die equivalent is aan deze method, maar recursief gedefinieerd.
+We zullen echter een andere definitie gebruiken die equivalent is aan deze methode, maar recursief gedefinieerd.
 We noteren deze transformatie als $\DFT_m$, een functie die een $m$-dimensionaal ingangssignaal transformeert.
 \begin{definitie}[Multidimensionale Discrete Fouriertransformatie]
-Definieer $\DFT_0$ als de identiteit op $\R^{n_1}$.
+Definieer $\DFT_0$ als de inbedding van $\R$ in $\C$.
+
+NOOT: Doe hier iets mee
+
 We defini\"eren dan een DFT van orde $m$ (notatie $\DFT_m$) als een transformatie 
 $\R^{n_1}\times\ldots\times\R^{n_m} \to \C^{n_1}\times\ldots\times\C^{n_m}$ aan de hand van het beeld $X$ van een $m$-dimensionaal ingangssignaal $x$:
 \eq{
@@ -475,6 +497,9 @@ $\R^{n_1}\times\ldots\times\R^{n_m} \to \C^{n_1}\times\ldots\times\C^{n_m}$ aan 
 Hier staat de notatie $x[j_m]$ voor een $(m-1)$-dimensionaal signaal dat we verkrijgen door de co\"ordinaat
 in de $m$-de richting vast te zetten.
 \end{definitie}
+
+NOOT: leg uit hoe het vastleggen van een coordinaat werkt
+
 Dit is duidelijk dezelfde definitie als eerder gegeven in termen van herhaalde sommatie. Voor $m=1$ staat er immers de gewone DFT en voor hogere machten schaalt dit met een factor $\tfrac{1}{n}$ en een extra sommatie.
 Het voordeel van deze definitie is dat het makkelijk om te schrijven is naar een algoritme dat 
 herhaald $\DFT$ toepast.
@@ -603,20 +628,28 @@ de perfecte reconstructie. Dan hebben we de relatie:
   \leq& \abso{\sum_{k=m}^\infty \hat f^2 [k] \cdot \int_a^b \phi_k^2(x) \dx}
   \leq \sum_{k=m}^\infty \abso{\hat f[k]}^2.
 }
+
+NOOT: we vinden zelfs kleine $o$ door Riemann-Lebesgue + Parseval
+
 Omdat de orde van deze vergelijking in termen van $m$ bepaald wordt door de grootste term kunnen we zeggen 
 dat de orde van de fout gelijk is aan de orde van het grootste co\"effici\"ent:
 \eq{
   ||f-F||_{L_2([a,b])} \in \O\left(\abso{\hat f[m]}\right) = \O(m^{-n})
 }
+NOOT: integraal kenmerk? sommatie voor n>1 meetkundige reeks
+
 \subsection{De fout in discrete geval}
 
 TODO: discreet $\to$ continu voor grote dataset, maak een definitie van smooth op discrete functies
+Kankermoeilijk, fuck dit
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{Implementatie van Fourier Transformatie in Python}
 Met de theoretische basis uit voorgaande secties is de implementatie van het \emph{Fast Fourier Transform} algoritme
 nu aan bod gekomen. In deze sectie zullen we uitwijden over enkele genomen hordes en keuzes, de resultaten volgen
 in een latere sectie.
+
+NOOT: Moven naar hoofdstuk 0
 
 Voor de implementatie van de Fourier-transformatie is de taal Python gebruikt,
 enkele redenen hiervoor waren:
