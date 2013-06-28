@@ -5,7 +5,7 @@ def run_and_print(comm):
     return child
 
 def do_graphics(compressions):
-    global myinfile,myskip
+    global myinfile,myskip,mytensor
     print "doing compression with ratios",compressions
     
     map(float,compressions) # catches errors
@@ -27,7 +27,7 @@ def do_graphics(compressions):
                         compressions)
 
     from os.path import isfile
-    bullshit = ['echo','top lel']
+    bullshit = ['echo','topkek']
 
     commlist_fourier = map(lambda x: ['python2','3chan.py','-c',str(x[0]),'-o',x[1],myinfile] 
                            if not isfile(x[1]) else bullshit,
@@ -97,7 +97,10 @@ def do_graphics(compressions):
             'label':'Daubechies 2',
             'psnr':psnr_db2,
             'ratios':ratios
-        },
+        }
+    ]
+    if mytensor:
+        real_list += [
         {
             'label':'Haar (Tensor)',
             'psnr':psnr_haar_t,
@@ -107,8 +110,7 @@ def do_graphics(compressions):
             'label':'Daubechies 2 (Tensor)',
             'psnr':psnr_db2_t,
             'ratios':ratios
-        },
-    ]
+        }]
     import matplotlib.pyplot as plt
     for i in range( len( real_list )):
         lst = real_list[i]
@@ -123,7 +125,7 @@ if __name__=="__main__":
     my_opts = [
         # short, long, args, description
         ('p','psnr',0,'skips to PSNR calc'),
-        ('t','type',1,'what algo to use'),
+        ('t','tensor',1,'tensor ja/nee ja!'),
         ('i','infile',1,"set infile to <arg>"),
         ('h','help',0,'print this message')
     ]
@@ -137,13 +139,13 @@ if __name__=="__main__":
         exit(1)
 
     from Wavelet_Defs import wavelet_dict
-    mytype = 'fourier'
+    mytensor = False
     myinfile = None
     myskip = False
 
     for o in opts:
-        if o[0] == 'type':
-            mytype = o[1]
+        if o[0] == 'tensor':
+            mytensor = True
         elif o[0] == 'psnr':
             myskip = True
         elif o[0] == 'infile':
