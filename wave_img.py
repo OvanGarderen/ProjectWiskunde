@@ -44,7 +44,7 @@ def mat5img( data, size ):
 
 def find_cutoff( ar, ratio ):
   if ratio > 1 or ratio < 0:
-    print "fuck off biatch"
+    print "fuck off biatch",ratio
     assert 0
 
   a = np.sort(np.absolute(ar))
@@ -162,7 +162,6 @@ if __name__ == "__main__":
   mycompress = 1.0
   myoutfile = None
   mytensor = False
-  mythreshfunc = threshold_hard
 
   for o in opts:
     if o[0] == 'wavelet':

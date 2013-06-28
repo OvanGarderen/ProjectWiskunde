@@ -32,22 +32,27 @@ def compress( dicks, mats):
     return float(len(dicks))/reduce(lambda x, y: x * y, mats.shape)
 
 
-if __name__=="__main__":
-    from sys import argv
+def main(imgname):
+    global mycompress,myoutfile
+
     from FFT2util import FFT2D,iFFT2D,matslice,realintmat
     from FFTjan import mat2dict,dict2mat
+    from Tools import find_cutoff_nd
 
-    data, dim = img3mat(argv[1])
+    data, dim = img3mat(imgname)
 
-    print "starting encoding of image %s" % (argv[1])
+    print "starting encoding of image %s" % (imgname)
     encoded = map(FFT2D,data)
     print "encoding succesfull"
 
     dim2 = (len(encoded[0][0]),len(encoded[0]))
     print dim2
 
+    import numpy as np
+    cutoff = find_cutoff_nd( np.array(encoded), mycompress )
+
     print "making dicks"
-    dicks = map(lambda x: mat2dict(x,0.10),encoded)
+    dicks = map(lambda x: mat2dict(x,cutoff),encoded)
     
     print len(dicks[0])
     
@@ -61,5 +66,54 @@ if __name__=="__main__":
     
     print "decoding succesfull"
     sliced = map(lambda x: matslice(realintmat(x),dim),decoded)
-    
-    mat3img(sliced,dim).save(argv[1].replace('.','_new.'))
+
+    if myoutfile != None:
+        filename = myoutfile
+    else:
+        filename = imgname.replace('.','_new.')
+    print "saving to",filename
+    mat3img(sliced,dim).save(filename)
+
+if __name__=="__main__":
+  # Dit stuk regelt de CLI options
+  from sys import stderr
+  import CLI,sys
+  my_opts = [
+    # short, long, args, description
+    ('s','smooth',0,"activate quadratic threshold"),
+    ('c','compress',1,"set compression to <arg>"),
+    ('o','output',1,"set destination to <arg>"),
+    ('h','help',0,'print this message')
+  ]
+  my_usage = CLI.usage("3chan.py [picture] [options]",
+                       "Uses various wavelets to compress and then decompress a picture",
+                       my_opts)
+  try:
+    args, opts = CLI.parse_args(sys.argv,my_opts) #throws IOError on error
+  except IOError:
+    print my_usage.short()
+    exit(1)
+
+  #set defaults for various options
+  from Wavelet_Defs import wavelet_dict
+  mycompress = 1.0
+  myoutfile = None
+
+  for o in opts:
+    if o[0] == 'compress':
+      try:
+        mycompress = float(o[1]) 
+      except TypeError:
+        exit(1)
+    elif o[0] == 'output':
+      myoutfile = o[1]
+    elif o[0] == 'help':
+      print my_usage
+      exit(1)
+
+  if len(args) == 1: # additional IOError
+    print my_usage.short()
+    exit(1)
+  
+  map(main,args[1:])
+

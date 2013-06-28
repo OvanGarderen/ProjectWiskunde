@@ -55,6 +55,8 @@ def _FFT2D( _mat ):
     M = len(_mat)
     N = len(_mat[0])
 
+    print N,M
+
     mat = copy.deepcopy(_mat)
 
     # FFT on rows
