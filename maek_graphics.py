@@ -27,7 +27,7 @@ def do_graphics(compressions):
                         compressions)
 
     from os.path import isfile
-    bullshit = ['echo','check em']
+    bullshit = ['echo','IT\'S OVER 9... ik heb geen ideeen meer man']
 
     commlist_fourier = map(lambda x: ['python2','3chan.py','-c',x[0],'-o',x[1],myinfile] 
                            if not isfile(x[1]) else bullshit,
