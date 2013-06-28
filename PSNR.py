@@ -14,7 +14,9 @@ def PSNR( s1, s2 ):
   return psnr
 
 if __name__ == "__main__":
-  if len(argv) > 1:
-    img1 = np.array(img3mat(argv[1])[0])
-    img2 = np.array(img3mat(argv[2])[0])
-    print PSNR( img1, img2 )
+  if len(argv) > 2:
+    ref = np.array(img3mat(argv[1])[0])
+    imges = zip( map(lambda x: PSNR( ref, np.array(img3mat(x)[0]) ), argv[2:] ), argv[2:] )
+    print imges
+    for i in range(len( imges )):
+      print "psnr for %s: %f" % (imges[i][1], imges[i][0] )
