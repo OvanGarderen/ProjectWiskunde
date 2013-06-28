@@ -11,25 +11,25 @@ def do_graphics(compressions):
     map(float,compressions) # catches errors
 
     names_fourier = map(lambda x: myinfile[:-4] + '_' + 'fourier' 
-                        + '_' + str(x) + myinfile[-4:],
+                        + '_' + str(x).replace('.','_') + myinfile[-4:],
                         compressions)
     names_haar = map(lambda x: myinfile[:-4] + '_' + 'haar' 
-                        + '_' + str(x) + myinfile[-4:],
+                        + '_' + str(x).replace('.','_') + myinfile[-4:],
                         compressions)
     names_db2 = map(lambda x: myinfile[:-4] + '_' + 'db2' 
-                        + '_' + str(x) + myinfile[-4:],
+                        + '_' + str(x).replace('.','_') + myinfile[-4:],
                         compressions)
     names_haar_t = map(lambda x: myinfile[:-4] + '_' + 'haar_t' 
-                        + '_' + str(x) + myinfile[-4:],
+                        + '_' + str(x).replace('.','_') + myinfile[-4:],
                         compressions)
     names_db2_t = map(lambda x: myinfile[:-4] + '_' + 'db2_t' 
-                        + '_' + str(x) + myinfile[-4:],
+                        + '_' + str(x).replace('.','_') + myinfile[-4:],
                         compressions)
 
     from os.path import isfile
     bullshit = ['echo','check em']
 
-    commlist_fourier = map(lambda x: ['python2','3chan.py','-c',str(x[0]),'-o',x[1],myinfile] 
+    commlist_fourier = map(lambda x: ['python2','3chan.py','-c',x[0],'-o',x[1],myinfile] 
                            if not isfile(x[1]) else bullshit,
                            zip(compressions,names_fourier))
     commlist_haar = map(lambda x: ['python2','wave_img.py','-w','haar','--smooth',
