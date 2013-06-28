@@ -121,9 +121,9 @@ def do_graphics(compressions):
 
     with open(myinfile[:-4]+".tbl","w") as f:
         print >>f,"\\begin{array}{c c c c c}"
-        print >>f,"\\% & fourier & haar & db2" 
+        print >>f,"\\% & fourier & haar & db2\\\\" 
         for c in range(len(ratios)):
-            print >>f,"%f & %f & %f & %f \\\\" % (float(ratios[c]),float(psnr_fourier[c]),
+            print >>f,"%.3f & %.3f & %.3f & %.3f \\\\" % (float(ratios[c]),float(psnr_fourier[c]),
                                                   float(psnr_haar[c]),float(psnr_db2[c])) 
         print >>f,"\\end{array}"
 
