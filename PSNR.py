@@ -13,10 +13,14 @@ def PSNR( s1, s2 ):
   psnr = 20 * log(maximal_value, 10) - 10*log(sum_squared, 10)
   return psnr
 
+def do_PSNR(ls):
+  ref = np.array(img3mat(ls[1])[0])
+  imges = zip( map(lambda x: PSNR( ref, np.array(img3mat(x)[0]) ), ls[2:] ), ls[2:] )
+  return imges
+
 if __name__ == "__main__":
-  if len(argv) > 2:
-    ref = np.array(img3mat(argv[1])[0])
-    imges = zip( map(lambda x: PSNR( ref, np.array(img3mat(x)[0]) ), argv[2:] ), argv[2:] )
-    print imges
+  if len(ls) > 2:
+    imges = do_PSNR(argv)
     for i in range(len( imges )):
-      print "psnr for %s: %f" % (imges[i][1], imges[i][0] )
+        print "psnr for %s: %f" % (imges[i][1], imges[i][0] )
+    
