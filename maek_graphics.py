@@ -19,62 +19,101 @@ def do_graphics(compressions):
     names_db2 = map(lambda x: myinfile[:-4] + '_' + 'db2' 
                         + '_' + str(x) + myinfile[-4:],
                         compressions)
+    names_haar_t = map(lambda x: myinfile[:-4] + '_' + 'haar_t' 
+                        + '_' + str(x) + myinfile[-4:],
+                        compressions)
+    names_db2_t = map(lambda x: myinfile[:-4] + '_' + 'db2_t' 
+                        + '_' + str(x) + myinfile[-4:],
+                        compressions)
 
     from os.path import isfile
+    bullshit = ['echo','top lel']
 
     commlist_fourier = map(lambda x: ['python2','3chan.py','-c',str(x[0]),'-o',x[1],myinfile] 
-                           if not isfile(x[1]) else ['sleep','1'],
+                           if not isfile(x[1]) else bullshit,
                            zip(compressions,names_fourier))
     commlist_haar = map(lambda x: ['python2','wave_img.py','-w','haar','--smooth',
                                   '-c',x[0],'-o',x[1],myinfile]
-                        if not isfile(x[1]) else ['sleep','1'],
+                        if not isfile(x[1]) else bullshit,
                         zip(compressions,names_haar))
     commlist_db2 = map(lambda x: ['python2','wave_img.py','-w','db2','--smooth',
                                   '-c',x[0],'-o',x[1],myinfile]
-                       if not isfile(x[1]) else ['sleep','1'],
+                       if not isfile(x[1]) else bullshit,
                        zip(compressions,names_db2))
+    commlist_haar_t = map(lambda x: ['python2','wave_img.py','--tensor','-w','haar',
+                                     '--smooth','-c',x[0],'-o',x[1],myinfile]
+                        if not isfile(x[1]) else bullshit,
+                          zip(compressions,names_haar_t))
+    commlist_db2_t = map(lambda x: ['python2','wave_img.py','--tensor','-w','db2','--smooth',
+                                  '-c',x[0],'-o',x[1],myinfile]
+                       if not isfile(x[1]) else bullshit,
+                         zip(compressions,names_db2_t))
  
     if not myskip:
         ch_1 = map(run_and_print,commlist_fourier)
+        map(lambda x: x.wait(),ch_1)
         ch_2 = map(run_and_print,commlist_haar)
+        map(lambda x: x.wait(),ch_2)
         ch_3 = map(run_and_print,commlist_db2)
-
-        map(lambda x: x.wait(),ch_1+ch_2+ch_3)
+        map(lambda x: x.wait(),ch_3)
+        ch_4 = map(run_and_print,commlist_haar_t)
+        map(lambda x: x.wait(),ch_4)
+        ch_5 = map(run_and_print,commlist_db2_t)
+        map(lambda x: x.wait(),ch_5)
 
     from PSNR import do_PSNR
     imges_fourier = do_PSNR(['',myinfile]+names_fourier)
     imges_db2 = do_PSNR(['',myinfile]+names_db2)
     imges_haar = do_PSNR(['',myinfile]+names_haar)
+    imges_db2_t = do_PSNR(['',myinfile]+names_db2_t)
+    imges_haar_t = do_PSNR(['',myinfile]+names_haar_t)
 
     print imges_fourier
     print imges_haar
     print imges_db2
+    print imges_haar_t
+    print imges_db2_t
 
     psnr_fourier = map(lambda x: x[0], imges_fourier)
     psnr_haar = map(lambda x: x[0], imges_haar)
     psnr_db2 = map(lambda x: x[0], imges_db2)
+    psnr_haar_t = map(lambda x: x[0], imges_haar_t)
+    psnr_db2_t = map(lambda x: x[0], imges_db2_t)
+
+    ratios = map(lambda x: x, compressions)
 
     real_list = [
         {
             'label':'Fourier',
             'psnr':psnr_fourier,
-            'ratios':compressions
+            'ratios':ratios
         },
         {
             'label':'Haar',
             'psnr':psnr_haar,
-            'ratios':compressions
+            'ratios':ratios
         },
         {
             'label':'Daubechies 2',
             'psnr':psnr_db2,
-            'ratios':compressions
+            'ratios':ratios
+        },
+        {
+            'label':'Haar (Tensor)',
+            'psnr':psnr_haar_t,
+            'ratios':ratios
+        },
+        {
+            'label':'Daubechies 2 (Tensor)',
+            'psnr':psnr_db2_t,
+            'ratios':ratios
         },
     ]
     import matplotlib.pyplot as plt
     for i in range( len( real_list )):
         lst = real_list[i]
         plt.plot(lst['ratios'],lst['psnr'],label=lst['label'])
+    plt.title(myinfile)
     plt.legend()
     plt.show()
 
