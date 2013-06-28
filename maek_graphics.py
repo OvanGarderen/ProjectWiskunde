@@ -119,6 +119,15 @@ def do_graphics(compressions):
     plt.legend(loc=2)
     plt.show()
 
+    with open(myinfile[:-4]+".tbl","w") as f:
+        print >>f,"\\begin{array}{c c c c c}"
+        print >>f,"\\% & fourier & haar & db2" 
+        for c in range(len(ratios)):
+            print >>f,"%f & %f & %f & %f \\\\" % (float(ratios[c]),float(psnr_fourier[c]),
+                                                  float(psnr_haar[c]),float(psnr_db2[c])) 
+        print >>f,"\\end{array}"
+
+
 if __name__=="__main__":
     from sys import stderr
     import CLI,sys
