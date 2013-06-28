@@ -27,7 +27,7 @@ def do_graphics(compressions):
                         compressions)
 
     from os.path import isfile
-    bullshit = ['echo','topkek']
+    bullshit = ['echo','check em']
 
     commlist_fourier = map(lambda x: ['python2','3chan.py','-c',str(x[0]),'-o',x[1],myinfile] 
                            if not isfile(x[1]) else bullshit,
@@ -116,7 +116,7 @@ def do_graphics(compressions):
         lst = real_list[i]
         plt.plot(lst['ratios'],lst['psnr'],label=lst['label'])
     plt.title(myinfile)
-    plt.legend()
+    plt.legend(loc=2)
     plt.show()
 
 if __name__=="__main__":
