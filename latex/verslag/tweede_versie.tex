@@ -1384,7 +1384,103 @@ Hoe hoger de PSNR is, hoe beter de reconstructie (over het algemeen) zal zijn.
 \restoregeometry
 \pagebreak
 
+
+\pagebreak
+\newgeometry{left=2cm,right=2cm,top=1cm,bottom=1cm}
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/Lenna_fourier_0_2.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/Lenna_fourier_0_1.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/Lenna_fourier_0_05.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/Lenna_fourier_0_01.png}
+	\end{subfigure}
+	\caption{Fourier op compressieniveaus 0.2, 0.10, 0.05, 0.01.}
+\end{figure}
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/Lenna_haar_0_2.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/Lenna_haar_0_1.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/Lenna_haar_0_05.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/Lenna_haar_0_01.png}
+	\end{subfigure}	
+	\caption{Haar op compressieniveaus 0.2, 0.10, 0.05, 0.01.}
+\end{figure}
+\begin{figure}
+	\centering	
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/Lenna_db2_0_2.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/Lenna_db2_0_1.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/Lenna_db2_0_05.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/Lenna_db2_0_01.png}
+	\end{subfigure}	
+	\caption{Daubechies 2 op compressieniveaus 0.2, 0.10, 0.05, 0.01.}
+\end{figure}
+\begin{figure}
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+	\centering
+	\vspace{10pt}
+	\begingroup
+	
+\renewcommand*{\arraystretch}{1.5}
+	$\begin{array}{c | c c c c}
+	\text{Compr} & \text{Fourier} & \text{Haar} & \text{DB2} \\ \hline
+0.200 & -21.043701 & -16.443978 & -15.615197 \\
+0.100 & -23.867860 & -20.863769 & -20.134351 \\
+0.050 & -25.825943 & -24.400495 & -23.745103 \\
+0.040 & -26.362758 & -25.303459 & -24.684358 \\
+0.030 & -27.024421 & -26.407813 & -25.757180 \\
+0.020 & -27.928360 & -27.754692 & -27.139561 \\
+0.010 & -29.380617 & -29.651147 & -29.111878 \\ \hline
+	\end{array}$
+	\endgroup
+	\end{subfigure}	
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\vspace{0pt}
+		\includegraphics[height=\textwidth]{plaatjes/grafiek_Lenna_0_15-0_01.png}
+	\end{subfigure}
+	\caption{Grafiek en PSNR.}
+\end{figure}
+\restoregeometry
+\pagebreak
+
 \chapter{Reflectie en discussie}
+In dit laatste hoofdstuk zullen we een meta-analyse maken van de praktische resultaten. Bladiebla.
+
+Wanneer we kijken naar de grafieken, wordt het direct duidelijk dat de Fouriertransformatie in eigenlijk alle gevallen een slechter resultaat oplevert (zowel in `wolligheid' als gereflecteerd door de PSNR).
 \chapter{Populaire samenvatting}
 
 \begin{thebibliography}{11}
