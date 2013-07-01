@@ -116,6 +116,7 @@
 \newpage
 \chapter{Intro}
 \section{Signaaluitbreiding}
+\label{signaal}
 Beide algoritmes kunnen enkel omgaan met signalen die een tweemacht lang zijn. Om te zorgen dat een willekeurig signaal ook getransformeerd kan worden, moet het dus uitgebreid worden voorbij zijn definitiegebied. De meeste bronnen onderscheiden de volgende manieren om het signaal uit te breiden. Laat $x_1, x_2, \ldots x_n$ het signaal.
 \begin{description}
 	\item[Zero-padding] $x' = 0, \ldots, 0| x_1, x_2, \ldots, x_n| 0, \ldots, 0$. Het gevolg van deze uitbreiding is dat het signaal niet langer continu hoeft te zijn op de randen;
@@ -701,7 +702,7 @@ TODO: meer implementatie specifieke details includen
 
 \fi
 \chapter{Wavelets}
-De Fouriertransformatie bestaat al honderden jaren en is een grote speler geworden in de \emph{signal processing}. Een groot nadeel van deze transformatie is dat zij slecht reageert op discontinue signalen door de globale dragers van de basisfuncties. Hierdoor worden alle Fourierco\"effici\"enten be\"invloed door dees discontinu\"iteit.
+De Fouriertransformatie bestaat al honderden jaren en is een grote speler geworden in de \emph{signal processing}. Een groot nadeel van deze transformatie is dat zij slecht reageert op discontinue signalen door de globale dragers van de basisfuncties. Hierdoor worden alle Fourierco\"effici\"enten be\"invloed door een discontinu\"iteit.
 
 In de loop van de vorige eeuw is een nieuwe transformatie ontstaan met een eigenschap die de Fouriertransformatie nooit kende. Deze noemt men nu ook wel de Wavelettransformatie.
 
@@ -723,7 +724,7 @@ Deze familie geeft aanleiding tot een Wavelettransformatie $W_f$ van $f$:
 
 Het is nu mogelijk om wavelets te construeren die met deze schaling en translatie een basis voor de $L_2(\R)$ vormen. Over het algemeen kijken we dan naar
 \[
-  \Psi := \left\{ \psi_{j,n}(t) = \frac{1}{\sqrt{2^j}} \psi\left( \frac{t - 2^jn}{2^j}\right) : (j,n) \in \Z^2 \right\}.
+  \left\{ \psi_{j,n}(t) = \sqrt{2^j} \psi\left( 2^j t - n\right) : (j,n) \in \Z^2 \right\}.
 \]
 De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er een orthogonale (en dus een orthonormale) basis gevormd wordt. 
 
@@ -738,65 +739,56 @@ waarbij $\langle \cdot, \cdot \rangle$ het standaardinproduct op de $L_2(\R)$ aa
 
 Het grote nadeel van de Fouriertransformatie maakt compressie van discrete signalen moeilijk. Veel van deze wavelets worden nu z\'o geconstrueerd dat dit probleem (deels) verholpen wordt. We zijn namelijk op zoek naar een wavelet die een eindige drager heeft. Het blijkt dat deze bestaat en dat er zelfs een hele grote verzameling wavelets is, elk met eigen gewilde eigenschappen.
 
-Omdat wij naar de toepassing van wavelets binnen de beeldcompressie bekijken, zijn we natuurlijk vooral ge\"interesseerd in het discrete geval. We kijken dus naar de benadering van $f$ op een TODO. Dit geeft aanleiding tot een rij geneste ruimtes die uiteindelijk naar de $L_2(\R)$ toe gaat
+Omdat wij naar de toepassing van wavelets binnen de beeldcompressie bekijken, zijn we natuurlijk vooral ge\"interesseerd in het discrete geval. We kijken dus naar de benadering van $f$. Dit geeft aanleiding tot een rij geneste ruimtes die uiteindelijk naar de $L_2(\R)$ toe gaat:
 
-NOOT: $V_0 \subset V_1$ etc. Niemand doet het meer zoals Mallat en iedereen zoals Robbie Robrob.
 \begin{equation}
   \label{multires}
-  \{0\} \ldots \subset V_{j+1} \subset V_j \subset V_{j-1} \subset \ldots \subset L_2(\R)
+  V_0 \subset V_1 \subset \ldots \subset L_2(\R)
 \end{equation}
 genaamd een multiresolutie.
 \begin{definitie}
-Een rij geneste ruimtes $\{ V_j: j \in \Z \}$ zoals in~\ref{multires} heet een multiresolutie wanneer voldaan wordt aan de volgende eigenschappen:
+Een rij geneste ruimtes $\{ V_j: j \in \N_0 \}$ zoals in~\ref{multires} heet een multiresolutie wanneer voldaan wordt aan de volgende eigenschappen:
 \begin{eqnarray}
   \forall j, k: f(t) \in V_j \implies f(t - 2^j k) \in V_j, \\
-  \forall j: V_{j+1} \subset V_j, \\
-  \forall j: f(t) \in V_j \iff f(t/2) \in V_{j+1}, \\
-  \bigcap_{j=-\infty}^{\infty} V_{j} = \lim_{j\to\infty} V_j = \{0\}, \\
-  \bigcup_{j=-\infty}^{\infty} V_j = \lim_{j\to-\infty} V_j = L_2(\R), \\
-  TODO: \text{ Er is $\theta$ zo dat $\{ \theta(t-n): n \in \Z \}$ een Rieszbasis voor $V_0$ is.}
+  \forall j: V_{j-1} \subset V_j, \\
+  \forall j: f(t) \in V_j \iff f(t/2) \in V_{j-1}, \\
+  \bigcup_{j=0}^{\infty} V_j = \lim_{j\to\infty} V_j = L_2(\R), \\
+  \text{ Er is $\phi: \R \to \R$ zo dat $\{ \phi(t-n): n \in \Z \}$ een orthonormale basis voor $V_0$ is.}
 \end{eqnarray}
 \end{definitie}
 
-\begin{voorbeeld} We bekijken een multiresolutie van stuksgewijs constante functies. De ruimte $V_j$ wordt hiermee de verzameling van alle $g(t) \in L_2(\R)$ die constant zijn voor $t \in [n 2^j, (n+1)2^j)$ met $n \in \Z$. De basisfunctie $\theta$ voor $V_0$ wordt in dit geval $\theta(t) = 1_{[0,1)}$. \end{voorbeeld}
+\begin{voorbeeld} We bekijken een multiresolutie van stuksgewijs constante functies. De ruimte $V_j$ wordt hiermee
+\[
+	V_j = \left\{ g(t) \in L_2(\R): g(t)\text{ is constant voor }t \in [n 2^{-j}, (n+1)2^{-j}) \right \}
+\] met $n \in \Z$. De basisfunctie $\phi$ voor $V_0$ wordt in dit geval $\phi(t) = 1_{[0,1)}(t)$. \end{voorbeeld}
 
 \section{Schalingsfuncties}
-Gegeven zo'n Rieszbasis voor $V_0$ willen we graag een orthonormale basis voor $V_j$ construeren. 
+Gegeven zo'n orthonormale basis voor $V_0$ willen we graag een orthonormale basis voor $V_j$ construeren. 
 \begin{stelling}[{\cite[T7.1]{mallat}}] 
-  Laat $\{ V_j \}$ een multiresolutie en laat $\phi$ de schalingsfunctie waarvan de Fouriergetransformeerde voldoet aan
+  Laat $\{ V_j \}$ een multiresolutie en laat $\{\phi(t-n) \}$ de basis voor $V_0$. Laat verder
   \[
-    \hat{\phi}(\omega) = \frac{\hat{\theta}(\omega)}{\left( \sum_{k=-\infty}^\infty | \hat{\theta}(\omega + 2k \pi) |^2 \right)^{1/2}}.
+    \phi_{j,n}(t) := \sqrt{2^j} \phi\left( t2^j - n \right).
   \]
-  Laat verder
-  \[
-    \phi_{j,n}(t) := \frac{1}{\sqrt{2^j}} \phi\left( \frac{t-n}{2^j} \right).
-  \]
-  Dan is $\{ \phi_{j,n}: n \in \Z \}$ een orthonormale basis voor $V_j$.
+  Dan is $\{ \phi_{j,n}: n \in \Z \}$ een orthonormale basis voor $V_j$. De functie $\phi$ is ook wel de \emph{schalingsfunctie}.
 \end{stelling}
-We zullen ons verder niet bezighouden met de Fouriergetransformeerde en alleen het gevolg (de orthonormale basis) gebruiken. Hij staat er bij om duidelijk te maken dat deze schalingsfunctie expliciet gevonden kan worden.
-
 \subsection{Benadering} De orthogonale projectie van $f$ op $V_j$ is, zoals we weten, de beste benadering van $f$ in $V_j$. Deze is nu te vinden door
 \[
 	P_{V_j} f = \sum_{n=-\infty}^\infty \langle f, \phi_{j,n} \rangle \phi_{j,n}.
 \]
-De co\"effici\"enten $a_j[n] = \langle f, \phi_{j,n} \rangle$ geven ons op deze manier een discrete benadering van $f$ op resolutie $2^{-j}$.
-
-\begin{voorbeeld}
-  De multiresolutie van stuksgewijs constante functies op de intervallen $[2^jn, 2^j(n+1))$ met $n \in \Z$ heeft als eigenschap dat de Rieszbasis ook direct orthonormaal is. Gevolg is dat $\phi = \theta = 1_{[0,1]}$.
-\end{voorbeeld}
+De co\"effici\"enten $a_j[n] = \langle f, \phi_{j,n} \rangle$ geven ons op deze manier een discrete benadering van $f$ op resolutie $2^j$.
 
 \section{Filters}
-Wanneer we een schalingsfunctie $\phi$ defini\"eren (en dus een $V_0$), ligt de hele multiresolutie eigenlijk vast. We zullen daarom deze schalingsfunctie nader onderzoeken.
+Wanneer we een schalingsfunctie $\phi$ defini\"eren (en dus een $V_0$), dan lijkt $V_1$ (en dus $V_j$) al redelijk beschreven te worden.\footnote{In stelling \ref{filter} wordt bewezen dat deze hele multiresolutie vast ligt.} We zullen daarom deze schalingsfunctie nader onderzoeken.
 
-Per definitie van de multiresolutie weten we dat $V_j \subset V_{j-1}$. In het bijzonder geldt dat $2^{-1/2}\phi(t/2) \in V_1 \subset V_0$ en omdat $\{ \phi(t-n): n \in \Z\}$ een orthonormale basis voor $V_0$ is, kunnen we $2^{-1/2} \phi(t/2)$ nu schrijven als
+Per definitie van de multiresolutie weten we dat $V_{j-1} \subset V_j$. In het bijzonder geldt dat $\phi(t) \in V_0 \subset V_1$ en omdat $\{ \sqrt{2}\phi(2t - n): n \in \Z\}$ een orthonormale basis voor $V_1$ is, kunnen we $\phi(t)$ nu schrijven als
 \[
-  \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^{\infty} \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle \phi(t-n).
+  \phi(t) = \sum_{n=-\infty}^{\infty} \left\langle \sqrt{2} \phi\left(2t-n\right), \phi(t) \right\rangle \sqrt{2}\phi(2t-n).
 \]
 
 \begin{definitie}
 Deze inproducten hebben een speciale naam, want de rij $\{h[n]: n \in \Z\}$ met
 \[
-  h[n] := \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle
+  h[n] := \left\langle \sqrt{2} \phi\left(2t-n\right), \phi(t) \right\rangle
 \]
 wordt nu ook wel de \emph{filter} van $\phi$ genoemd.
 \end{definitie}
@@ -816,41 +808,41 @@ wordt nu ook wel de \emph{filter} van $\phi$ genoemd.
   \]
   een schalingsfunctie in $L^2(\R)$.
 \end{stelling}
-Wederom zullen we enkel de gevolgen gebruiken: namelijk dat de multiresolutie vast ligt met een goede keuze van $\phi$, en dat voor een goed gekozen $h[n]$, $\phi$ ook vast ligt.
+We zullen enkel de gevolgen gebruiken: namelijk dat de multiresolutie vast ligt met een goede keuze van $\phi$, en dat voor een goed gekozen $h[n]$, $\phi$ ook vast ligt.
 
 \begin{voorbeeld}
-Bekijk weer het geval $\phi(t) = 1_{[0,1)}$. Dan vinden we dat
+Bekijk weer het geval $\phi(t) = 1_{[0,1)}(t)$. Dan vinden we dat
 \[
-  h[n] = \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle = \begin{cases} \frac{1}{\sqrt{2}} & \text{ als } n \in \{0,1\} \\ 0 & \text{ anders.} \end{cases}
+  h[n] = \left\langle \sqrt{2} \phi\left(2t-n\right), \phi(t) \right\rangle = \begin{cases} \frac{1}{\sqrt{2}} & \text{ als } n \in \{0,1\} \\ 0 & \text{ anders.} \end{cases}
 \]
 \end{voorbeeld}
 
 \section{Terugkeer van de wavelet}
-We weten dat $V_j$ bevat is in $V_{j-1}$. Laat nu $W_j$ het orthogonale complement van $V_j$ in $V_{j-1}$:
+We weten dat $V_j$ bevat is in $V_{j+1}$. Laat nu $W_j$ het orthogonale complement van $V_j$ in $V_{j+1}$:
 \[
-	W_j \oplus V_j = V_{j-1}.
+	W_j \oplus V_j = V_{j+1}.
 \]
-De projectie van $f$ op $V_{j-1}$ kan dus geschreven worden als som van projecties:
+De projectie van $f$ op $V_{j+1}$ kan dus geschreven worden als som van projecties:
 \[
-	P_{V_{j-1}} f = P_{V_j} f + P_{W_j} f.
+	P_{V_{j+1}} f = P_{V_j} f + P_{W_j} f.
 \]
-Omdat $V_j \subset V_{j-1}$ is alle informatie over $f$ die beschikbaar is in $V_j$, ook beschikbaar in $V_{j-1}$. Ook is het goed mogelijk dat door deze grovere benadering, informatie zoek gaat. Deze `details' worden op die manier zichtbaar in $P_{W_j} f$.
+Omdat $V_j \subset V_{j+1}$ is alle informatie over $f$ die beschikbaar is in $V_j$, ook beschikbaar in $V_{j+1}$. Ook is het goed mogelijk dat door deze grovere benadering, informatie zoek gaat. Deze `details' worden op die manier zichtbaar in $P_{W_j} f$.
 
 Het kan bewezen worden \cite{mallat}[T7.3] dat, gegeven een schalingsfunctie $\phi$ (en daarmee een filter $h$) er een functie $\psi$ bestaat zo dat 
 \[
-	\left\{ \psi_{j,n}(t) := \frac{1}{\sqrt{2}} \psi\left(\frac{t-2^jn}{2^j}\right) : n \in \Z \right\}
-\] een orthonormale basis is voor $W_j$ en $\{ \psi_{j,n}: (j,n) \in \Z^2 \}$ een basis voor $L_2(\R)$. Deze functie is zo een orthogonale wavelet, omdat $W_j \perp V_j$.
-Omdat nu $W_j \subset V_{j-1}$ en dus in het bijzonder $2^{-1/2} \psi(t/2) \in W_1 \subset V_0$ en omdat $\{ \phi(t-n): n \in \Z \}$ een orthonormale basis is voor $V_0$, kunnen we ook $2^{-1/2}\psi(t/2)$ in termen schrijven als:
+	\left\{ \psi_{j,n}(t) := \sqrt{2^j} \psi\left(2^jt - n\right) : n \in \Z \right\}
+\] een orthonormale basis is voor $W_j$ en $\{ \psi_{j,n}: (j,n) \in \Z^2 \}$ een basis voor $L_2(\R)$. Deze functie is dan een \emph{orthogonale} wavelet, omdat $W_j \perp V_j$.
+Omdat nu $W_j \subset V_{j+1}$ en dus in het bijzonder $\psi(t) \in W_0 \subset V_1$ en omdat $\{ \sqrt{2}\phi(2t-n): n \in \Z \}$ een orthonormale basis is voor $V_1$, kunnen we ook $\psi(t)$ in termen schrijven als:
 \[
-	\frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^{\infty} \left\langle \frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle \phi(t-n).
+	\psi\left(t\right) = \sum_{n=-\infty}^{\infty} \left\langle \psi\left(t\right), \sqrt{2}\phi(2t-n) \right\rangle \sqrt{2}\phi(2t-n).
 \]
 Ook deze inproducten hebben een speciale naam: de rij $g[n]$ met
 \[
-	g[n] := \left\langle \frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle
+	g[n] := \left\langle \psi\left(t\right), \sqrt{2}\phi(2t-n) \right\rangle 
 \]
-wordt nu ook wel de filter van $\psi$ genoemd. De twee filters zijn gerelateerd aan elkaar volgens de vergelijking
+wordt nu ook wel de filter van $\psi$ genoemd. De twee filters zijn gerelateerd aan elkaar volgens de vergelijking\cite{wavelet_filter[V13]}\cite{daubechies[P958]}
 \[
-	g[n] = (-1)^{1-n}h[1-n].
+	g[n] = (-1)^{n}h[1-n].
 \]
 
 Zoals nu wel duidelijk geworden is, wordt met een filter $h$ (die voldoet aan bepaalde eigenschappen: zie stelling~\ref{filter}) een schalingsfunctie $\phi$ en een filter $g$ met waveletfunctie $\psi$ geconstrueerd.
@@ -858,22 +850,22 @@ Zoals nu wel duidelijk geworden is, wordt met een filter $h$ (die voldoet aan be
 \begin{voorbeeld}
 We keren nog een laatste keer terug naar het voorbeeld waarin $\phi(t) = 1_{[0,1)}$. We vinden met de gelijkheden uit voorgaande paragrafen dat
 \[
-\frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^{\infty} (-1)^{1-n}h[1-n] \phi(t-n),
+\psi\left(t\right) = \sum_{n=-\infty}^{\infty} (-1)^{n}h[1-n] \sqrt{2}\phi(2t-n),
 \]
 en omdat $h[0] = h[1] = 2^{-1/2}, h[n] = 0$ voor $n \in \Z \setminus \{0,1\}$ zoals we eerder vonden, herschrijft dit tot
 \[
-\frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right) = \frac{1}{\sqrt{2}}\left(\phi(t-1) - \phi(t)\right)
+\psi\left(t\right) = \sqrt{2}\left(\phi(2t) - \phi(2t - 1)\right)
 \]
 met als gevolg dat
 \[
-	\psi(t) = \begin{cases} -1 & \text{ als } t \in [0,1/2) \\ 1 & \text{ als } t \in [1/2,1) \\ 0 & \text{ anders.} \end{cases}
+	\psi(t) = \begin{cases} 1 & \text{ als } t \in [0,1/2) \\ -1 & \text{ als } t \in [1/2,1) \\ 0 & \text{ anders.} \end{cases}
 \]
 
 Deze wavelet $\psi$ wordt ook wel de Haarwavelet genoemd en is uitgevonden voor Alfred Haar in 1909, hoewel het onderzoeksgebied van de wavelets toen nog niet bestond. In het vervolg zullen we nog verdere aandacht aan deze wavelet besteden.
 \end{voorbeeld}
 
 \section{Het kiezen van een wavelet}
-Bij het kiezen of vinden van een wavelet is men over het algemeen op zoek naar bepaalde eigenschappen. Voor compressie zijn we op zoek naar een wavelet die voor bepaalde klassen functies een klein aantal grote co\"effici\"enten en een groot aantal kleine teweeg brengt: een soort concentratie van de co\"effici\"enten. Dit wordt vooral bepaald door drie factoren: gladheid van $f$ (waar we niks aan kunnen doen), de grootte van de drager (welke hierna aan bod komt) en de zogenaamde orde van de wavelet.
+Bij het kiezen of vinden van een wavelet is men over het algemeen op zoek naar bepaalde eigenschappen. Voor compressie zijn we op zoek naar een wavelet die een klein aantal grote co\"effici\"enten en een groot aantal kleine teweeg brengt: een soort concentratie van de belangrijke informatie. Dit wordt vooral bepaald door drie factoren: gladheid van $f$ (waar we niks aan kunnen doen), de grootte van de drager (welke hierna aan bod komt) en de zogenaamde orde van de wavelet.
 
 \begin{definitie}
 Wanneer de waveletfunctie loodrecht staat ($\langle \psi, q\rangle = 0$) op alle polynomen van graad $p-1$ of lager, spreken we van een wavelet van orde $p$. Dit komt overeen met te zeggen dat
@@ -893,7 +885,8 @@ Intu\"itief is deze eigenschap natuurlijk gewild: we winnen immers een heel stel
 Eerder spraken we het verlangen uit om een wavelet met eindige drager te vinden zodat discontinu\"iteiten alleen lokaal zichtbaar zijn. We zullen hier de dragers van $h[n], \psi$ en $\phi$ aan elkaar relateren.
 
 \subsection{Compacte drager} 
-NOOT: $h$ en $\phi$ zitten niet in dezelfde ruimte, rechtpraten
+Hoewel $\phi$ een functie uit $L_2$ is, en $h$ een functie uit $\ell_2$, is het toch mogelijk het begrip drager in beide ruimtes te beschrijven alsof ze hetzelfde zijn. Laat daartoe $h'$ de stuksgewijs constante functie van $\R$ naar $\R$ die $x$ stuurt naar $h(\lfloor x \rfloor)$. Dan is de drager van $h$ gedefini\"eerd als de drager van $h'$.
+
 \begin{stelling}[{\cite[P7.2]{mallat}}]
   De volgende relaties gelden voor de dragers.
   \begin{enumerate}
@@ -903,33 +896,35 @@ NOOT: $h$ en $\phi$ zitten niet in dezelfde ruimte, rechtpraten
 \end{stelling}
 \begin{proof}[Bewijs 1] Als $\phi$ een compacte drager heeft dan $h[n]$ ook: we weten dat
 \[
-  h[n] = \left\langle \frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right), \phi(t-n) \right\rangle,
+  h[n] = \left\langle \sqrt{2} \phi\left(2t-n\right), \phi(t) \right\rangle,
 \]
-er kunnen maar eindig veel $n$ ongelijk nul zijn. Omgekeerd, als $h[n] \not= 0$ voor eindig veel $n$, dan zien we
-\begin{equation}
-\label{phi_t2}
-	\frac{1}{\sqrt{2}} \phi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^\infty h[n] \phi(t-n)
-\end{equation}
- TODO: pag 966 van Daubechies ``orthonormal bases of compactly supported wavelets".
+dus er kunnen maar eindig veel $n$ ongelijk nul zijn. De omgekeerde bewering staat bewezen in \cite{daubechies[P965-967]}. TODO?
 
 Om deze dragers gelijk te krijgen, stel dat de drager van $h[n]$ gelijk $[N_1,N_2]$ is, en die van $\phi$ $[K_1, K_2]$. De drager van $\phi(t/2)$ is $[2K_1, 2K_2]$ en de drager van de rechterzijde van $\ref{phi_t2}$ is $[N_1 + K_1, N_2 + K_2]$. We concluderen dat $K_1 = N_1$ en $K_2 = N_2$.
 \end{proof}
 \begin{proof}[Bewijs 2]
 Kijk nu naar
 \[
-\frac{1}{\sqrt{2}} \psi\left(\frac{t}{2}\right) = \sum_{n=-\infty}^{\infty} g[n] \phi(t-n) = \sum_{n=-\infty}^{\infty} (-1)^{1-n}h[-1-n] \phi(t-n).
+\psi\left(t\right) = \sum_{n=-\infty}^{\infty} g[n] \phi(2t-n) = \sum_{n=-\infty}^{\infty} (-1)^{n}h[1-n] \phi(2t-n).
 \]
 Met de informatie uit het begin van de stelling kunnen we de drager van de rechterkant vinden: $[N_1 - N_2 + 1, N_2 - N_1 + 1]$. De functie $\psi(t/2)$ is nu precies een dilatie met factor twee dus de drager van $\psi(t)$ moet wel gelijk zijn aan $[(N_1 - N_2 + 1)/2, (N_2 - N_1 + 1)/2]$.
 \end{proof}
 
 \subsection{Daubechieswavelets}
-Hoewel de constructie van de Daubechieswavelet buiten het spectrum van dit artikel valt,\footnote{Voor een goede beschrijving van deze constructie, zie \cite{mallat}.} willen we toch een kort licht schijnen op deze speciale familie van wavelets. Deze worden gemaakt met de noties eerder, namelijk dat we de drager willen minimaliseren maar de orde maximaliseren. Daubechies heeft bewezen [TODO ref] dat een filter $h$ met orde $p$, minimaal een drager van lengte $2p$ moet hebben. 
-
-De Daubechieswavelet van orde $p$ nu, heeft precies een filter van lengte $2p$. In het bijzonder is de Haarwavelet de eerste in de familie van Daubechieswavelets.
+Hoewel de constructie van de Daubechieswavelet buiten het spectrum van dit artikel valt,\footnote{Voor een goede beschrijving van deze constructie, zie \cite{mallat} of \cite{daubechies}.} willen we toch een kort licht schijnen op deze speciale familie van wavelets. Deze worden gemaakt met de noties van eerder, namelijk dat we de drager willen minimaliseren maar de orde maximaliseren. Daubechies heeft bewezen\cite{daubechies} dat een filter $h$ met orde $p$, minimaal een drager van lengte $2p$ moet hebben. De zogenaamde Daubechieswavelet van orde $p$ heeft precies een filter van lengte $2p$. In het bijzonder is de Haarwavelet de eerste in de familie van Daubechieswavelets.
 
 Wij hebben in het praktische deel van ons project aandacht besteed aan de zogenaamde Daubechies-2 wavelet die haar naam ontleent aan het feit dat zij van orde 2 is.
 
-TODO picca van Daubechies wavelets
+\begin{figure}[h]
+\centering
+\begin{subfigure}{0.48\linewidth}
+	\includegraphics[width=\linewidth]{plaatjes/db2_phi.pdf}
+\end{subfigure}
+\begin{subfigure}{0.48\linewidth}
+	\includegraphics[width=\linewidth]{plaatjes/db2_psi.pdf}
+\end{subfigure}
+\caption{Links: de Daubechies-2 schalingsfunctie. Rechts: de Daubechies-2 waveletfunctie.}
+\end{figure}
 
 \section{Fast Wavelet Transform}
 TODO schrijven dit
@@ -954,28 +949,24 @@ $\boldsymbol{\N oem\, ook\, \C onvolutie}$
 Met de theoretische beschouwing van wavelets en de Fast Wavelet Transform achter de rug, kunnen we wat verder kijken naar practische obstakels.
 
 \subsection{Eindige signalen} 
-Een van de eerste aannames die we tot nu toe steeds maakten is die van de oneindige signalen. Wanneer echter de functie $f$ een compacte drager heeft, worden een aantal zaken wat lastiger. Neem als eerste aan dat de drager van $f$ gewoon $[0,1]$ is.\footnote{Door translatie en dilatie kan elk signaal met compacte basis omgevormd worden tot een signaal met drager in $[0,1]$. We verliezen hier dus geen algemeenheid.} In dit geval zou het kunnen dat de waveletfuncties met een drager die $t=0$ of $t=1$ doorsnijdt, niet meer van een bepaalde orde is. Er zijn in de literatuur oplossingen voor dit probleem gevonden. Hier zullen wij verder niet op in gaan.
+Een van de eerste aannames die we tot nu toe steeds maakten is die van de oneindige signalen. Wanneer echter de functie $f$ een compacte drager heeft, worden een aantal zaken wat lastiger. Neem als eerste aan dat de drager van $f$ gewoon $[0,1]$ is.\footnote{Door translatie en dilatie kan elk signaal met compacte basis omgevormd worden tot een signaal met drager in $[0,1]$. We verliezen hier dus geen algemeenheid.} In dit geval zou het kunnen dat de waveletfuncties met een drager die $t=0$ of $t=1$ doorsnijdt, niet meer de gewenste eigenschappen heeft. Er zijn in de literatuur oplossingen voor dit probleem gevonden. Hier zullen wij verder niet op in gaan.
 
-Wanneer $f$ leeft in $L^2([0,1])$, kunnen we alle $V_j$ met $j > 0$ buiten beschouwing laten omdat de resolutie in deze ruimte te laag is om nog interessante informatie over $f$ te bieden. We hebben op deze manier een rij geneste ruimtes
+Wanneer we nu een benadering van $f$ maken op resolutie $2^J$ (door bijvoorbeeld een Fast Wavelet Transform), bekijken we
 \[
-V_0 \subset V_{-1} \subset \ldots.
+	V_0 \subset V_{1} \subset \ldots \subset V_{J}.
 \]
-Wanneer we nu een benadering van $f$ maken op resolutie $2^{-J}$ (door bijvoorbeeld een Fast Wavelet Transform), bekijken we
-\[
-	V_0 \subset V_{-1} \subset \ldots \subset V_{-J}.
-\]
-Een discreet signaal van lengte $2^{-J}$ kan zo perfect `benaderd' worden in een waveletbasis op resolutie $2^{-J}$ en dit is precies waarom de Fast Wavelet Transform zo veel gebruikt wordt bij het analyseren van discrete signalen.
+Een discreet signaal van lengte $2^{J}$ kan zo perfect getransformeerd worden in een waveletbasis op resolutie $2^{J}$. Dit is precies waarom de Fast Wavelet Transform zo veel gebruikt wordt bij het analyseren van discrete signalen.
 
 \subsection{Signaaluitbreiding}
-Een probleem waar we in het geval van eindige signalen nog meer mee te maken krijgen is dat de algoritme niet goed omgaat met de randen. De convolutie moet nu ineens \emph{buiten het definitiegebied} van het signaal `kijken'. Eerder in sectie [TODO] hebben we al gezien hoe signalen naar een tweemacht uitgebreid kunnen worden. Precies dezelfde methoden kunnen gebruikt worden om het signaal nog verder uit te breiden. 
+Een probleem waar we in het geval van eindige signalen nog meer mee te maken krijgen is dat de algoritme niet goed omgaat met de randen. De convolutie moet nu ineens \emph{buiten het definitiegebied} van het signaal `kijken'. Eerder in sectie \ref{signaal} hebben we al gezien hoe signalen naar een tweemacht uitgebreid kunnen worden. Precies dezelfde methoden kunnen gebruikt worden om het signaal nog verder uit te breiden. 
 
-Om niet te veel tijd te verliezen met het ondersteunen van meerdere mogelijkheden hebben wij er voor gekozen om periodic padding op alle signalen toe te passen. Dit omdat de zogenaamde \emph{circulaire convolutie} ingebouwd zit in de bibliotheek die wij gebruikt hebben.
+Om niet te veel tijd te verliezen met het ondersteunen van meerdere mogelijkheden hebben wij er voor gekozen om \emph{periodic padding} op alle signalen toe te passen. Dit omdat de zogenaamde \emph{circulaire convolutie} ingebouwd zit in de bibliotheek die wij gebruikt hebben.
 
 \subsection{Complexiteit van de algoritme}
 NOOT: rob heeft hier "nog niet" staan. wat?
-Als de lengte van de filter $h$ gelijk is aan $K$, en de lengte van het originele signaal $a_L$ gelijk is aan $N = 2^{-L}$, kunnen we voor $j \in \{L, \ldots, 0\}$ zien dat $a_j$ en $d_j$ beide $2^{-j}$ elementen bevatten. Nu kunnen $a_{j+1}$ en $d_{j+1}$ gemaakt worden door $2^{-j}K$ operaties zodat elke stap van de algoritme $2^{-j} \cdot K$ operaties kost. Dan kost het hele algoritme
+Als de lengte van de filter $h$ gelijk is aan $K$, en de lengte van het originele signaal $a_L$ gelijk is aan $N = 2^{L}$, kunnen we voor $j \in \{0, \ldots, L\}$ zien dat $a_j$ en $d_j$ beide $2^{j}$ elementen bevatten. Nu kunnen $a_{j-1}$ en $d_{j-1}$ gemaakt worden door $2^{j}K$ operaties zodat elke stap van de algoritme $2^{j} \cdot K$ operaties kost. Dan kost het hele algoritme
 \[
-	\sum_{j=L}^0 2^{-j} \cdot K = K \sum_{j=L}^0 2^{-j} = K \cdot (2^{1-L} - 1) < 2 \cdot K 2^{-L} = 2KN
+	\sum_{j=L}^0 2^{j} \cdot K = K \sum_{j=L}^0 2^{j} = K \cdot (2^{1+L} - 1) < 2 \cdot K 2^{L} = 2KN
 \]
 operaties. Dus deze DWT is een $\mathcal{O}(KN)$ algoritme. Ook de complexiteit van de inverse wordt op dezelfde manier van orde $KN$. 
 
@@ -987,26 +978,33 @@ Met een orthonormale waveletbasis $\{ \psi_{j,n}: (j,n) \in \Z^2\}$ van $L_2(\R)
 \[
   \{ \psi_{j_1,n_1}(x_1) \psi_{j_2,n_2}(x_2): (j_i,n_i) \in \Z^4 \},
 \]
-welke een orthonormale basis voor $L_2(\R^2)$ is. We zien direct dat we op de $x_1$-as met resolutie $2^{-j_1}$ kijken terwijl de $x_2$-as resolutie $2^{-j_2}$ kent. Mallat vond dit iets om te vermijden \cite{mallat}[\S 7.7] en legt in zijn analyse dan ook de eis $j_1 = j_2 =: j$ op. Wij zullen in het vervolg kijken naar het zogenaamde Tensorproduct, wat de eis $j_1 = j_2$ \emph{niet} oplegt.
+welke een orthonormale basis voor $L_2(\R^2)$ is. We zien direct dat we op de $x_1$-as met resolutie $2^{j_1}$ kijken terwijl de $x_2$-as resolutie $2^{j_2}$ kent. 
 
-Zoals in 1 dimensie is de notie van `resolutie' geformaliseerd in het begrip multiresolutie. De definitie van deze multiresolutie is wederom een natuurlijke voortzetting van het eendimensionale geval. Op deze manier bekijken we een ruimte $V_j^2 = V_j \otimes V_j$. In \cite[\S 7.7]{mallat} wordt nu bewezen dat, gegeven een orthonormale basis $\{ \phi_{j,m}: m \in \Z \}$ voor $V_j$, de verzameling
+Mallat vond dit iets om te vermijden \cite[\S 7.7]{mallat} en legt in zijn analyse dan ook de eis $j_1 = j_2 =: j$ op. Wij zullen in het vervolg \'o\'ok kijken naar het zogenaamde Tensorproduct, wat de eis $j_1 = j_2$ \emph{niet} oplegt.
+
+Zoals in 1 dimensie is de notie van `resolutie' geformaliseerd in het begrip multiresolutie. De definitie van deze multiresolutie is wederom een natuurlijke voortzetting van het eendimensionale geval. Wanneer we spreken over een separeerbare multiresolutie, gaat het om een ruimte $V_j^{(2)} := V_j \otimes V_j$. In \cite[A.5]{mallat} wordt nu bewezen dat, gegeven een orthonormale basis $\{ \phi_{j,m}: m \in \Z \}$ voor $V_j$, de verzameling
 \[
 	\{ \phi^{(2)}_{j,n} := \phi_{j,n_1} \otimes \phi_{j,n_2}: n \in \Z^2 \}
 \]
-een basis voor $V_j^2$ is.
+een orthonormale basis voor $V_j^{(2)}$ is.
 
-Neem als voorbeeld weer $V_j$ de ruimte van stuksgewijs constante functies op het interval $[2^j m, 2^j(m+1) )$ voor $m \in \Z$. We vinden voor $V_j^2$ nu de ruimte van vierkantsgewijs constante functies op vierkanten $[2^jn_1, 2^j(n_1+1)) \times [2^jn_2, 2^j(n_2+1))$. De tweedimensionale schalingsfunctie wordt op die manier
+\begin{voorbeeld}
+Bekijk weer $V_j$ de ruimte van stuksgewijs constante functies op het interval 
+\[
+ [2^{-j} m, 2^{-j}(m+1) ), m \in \Z.
+\] 
+We vinden voor $V_j^{(2)}$ nu de ruimte van vierkantsgewijs constante functies op vierkanten $[2^{-j}n_1, 2^{-j}(n_1+1)) \times [2^{-j}n_2, 2^{-j}(n_2+1))$. De tweedimensionale schalingsfunctie wordt op die manier
 \[
 	\phi^{(2)}(x_1,x_2) = \phi(x_1)\phi(x_2) = \begin{cases} 1 & \text{ als } x_1 \in [0,1)\text{ en }x_2 \in [0,1) \\ 0 & \text{ anders.} \end{cases}
 \]
+\end{voorbeeld}
 
 \subsection{Tweedimensionale Waveletfuncties}
-We weten dat $V_j^2$ bevat is in $V_{j-1}^2$. 
-We bekijken het orthogonale complement $\boldsymbol{U}_j \perp V_j^2$:
+We weten dat $V_j^{(2)}$ bevat is in $V_{j+1}^{(2)}$. Bekijk het orthogonale complement $\boldsymbol{U}_j \perp V_j^{(2)}$:
 \[
-	V_j^2 \oplus U_j = V_{j-1}^2.
+	V_j^{(2)} \oplus U_j = V_{j+1}^{(2)}.
 \]
-Om nu een orthogonale waveletbasis voor $\boldsymbol{U}_j$ en (dus) $L^2(\R^2)$ te vinden, gaan we als volgt te werk.
+Om nu een orthogonale waveletbasis voor $\boldsymbol{U}_j$ en (dus in de limiet) $L^2(\R^2)$ te vinden, gaan we als volgt te werk.
 \begin{stelling}[{\cite[T7.24]{mallat}}]
 Laat $\phi$ een schalingsfunctie en $\psi$ de bijhorende wavelet die en basis voor de $L^2(\R)$ voortbrengt. Maak drie wavelets
 \[
@@ -1014,20 +1012,26 @@ Laat $\phi$ een schalingsfunctie en $\psi$ de bijhorende wavelet die en basis vo
 \]
 en laat voor $k \in \{1,2,3\}$ nu
 \[
-	\psi^k_{j,n}(x) = \frac{1}{2^j} \psi^k\left( \frac{x_1 - 2^j n_1}{2^j}, \frac{x_2 - 2^j n_2}{2^j} \right).
+	\psi^k_{j,n}(x) = 2^j \psi^k\left( 2^jx_1 - n_1, 2^j x_2 - n_2 \right).
 \]
 
-Dan is $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis voor $\boldsymbol{U}_j$ 
-en $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \Z \}$ een basis voor $L^2(\R^2)$.
+Dan is 
+\[
+	\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}
+\] een basis voor $\boldsymbol{U}_j$ 
+en 
+\[
+	\{ \phi^2_{j, n}, \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}
+\] een basis voor $L^2(\R^2)$.
 \end{stelling}
 \begin{proof}[Bewijs]
 We weten
 \[
-	V_{j-1}^2 = V_j^2 \oplus \boldsymbol{U}_j \implies V_{j-1} \otimes V_{j-1} = ( V_j \otimes V_j ) \oplus \boldsymbol{U}_j.
+	V_{j+1}^{(2)} = V_j^{(2)} \oplus \boldsymbol{U}_j \implies V_{j+1} \otimes V_{j+1} = ( V_j \otimes V_j ) \oplus \boldsymbol{U}_j.
 \]
-Vul nu $V_{j-1} = V_j \oplus W_j$ in om te vinden
+Vul nu $V_{j+1} = V_j \oplus W_j$ in om te vinden
 \[
-	( V_j \oplus W_j ) \otimes (V_j \oplus W_j ) = (V_j \otimes V_j) \oplus \boldsymbol{U}_j %hier stond dus:(W_j \otimes W_j) 
+	( V_j \oplus W_j ) \otimes (V_j \oplus W_j ) = (V_j \otimes V_j) \oplus \boldsymbol{U}_j
 \]
 \[
 	\implies (V_j \otimes V_j) \oplus (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = (V_j \otimes V_j) \oplus \boldsymbol{U}_j
@@ -1035,11 +1039,13 @@ Vul nu $V_{j-1} = V_j \oplus W_j$ in om te vinden
 \[
 	\implies (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = \boldsymbol{U}_j.
 \]
-Nu is het duidelijk dat $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis is voor $\boldsymbol{U}_j$. Omdat nu
+Nu is het duidelijk dat $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis is voor $\boldsymbol{U}_j$. 
+
+Omdat nu
 \[
-	L^2(\R^2) = \bigoplus_{j=-\infty}^\infty \boldsymbol{U}_j
+	L^2(\R^2) = \lim_{j \to \infty} V_j^{(2)} = V_0^{(2)} \oplus \lim_{j \to \infty} \bigoplus \boldsymbol{U}_j
 \]
-is $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \Z \}$ een basis voor $L^2(\R^2)$.
+is $\{  \phi^2_{j, n}, \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}$ een basis voor $L^2(\R^2)$.
 \end{proof}
 
 Met deze kennis in handen zullen we het tweedimensionale geval van de Fast Wavelet Transform formuleren.
@@ -1076,11 +1082,11 @@ a_j[n] = \breve{a}_{j+1} \star (h \otimes h)[n] + \breve{d}_{j+1}^1 \star (h \ot
 
 TODO: ogier schrijf jij dit af?
 
-Wat we steeds doen is de ruimte $V_j^2$ schrijven als $V_{j+1}^2$ met daarbij een aantal orthogonale complementen. Wanneer dit algoritme recursief toegepast wordt, schrijven we $V_{j+1}^2$ ook weer als $V_{j+2}^2$ met orthogonale complementen en zo voort. Dit levert dat
+Wat we steeds doen is de ruimte $V_j^{(2)}$ schrijven als $V_{j-1}^{(2)}$ met daarbij een aantal orthogonale complementen. Wanneer dit algoritme recursief toegepast wordt, schrijven we $V_{j-1}^{(2)}$ ook weer als $V_{j-2}^{(2)}$ met orthogonale complementen en zo voort. Dit levert dat
 \[
-	\boldsymbol\Phi = \left\{ \psi^k_{j+1,\cdot}, \psi^k_{j+2,\cdot}, \ldots \psi^k_{L,\cdot}, \phi^{(2)}_{L,\cdot}: k \in \{1,2,3\} \right\}
+	\boldsymbol\Phi = \left\{ \psi^k_{j-1,\cdot}, \psi^k_{j-2,\cdot}, \ldots \psi^k_{L,\cdot}, \phi^{(2)}_{L,\cdot}: k \in \{1,2,3\} \right\}
 \]
-een basis is voor $V_j^2$. TODO plaatje. Dit is echter niet de enige basis die we kunnen bouwen voor $V_j^2$ wanneer we recursief tot een niveau $L$ kijken.
+een basis is voor $V_j^2$. TODO plaatje.
 
 \subsection{Meer dan twee dimensies}
 Het $n$-dimensionale geval van de Mallatdecompositie is nog TODOOO
@@ -1405,7 +1411,7 @@ Hoe hoger de PSNR is, hoe beter de reconstructie (over het algemeen) zal zijn.
 		\centering
 		\includegraphics[width=\textwidth]{plaatjes/Lenna_fourier_0_01.png}
 	\end{subfigure}
-	\caption{Fourier op compressieniveaus 0.2, 0.10, 0.05, 0.01.}
+	\caption{Fourier op compressieniveaus 0.10, 0.05, 0.03, 0.01.}
 \end{figure}
 \begin{figure}
 	\centering
@@ -1425,7 +1431,7 @@ Hoe hoger de PSNR is, hoe beter de reconstructie (over het algemeen) zal zijn.
 		\centering
 		\includegraphics[width=\textwidth]{plaatjes/Lenna_haar_0_01.png}
 	\end{subfigure}	
-	\caption{Haar op compressieniveaus 0.2, 0.10, 0.05, 0.01.}
+	\caption{Haar op compressieniveaus 0.10, 0.05, 0.03, 0.01.}
 \end{figure}
 \begin{figure}
 	\centering	
@@ -1445,7 +1451,7 @@ Hoe hoger de PSNR is, hoe beter de reconstructie (over het algemeen) zal zijn.
 		\centering
 		\includegraphics[width=\textwidth]{plaatjes/Lenna_db2_0_01.png}
 	\end{subfigure}	
-	\caption{Daubechies 2 op compressieniveaus 0.2, 0.10, 0.05, 0.01.}
+	\caption{Daubechies 2 op compressieniveaus 0.10, 0.05, 0.05, 0.01.}
 \end{figure}
 \begin{figure}
 	\centering
@@ -1477,8 +1483,101 @@ Hoe hoger de PSNR is, hoe beter de reconstructie (over het algemeen) zal zijn.
 \restoregeometry
 \pagebreak
 
+\pagebreak
+\newgeometry{left=2cm,right=2cm,top=1cm,bottom=1cm}
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/shyguy_fourier_0_1.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/shyguy_fourier_0_05.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/shyguy_fourier_0_03.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/shyguy_fourier_0_01.png}
+	\end{subfigure}
+	\caption{Fourier op compressieniveaus 0.10, 0.05, 0.03, 0.01.}
+\end{figure}
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/shyguy_haar_0_1.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/shyguy_haar_0_05.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/shyguy_haar_0_03.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/shyguy_haar_0_01.png}
+	\end{subfigure}	
+	\caption{Haar op compressieniveaus 0.10, 0.05, 0.03, 0.01.}
+\end{figure}
+\begin{figure}
+	\centering	
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/shyguy_db2_0_1.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/shyguy_db2_0_05.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/shyguy_db2_0_03.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/shyguy_db2_0_01.png}
+	\end{subfigure}	
+	\caption{Daubechies 2 op compressieniveaus 0.10, 0.05, 0.05, 0.01.}
+\end{figure}
+\begin{figure}
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+	\centering
+	\vspace{10pt}
+	\begingroup
+	
+\renewcommand*{\arraystretch}{1.5}
+	$\begin{array}{c | c c c c}
+	\text{Compr} & \text{Fourier} & \text{Haar} & \text{DB2} \\ \hline
+0.125 & -25.709419 & 6.188436 & -12.939796 \\
+0.100 & -26.352690 & -2.252695 & -16.684428 \\
+0.075 & -27.084570 & -13.247047 & -20.121718 \\
+0.050 & -27.987835 & -22.194021 & -23.640705 \\
+0.040 & -28.455719 & -25.861219 & -25.259163 \\
+0.030 & -29.045916 & -26.633403 & -26.750137 \\
+0.020 & -29.857696 & -28.858775 & -28.445793 \\
+0.010 & -31.289113 & -31.320495 & -30.669577 \\ \hline
+	\end{array}$
+	\endgroup
+	\end{subfigure}	
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\vspace{0pt}
+		\includegraphics[height=\textwidth]{plaatjes/grafiek_shyguy_0_15-0_01.png}
+	\end{subfigure}
+	\caption{Grafiek en PSNR.}
+\end{figure}
+\restoregeometry
+\pagebreak
+
 \chapter{Reflectie en discussie}
-In dit laatste hoofdstuk zullen we een meta-analyse maken van de praktische resultaten. Bladiebla.
+In dit laatste hoofdstuk zullen we een meta-analyse maken van de praktische resultaten. Bladiebla TODO.
 
 Wanneer we kijken naar de grafieken, wordt het direct duidelijk dat de Fouriertransformatie in eigenlijk alle gevallen een slechter resultaat oplevert (zowel in `wolligheid' als gereflecteerd door de PSNR).
 \chapter{Populaire samenvatting}
@@ -1498,17 +1597,23 @@ Wanneer we kijken naar de grafieken, wordt het direct duidelijk dat de Fouriertr
   Princeton University Press.
   1949.
 
+\bibitem{wavelet_filter}
+	\url{http://djj.ee.ntu.edu.tw/Wavelet_Filter.pdf}
 
 \bibitem{tammo}
 Tammo Jan Dijkstra,
 \emph{Adaptive tensor product wavelet methods for solving PDEs}, 2009
 \bibitem{tensor_wavelet}
-http://www.uio.no/studier/emner/matnat/math/MAT-INF2360/v12/tensorwavelet.pdf
+\url{http://www.uio.no/studier/emner/matnat/math/MAT-INF2360/v12/tensorwavelet.pdf}
 \bibitem{mallat}
 St\'ephane Mallat,
 \emph{A Wavelet Tour of Signal Processing}
 \bibitem{jackson}
-http://www.ams.org/journals/bull/1960-66-02/S0002-9904-1960-10426-0/S0002-9904-1960-10426-0.pdf
+\url{http://www.ams.org/journals/bull/1960-66-02/S0002-9904-1960-10426-0/S0002-9904-1960-10426-0.pdf}
+
+\bibitem{daubechies}
+Ingrid Daubechies, \emph{Orthonormal Bases of Compactly Supported Wavelets}.
+AT\&T Bell Laboratories, 1988.
 
 \end{thebibliography}
 
