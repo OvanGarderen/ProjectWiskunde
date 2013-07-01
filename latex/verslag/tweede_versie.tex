@@ -100,6 +100,7 @@
 \newcommand{\DFT}{\text{DFT}}
 \newcommand{\dpii}{{2\pi i}}
 \newcommand{\abso}[1]{{\left| #1 \right|}}
+\renewcommand{\d}[1]{{\textrm{d} #1}}
 
 \setlength\parindent{0pt}
 \parskip = \baselineskip
@@ -827,13 +828,15 @@ Bekijk weer het geval $\phi(t) = 1_{[0,1)}$. Dan vinden we dat
 
 \section{Terugkeer van de wavelet}
 We weten dat $V_j$ bevat is in $V_{j-1}$. Laat nu $W_j$ het orthogonale complement van $V_j$ in $V_{j-1}$:
-\[
-	W_j \oplus V_j = V_{j-1}.
-\]
+\begin{equation}
+\label{ruimterec}
+	V_{j} = W_{j-1} \oplus V_{j-1} 
+\end{equation}
 De projectie van $f$ op $V_{j-1}$ kan dus geschreven worden als som van projecties:
-\[
-	P_{V_{j-1}} f = P_{V_j} f + P_{W_j} f.
-\]
+\begin{equation}
+\label{projectie_rec}
+	P_{V_{j}} f = P_{V_{j-1}} f + P_{W_{j-1}} f.
+\end{equation}
 Omdat $V_j \subset V_{j-1}$ is alle informatie over $f$ die beschikbaar is in $V_j$, ook beschikbaar in $V_{j-1}$. Ook is het goed mogelijk dat door deze grovere benadering, informatie zoek gaat. Deze `details' worden op die manier zichtbaar in $P_{W_j} f$.
 
 Het kan bewezen worden \cite{mallat}[T7.3] dat, gegeven een schalingsfunctie $\phi$ (en daarmee een filter $h$) er een functie $\psi$ bestaat zo dat 
@@ -932,24 +935,144 @@ Wij hebben in het praktische deel van ons project aandacht besteed aan de zogena
 TODO picca van Daubechies wavelets
 
 \section{Fast Wavelet Transform}
-TODO schrijven dit
-probeer dit er in te stoppen (als dat niet al duidelijk wordt)?
+
+Door de recursieve relatie van de ruimtes in \ref{ruimterec} herhaald toe te passen, 
+kunnen we de ruimte $V_j$ schrijven in termen van $V_0$ en een scala aan 
+orthogonaal-complementsruimtes $W_k$.
+\begin{equation}
+  \label{ruimte_splitsing}
+	V_j = V_k \oplus W_k \oplus \cdots \oplus W_{j-1} = \ldots 
+        = V_0 \oplus W_0 \oplus \cdots \oplus W_{j-1}
+\end{equation}
+We willen nu een functie $f$ benaderen in de ruimte $V_j$ door $P_{V_j}f$ te schrijven in 
+de basis van de ruimtes $V_0$ en de verschillende $W_k$. Hiervoor dienen we de inproducten
+te bereken van $f$ met de basisvectoren in deze ruimtes.
+We onderscheiden dan de \emph{approximatie} 
+co\"efficienten $a_j[n]$ en de \emph{detail} co\"efficienten $d_j[n]$, die
+$f$ geven als projectie op  respectievelijk $V_j$ en $W_j$.
+
+Het is echter veel rekenwerk om al deze co\"efficienten uit te rekenen, dit gebeurt immers
+door het berekenen van integralen. We beperken ons daarom tot her uit rekenen van de 
+co\"efficienten op het niveau $j$ en proberen vervolgens een recursieve relatie te vinden
+om hieruit de approximatie en detailco\"efficienten te vinden.
+ 
+Vanwege de relatie in \ref{ruimterec} kunnen we de basisfuncties uit de ruimtes $W_{j-1}$,
+$V_{j-1}$ schrijven in termen van de basisfuncties van de ruimte $V_j$.
+We schrijven daarvoor $\phi_{j-1,n}$ om in termen van de basisfuncties $\phi_{j,k}$; evenzo
+voor $\psi_{j-1,n}$.
+\begin{equation}
+\label{phi_rec}
+\phi_{j-1,n} = \sum_{k=-\infty}^{\infty} \inpr{\phi_{j-1,n}}{\phi_{j,k}} \phi_{j,k}
+\end{equation}
+\begin{equation}
+\label{psi_rec}
+\psi_{j-1,n} = \sum_{k=-\infty}^{\infty} \inpr{\psi_{j-1,n}}{\phi_{j,k}} \phi_{j,k}
+\end{equation}
+We rekenen vervolgens de inproducten uit om deze om te schrijven naar een filterco\"efficient,
+bekijk
+\eq{
+  \inpr{\phi_{j-1,n}}{\phi_{j,k}} 
+  =& \int_{-\infty}^\infty \sqrt{2^{j-1}}\phi(2^{j-1}t -n) 
+  \sqrt{2^{j}}\phi^\star(2^j t - k) \d{t}\\
+  =& \int_{-\infty}^\infty \tfrac{1}{2^j} 2^{j-1} 
+  \sqrt{2} \phi(t') \phi(2t' - k + 2n) \d{t'}\\
+  =& \inpr{\phi(t)}{\sqrt{2}\phi(2t-k+2n)} \\
+  =& h[k-2n],
+}
+\eq{
+  \inpr{\psi_{j-1,n}}{\phi_{j,k}} 
+  =& \int_{-\infty}^\infty \sqrt{2^{j-1}}\psi(2^{j-1}t -n) 
+  \sqrt{2^{j}}\phi^\star(2^j t - k) \d{t}\\
+  =& \int_{-\infty}^\infty \tfrac{1}{2^j} 2^{j-1} 
+  \sqrt{2} \psi(t') \phi(2t' - k + 2n) \d{t'}\\
+  =& \inpr{\psi(t)}{\sqrt{2}\phi(2t-k+2n)} \\
+  =& g[k-2n],
+}
+waarbij we de co\"ordinaat-transformatie $t' = 2^{j-1}t - n$ hebben gebruikt.
+Door nu aan beide zijden van vergelijkingen \ref{phi_rec}, \ref{psi_rec} het
+inproduct met $f$ te nemen kunnen we de coe\"fficienten van de resolutie $2^{j-1}$ schrijven
+in termen van de coe\"fficienten op de resolutie $2^j$.
+\begin{equation}
+\label{approx_rec}
+a_{j-1}[n] = \inpr{f}{\phi_{j-1,n}} 
+= \sum_{k=-\infty}^{\infty} h[k-2n] \inpr{f}{\phi_{j,k}}
+= \sum_{k=-\infty}^\infty h[k-2n] a_{j}[k]
+= (a_j \star \bar h)[2n]
+\end{equation}
+\begin{equation}
+\label{detail_rec}
+d_{j-1}[n] = \inpr{f}{\psi_{j-1,n}} 
+= \sum_{k=-\infty}^{\infty} g[k-2n] \inpr{f}{\phi_{j,k}}
+= \sum_{k=-\infty}^\infty g[k-2n] a_{j}[k] 
+= (a_j \star \bar g)[2n]
+\end{equation}
+Waarbij $\bar f: x \mapsto f(-x)$ en $x\star y$ de discrete convolutie aangeeft, 
+als kortere schrijfwijze van deze sommatie.
+De relatie die hier gevonden is geeft aanleiding tot een algoritme.
+
+\begin{algo}[Fast Wavelet Transform]
+Gegeven een rij co\"effici\"enten $a_j\in\R^{2^j}$ dan definie\"eren we een recursief 
+algoritme $\textrm{FWT}:\R^{2^j}\to\R^{2^j}$ volgens:\\
+Als $j=0$ dan geldt
 \[
-	V_{-J} = V_0 \oplus W_0 \oplus \cdots \oplus W_{1-J}
+\textrm{FWT}(a_j)[n] = a_j[n]
 \]
-$\boldsymbol{\N oem\, ook\, \C onvolutie}$
+Als $j>0$ bereken $a_{j-1}$ en $d_{j-1}$ volgens \ref{approx_rec}, \ref{detail_rec}.
+Vervolgens geldt
+\[
+\textrm{FWT}(a_j)[n] = \begin{cases} 
+\textrm{FWT}(a_{j-1})[n] & \text{als } n\leq 2^{j-1} \\
+d_{j-1}[n] & \text{als } n>2^{j-1} \end{cases}
+\]
+\end{algo}
+We gaan hierbij uit van een eindige filter en beschouwen onze ruimte $V_j$ als functies
+op een interval in $\R$, dan versimpelen de oneindige sommaties in \ref{approx_rec},
+\ref{detail_rec}. Voor een discrete functie $f\in\R^{2^j}$ kunnen we nu 
+$\mathrm{FWT}(f)$ nemen als de fast wavelet transform, 
+we nemen dan aan dat $\inpr{f}{a_{j,k}} = f[k]$ voor het
+grootste niveau $V_j$. Deze aannames komen ruwweg neer op de bewering dat 
+$V_0 = \{\phi_{0,0}\}$ en dat zowel $\phi$ als $\psi$ een compacte drager heeft.
 
+We kunnen vervolgens de transformatie inverteren aan de hand van het volgende algoritme
+\begin{algo}[Inverse Fast Wavelet Transform]
+Gegeven een rij co\"effici\"enten $x_j\in\R^{2^j}$ dan definie\"eren we een recursief 
+algoritme $\textrm{iFWT}:\R^{2^j}\to\R^{2^j}$ volgens:\\
+Als $j=0$ dan geldt
+\[
+\textrm{iFWT}(x_j)[n] = x_j[n]
+\]
+Als $j>0$ laat $x_{j-1}[n] = x_j[n]$ en $d_{j-1}[n] = x_j[n+2^{j-1}]$ voor 
+$1\leq n\leq 2^{j-1}$. Bereken hiermee $a_{j-1} = iFWT(x_{j-1})$,
+dan geldt
 \begin{equation}
-\label{approx}
-	a_{j+1}[n] = \sum_{p=-\infty}^\infty h[p-2n] a_j[p] = a_j \star \bar{h}[2n]
+\label{reconstr_FWT}
+\textrm{iFWT}(x_j)[n] = (\hat a_{j-1}\star h)[n] + (\hat d_{j-1}\star g)[n]
 \end{equation}
-\begin{equation}
-\label{detail}
-	d_{j+1}[n] = \sum_{p=-\infty}^\infty g[p-2n] a_j[p] = a_j \star \bar{g}[2n]
-\end{equation}
-
-\subsection{Onze implementatie}
-
+Waarbij $\hat y [2n] = y[n]$ en $\hat y [2n+1] = 0$.  
+\end{algo}
+\begin{proof}[Bewijs van inversie]
+Voor het geval $j=0$ geldt duidelijk dat 
+$\textrm{iFWT}(\textrm{FWT}(a_0)) = \textrm{iFWT}(a_0) = a_0$.
+We zullen dus verder moeten bewijzen dat \ref{reconstr_FWT} de inverse van de FWT vormt.
+Schrijf hiervoor de basisfuncties van $V_j$ in termen van de basisfuncties van $V_{j-1}$
+en $W_{j-1}$, ofwel:
+\[
+\phi_{j,n} = \sum_{k=-\infty}^\infty \inpr{\phi_{j,n}}{\phi_{j-1,k}}\phi_{j-1,k}
++ \sum_{-\infty}^\infty \inpr{\phi_{j,n}}{\psi_{j-1,k}}\psi_{j-1,k}
+\]
+Deze inproducten komen weer overeen met de filterco\"efficienten, nemen we dus aan 
+beide zeiden het inproduct dan volgt
+\[
+a_j[n] = \sum_{k=-\infty}^\infty h[n-2k]a_{j-1}[k]
++ \sum_{-\infty}^\infty g[n-2k]d_{j-1}[k]
+\]
+Door nu in de sommatie de variabele $k$ te vervangen door $k'=2k$ vereenvoudigt dit tot
+\[
+a_j[n] = \sum_{k'=-\infty}^\infty h[n-k']\hat a_{j-1}[k']
++ \sum_{-\infty}^\infty g[n-2k]\hat d_{j-1}[k']
+\]
+Daarmee geeft de iFWT een inverse voor de FWT.
+\end{proof}
 \section{Analyse van de Wavelettransformatie}
 Met de theoretische beschouwing van wavelets en de Fast Wavelet Transform achter de rug, kunnen we wat verder kijken naar practische obstakels.
 
