@@ -1,8 +1,7 @@
 %We moeten even beslissen welke van de twee we willen gebruiken
 \documentclass[11pt]{report}
 %\documentclass[11pt]{amsart} 
-\usepackage[demo]{graphicx}
-\usepackage{subfigure}
+\usepackage{graphicx}
 
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -10,11 +9,14 @@
 
 \usepackage{parcolumns}
 
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{geometry}
+
 % PYTHON CODE
 \usepackage{listings}
 \usepackage{color}
 
-\usepackage{caption}
 
 \DeclareCaptionFont{black}{ \color{black} }
 \DeclareCaptionFormat{listing}{
@@ -979,7 +981,7 @@ operaties. Dus deze DWT is een $\mathcal{O}(KN)$ algoritme. Ook de complexiteit 
 
 \section{Meer dimensies: de Mallatdecompositie}
 NOOT: meer stressen dat je een algemene vorm hebt die 2 decomposities geeft
-NOOT: V^2_j => V^{(2)}_j.
+NOOT: $V^2_j => V^{(2)}_j$.
 
 Met een orthonormale waveletbasis $\{ \psi_{j,n}: (j,n) \in \Z^2\}$ van $L_2(\R)$ volgt een natuurlijke voortzetting naar twee dimensies door
 \[
@@ -1269,18 +1271,118 @@ Hoewel de vorige zin misschien klinkt alsof er roet in ons eten gegooid wordt, i
 \subsection{Onze implementatie}
 
 \chapter{Resultaten}
-\section{Fouriertransformatie}
-\subsection{Praktische nadelen}
-\subsection{Geluid}
-\subsection{Plaatjes}
+In dit hoofdstuk zullen we een kwantitatieve vergelijking tussen de verschillende algoritmes maken. Hierbij zullen we het begrip \emph{Peak Signal To Noise Ratio} gebruiken. Dit is een veelgebruikte methode om de reconstructiequaliteit van een lossy compressie-algoritme te testen.
 
-\section{Wavelettransformaties d.m.v. Mallatdecompositie}
-\subsection{Geluid}
-\subsection{Plaatjes}
+\begin{definitie}[Peak Signal To Noise Ratio (PSNR)]
+Gegeven een signaal $f: \Z^k \to \R^k$ en een reconstructie $\hat f$, is de $PSNR$ gelijk aan
+\[
+	PSNR(f) := 20 \cdot \log_{10}( M ) - 10 \cdot \log_{10}(S),
+\]
+waarbij
+\[
+	M := \max( \max_{\boldsymbol j \in \Z^k} (f[\boldsymbol k]), \max_{\boldsymbol j \in \Z^k} (\hat f[\boldsymbol k]))
+\]
+en
+\[
+	S := \sum_{\boldsymbol j \in \Z^k} (f[\boldsymbol j] - \hat f[\boldsymbol j])^2.
+\]
 
-\section{Wavelettransformaties in 3D: film}
-\subsection{Filmpjes met Mallat}
-\subsection{Filmpjes met Tensor}
+Hoe hoger de PSNR is, hoe beter de reconstructie (over het algemeen) zal zijn.
+\end{definitie}
+
+\pagebreak
+\newgeometry{left=2cm,right=2cm,top=1cm,bottom=1cm}
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/gentoo_fourier_0_15.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/gentoo_fourier_0_1.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/gentoo_fourier_0_05.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/gentoo_fourier_0_01.png}
+	\end{subfigure}
+	\caption{Fourier op compressieniveaus 0.15, 0.10, 0.05, 0.01.}
+\end{figure}
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/gentoo_haar_0_15.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/gentoo_haar_0_1.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/gentoo_haar_0_05.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/gentoo_haar_0_01.png}
+	\end{subfigure}	
+	\caption{Haar op compressieniveaus 0.15, 0.10, 0.05, 0.01.}
+\end{figure}
+\begin{figure}
+	\centering	
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/gentoo_db2_0_15.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/gentoo_db2_0_1.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/gentoo_db2_0_05.png}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{plaatjes/gentoo_db2_0_01.png}
+	\end{subfigure}	
+	\caption{Daubechies 2 op compressieniveaus 0.15, 0.10, 0.05, 0.01.}
+\end{figure}
+\begin{figure}
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+	\centering
+	\vspace{10pt}
+	\begingroup
+	
+\renewcommand*{\arraystretch}{1.5}
+	$\begin{array}{c | c c c c}
+	\text{Compr} & \text{Fourier} & \text{Haar} & \text{DB2} \\ \hline
+	0.150 & -21.564987 & 1.508043 & -0.325757 \\
+	0.125 & -22.220604 & -3.607729 & -4.753701 \\
+	0.100 & -22.974077 & -7.518578 & -8.964313 \\
+	0.075 & -23.893526 & -11.909545 & -13.080699 \\
+	0.050 & -25.134504 & -17.028756 & -17.498265 \\
+	0.040 & -25.786567 & -19.471026 & -19.515331 \\
+	0.030 & -26.597406 & -21.936183 & -21.791275 \\
+	0.020 & -27.693270 & -25.283096 & -24.377904 \\
+	0.010 & -29.532364 & -28.763393 & -27.638580 \\ \hline
+	\end{array}$
+	\endgroup
+	\end{subfigure}	
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\vspace{0pt}
+		\includegraphics[height=\textwidth]{plaatjes/grafiek_gentoo_0_15-0_01.png}
+	\end{subfigure}
+	\caption{Grafiek en PSNR.}
+\end{figure}
+\restoregeometry
+\pagebreak
 
 \chapter{Reflectie en discussie}
 \chapter{Populaire samenvatting}
