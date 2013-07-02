@@ -760,8 +760,10 @@ Een rij geneste ruimtes $\{ V_j: j \in \N_0 \}$ zoals in~\ref{multires} heet een
 
 \begin{voorbeeld} We bekijken een multiresolutie van stuksgewijs constante functies. De ruimte $V_j$ wordt hiermee
 \[
-	V_j = \left\{ g(t) \in L_2(\R): g(t)\text{ is constant voor }t \in [n 2^{-j}, (n+1)2^{-j}) \right \}
-\] met $n \in \Z$. De basisfunctie $\phi$ voor $V_0$ wordt in dit geval $\phi(t) = 1_{[0,1)}(t)$. \end{voorbeeld}
+V_j = \left\{ g(t) \in L_2(\R): g(t)\text{ is constant voor }t \in [n 2^{-j}, (n+1)2^{-j}) \right \}
+\] 
+met $n \in \Z$. De basisfunctie $\phi$ voor $V_0$ wordt in dit geval $\phi(t) = 1_{[0,1)}(t)$.
+\end{voorbeeld}
 
 \section{Schalingsfuncties}
 Gegeven zo'n orthonormale basis voor $V_0$ willen we graag een orthonormale basis voor $V_j$ construeren. 
@@ -1106,9 +1108,10 @@ welke een orthonormale basis voor $L_2(\R^2)$ is. We zien direct dat we op de $x
 Mallat vond dit iets om te vermijden \cite[\S 7.7]{mallat} en legt in zijn analyse dan ook de eis $j_1 = j_2 =: j$ op. Wij zullen in het vervolg \'o\'ok kijken naar het zogenaamde Tensorproduct, wat de eis $j_1 = j_2$ \emph{niet} oplegt.
 
 Zoals in 1 dimensie is de notie van `resolutie' geformaliseerd in het begrip multiresolutie. De definitie van deze multiresolutie is wederom een natuurlijke voortzetting van het eendimensionale geval. Wanneer we spreken over een separeerbare multiresolutie, gaat het om een ruimte $V_j^{(2)} := V_j \otimes V_j$. In \cite[A.5]{mallat} wordt nu bewezen dat, gegeven een orthonormale basis $\{ \phi_{j,m}: m \in \Z \}$ voor $V_j$, de verzameling
-\[
+\begin{equation}
+\label{phi_phi_basis}
 	\{ \phi^{(2)}_{j,n} := \phi_{j,n_1} \otimes \phi_{j,n_2}: n \in \Z^2 \}
-\]
+\end{equation}
 een orthonormale basis voor $V_j^{(2)}$ is.
 
 \begin{voorbeeld}
@@ -1124,15 +1127,17 @@ We vinden voor $V_j^{(2)}$ nu de ruimte van vierkantsgewijs constante functies o
 
 \subsection{Tweedimensionale Waveletfuncties}
 We weten dat $V_j^{(2)}$ bevat is in $V_{j+1}^{(2)}$. Bekijk het orthogonale complement $\boldsymbol{U}_j \perp V_j^{(2)}$:
-\[
-	V_j^{(2)} \oplus U_j = V_{j+1}^{(2)}.
-\]
+\begin{equation}
+  \label{2d_ruimte_rec}
+	V_j^{(2)} \oplus \boldsymbol{U}_j = V_{j+1}^{(2)}.
+\end{equation}
 Om nu een orthogonale waveletbasis voor $\boldsymbol{U}_j$ en (dus in de limiet) $L^2(\R^2)$ te vinden, gaan we als volgt te werk.
 \begin{stelling}[{\cite[T7.24]{mallat}}]
 Laat $\phi$ een schalingsfunctie en $\psi$ de bijhorende wavelet die en basis voor de $L^2(\R)$ voortbrengt. Maak drie wavelets
-\[
+\begin{equation}
+\label{psi_k_defs}
 	\psi^1(x) = \phi(x_1)\psi(x_2) \quad \psi^2(x) = \psi(x_1) \phi(x_2) \quad \psi^3(x) = \psi(x_1)\psi(x_2)
-\]
+\end{equation}
 en laat voor $k \in \{1,2,3\}$ nu
 \[
 	\psi^k_{j,n}(x) = 2^j \psi^k\left( 2^jx_1 - n_1, 2^j x_2 - n_2 \right).
@@ -1172,30 +1177,96 @@ is $\{ \phi_{0, n}^2: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{
 \end{proof}
 
 Bovenstaande basis heeft dus schalingsfuncties op \'e\'en niveau en waveletfuncties op alle niveaus. Net zoals in het eendimensionale geval kunnen we met deze basis een algoritme formuleren.
-\begin{algo}[Tweedimensionale Fast Wavelet Transform]
-Zoals in het eendimensionale geval, laat $j$ vast. Dan:
+
+\subsection{Naar een tweedimensionaal algoritme}
+Nu we een relatie hebben gevonden $(\ref{2d_ruimte_rec})$ tussen de ruimtes op verschillende
+niveau's volgens
 \[
-	a_j[n] := \langle f, \phi^{(2)}_{j,n} \rangle \quad d^k_j[n] := \langle f, \psi^k_{j,n} \rangle , k \in \{1,2,3\}.
+V_{j+1}^{(2)} = (V_j\otimes W_j) \oplus (W_j\otimes V_j) \oplus
+(W_j\otimes W_j) \oplus (V_j\otimes V_j)
+\] 
+kunnen we het eendimensionale algoritme uitbreiden naar twee dimensies.
+Hiervoor kijken we wederom naar de inproducten van een functie $f$ met
+onze basisfuncties.
+We defini\"eren daarvoor weer de \emph{approximatie}~co\"effici\"ent en een drietal
+van \emph{detail}~co\"effici\"enten volgens.
+\[
+	a_j[n] := \langle f, \phi^{(2)}_{j,n} \rangle \quad d^k_j[n] := \langle f, \psi^k_{j,n} \rangle ,\quad k \in \{1,2,3\}.
+\]
+We zullen nu in het bijzonder kunnen zeggen (maak gebruik van $\ref{phi_phi_basis}$)
+dat we de basis-functies op het niveau $j$ kunnen ontbinden volgens:
+\begin{equation}
+\label{phi_phi_som}
+\phi^{(2)}_{j,(n_1,n_2)} = \sum_{k_1=-\infty}^\infty \sum_{k_2=-\infty}^\infty
+\inpr{\phi_{j,n_1}\otimes\phi_{j,n_2}}{\phi_{j+1,k_1}\otimes\phi_{j+1,k_2}} 
+\phi^{(2)}_{j+1,(k_1,k_2)}
+\end{equation}
+\begin{equation}
+\label{psi_k_som}
+\psi^{p}_{j,(n_1,n_2)} = \sum_{k_1=-\infty}^\infty \sum_{k_2=-\infty}^\infty
+\inpr{\psi^p_{j,(n_1,n_2)}}{\phi_{j+1,k_1}\otimes\phi_{j+1,k_2}} 
+\phi^{(2)}_{j+1,(k_1,k_2)}
+\end{equation}
+We maken nu gebruik van \emph{TODO ref} om het inproduct behorende bij het tensorproduct
+van twee \emph{Hilbertruimten} uit te schrijven volgens:
+\[
+\inpr{a\otimes b}{c\otimes d} = \inpr{a}{c}\cdot \inpr{b}{d}
+\]
+Waarbij de inproducten lopen over de respectievelijke ruimtes.
+Dit versimpelt de inproducten die we zoeken volgens:
+\[
+\inpr{\phi_{j,n_1}\otimes\phi_{j,n_2}}{\phi_{j+1,k_1}\otimes\phi_{j+1,k_2}}
+=\inpr{\phi_{j,n_1}}{\phi_{j+1,k_1}}\inpr{\phi_{j,n_2}}{\phi_{j+1,k_2}}
+=h[k_1-2n_1]\cdot h[k_2-2n_2]
+\]
+Waarbij we de filterrelatie voor \'e\'en dimensie toepassen. We kunnen dit nog een
+stuk verbeteren door het product $h[\_]\cdot h[\_]$ om te schrijven naar een tensorproduct,
+dan is:
+\[
+h\otimes h : \Z\times\Z \to \R :: (x_1,x_2) \mapsto h[x_1]\cdot h[x_2]
+\]
+Deze stappen kunnen nu ook met hetzelfde argument toegepast worden op de $\psi^k$'s,
+we verkrijgen dan met een blik op de definities in ($\ref{psi_k_defs}$) de vergelijkingen:
+\[
+\inpr{\psi^1_{j,(n_1,n_2)}}{\phi^{(2)}_{j+1,(k_1,k_2)}} = (h\otimes g) [k_1-2n_1,k_2-2n_2]
+\]
+\[
+\inpr{\psi^2_{j,(n_1,n_2)}}{\phi^{(2)}_{j+1,(k_1,k_2)}} = (g\otimes h) [k_1-2n_1,k_2-2n_2]
+\]
+\[
+\inpr{\psi^3_{j,(n_1,n_2)}}{\phi^{(2)}_{j+1,(k_1,k_2)}} = (g\otimes g) [k_1-2n_1,k_2-2n_2]
+\]
+We richten ons nu weer op de \emph{approximatie} en \emph{detail}~co\"effici\"enten door
+aan beide zeiden van de vergelijkingen $\ref{phi_phi_som}$,$\ref{psi_k_som}$ het inproduct
+met $f$ te nemen. We kunnen dit aan de hand van onze nieuwe 2-dimensionale filters
+opschrijven met een convolutie in twee dimensies, namelijk
+\[
+	a_{j}[n] = (a_{j+1} \star (\bar{h} \otimes \bar{h}))[2n_1,2n_2];
+\]
+\[
+	d^1_{j}[n] =( a_{j+1} \star (\bar{h} \otimes \bar{g}))[2n_1,2n_2];
+\]
+\[
+	d^2_{j}[n] = (a_{j+1} \star (\bar{g} \otimes \bar{h}))[2n_1,2n_2];
+\]
+\[
+	d^3_{j}[n] = (a_{j+1} \star (\bar{g} \otimes \bar{g}))[2n_1,2n_2],
+\]
+waarbij de convolutie gegeven wordt door
+\[
+	(x \star y)[n_1,n_2] := \sum_{p_1=-\infty}^\infty \sum_{p_2 = -\infty}^\infty 
+        x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
 \]
 
-Vervolgens, gebruikmakend van vergelijkingen $\ref{approx}$ en $\ref{detail}$, zien we dat (TODO):
-\[
-	a_{j+1}[n] = a_j \star (\bar{h} \otimes \bar{h})[2n];
-\]
-\[
-	d^1_{j+1}[n] = a_j \star (\bar{h} \otimes \bar{g})[2n];
-\]
-\[
-	d^2_{j+1}[n] = a_j \star (\bar{g} \otimes \bar{h})[2n];
-\]
-\[
-	d^3_{j+1}[n] = a_j \star (\bar{g} \otimes \bar{g})[2n],
-\]
-waarbij
-\[
-	g \star (x \otimes y)[n_1,n_2] := \sum_{p_1=-\infty}^\infty x[n_1 - p_1] \sum_{p_2 = -\infty}^\infty y[n_2 - p_2] g[p_1, p_2]
-\]
-een tweedimensionale convolutie defini\"eert.
+
+\begin{algo}[Tweedimensionale Fast Wavelet Transform]
+
+NOOT: ik probeer zo min mogelijk definities in het algoritme te zetten zodat het iets makkelijker uit te leggen is.
+
+Zoals in het eendimensionale geval, laat $j$ vast. Dan:
+Vervolgens, gebruikmakend van vergelijkingen $ref{approx}$ en $ref{detail}$, zien we dat (TODO):
+
+NOOT: Dit is de 2d iFWT alweer:
 
 Andersom geldt dat
 \[
