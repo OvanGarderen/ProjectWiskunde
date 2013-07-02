@@ -2,6 +2,7 @@
 \documentclass[11pt]{report}
 %\documentclass[11pt]{amsart} 
 \usepackage{graphicx}
+\usepackage{hyperref}
 
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -16,7 +17,6 @@
 % PYTHON CODE
 \usepackage{listings}
 \usepackage{color}
-
 
 \DeclareCaptionFont{black}{ \color{black} }
 \DeclareCaptionFormat{listing}{
@@ -1144,7 +1144,7 @@ Dan is
 \] een basis voor $\boldsymbol{U}_j$ 
 en 
 \[
-	\{ \phi^2_{j, n}, \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}
+  \{ \phi_{0, n}^2: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}
 \] een basis voor $L^2(\R^2)$.
 \end{stelling}
 \begin{proof}[Bewijs]
@@ -1166,12 +1166,12 @@ Nu is het duidelijk dat $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2
 
 Omdat nu
 \[
-	L^2(\R^2) = \lim_{j \to \infty} V_j^{(2)} = V_0^{(2)} \oplus \lim_{j \to \infty} \bigoplus \boldsymbol{U}_j
+	L^2(\R^2) = \lim_{j \to \infty} V_j^{(2)} = \lim_{j \to \infty} ( V_0 \oplus \boldsymbol{U}_0 \oplus \cdots \oplus \boldsymbol{U}_{j-1} ) = \left( \bigoplus_{j=0}^\infty \boldsymbol{U}_j \right) \oplus V_0
 \]
-is $\{  \phi^2_{j, n}, \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}$ een basis voor $L^2(\R^2)$.
+is $\{ \phi_{0, n}^2: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}$ een basis voor $L^2(\R^2)$.
 \end{proof}
 
-Met deze kennis in handen zullen we het tweedimensionale geval van de Fast Wavelet Transform formuleren.
+Bovenstaande basis heeft dus schalingsfuncties op \'e\'en niveau en waveletfuncties op alle niveaus. Net zoals in het eendimensionale geval kunnen we met deze basis een algoritme formuleren.
 \begin{algo}[Tweedimensionale Fast Wavelet Transform]
 Zoals in het eendimensionale geval, laat $j$ vast. Dan:
 \[
@@ -1205,18 +1205,21 @@ a_j[n] = \breve{a}_{j+1} \star (h \otimes h)[n] + \breve{d}_{j+1}^1 \star (h \ot
 
 TODO: ogier schrijf jij dit af?
 
-Wat we steeds doen is de ruimte $V_j^{(2)}$ schrijven als $V_{j-1}^{(2)}$ met daarbij een aantal orthogonale complementen. Wanneer dit algoritme recursief toegepast wordt, schrijven we $V_{j-1}^{(2)}$ ook weer als $V_{j-2}^{(2)}$ met orthogonale complementen en zo voort. Dit levert dat
-\[
-	\boldsymbol\Phi = \left\{ \psi^k_{j-1,\cdot}, \psi^k_{j-2,\cdot}, \ldots \psi^k_{L,\cdot}, \phi^{(2)}_{L,\cdot}: k \in \{1,2,3\} \right\}
-\]
-een basis is voor $V_j^2$. TODO plaatje.
-
 \subsection{Meer dan twee dimensies}
 Het $n$-dimensionale geval van de Mallatdecompositie is nog TODOOO
 
-\subsection{Eindige signalen}
+\subsection{Eindige signalen in $n$ dimensies}
+Zoals in een eerdere sectie in 1 dimensie al aan werd gegeven, kijken we in de praktijk vaak naar signalen met een compacte drager, zeg $\Box := [0,1]^n$. Dan focussen we ons dus op functies $f \in L_2(\Box)$ en niet meer op functies in $L_2(\R^n)$. Net zoals eerder komen er problemen voor wavelets `op de rand'. Wij zullen hier wederom geen verdere aandacht aan besteden.
+
+Wanneer we $L_2(\Box)$ als deelruimte van $L_2(\R^n)$ beschouwen, is er een natuurlijke basis voor deze deelruimte te vinden. Neem namelijk alle basisfuncties met een drager die $\Box$ doorsnijdt (de rest is op $\Box$ namelijk gewoon de nulfunctie). Definieer $\nabla$ als de verzameling indices $\lambda := (j, n)$ van wavelets die drager doorsnijden met $[0,1]$. Dan wordt $\Psi := \{ \psi_\lambda: \lambda \in \nabla \}$ een basis voor $L_2([0,1])$. Definieer daarnaast $|\lambda| := |(j,n)| = j$ als het niveau.
+
+NOOT: dit stukje is poep.
+
+
+\iffalse
 Concreet zullen we echter niet gebruik maken van signalen die leven in $L^2(\R^n)$. We zullen eerder op zoek zijn naar de Wavelettransformatie van een signaal met compacte drager. Neem dus aan dat $f$ leeft in $L^2([0,1]^n)$. Dit $n$-dimensionale eenheidsinterval wordt ook wel met $\Box$ aangegeven. Omdat $\Box \subset \R^n$, kunnen we een waveletbasis voor $L^2(\R^n)$ ook als basis nemen voor $L^2(\Box)$. Maar eigenlijk is dit iets te veel (gezien het feit dat veel basisfuncties hun drager geheel buiten het interval zullen hebben). Daarom wordt de verzameling van indices $\lambda := (j,n)$ van wavelets die drager doorsnijden met $[0,1]$ ook wel $\nabla$ genoemd. Dus $\Psi = \{ \psi_\lambda: \lambda \in \nabla \}$ wordt nu een basis voor $L^2([0,1])$. Defini\"eer $|\lambda| = |(j,n)| = j$ als het niveau.
 Verder zullen we vanaf nu aannemen dat $\boldsymbol\psi$ een compacte drager heeft (zoals we in de praktijk altijd willen) en van orde $p$ is.
+\fi
 
 TODO: definitie $H^d$ -> Sobolevruimte + controleren in lemma's
 
@@ -1228,13 +1231,14 @@ Laat $f$ een functie in $L^2(\Box)$ met aftelbare orthonormale basis $\mathcal{B
 	f = \sum_{m = 0}^\infty \langle f, g_m \rangle g_m.
 \]
 
-\begin{lemm}
+\begin{lemm}[Parsevalgelijkheid\cite{parseval}]
 Als nu een functie $f$ in $L^2(\Box)$ geschreven wordt in $\mathcal{B}$ dan geldt
 \[
 	\|f\|^2 = \sum_{m=1}^\infty | \langle f, g_m \rangle |^2.
 \]
 \end{lemm}
 \begin{proof}[Bewijs]
+  TODO: bewijs skippen, reference er in?
 We hebben te maken met een Hilbertruimte dus
 \[
 \|f\|^2 = \langle f, f \rangle = \left\langle \sum_{m=1}^\infty \langle f, g_m \rangle g_m, \sum_{n=0}^\infty \langle f, g_n \rangle g_n \right\rangle = \sum_{m=1}^\infty \sum_{n=0}^\infty \left\langle \langle f, g_m \rangle g_m, \langle f, g_n \rangle g_n \right \rangle
@@ -1737,6 +1741,8 @@ St\'ephane Mallat,
 \bibitem{daubechies}
 Ingrid Daubechies, \emph{Orthonormal Bases of Compactly Supported Wavelets}.
 AT\&T Bell Laboratories, 1988.
+\bibitem{parseval}
+\url{http://www.encyclopediaofmath.org/index.php/Parseval_equality}
 
 \end{thebibliography}
 
