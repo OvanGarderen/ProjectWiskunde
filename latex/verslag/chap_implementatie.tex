@@ -1,0 +1,67 @@
+\chapter{Onze implementie}
+
+\section{Implementatie van Fourier Transformatie in Python}
+Met de theoretische basis uit voorgaande secties is de implementatie van het \emph{Fast Fourier Transform} algoritme
+nu aan bod gekomen. In deze sectie zullen we uitwijden over enkele genomen hordes en keuzes, de resultaten volgen
+in een latere sectie.
+
+\subsection{Fast Fourier Transform Implementatie}
+TODO: even kijken of we dit zo moeten doen of dat we beter alles kunnen referen
+
+De python code die gebruikt is om het FFT algoritme in te programmeren volgt precies het schema van Pseudocode
+zoals beschreven in een vorige sectie.
+
+\begin{lstlisting}[caption={FFT algoritme in Python, voert de pseudocode uit zoals in sectie (TODO)}]
+def FFT( xs ):
+    N = len(xs)
+    if N <= 1:                  # randconditie
+        return xs
+    else:
+        even = FFT(xs[0::2])    # voer FFT uit op even indices
+        odd  = FFT(xs[1::2])    # voer FFT uit op oneven indices
+
+        return [0.5*(even[k] + exp(-2j*pi*k/N)*odd[k]) for k in range(N/2)] + 
+               [0.5*(even[k] - exp(-2j*pi*k/N)*odd[k]) for k in range(N/2)]
+\end{lstlisting}
+
+Hierbij dient uitgelegd te worden dat de $[x \text{ for } y] + [z \text{ for } w]$ notatie twee lijsten construeert en achter elkaar zet. Dit algoritme werkt, zoals eerder beschreven enkel op signalen waarvan de lengte
+$N$ een macht van $2$ is. We hebben daarom signaalextensie toe moeten passen door middel van zero-padding
+om het programma ook op andersvormige signalen te laten werken.
+
+\begin{lstlisting}[caption={Zero-Padding algoritme in Python, voegt nullen toe tot een tweemacht is bereikt}]
+def Zero_Padding( xs ):
+    N_old = len(xs)
+    N_new = 2**ceil(log(N_old,2))         # rond logaritme af voor kleinste tweemacht
+    return [xs[k] if (k < N_old) else 0 for k in range(N_new)]
+\end{lstlisting}
+
+Vervolgens hebben we deze code toegepast in twee dimensies. We maken hier gebruik van de definitie van het
+MFFT algoritme, dat grofweg zegt dat een meerdimensionaal algoritme kan worden geconstrueerd door herhaald 
+het 1-dimensionale geval toe te passen. Voor 2 dimensies in het bijzonder betekent dit dat we simpelweg 
+FFT konden toepassen op rijen en kolommen.
+
+\begin{lstlisting}[caption=2-Dimensionaal FFT algoritme]
+def FFT_2D( xss ):
+    xss = map(FFT, xss)        # voer FFT uit op rijen
+
+    xss_t = transpose(xss)     # verwissel rijen met kolommen
+    xss_t = map(FFT, xss_t)    # voer FFT uit op kolommen
+    xss   = transpose(xss_t)   # maak verwisseling ongedaan 
+
+    return xss
+\end{lstlisting}
+Hier is de python-functie \emph{map} gebruikt die ruwweg gedefinieerd is als 
+$\text{map}(f,x) = [f(y) \text{ for } y \text{ in } x]$
+Met het oog op duidelijkheid is hier de Zero-Padding fase weggelaten, 
+dit algoritme verwacht nu nog een $2^n \times 2^m$ matrix.
+Dit is echter gemakkelijk te implementeren door Zero\_Padding toe te passen op rijen en kolommen.
+
+%-----------------------------------------------------------------------------------------------------------------
+
+TODO :: 
+Dingen die nog moeten.
+\begin{itemize}
+\item Iets over de conversie van matrix naar dictionary en de compressiestap 
+\item Iets over de manier waarop beelden geconstrueerd zijn (0 - 255 en dan 4 kanaals)
+\item Niet uit te breiden naar 3D $\to$ te langzaam.
+\end{itemize}

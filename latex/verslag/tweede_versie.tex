@@ -137,21 +137,13 @@ Op het voorblad is te zien, vanaf linksboven en dan met de klok mee:
 
 \tableofcontents
 \newpage
-\chapter{Intro}
-\section{Signaaluitbreiding}
-\label{signaal}
-Beide algoritmes kunnen enkel omgaan met signalen die een tweemacht lang zijn. Om te zorgen dat een willekeurig signaal ook getransformeerd kan worden, moet het dus uitgebreid worden voorbij zijn definitiegebied. De meeste bronnen onderscheiden de volgende manieren om het signaal uit te breiden. Laat $x_1, x_2, \ldots x_n$ het signaal.
-\begin{description}
-\item[Zero-padding] $x' = 0, \ldots, 0| x_1, x_2, \ldots, x_n| 0, \ldots, 0$. Het gevolg van deze uitbreiding is dat het signaal niet langer continu hoeft te zijn op de randen;
-\item[Constant padding] $x' = x_1, \ldots, x_1| x_1, x_2, \ldots, x_n| x_n, \ldots, x_n$. Het gevolg is nu dat het signaal geen continue afgeleide meer hoeft te hebben;
-\item[Symmetric padding] $x' = x_n, \ldots, x_1| x_1, x_2, \ldots, x_n| x_n, \ldots, x_1$. Het gevolg is nu dat het signaal geen continue afgeleide meer hoeft te hebben;
-\item[Periodic padding] $x' = x_1, \ldots, x_n| x_1, x_2, \ldots, x_n| x_1, \ldots, x_n$. Het nieuwe signaal hoeft wederom niet continu te worden.
-\end{description}
-Wij hebben ervoor gekozen om signalen uit te breiden door middel van zero-padding.
+\include{chap_intro}
 
 \include{chap_fourier}
 
 \include{chap_wavelet}
+
+\include{chap_implementatie}
 
 \include{chap_resultaten}
 
