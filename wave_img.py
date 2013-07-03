@@ -162,6 +162,7 @@ if __name__ == "__main__":
   mycompress = 1.0
   myoutfile = None
   mytensor = False
+  mythreshfunc = threshold_hard
 
   for o in opts:
     if o[0] == 'wavelet':
