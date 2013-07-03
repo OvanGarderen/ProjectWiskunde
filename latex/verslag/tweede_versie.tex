@@ -1240,18 +1240,14 @@ We richten ons nu weer op de \emph{approximatie} en \emph{detail}~co\"effici\"en
 aan beide zeiden van de vergelijkingen $\ref{phi_phi_som}$,$\ref{psi_k_som}$ het inproduct
 met $f$ te nemen. We kunnen dit aan de hand van onze nieuwe 2-dimensionale filters
 opschrijven met een convolutie in twee dimensies, namelijk
-\[
-	a_{j}[n] = (a_{j+1} \star (\bar{h} \otimes \bar{h}))[2n_1,2n_2];
-\]
-\[
-	d^1_{j}[n] =( a_{j+1} \star (\bar{h} \otimes \bar{g}))[2n_1,2n_2];
-\]
-\[
-	d^2_{j}[n] = (a_{j+1} \star (\bar{g} \otimes \bar{h}))[2n_1,2n_2];
-\]
-\[
-	d^3_{j}[n] = (a_{j+1} \star (\bar{g} \otimes \bar{g}))[2n_1,2n_2],
-\]
+\begin{eqnarray}
+\label{2d_coef_rec}
+	a_{j}[n_1,n_2] =& (a_{j+1} \star (\bar{h} \otimes \bar{h}))[2n_1,2n_2] \\
+	d^1_{j}[n_1,n_2] =&( a_{j+1} \star (\bar{h} \otimes \bar{g}))[2n_1,2n_2] \\
+	d^2_{j}[n_1,n_2] =& (a_{j+1} \star (\bar{g} \otimes \bar{h}))[2n_1,2n_2] \\
+\label{2d_coef_rec_last}
+	d^3_{j}[n_1,n_2] =& (a_{j+1} \star (\bar{g} \otimes \bar{g}))[2n_1,2n_2]
+\end{eqnarray}
 waarbij de convolutie gegeven wordt door
 \[
 	(x \star y)[n_1,n_2] := \sum_{p_1=-\infty}^\infty \sum_{p_2 = -\infty}^\infty 
@@ -1260,21 +1256,30 @@ waarbij de convolutie gegeven wordt door
 
 
 \begin{algo}[Tweedimensionale Fast Wavelet Transform]
-
-NOOT: ik probeer zo min mogelijk definities in het algoritme te zetten zodat het iets makkelijker uit te leggen is.
-
-Zoals in het eendimensionale geval, laat $j$ vast. Dan:
-Vervolgens, gebruikmakend van vergelijkingen $ref{approx}$ en $ref{detail}$, zien we dat (TODO):
-
-NOOT: Dit is de 2d iFWT alweer:
-
+Gegeven een matrix van co\"effici\"enten $a_j\in\R^{2^j}\times\R^{2^j}$ dan definie\"eren 
+we een recursief algoritme $\textrm{FWT}_2:\R^{2^j}\times\R^{2^j}\to\R^{2^j}\times\R^{2^j}$ 
+volgens:\\
+Als $j=0$ dan geldt
+\[
+\textrm{FWT}_2(a_j)[n_1,n_2] = a_j[n_1,n_2]
+\]
+Als $j>0$ bereken $a_{j-1}$,$d^1_{j-1}$,$d^2_{j-1}$ en $d^3_{j-1}$ uit $a_{j}$ 
+volgens $(\ref{2d_coef_rec}-\ref{2d_coef_rec_last})$
+Vervolgens geldt
+\[
+\textrm{FWT}(a_j)[n] = \begin{cases} 
+\textrm{FWT}(a_{j-1})[n] & \text{als } n\leq 2^{j-1} \\
+d_{j-1}[n] & \text{als } n>2^{j-1} \end{cases}
+\]
+\end{algo}
+\begin{algo}[Inverse Tweedimensionale Fast Wavelet Transform]
 Andersom geldt dat
 \[
 a_j[n] = \breve{a}_{j+1} \star (h \otimes h)[n] + \breve{d}_{j+1}^1 \star (h \otimes g)[n] + \breve{d}_{j+1}^2 \star (g \otimes h)[n] + \breve{d}_{j+1}^3 \star (g \otimes g)[n]
 \]
 \end{algo}
 
-TODO: ogier schrijf jij dit af?
+TODO: ogier schrijf jij dit af? Ja jan dit schrijf ik af!
 
 \subsection{Meer dan twee dimensies}
 Het $n$-dimensionale geval van de Mallatdecompositie is nog TODOOO
