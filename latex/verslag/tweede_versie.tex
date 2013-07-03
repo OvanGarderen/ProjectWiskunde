@@ -80,7 +80,7 @@
 \newtheorem*{definitie}{Definitie}
 
 \theoremstyle{remark}
-\newtheorem*{gevolg}{Gevolg}
+\newtheorem{gevolg}{Gevolg}
 \newtheorem*{opmerk}{Opmerking}
 \newtheorem*{voorbeeld}{Voorbeeld}
 
@@ -1097,7 +1097,6 @@ operaties. Dus deze DWT is een $\mathcal{O}(KN)$ algoritme. Ook de complexiteit 
 
 \section{Meer dimensies: de Mallatdecompositie}
 NOOT: meer stressen dat je een algemene vorm hebt die 2 decomposities geeft
-NOOT: $V^2_j => V^{(2)}_j$.
 
 Met een orthonormale waveletbasis $\{ \psi_{j,n}: (j,n) \in \Z^2\}$ van $L_2(\R)$ volgt een natuurlijke voortzetting naar twee dimensies door
 \[
@@ -1119,7 +1118,7 @@ Bekijk weer $V_j$ de ruimte van stuksgewijs constante functies op het interval
 \[
  [2^{-j} m, 2^{-j}(m+1) ), m \in \Z.
 \] 
-We vinden voor $V_j^{(2)}$ nu de ruimte van vierkantsgewijs constante functies op vierkanten $[2^{-j}n_1, 2^{-j}(n_1+1)) \times [2^{-j}n_2, 2^{-j}(n_2+1))$. De tweedimensionale schalingsfunctie wordt op die manier
+We vinden voor $V_j^{(2)}$ nu de ruimte van stuksgewijs constante functies op vierkanten $[2^{-j}n_1, 2^{-j}(n_1+1)) \times [2^{-j}n_2, 2^{-j}(n_2+1))$. De tweedimensionale schalingsfunctie wordt op die manier
 \[
 	\phi^{(2)}(x_1,x_2) = \phi(x_1)\phi(x_2) = \begin{cases} 1 & \text{ als } x_1 \in [0,1)\text{ en }x_2 \in [0,1) \\ 0 & \text{ anders.} \end{cases}
 \]
@@ -1169,12 +1168,19 @@ Vul nu $V_{j+1} = V_j \oplus W_j$ in om te vinden
 \]
 Nu is het duidelijk dat $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis is voor $\boldsymbol{U}_j$. 
 
-Omdat nu
+Omdat nu via vergelijking \ref{ruimterec} moet gelden
 \[
-	L^2(\R^2) = \lim_{j \to \infty} V_j^{(2)} = \lim_{j \to \infty} ( V_0 \oplus \boldsymbol{U}_0 \oplus \cdots \oplus \boldsymbol{U}_{j-1} ) = \left( \bigoplus_{j=0}^\infty \boldsymbol{U}_j \right) \oplus V_0
+	L^2(\R^2) = \lim_{j \to \infty} V_j^{(2)} = \lim_{j \to \infty} ( V_0^{(2)} \oplus \boldsymbol{U}_0 \oplus \cdots \oplus \boldsymbol{U}_{j-1} ) = \left( \bigoplus_{j=0}^\infty \boldsymbol{U}_j \right) \oplus V_0^{(2)}
 \]
 is $\{ \phi_{0, n}^2: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}$ een basis voor $L^2(\R^2)$.
 \end{proof}
+\begin{gevolg}
+In het bewijs wordt nu ook duidelijk dat 
+\[
+	\left\{ \phi_{0, n}^2: n \in \Z^2 \right\} \cup \left\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \{0, \ldots, L \}  \right\}
+\]
+een basis voor $V_L^{(2)}$ is.
+\end{gevolg}
 
 Bovenstaande basis heeft dus schalingsfuncties op \'e\'en niveau en waveletfuncties op alle niveaus. Net zoals in het eendimensionale geval kunnen we met deze basis een algoritme formuleren.
 
@@ -1285,6 +1291,9 @@ TODO: ogier schrijf jij dit af? Ja jan dit schrijf ik af!
 Het $n$-dimensionale geval van de Mallatdecompositie is nog TODOOO
 
 \subsection{Eindige signalen in $n$ dimensies}
+De notie van eindige signalen is al eerder langsgekomen. We bekijken functies met een compacte drager $[0,1]$. Het gevolg hiervan is dat de complete waveletbasis teveel elementen bevat. Alleen wavelets waarvan de drager het interval doorsnijdt, zijn voor ons interessant. Wanneer we nu naar meer dimensies gaan, praten we over een $n$-dimensionaal eenheidsinterval $[0,1]^n =: \Box$. 
+
+\iffalse
 Zoals in een eerdere sectie in 1 dimensie al aan werd gegeven, kijken we in de praktijk vaak naar signalen met een compacte drager, zeg $\Box := [0,1]^n$. Dan focussen we ons dus op functies $f \in L_2(\Box)$ en niet meer op functies in $L_2(\R^n)$. Net zoals eerder komen er problemen voor wavelets `op de rand'. Wij zullen hier wederom geen verdere aandacht aan besteden.
 
 Wanneer we $L_2(\Box)$ als deelruimte van $L_2(\R^n)$ beschouwen, is er een natuurlijke basis voor deze deelruimte te vinden. Neem namelijk alle basisfuncties met een drager die $\Box$ doorsnijdt (de rest is op $\Box$ namelijk gewoon de nulfunctie). Definieer $\nabla$ als de verzameling indices $\lambda := (j, n)$ van wavelets die drager doorsnijden met $[0,1]$. Dan wordt $\Psi := \{ \psi_\lambda: \lambda \in \nabla \}$ een basis voor $L_2([0,1])$. Definieer daarnaast $|\lambda| := |(j,n)| = j$ als het niveau.
@@ -1292,82 +1301,10 @@ Wanneer we $L_2(\Box)$ als deelruimte van $L_2(\R^n)$ beschouwen, is er een natu
 NOOT: dit stukje is poep.
 
 
-\iffalse
 Concreet zullen we echter niet gebruik maken van signalen die leven in $L^2(\R^n)$. We zullen eerder op zoek zijn naar de Wavelettransformatie van een signaal met compacte drager. Neem dus aan dat $f$ leeft in $L^2([0,1]^n)$. Dit $n$-dimensionale eenheidsinterval wordt ook wel met $\Box$ aangegeven. Omdat $\Box \subset \R^n$, kunnen we een waveletbasis voor $L^2(\R^n)$ ook als basis nemen voor $L^2(\Box)$. Maar eigenlijk is dit iets te veel (gezien het feit dat veel basisfuncties hun drager geheel buiten het interval zullen hebben). Daarom wordt de verzameling van indices $\lambda := (j,n)$ van wavelets die drager doorsnijden met $[0,1]$ ook wel $\nabla$ genoemd. Dus $\Psi = \{ \psi_\lambda: \lambda \in \nabla \}$ wordt nu een basis voor $L^2([0,1])$. Defini\"eer $|\lambda| = |(j,n)| = j$ als het niveau.
 Verder zullen we vanaf nu aannemen dat $\boldsymbol\psi$ een compacte drager heeft (zoals we in de praktijk altijd willen) en van orde $p$ is.
 \fi
 
-TODO: definitie $H^d$ -> Sobolevruimte + controleren in lemma's
-
-\subsection{Analyse van de fout van een lineaire benadering}
-Bij compressie is men op zoek naar een manier om stukjes data weg te kunnen gooien of te schrijven op zo'n manier dat het minder ruimte inneemt. Wij zijn in het bijzonder ge\"interesseerd naar \emph{hoe dichtbij} we bij perfecte reconstructie zitten wanneer we een vooraf bepaald aantal data opslaan. Er is al uitgebreid onderzoek gedaan naar hoe dit werkt bij de waveletbasis en een aantal resultaten hiervan zullen we opnemen in ons verslag.
-
-Laat $f$ een functie in $L^2(\Box)$ met aftelbare orthonormale basis $\mathcal{B} = \{ g_m \}$. Dan valt $f$ in deze basis te schrijven als
-\[
-	f = \sum_{m = 0}^\infty \langle f, g_m \rangle g_m.
-\]
-
-\begin{lemm}[Parsevalgelijkheid\cite{parseval}]
-Als nu een functie $f$ in $L^2(\Box)$ geschreven wordt in $\mathcal{B}$ dan geldt
-\[
-	\|f\|^2 = \sum_{m=1}^\infty | \langle f, g_m \rangle |^2.
-\]
-\end{lemm}
-\begin{proof}[Bewijs]
-  TODO: bewijs skippen, reference er in?
-We hebben te maken met een Hilbertruimte dus
-\[
-\|f\|^2 = \langle f, f \rangle = \left\langle \sum_{m=1}^\infty \langle f, g_m \rangle g_m, \sum_{n=0}^\infty \langle f, g_n \rangle g_n \right\rangle = \sum_{m=1}^\infty \sum_{n=0}^\infty \left\langle \langle f, g_m \rangle g_m, \langle f, g_n \rangle g_n \right \rangle
-\]
-\[
- = \sum_{m=1}^\infty \sum_{n=1}^\infty \langle f, g_m \rangle \overline{\langle f, g_n \rangle}\langle g_m, g_n \rangle = \sum_{m=1}^\infty \sum_{n=1}^\infty \langle f, g_m \rangle \overline{\langle f, g_n \rangle} \delta_{m,n} 
-\]
-\[ = \sum_{m=1}^\infty \langle f, g_m \rangle \overline{\langle f, g_m \rangle} = \sum_{m=1}^\infty |\langle f, g_m \rangle |^2.
-\]
-\end{proof}
-
-Wanneer we nu niet de hele basis, maar zeg alleen de eerste $N$ elementen pakken, krijgen we een verzameling $\mathcal{B}_N \subset \mathcal{B}$ zodat
-\[
-	f_{\mathcal{B}_N} := \sum_{m = 1}^N \langle f, g_m \rangle g_m.
-\]
-
-In het bijzonder zijn we nu op zoek naar de \emph{fout} $\| f - f_{\mathcal{B}_N} \|$:
-\[
-	\| f - f_{\mathcal{B}_N} \|^2 = \left\| \sum_{m=1}^\infty\langle f, g_m \rangle g_m - \sum_{m=1}^N \langle f, g_m \rangle g_m \right\|^2 = \left\| \sum_{m=N+1}^\infty\langle f, g_m \rangle g_m \right\|^2 = \sum_{m=N+1}^\infty | \langle f, g_m \rangle |^2.
-\]
-Duidelijk moge zijn dat voor $N \to \infty$, $\| f - f_{\mathcal{B}_N} \|^2 \to 0$.
-
-\subsection{Fout van de Mallatdecompositie}
-NOOT: mallat-waveletbasis uitwerken/vermelden
-Wij zijn op het moment ge\"interesseerd in de Mallat-waveletbasis $\boldsymbol\Phi$. Deze is ook duidelijk aftelbaar dus bovenstaande eigenschap geldt.
-
-Defini\"eer $J_M := \{ l \in \N^n: \| l \|_\infty \leq M \}$. Laat $\boldsymbol\Phi_M := \{ \boldsymbol{\psi}_{\boldsymbol{\lambda}} \in \boldsymbol\Phi: |\boldsymbol\lambda| \in J_M \}$ met $|\boldsymbol\lambda| = (|\lambda_1, \ldots, |\lambda_n|)$ de verzameling basisfuncties tot een niveau $M$.
-
-\begin{stelling}[Fout van Mallatdecompositie]
-Wanneer $f \in H^p(\Box)$, zal de fout $\| f - f_{\mathcal{\boldsymbol\Phi}_M} \|$ bij een Mallatdecompositie met de basisfuncties tot niveau $M$ hoogstens proportioneel met $(\# \boldsymbol\Phi_M)^{-p/n}$ zijn.
-\end{stelling}
-\begin{proof}
-
-We maken gebruik van de zogenaamde Jacksonongelijkheid \cite{jackson} die zegt dat 
-\[
-  \inf_{q \in \mathbb{P}_{p-1}} ||f - q||_{L_2(\Box)} \simeq 2^{-jp} ||f||_{H^p(\Box)}
-\]
-wanneer $f \in H^p(\Box)$.
-
-Voor elke dimensie zitten er $\mathcal{O}(2^M)$ basisfuncties in $\{ \psi_\lambda: |\lambda| \leq M \}$. Er zijn $n$ dimensies dus $2^{Mn} = N (= \# \boldsymbol\Phi)$ basisfuncties in totaal.
-
-Bekijk de fout:
-\[
-  \left\| f - f_{\boldsymbol\Phi_M} \right\|^2_{L_2(\Box)} = \sum_{{\boldsymbol\psi} \in \boldsymbol\Phi \setminus \boldsymbol\Phi_M} | \langle f, \boldsymbol\psi \rangle |^2 \simeq \sum_{|\boldsymbol\lambda| > M} 2^{-|\boldsymbol\lambda|p} \simeq 2^{-Mp},
-\]
-waarbij het laatste isteken voortkomt uit
-\[
-	\sum_{k=M+1}^\infty 2^{- kp} = \frac{2^{-Mp}}{2^p-1}
-\]
-en de notie dat $p$ constant is voor een keuze van de wavelet. De fout is nu $2^{-Mp/2} \simeq 2^{-Mp}$. Omschrijven geeft dat dit overeenkomt met een fout van $N^{-p/n}$.
-\end{proof}
-
-\subsection{Onze implementatie}
 \section{Tensorproduct}
 Herinner de gelijkheid
 \[
@@ -1401,8 +1338,95 @@ In onze definitie\footnote{In de literatuur wordt de Mallatdecompositie ook vaak
 \subsection{Meer dan twee dimensies}
 Het moge duidelijk zijn hoe het Tensorproduct schaalt naar meer dimensies. De $\boldsymbol\Psi$ moet hier gewoon niet langer twee basisfuncties maar $n$ basisfuncties pakken. 
 
+\section{Analyse van de fout van beide decomposities}
+
+Bij compressie is men op zoek naar een manier om stukjes data weg te kunnen gooien of te schrijven op zo'n manier dat het minder ruimte inneemt. Wij zijn in het bijzonder ge\"interesseerd naar \emph{hoe dichtbij} we bij perfecte reconstructie zitten wanneer we een vooraf bepaald aantal data opslaan. Er is al uitgebreid onderzoek gedaan naar hoe dit werkt bij de waveletbasis en een aantal resultaten hiervan zullen we opnemen in ons verslag.
+
+Laat $f$ een functie in $L^2(\Box)$ met aftelbare orthonormale basis $\mathcal{B} = \{ g_m \}$. Dan valt $f$ in deze basis te schrijven als
+\[
+	f = \sum_{m = 0}^\infty \langle f, g_m \rangle g_m.
+\]
+
+\begin{lemm}[Parsevalgelijkheid\cite{parseval}]
+Als nu een functie $f$ in $L^2(\Box)$ geschreven wordt in $\mathcal{B}$ dan geldt
+\[
+	\|f\|^2 = \sum_{m=1}^\infty | \langle f, g_m \rangle |^2.
+\]
+\end{lemm}
+\begin{proof}[Bewijs]
+  TODO: bewijs skippen, reference er in?
+We hebben te maken met een Hilbertruimte dus
+\[
+\|f\|^2 = \langle f, f \rangle = \left\langle \sum_{m=1}^\infty \langle f, g_m \rangle g_m, \sum_{n=0}^\infty \langle f, g_n \rangle g_n \right\rangle = \sum_{m=1}^\infty \sum_{n=0}^\infty \left\langle \langle f, g_m \rangle g_m, \langle f, g_n \rangle g_n \right \rangle
+\]
+\[
+ = \sum_{m=1}^\infty \sum_{n=1}^\infty \langle f, g_m \rangle \overline{\langle f, g_n \rangle}\langle g_m, g_n \rangle = \sum_{m=1}^\infty \sum_{n=1}^\infty \langle f, g_m \rangle \overline{\langle f, g_n \rangle} \delta_{m,n} 
+\]
+\[ = \sum_{m=1}^\infty \langle f, g_m \rangle \overline{\langle f, g_m \rangle} = \sum_{m=1}^\infty |\langle f, g_m \rangle |^2.
+\]
+\end{proof}
+
+\begin{gevolg}
+\label{linfout}
+Wanneer we nu niet de hele basis, maar zeg alleen de eerste $N$ elementen pakken, krijgen we een verzameling $\mathcal{B}_N \subset \mathcal{B}$ zodat
+\[
+	f_{\mathcal{B}_N} := \sum_{m = 1}^N \langle f, g_m \rangle g_m.
+\]
+
+In het bijzonder zijn we nu op zoek naar de \emph{fout} $\| f - f_{\mathcal{B}_N} \|$:
+\[
+	\| f - f_{\mathcal{B}_N} \|^2 = \left\| \sum_{m=1}^\infty\langle f, g_m \rangle g_m - \sum_{m=1}^N \langle f, g_m \rangle g_m \right\|^2 = \left\| \sum_{m=N+1}^\infty\langle f, g_m \rangle g_m \right\|^2 = \sum_{m=N+1}^\infty | \langle f, g_m \rangle |^2.
+\]
+Duidelijk moge zijn dat voor $N \to \infty$, $\| f - f_{\mathcal{B}_N} \|^2 \to 0$.
+\end{gevolg}
+
+\begin{definitie}[Sobolevruimte]
+Een Sobolevruimte $H^p(\Omega)$ over $\Omega \subset \R^n$ is de verzameling van alle functies $u \in L_2(\Omega)$ z\'o dat voor elke $\alpha \in \R^n$ geldt dat $|\alpha| \leq p \implies D^\alpha u \in L_2(\Omega)$. De zwakke parti\"ele afgeleide $D^\alpha u$ betekent
+\[
+	D^\alpha u := \frac{\partial^{|\alpha|} u}{\partial x_1^{\alpha_1} \cdots \partial x_n^{\alpha_n} }.
+\]
+
+De norm op $H^p$ wordt nu
+\[
+	\| u \|_{H^p(\Omega)} := \sum_{|\alpha| \leq k} \| D^\alpha u \|_{L_2(\Omega)}.
+\]
+\end{definitie}
+
+\subsection{Fout van de Mallatdecompositie}
+NOOT: mallat-waveletbasis uitwerken/vermelden
+Wij zijn op het moment ge\"interesseerd in de Mallat-waveletbasis $\boldsymbol\Phi$. Deze is ook duidelijk aftelbaar dus we kunnen gevolg~\ref{linfout} gebruiken. 
+
+Defini\"eer $J_M := \{ l \in \N^n: \| l \|_\infty \leq M \}$. Laat $\boldsymbol\Phi_M := \{ \boldsymbol{\psi}_{\boldsymbol{\lambda}} \in \boldsymbol\Phi: |\boldsymbol\lambda| \in J_M \}$ met $|\boldsymbol\lambda| = (|\lambda_1, \ldots, |\lambda_n|)$ de verzameling basisfuncties tot een niveau $M$.
+
+\begin{stelling}[Fout van Mallatdecompositie]
+Wanneer $f \in H^p(\Box)$, zal de fout $\| f - f_{\mathcal{\boldsymbol\Phi}_M} \|$ bij een Mallatdecompositie met de basisfuncties tot niveau $M$ hoogstens proportioneel met $N^{-p/n}$ zijn, met $N := \# \boldsymbol\Phi_M$ het aantal basisfuncties tot niveau $M$.
+\end{stelling}
+\begin{proof}
+
+We maken gebruik van de zogenaamde Jacksonongelijkheid \cite{jackson} die zegt dat 
+\[
+  \inf_{q \in \mathbb{P}_{p-1}} ||f - q||_{L_2(\Box)} \simeq 2^{-jp} ||f||_{H^p(\Box)}
+\]
+wanneer $f \in H^p(\Box)$.
+
+Voor elke dimensie zitten er $\mathcal{O}(2^M)$ basisfuncties in $\{ \psi_\lambda: |\lambda| \leq M \}$. Er zijn $n$ dimensies dus $2^{Mn} = N$ basisfuncties in totaal.
+
+Bekijk de fout:
+\[
+  \left\| f - f_{\boldsymbol\Phi_M} \right\|^2_{L_2(\Box)} = \sum_{{\boldsymbol\psi} \in \boldsymbol\Phi \setminus \boldsymbol\Phi_M} | \langle f, \boldsymbol\psi \rangle |^2 \simeq \sum_{|\boldsymbol\lambda| > M} 2^{-|\boldsymbol\lambda|p} \simeq 2^{-Mp},
+\]
+waarbij het laatste isteken voortkomt uit
+\[
+	\sum_{k=M+1}^\infty 2^{- kp} = \frac{2^{-Mp}}{2^p-1}
+\]
+en de notie dat $p$ constant is voor een keuze van de wavelet. De fout is nu $2^{-Mp/2} \simeq 2^{-Mp}$. Omschrijven geeft dat dit overeenkomt met een fout van $N^{-p/n}$.
+\end{proof}
+
+
+
 \subsection{Fout van het Tensorproduct}
-NOOT: $H^d$ en shit
+We bekijken een aftelbare basis van $L_2(\Box)$. In 1 dimensie wordt deze basis gevonden door $\{ \psi_\lambda: \lambda \in \nabla \}$, waarbij $\nabla$ precies de indexverzameling van deze basis is.
+
 Volgens \cite[L3.1.7]{tammo} is 
 \[ 
   \boldsymbol\Psi = \Psi \otimes \cdots \otimes \Psi = \{ \boldsymbol{\psi_\lambda} := \psi_{\lambda_1} \otimes \cdots \otimes \psi_{\lambda_n}: \lambda_i \in \nabla \}
@@ -1476,8 +1500,6 @@ NOOT: needs moar exclamation
 In de praktijk hebben we echter nooit te maken met compleet gladde functies. Gevolg is dat deze stellingen niet helemaal opgaan. Niet \emph{helemaal}, omdat per constructie van onze wavelet, de basis compact is en dus `zoomen we in' op de functie. Lokaal is de mogelijkheid dat $f$ glad genoeg is ineens een stuk meer in zicht. Het gevolg is wel dat je op zo'n moment waarschijnlijk lokaal een hoger niveau wil gebruiken. De bewijzen van hierboven zijn op basis van een \emph{niet-adaptieve} deelverzameling, dat wil zeggen dat ze geen rekening houden met lokaal een hoger niveau.
 
 Hoewel de vorige zin misschien klinkt alsof er roet in ons eten gegooid wordt, is het in de praktijk toch goed mogelijk om de gevolgen te zien. Dit zullen we zien wanneer we de twee decomposities zullen gaan vergelijken.
-
-\subsection{Onze implementatie}
 
 \chapter{Resultaten}
 In dit hoofdstuk zullen we een kwantitatieve vergelijking tussen de verschillende algoritmes maken. Hierbij zullen we het begrip \emph{Peak Signal To Noise Ratio} gebruiken. Dit is een veelgebruikte methode om de reconstructiequaliteit van een lossy compressie-algoritme te testen.
@@ -1785,7 +1807,7 @@ In dit laatste hoofdstuk zullen we een meta-analyse maken van de praktische resu
 Wanneer we kijken naar de grafieken, wordt het direct duidelijk dat de Fouriertransformatie in eigenlijk alle gevallen een slechter resultaat oplevert (zowel in `wolligheid' als gereflecteerd door de PSNR).
 \chapter{Populaire samenvatting}
 
-\begin{thebibliography}{11}
+\begin{thebibliography}{9}
 
 \bibitem{akra-bazzi}
   Mohamad Akra, Louay Bazzi,
