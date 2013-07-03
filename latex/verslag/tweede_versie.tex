@@ -1194,10 +1194,11 @@ Bovenstaande basis heeft dus schalingsfuncties op \'e\'en niveau en waveletfunct
 \subsection{Naar een tweedimensionaal algoritme}
 Nu we een relatie hebben gevonden $(\ref{2d_ruimte_rec})$ tussen de ruimtes op verschillende
 niveau's volgens
-\[
+\begin{equation}
+  \label{2d_ruimte_decomp}
 V_{j+1}^{(2)} = (V_j\otimes W_j) \oplus (W_j\otimes V_j) \oplus
 (W_j\otimes W_j) \oplus (V_j\otimes V_j)
-\]
+\end{equation}
 kunnen we het eendimensionale algoritme uitbreiden naar twee dimensies.
 Hiervoor kijken we wederom naar de inproducten van een functie $f$ met
 onze basisfuncties.
@@ -1402,10 +1403,26 @@ Verder zullen we vanaf nu aannemen dat $\boldsymbol\psi$ een compacte drager hee
 \fi
 
 \section{Tensorproduct}
-Herinner de gelijkheid
+Herinner dat we voor de Mallat-decompositie gebruik maakte van de gelijkheid (zie \ref{2d_ruimte_decomp}):
 \[
-	V_{j} = V_{j+1} \oplus W_{j+1}.
+V_{j}^{(2)} = (V_{j-1}\otimes W_{j-1}) \oplus (W_{j-1}\otimes V_{j-1}) \oplus
+(W_{j-1}\otimes W_{j-1}) \oplus (V^{(2)}_{j-1})
 \]
+Door dit herhaald toe te passen kregen we een basis van de vorm:
+\[
+\{\phi^{(2)}_{0,(n_11,n_2)}\largediv n_1,n_2\in\Z\}\cup
+\{\psi^k_{j,(n_1,n_2)} \largediv k=1,2,3\quad j\in \N_0 \quad n_1,n_2\in\Z\}
+\]
+We zullen nu echter zien dat er ook een andere manier is om deze ruimte te decomposeren.
+Bedenk dat we in 1 dimensie de decompositie zoals in \ref{ruimte_splitsing} gebruiken volgens:
+\[
+V_j = V_0 \oplus W_0 \oplus \cdots \oplus W_{j-1}
+\]
+Daarmee schrijven we de ruimte $V^{(2)}_j$ als het tensorproduct van $V_j$ met zichzelf:
+\[
+V^{(2)}_j = V_j\otimes V_j = (V_0\oplus W_0\oplus\cdots W_{j-1})\otimes(V_0\oplus W_0\oplus\cdots W_{j-1})
+\]
+Dit geeft aanleiding tot een nieuwe 
 Dit kan ook herhaaldelijk toegepast worden:
 \[
 	V_j = V_{j+1} \oplus W_{j+1} = (V_{j+2} \oplus W_{j+2} ) \oplus W_{j+1} = \ldots = V_{L} \oplus W_L \oplus \cdots \oplus W_{j+1}.
