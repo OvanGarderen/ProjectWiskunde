@@ -120,6 +120,8 @@
 	\includegraphics[width=0.6\linewidth]{plaatjes/voorkant.png}
 }
 
+\includeonly{chap_implementatie, chap_wavelet}
+
 \begin{document}
 \maketitle
 
@@ -148,9 +150,27 @@ Op het voorblad is te zien, vanaf linksboven en dan met de klok mee:
 \include{chap_resultaten}
 
 \chapter{Reflectie en discussie}
-In dit laatste hoofdstuk zullen we een meta-analyse maken van de praktische resultaten. Bladiebla TODO.
+In dit laatste hoofdstuk zullen we een analyse maken van het praktische deel van ons project.
 
-Wanneer we kijken naar de grafieken, wordt het direct duidelijk dat de Fouriertransformatie in eigenlijk alle gevallen een slechter resultaat oplevert (zowel in `wolligheid' als gereflecteerd door de PSNR).
+Wanneer we kijken naar de grafieken, wordt het direct duidelijk dat de Fouriertransformatie in eigenlijk alle gevallen een slechter resultaat oplevert (zowel in `wolligheid' als gereflecteerd door de PSNR). Het enige geval waarin Fourier echt beter presteert dan de wavelets is wanneer we kijken naar een periodieke functie.
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[b]{0.25\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plaatjes/sin_fourier.png}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.25\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plaatjes/sin.png}
+  \end{subfigure}
+  \caption{Een periodiek signaal wordt perfect door de Fouriertransformatie gereconstrueerd bij 1 \% van de data, maar de wavelettransformatie kan op het zelfde niveau niet tippen.}
+\end{figure}
+
+De reden hiervoor is al veelvuldig aangedragen: waveletbasisfuncties hebben een lokale drager, terwijl de basisfuncties van Fourier op de hele ruimte werken. Hoewel dit een heel voor de hand liggende reden is, is het toch mooi om dit in de praktijk te zien.
+
+\section{Fotorealisme versus strak}
+Kijkende naar Lenna op de verschillende compressieniveaus, is het duidelijk dat de Daubechieswavelet bla
+
 \chapter{Populaire samenvatting}
 
 \begin{thebibliography}{11}
