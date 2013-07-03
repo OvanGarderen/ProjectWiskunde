@@ -1,17 +1,20 @@
 \chapter{Onze implementie}
 
-\section{Implementatie van Fourier Transformatie in Python}
-Met de theoretische basis uit voorgaande secties is de implementatie van het \emph{Fast Fourier Transform} algoritme
-nu aan bod gekomen. In deze sectie zullen we uitwijden over enkele genomen hordes en keuzes, de resultaten volgen
+Een discreet signaal in 1 dimensie kan over het algemeen geschreven worden als een vector re\"ele getallen van een bepaalde lengte (de signaallengte). Wanneer we plaatjes willen beschrijven, bekijken we daarom vaak matrices. Dit is een matrix van grijswaardes, waarbij vier kanalen (rood, groen, blauw, doorzichtigheid) elk een eigen matrix hebben die bij elkaar de representatie geven van een kleurenplaatje.
+
+Omdat het menselijk oog niet heel nauwkeurig is, en door de limitaties van computers, slaan we de matrixco\"effici\"enten niet op als re\"ele getallen. In plaats daarvan worden vaak integerwaardes tussen 0 en 255 gebruikt. Omdat elk van de 3 kleurenkanalen zo 256 waardes krijgt, is het kleurenpallet toch groot. In elk van onze implementaties worden beelden gescheiden in haar vier kanalen en wordt op elk kanaal afzonderlijk het algoritme toegpast. De reden voor deze keuze is dat de verschillende kanalen niet veel met elkaar van doen hoeven hebben.
+
+Bewegend beeld is zo op precies dezelfde manier te zien als een driedimensionale matrix.
+
+\section{Implementatie van Fouriertransformatie in Python}
+Met de theoretische basis uit voorgaande secties is de implementatie van het \emph{Fast Fourier Transform}-algoritme
+nu aan bod gekomen. In deze sectie zullen we uitweiden over enkele genomen hordes en keuzes, de resultaten volgen
 in een latere sectie.
 
 \subsection{Fast Fourier Transform Implementatie}
-TODO: even kijken of we dit zo moeten doen of dat we beter alles kunnen referen
+De Pythoncode die gebruikt is om het FFT-algoritme in te programmeren volgt precies het schema van de eerder gegeven pseudocode.
 
-De python code die gebruikt is om het FFT algoritme in te programmeren volgt precies het schema van Pseudocode
-zoals beschreven in een vorige sectie.
-
-\begin{lstlisting}[caption={FFT algoritme in Python, voert de pseudocode uit zoals in sectie (TODO)}]
+\begin{lstlisting}[caption={FFT algoritme in Python, voert de pseudocode uit zoals in sectie~\ref{fft_sec}}]
 def FFT( xs ):
     N = len(xs)
     if N <= 1:                  # randconditie
@@ -22,13 +25,13 @@ def FFT( xs ):
 
         return [0.5*(even[k] + exp(-2j*pi*k/N)*odd[k]) for k in range(N/2)] + 
                [0.5*(even[k] - exp(-2j*pi*k/N)*odd[k]) for k in range(N/2)]
-\end{lstlisting}
+\end{lstlisting}as
 
-Hierbij dient uitgelegd te worden dat de $[x \text{ for } y] + [z \text{ for } w]$ notatie twee lijsten construeert en achter elkaar zet. Dit algoritme werkt, zoals eerder beschreven enkel op signalen waarvan de lengte
+Hierbij dient uitgelegd te worden dat de notatie $[x \text{ for } y] + [z \text{ for } w]$ twee lijsten construeert en achter elkaar zet. Dit algoritme werkt -- zoals eerder beschreven -- enkel op signalen waarvan de lengte
 $N$ een macht van $2$ is. We hebben daarom signaalextensie toe moeten passen door middel van zero-padding
 om het programma ook op andersvormige signalen te laten werken.
 
-\begin{lstlisting}[caption={Zero-Padding algoritme in Python, voegt nullen toe tot een tweemacht is bereikt}]
+\begin{lstlisting}[caption={Zero-padding algoritme in Python, voegt nullen toe tot een tweemacht is bereikt}]
 def Zero_Padding( xs ):
     N_old = len(xs)
     N_new = 2**ceil(log(N_old,2))         # rond logaritme af voor kleinste tweemacht
@@ -36,7 +39,7 @@ def Zero_Padding( xs ):
 \end{lstlisting}
 
 Vervolgens hebben we deze code toegepast in twee dimensies. We maken hier gebruik van de definitie van het
-MFFT algoritme, dat grofweg zegt dat een meerdimensionaal algoritme kan worden geconstrueerd door herhaald 
+MFFT-algoritme, dat grofweg zegt dat een meerdimensionaal algoritme kan worden geconstrueerd door herhaald 
 het 1-dimensionale geval toe te passen. Voor 2 dimensies in het bijzonder betekent dit dat we simpelweg 
 FFT konden toepassen op rijen en kolommen.
 
@@ -50,18 +53,133 @@ def FFT_2D( xss ):
 
     return xss
 \end{lstlisting}
-Hier is de python-functie \emph{map} gebruikt die ruwweg gedefinieerd is als 
-$\text{map}(f,x) = [f(y) \text{ for } y \text{ in } x]$
+Hier is de Pythonfunctie \texttt{map} gebruikt die ruwweg gedefinieerd is als 
+\[
+	\texttt{map}(f,x) = [f(y) \text{ for } y \text{ in } x]
+\]
 Met het oog op duidelijkheid is hier de Zero-Padding fase weggelaten, 
 dit algoritme verwacht nu nog een $2^n \times 2^m$ matrix.
-Dit is echter gemakkelijk te implementeren door Zero\_Padding toe te passen op rijen en kolommen.
+Dit is echter gemakkelijk te implementeren door Zero-Padding toe te passen op rijen en kolommen.
 
-%-----------------------------------------------------------------------------------------------------------------
+\subsection{Compressie}
+Zoals in de introductie van ons verslag al aan bod gekomen is, hebben we compressie bereikt door de kleinste co\"effici\"enten weg te gooien en aan de slag te gaan met een kleinere lijst. Dit brengt twee problemen met zich mee: (1) welke waarde nemen we als \emph{cutoff}, en (2) hoe slaan we de overgebleven co\"effici\"enten op?
+\subsubsection{Cutoff}
+Hoewel ons eerste programma een voorgegeven cutoff verwachtte, hebben latere versies de volgende routine gebruikt. TODO: leg uit waarom die return waarde werkt.
+\begin{lstlisting}[caption=Het vinden van een goede cutoff-waarde gegeven een gewenst compressieniveau]
+def find_cutoff( mat, ratio ):
+	if ratio < 0 or ratio > 1: return
+	length = reduce( lambda x, y: x*y, array.shape ) #aantal cellen in de matrix 
+	vector = reshape(array, length) 				 #reshape naar 1 lange vector
+	sort(modulus(vector)) 							 #sorteer de vector
+	return vector[ int( ratio*len(vector) ) ]
+\end{lstlisting}
 
-TODO :: 
-Dingen die nog moeten.
-\begin{itemize}
-\item Iets over de conversie van matrix naar dictionary en de compressiestap 
-\item Iets over de manier waarop beelden geconstrueerd zijn (0 - 255 en dan 4 kanaals)
-\item Niet uit te breiden naar 3D $\to$ te langzaam.
-\end{itemize}
+\subsubsection{Opslaan van de co\"effici\"enten}
+Het opslaan minder natuurlijk te implementeren dan men misschien zou denken, voornamelijk omdat er ineens bijgehouden moet worden \emph{welke} co\"effici\"enten er opgeslagen worden. Hier hebben wij een zogenaamd \emph{dictionary} voor gebruikt. Een dictionary in Python is niks meer dan een lijst van (naam, waarde)-paren. De naam is in ons geval de plek in de matrix en de waarde is het (complexe) getal wat in die cel hoort te staan. Dit geeft aanleiding tot het schrijven van twee routines \texttt{dict2mat} en \texttt{mat2dict}.
+\begin{lstlisting}[caption=Matrix naar dictionary conversie]
+def mat2dict( mat, cutoff ):
+	N, M = mat.shape
+	dict = {}
+	for y in range(N):
+		for x in range(M):
+			if modulus( mat[y][x] ) >= cutoff:
+				dict[(y,x)] = mat[y][x]
+	return (dict, N, M)
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Dictionary naar matrix conversie]
+def dict2mat( dict, N, M ):
+	mat = []
+	for y in range( N ):
+		row = []
+		for x in range( M ):
+			i = (y, x)
+			row[x] = dict[i] if i in dict else 0.0
+		mat[y] = row
+	return mat
+\end{lstlisting}
+
+Duidelijk moge zijn dat we, door deze twee functies na elkaar uit te voeren, een matrix terugkrijgen met nullen waar eerst kleine co\"effici\"enten stonden.
+
+\subsection{Het .wvg-beeldformaat}
+Hoewel we een eigen beeldformaat gemaakt hebben, is het ons niet gelukt om de plaatjes echt in minder ruimte op te slaan dan hun ongecomprimeerde versie. Dit heeft met twee dingen te maken. Ten eerste is de manier waarop wij de dictionaries opgeslagen hebben niet optimaal geweest.\footnote{Later bedachten we nog een manier die ongeveer 50\% van de oorspronkelijke ruimte in zou nemen, door niet (index, waarde)-paren op te slaan maar met een zogenaamde bitmap.} Ten tweede is de Fouriertransformatie een complex algoritme in de zin dat zij complexe co\"effici\"enten teruggeeft. Door het isomorfisme $\C \simeq \R^2$ moesten wij zodoende twee waardes voor elke co\"effici\"ent opslaan.
+
+\section{Wavelets in 1 dimensie}
+Een orthogonale wavelet wordt discreet eigenlijk helemaal gekenmerkt door haar filter $h$. Zoals beschreven in de sectie over de FWT, hebben we daarmee (via vergelijkingen~\ref{highpassfilter}, \ref{approx_rec}, \ref{detail_rec}, \ref{reconstr_FWT}) eigenlijk het algoritme al helemaal in handen. Definieer
+\[
+	\texttt{dec\_l} := \bar{h}; \texttt{dec\_h} := \bar{g}; \texttt{rec\_l} := h; \texttt{rec\_h} := g.
+\]
+Dan kunnen we met twee routines in elke richting het algoritme simpel implementeren.
+\begin{lstlisting}[caption=De FWT]
+def next(wavelet, signal):
+	low = downsampling_convolution( signal, wavelet.dec_l )
+	hi = downsampling_convolution( signal, wavelet.dec_h )
+	return concatenate(low, hi)
+	
+def fwt(wavelet, signal):
+	signal = zero_pad(signal)
+	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte
+	
+	for i in range( steps ):
+		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		signal[0:k] = next( signal[0:k], wavelet )
+	return signal
+\end{lstlisting}
+\begin{lstlisting}[caption=De iFWT]
+def prev(wavelet, signal):
+	N = len(signal)
+	low = upsampling_convolution( signal[:N//2], wavelet.rec_l )
+	hi = upsampling_convolution( signal[N//2:], wavelet.rec_h )
+	return  sum(low, hi) 	#elementsgewijze sommatie
+	
+def ifwt( wavelet, signal, original_length ):
+	steps = int( log( len(signal), 2) ) #neem de 2-log van de lengte
+	
+	for i in range( steps ):
+		j = steps - i - 1 #we gaan andersom
+		k = len(signal) / 2**j
+		signal[0:k] = prev( signal[0:k], wavelet)
+	return signal[0:original_length] #het signaal was aangevuld tot een tweemacht
+
+\end{lstlisting}
+
+\section{Wavelets in twee dimensies}
+Zoals eerder beschreven is, kunnen we in meer dimensies eigenlijk twee kanten op: de Mallatdecompositie en het Tensorproduct.
+
+\subsection{Mallatdecompositie}
+De Mallatdecompositie is in de implementatie eigenlijk heel simpel. We gebruiken nog steeds de eendimensionale \texttt{next} en \texttt{prev} routines. Omdat we hier in twee richtingen kunnen werken, moet het signaal aangevuld worden tot een vierkante tweemacht.\footnote{Het is in theorie mogelijk om een rechthoek te transformeren maar deze abstractie heeft weinig practisch nut.}
+
+\begin{lstlisting}[caption=De Mallatdecompositie in 2 dimensies]
+def next_2d( wavelet, signal ):
+	x, y = signal.shape
+	for j in range(x): #1d-fwt op de rijen
+		signal[j, :] = next( wavelet, signal[j, :] )
+	for i in range(y): #1d-fwt op de kolommen
+		signal[:, i] = next( wavelet, signal[:, i] )
+
+def fwt2d(wavelet, signal):
+	signal = zero_pad_2d(signal)
+	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte
+	
+	for i in range( steps ):
+		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		signal[0:k,0:k] = next_2d( signal[0:k,0:k], wavelet )
+	return signal
+\end{lstlisting}
+\begin{lstlisting}[caption=De omgekeerde Mallatdecompositie in 2 dimensies]
+def prev_2d( wavelet, signal ):
+	x, y = signal.shape
+	for j in range(x): #1d-ifwt op de rijen
+		signal[j, :] = prev( wavelet, signal[j, :] )
+	for i in range(y): #1d-ifwt op de kolommen
+		signal[:, i] = prev( wavelet, signal[:, i] )
+
+def ifwt2d( wavelet, signal, N, M ): #N en M zijn originele lengte en breedte
+	steps = int( log( len(signal), 2) ) #neem de 2-log van de lengte
+	
+	for i in range( steps ):
+		j = steps - i - 1 #we gaan andersom
+		k = len(signal) / 2**j
+		signal[0:k,0:k] = prev_2d( signal[0:k,0:k], wavelet)
+	return signal[0:N,0:M]
+\end{lstlisting}

@@ -179,6 +179,7 @@ dus de iDFT samengesteld met de DFT geeft een identiteit.
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{De Fast Fourier Transform}
+\label{fft_sec}
 De snelheid van het DFT algoritme valt in de praktijk nogal tegen, het nemen van $n$ inproducten over vectoren 
 van lengte $n$ heeft namelijk een tijdscomplexiteit van $\O(n^2)$. Dit staat de directe implementatie van de DFT 
 voor praktische toepassingen in de weg. Daarom is er een alternatief algoritme, de \emph{Fast Fourier Transform}.  \bigskip
@@ -272,13 +273,9 @@ een 2-macht zijn opgelost met signaalextensie, zoals eerder beschreven.
 
 %-----------------------------------------------------------------------------------------------------------------
 \subsection{Complexiteit van de Fast Fourier Transform}
-Hoewel het vanuit een puur wiskundig oogpunt wellicht minder relevant is, is de complexiteit van een algoritme als een factor van belangrijk praktisch nut. 
+Wat in de huidige tijd van computers ook een belangrijk punt geworden is, is complexiteit van een algoritme.
 
-NOOT: iedereen moet zich hier druk om maken!!!!11!1!111111
-
-De complexiteit vertaalt namelijk direct naar 
-de looptijd van het algoritme. We hebben hier de volgende stelling uit de complexiteitstheorie nodig.
-\footnote{Dit is een speciaal geval van de stelling, voor de volledige stelleing en het bewijs zie \cite{akra-bazzi}.}
+De complexiteit vertaalt namelijk direct naar de tijd die nodig is om een resultaat te krijgen. We hebben, om de complexiteit te vinden, de volgende stelling uit de Complexiteitstheorie nodig.\footnote{Dit is een speciaal geval van de stelling, voor de volledige stelleing en het bewijs zie \cite{akra-bazzi}.}
 
 \begin{stelling}[Akra-Bazzi]
     Zij $T(n)$ een recurrente betrekking van de vorm
@@ -346,6 +343,10 @@ Laat hiervoor namelijk $a=b=2$, $c_0=d=1$ en $f (n) = N\cdot n$:
 Dit betekent dat $T(n) \in \theta(n \log n)$ en dus zeker $T(n) \in \O(n \log n)$.
 Hiermee hebben we bewezen dat de FFT en daarmee de iFFT binnen tijdscomplexiteit $\O(n\log n)$ lopen. 
 \end{proof}
+
+\begin{gevolg}
+Omdat het algoritme niet in lineaire tijd loopt, wordt het al snel lang wachten bij grote signalen. In meer dimensies is er al helemaal snel een groot praktisch bezwaar. Dit wachten is ook precies de reden dat we driedimensionale signalen niet verder bekeken hebben met de Fouriertransformatie.
+\end{gevolg}
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{Discrete Fourier Transform in meer dimensies}
