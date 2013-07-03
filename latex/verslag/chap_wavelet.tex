@@ -718,49 +718,104 @@ Daarmee schrijven we de ruimte $V^{(2)}_j$ als het tensorproduct van $V_j$ met z
 \[
 V^{(2)}_j = V_j\otimes V_j = (V_0\oplus W_0\oplus\cdots W_{j-1})\otimes(V_0\oplus W_0\oplus\cdots W_{j-1})
 \]
-Dit geeft aanleiding tot een nieuwe 
-Dit kan ook herhaaldelijk toegepast worden:
-\[
-	V_j = V_{j+1} \oplus W_{j+1} = (V_{j+2} \oplus W_{j+2} ) \oplus W_{j+1} = \ldots = V_{L} \oplus W_L \oplus \cdots \oplus W_{j+1}.
-\]
-Dus we kunnen nu $V_j^2$ ook anders schrijven:
-\[
-	V_j^2 = V_j \otimes V_j = (V_{L} \oplus W_L \oplus \cdots \oplus W_{j+1}) \otimes (V_{L} \oplus W_L \oplus \cdots \oplus W_{j+1}).
-\]
+Dit geeft aanleiding tot een nieuwe basis, namelijk het tensorproduct van de basis van $V_j$ met zichzelf,
+we duiden deze basis dan ook aan als de \emph{Tensorbasis}.
+\footnote{In de literatuur wordt de Mallatdecompositie ook regelmatig een Tensorproduct genoemd. 
+De verwarring ontstaat hier doordat in de Mallat Basis de basisfuncties ook tensorproducten zijn van wavelet- 
+en schalingsfuncties. We doelen echter in onze naamgeving op \emph{het tensorproduct van twee bases}.}
+\begin{equation}
+  \label{tensor_basis_def}
+  \begin{split}
+    \boldsymbol \Psi_T :=& (\{\phi_{0,n}\largediv n\in\Z\}\cup \{\psi_{j,n}\largediv j\in\N_0\quad n\in\Z\})^2\\
+                        =& \{\phi_{0,n_1}\otimes\phi_{0,n_2}\largediv n_1,n_2\in\Z\} 
+                        \cup \{\phi_{0,n_1}\otimes\psi_{j,n_2}\largediv j\in\N_0\quad n_1,n_2\in\Z\} \\    
+                         & \cup \{\psi_{j,n_1}\otimes\phi_{0,n_2}\largediv j\in\N_0\quad n_1,n_2\in\Z\} \\
+                         & \cup \{\psi_{j_1,n_1}\otimes\psi_{j_2,n_2}\largediv j_1,j_2\in\N_0\quad n_1,n_2\in\Z\} \\
+  \end{split}
+\end{equation}
+Waar $A^2 = \{a\otimes b \largediv a,b\in A\}$ een tensorproduct van een basis met zichzelf geeft.
 
-Voor $V_L$ was $\{ \phi_{L,k}: k \in \Z \}$ een basis. Voor $W_i$ was $\{ \psi_{i,k}: k \in \Z \}$ een basis. Zo krijgen we dat
-\[
-	\Psi := \{ \phi_{L,\cdot}, \psi_{L,\cdot}, \ldots, \psi_{j+1,\cdot} \}
-\]
-een basis moet zijn voor $V_j$. Uit \cite[T8.5]{tensor_wavelet} vinden we dat $\boldsymbol\Psi := \{ \psi_1 \otimes \psi_2: \psi_1, \psi_2 \in \Psi \}$ een basis is voor $V_j^2$. Dit kunnen we uitschrijven tot
-\[
-  \boldsymbol\Psi = \left\{
-  \begin{array}{cccc}
-    \phi_{L, \cdot} \otimes \phi_{L, \cdot}, & \phi_{L, \cdot} \otimes \psi_{L, \cdot}, & \cdots, & \phi_{L, \cdot} \otimes \psi_{j+1,\cdot}, \\
-    \psi_{L, \cdot} \otimes \phi_{L, \cdot}, & \psi_{L, \cdot} \otimes \psi_{L, \cdot}, & \cdots, & \psi_{L, \cdot} \otimes \psi_{j+1,\cdot} ,\\
-    \vdots \\
-    \psi_{j+1, \cdot} \otimes \psi_{j+1, \cdot}, & \phi_{L, \cdot} \otimes \psi_{L, \cdot}, & \cdots, & \psi_{j+1, \cdot} \otimes \psi_{j+1,\cdot} \\
-  \end{array}\right\}.
-\]
-In onze definitie\footnote{In de literatuur wordt de Mallatdecompositie ook vaak genoeg een Tensorproduct genoemd. Dit is natuurlijk geen verkeerde (hoogstens een verwarrende) naamgeving want de Mallatdecompositie \emph{is} gewoon een Tensorproduct.} is het Tensorproduct nu het schrijven van het (tweedimensionale) signaal in termen van deze basis $\boldsymbol\Psi$. 
+Een karakteristiek van de Mallatbasis is, dat deze $\psi \otimes \psi$ functies bevat van enkel dezelfde schaal,
+bij de Tensorbasis hebben we nu $j_1$ en $j_2$ die ongelijk aan elkaar zijn.
+De Mallatbasis moest door deze eis aangevuld worden met functies van de vorm $\phi\otimes\psi$ en $\psi\otimes\phi$,
+dit is bij de Tensorbasis niet meer aan de orde (met uitzondering van enkele samenstellingen van $\phi_0$ met $\psi_j$'s)
 
-\begin{algo}[Tensor schrijf dit af godverdomme]
-  \[
-  \mathrm{FWT}_2(a_j)[n_1,n_2] = \begin{cases}
-    \mathrm{FWT}_2(a_{j-1})[n_1,n_2] & \text{als } n_1 \leq 2^{j-1} \text{ en } n_2 \leq 2^{j-1}\\
-    FWT(d^1_{j-1}\largediv_{x_2=n_2})[n_1]
-    & \text{als } n_1\leq 2^{j-1} \text{ en } n_2>2^{j-1} \\
-    FWT(d^2_{j-1}\largediv_{x_1=n_1})[n_2]
-    & \text{als } n_1>2^{j-1} \text{ en } n_2\leq 2^{j-1} \\
-    d^3_{j-1}[n_1,n_2] & \text{als } n_1>2^{j-1} \text{ en } n_2>2^{j-1} \end{cases}
-  \]
-  Waar de notatie $d\largediv_{x_i=a}$ staat voor de vector die verkregen wordt
-  door de $i$-de index van $d$ vast te leggen op $a$.
-  Merk op dat we hier gebruiken van de 1-dimensionale FWT om
+We willen nu een algoritme bedenken dat een tweedimensionaal schrijft in termen van de Tensorbasis,
+we zullen zien dat dit neerkomt op het uitvoeren van FWT op alle rijen en kolommen van de ingangssignaal (een matrix)
+
+\begin{algo}[Tweedimensionale Tensor Fast Wavelet Transform]
+Gegeven een ingangssignaal $a_j\in\R^{2^j}\times\R^{2^j}$ dan defini\"eren we een bijbehorend sequentieel algoritme 
+$\mathrm{TFWT}_2:\R^{2^j}\times\R^{2^j}\to \R^{2^j}\times\R^{2^j}$ door het schema:\\
+Bereken $\tilde a_j$ zo dat geldt:
+\[
+\tilde a_j[n_1,n_2] = \mathrm{FWT}(a_j\largediv_{x_1=n_1})[n_2] 
+\]
+Dan wordt de $\mathrm{TFWT}_2$ gegeven door:
+\[
+\mathrm{TFWT}_2(a_j)[n_1,n_2] = \mathrm{FWT}(\tilde a_j\largediv_{x_2=n_2})[n_1]
+\] 
+Waarbij de notatie $a\largediv_{x_i=c}$ staat voor de vector die verkregen wordt door uit $a$
+de $i$'de co\"ordinaat vast te zetten (e.g. $a\largediv_{x_1=c}[d] = a[c,d]$).
 \end{algo}
 
+We zullen aantonen dat de $\mathrm{TFWT}_2$ ook inderdaad een decompositie geeft in termen van de Tensorbasis.
+We zijn namelijk op zoek naar een matrix van de vorm:
+\begin{equation}
+\label{TFWT_mat}
+\begin{bmatrix}
+\inpr{f}{\phi_0\otimes\phi_0}     & \inpr{f}{\phi_0\otimes\psi_0}     & \cdots & \inpr{f}{\phi_0\otimes\psi_\lambda} \\
+\inpr{f}{\psi_0\otimes\phi_0}     & \inpr{f}{\psi_0\otimes\psi_0}     & \cdots & \inpr{f}{\psi_0\otimes\psi_\lambda} \\ 
+           \vdots                 &         \vdots                    & \ddots &                \vdots  \\ 
+\inpr{f}{\psi_\lambda\otimes\phi_0} & \inpr{f}{\psi_\lambda\otimes\psi_0} 
+& \cdots & \inpr{f}{\psi_\lambda\otimes\psi_\lambda} \\
+\end{bmatrix}
+\end{equation}
+Waarbij $\lambda$ een index geeft over de interessante basisfuncties.
+We weten nu dat wanneer we de FWT nemen in \'e\'en co\"ordinaat door de andere co\"ordinaat vast te nemen,
+ dit ons voor elke vaste waarde een vector geeft volgens:
+\[
+y \mapsto
+\begin{bmatrix}
+\inpr{f\largediv_{x_2=y}}{\phi_0} & 
+\inpr{f\largediv_{x_2=y}}{\psi_0} & \cdots & 
+\inpr{f\largediv_{x_2=y}}{\psi_\lambda}
+\end{bmatrix}
+\]
+Hieruit kunnen we ook een vector van functies maken door de rol van functie en matrix-index om te wisselen:
+\[
+\begin{bmatrix}
+y \mapsto \inpr{f\largediv_{x_2=y}}{\phi_0} & 
+y \mapsto \inpr{f\largediv_{x_2=y}}{\psi_0} & \cdots & 
+y \mapsto \inpr{f\largediv_{x_2=y}}{\psi_\lambda}
+\end{bmatrix}
+\]
+Wanneer we nu voor elke functie in deze vector de FWT bereken zullen we weer een vector inproducten krijgen
+voor elke co\"ordinaat in de originele vector, schrijf deze vector van vectoren (equivalent met een matrix) uit als 
+$M[\lambda_1,\lambda_2]$,
+\footnote{Hier wordt het inproduct van $\phi_0$ weggelaten om de schrijfwijze te verduidelijken.}
+dan volgt:
+\[
+M[\lambda_1,\lambda_2] = \inpr{y\mapsto \inpr{f\largediv_{x_2=y}}{\psi_{\lambda_1}}}{\psi_{\lambda_2}}
+\]
+We kunnen dit omschrijven door de definitie van het inproduct op functieruimten toe te passen:
+\[
+\inpr{y\mapsto \inpr{f\largediv_{x_2=y}}{a}}{b} = 
+\int_{-\infty}^\infty\int_{-\infty}^\infty f(x_1,x_2) \cdot a(x_1) \d{x_1} \cdot b(x_2) \d{x_2} = \inpr{f}{a\otimes b} 
+\]
+Waardoor de matrix $M$ identiek is aan \ref{TFWT_mat}. 
+
+Het vinden van een inverse voor dit algoritme is nu ook triviaal, de iFWT geeft samengesteld met de FWT
+immers de identiteit, zodat het toepassen op kolommen en rijen van de iFWT de $\mathrm{TFWT}_2$ inverteert.
+
 \subsection{Meer dan twee dimensies}
-Het moge duidelijk zijn hoe het Tensorproduct schaalt naar meer dimensies. De $\boldsymbol\Psi$ moet hier gewoon niet langer twee basisfuncties maar $n$ basisfuncties pakken. 
+Er is nu een natuurlijke voortzetting van het Tensorproduct naar meerdimensionale signalen.
+Dit doen we namelijk door voor bijvoorbeeld $n$ dimensies als basis voor $V^{(n)}_j$ de basis te kiezen die we verkrijgen 
+door de basis van $V_j$ met tensorproducten tot de $n$-de macht te verheffen.
+Vervolgens is het algoritme aan te passen zodat het steeds over \'e\'en co\"ordinaat de FWT uitvoert, 
+met bijbehorende inverse.
+
+Omdat de stap in complexiteit van de notatie vele male groter is dan de benodigde denkstap laten we hier een rigoreuze
+behandeling van de meerdimensionale Tensor Fast Wavelet Transform achterwege.
 
 \section{Analyse van de fout van beide decomposities}
 
