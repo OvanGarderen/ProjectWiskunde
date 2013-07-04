@@ -23,10 +23,9 @@ Het is nu mogelijk om wavelets te construeren die met deze schaling en translati
 \[
 \left\{ \psi_{j,n}(t) = \sqrt{2^j} \psi\left( 2^j t - n\right) : (j,n) \in \Z^2 \right\}.
 \]
-De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er een orthogonale (en dus een orthonormale) basis gevormd wordt. Zie figuur~\ref{wavelets} voor twee wavelets
+De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er een orthogonale (en dus een orthonormale) basis gevormd wordt. Zie figuur~\ref{fig:wavelets} voor twee wavelets.
 
 \begin{figure}[h]
-\label{wavelets}
   \centering
   \begin{subfigure}{0.48\linewidth}
     \includegraphics[width=\linewidth]{plaatjes/db1.pdf}
@@ -35,6 +34,7 @@ De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er
     \includegraphics[width=\linewidth]{plaatjes/db4.pdf}
   \end{subfigure}
   \caption{Links: Haar. Rechts: De Daubechies-4. De gestippelde grafiek is een translatie naar rechts en staat in beide gevallen loodrecht op de continue lijn die de waveletfunctie voorstelt.}
+\label{fig:wavelets}
 \end{figure}
 
 \begin{gevolg}We kunnen een functie $f$ in $L^2(\R)$ schrijven in deze basis:
