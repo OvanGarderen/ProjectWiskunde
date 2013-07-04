@@ -1,0 +1,6 @@
+#!/bin/sh
+# quickly push some stuff
+
+files=$@
+read -p "commit message:" msg
+git add "$@" && git commit -m "$msg" && git push
