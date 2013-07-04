@@ -1,8 +1,33 @@
 \chapter{Reflectie en discussie}
 In dit laatste hoofdstuk zullen we een analyse maken van het praktische deel van ons project.
 
-Wanneer we kijken naar de grafieken, wordt het direct duidelijk dat de Fouriertransformatie in eigenlijk alle gevallen een slechter resultaat oplevert. Er is zowel een subjectieve `wolligheid' die geassoci\"eerd kan worden met het verlies
-van details als een objectief verschil in PSNR. Het enige geval waarin Fourier echt beter presteert dan de wavelets is wanneer we kijken naar een periodieke functie.
+\section{Discussie}
+\subsection{Gebruik van PSNR als maatstaf voor kwaliteit}
+Omdat we te maken hebben met `lossy' beeldcompressie dienen we dit verlies in kaart te brengen op een 
+objectieve en kwantitatieve manier. 
+De PSNR is een gebruikelijke grootheid voor dit soort analyses, er wordt gezegd dat dit voor eenzelfde 
+beginsignaal een goede reflectie geeft van de menselijke beleving van de kwaliteit van de reconstructie.
+We beroepen ons hier dan ook op de ander onderzoek NEEDS MOAR REFS
+
+
+\subsection{Gebruikte testbeelden}
+Met een beetje kwade wil kan altijd een beeld geconstrueerd worden dat met minder co\"effici\"enten is te schrijven
+in de ene basis dan in de andere, voor een extreem voorbeeld zie figuur \ref{fig:sinus_fig}.
+Omdat het object van studie een beeldcompressie algoritme is, hebben wij ons gericht op een aantal soorten 
+beeldmateriaal waarvoor dit algoritme gebruikt zou kunnen worden. Dit kan ruwweg verdeeld worden in een aantal
+catagori\"en:
+\begin{itemize}
+\item Fotorealistische beelden, worden gekarakteriseerd door het ontbreken van scherpe randen hoewel
+  er veel \emph{details} belangrijk zijn. Ook is het verloop in het beeld voornamelijk \emph{vloeiend}. (zie Lenna ref)
+\item Cartoony beelden, over het algemeen minder complex (weinig belangrijke details en minder vloeiend) 
+  en bestaat in het algemeen uit \emph{kleurvlakken} omgeven met \emph{scherpe randen}. Zie (spengebeb/shyguy ref)
+\item Computer Graphics, een grotere catagorie die de \emph{scherpe randen} deelt met de Cartoony beelden
+  maar ook veel \emph{vloeiende} verlopen (gradients) heeft in plaats van kleurvlakken.
+\item Pixel Art, lijkt op de Cartoony beelden vanwege de \emph{scherpe randen} en \emph{kleurvlakken}
+  maar heeft bijna altijd een enorme hoeveelheid \emph{details} aangezien het beeld pixel voor pixel vervaardigd is.
+\end{itemize}
+
+
 \begin{figure}[h]
   \centering
   \begin{subfigure}[b]{0.25\textwidth}
@@ -13,18 +38,24 @@ van details als een objectief verschil in PSNR. Het enige geval waarin Fourier e
     \centering
     \includegraphics[width=\textwidth]{plaatjes/sin.png}
   \end{subfigure}
-  \caption{Een periodiek signaal wordt perfect door de Fouriertransformatie gereconstrueerd bij 1 \% van de data, maar de wavelettransformatie kan op het zelfde niveau niet tippen.}
+  \caption{Een periodiek signaal wordt perfect door de Fouriertransformatie gereconstrueerd door 1 \% van de data; de wavelettransformatie geeft hier een
+echter een slechte reconstructie.}
+  \label{fig:sinus_fig}
 \end{figure}
 
-De reden hiervoor is al veelvuldig aangedragen: waveletbasisfuncties hebben een lokale drager, terwijl de basisfuncties van Fourier op de hele ruimte werken. Hoewel dit een heel voor de hand liggende reden is, is het toch mooi om dit in de praktijk te zien.
+\section{Verklaring van resultaten}
 
-\section{Discussie}
-\subsection{Gebruik van PSNR als maatstaf voor kwaliteit}
-Omdat we te maken hebben met `lossy' beeldcompressie dienen we dit verlies in kaart te brengen op een 
-objectieve en kwantitatieve manier. 
-De PSNR is een gebruikelijke grootheid voor dit soort analyses, er wordt gezegd dat dit voor eenzelfde 
-beginsignaal een goede reflectie geeft van de menselijke beleving van de kwaliteit van de reconstructie.
-We beroepen ons hier dan ook op de ander onderzoek NEEDS MOAR REFS
+\subsection{}
+Wanneer we kijken naar de grafieken, wordt het direct duidelijk dat de Fouriertransformatie 
+in eigenlijk alle gevallen een slechter resultaat oplevert.
+
+Er is zowel een subjectieve `wolligheid' die geassoci\"eerd kan worden met het verlies
+van details als een objectief verschil in PSNR.
+De reden hiervoor is al veelvuldig aangedragen: waveletbasisfuncties hebben een lokale drager, 
+terwijl de basisfuncties van Fourier op de hele ruimte werken.
+
+\subsection{Convergentie bij kleine dataset}
+In de grafieken lijkt het verschil tussen 
 
 \section{Fotorealisme versus strak}
 Kijkende naar Lenna op de verschillende compressieniveaus, is het duidelijk dat de Daubechieswavelet bla
