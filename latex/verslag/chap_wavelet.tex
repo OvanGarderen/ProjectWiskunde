@@ -23,9 +23,19 @@ Het is nu mogelijk om wavelets te construeren die met deze schaling en translati
 \[
 \left\{ \psi_{j,n}(t) = \sqrt{2^j} \psi\left( 2^j t - n\right) : (j,n) \in \Z^2 \right\}.
 \]
-De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er een orthogonale (en dus een orthonormale) basis gevormd wordt.
+De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er een orthogonale (en dus een orthonormale) basis gevormd wordt. Zie figuur~\ref{wavelets} voor twee wavelets
 
-Figuurtje van voorbeeld TODODOO.
+\begin{figure}[h]
+\label{wavelets}
+  \centering
+  \begin{subfigure}{0.48\linewidth}
+    \includegraphics[width=\linewidth]{plaatjes/db1.pdf}
+  \end{subfigure}
+  \begin{subfigure}{0.48\linewidth}
+    \includegraphics[width=\linewidth]{plaatjes/db4.pdf}
+  \end{subfigure}
+  \caption{Links: Haar. Rechts: De Daubechies-4. De gestippelde grafiek is een translatie naar rechts en staat in beide gevallen loodrecht op de continue lijn die de waveletfunctie voorstelt.}
+\end{figure}
 
 \begin{gevolg}We kunnen een functie $f$ in $L^2(\R)$ schrijven in deze basis:
   \[
@@ -400,8 +410,6 @@ Als de lengte van de filter $h$ gelijk is aan $K$, en de lengte van het originel
 operaties. Dus deze DWT is een $\mathcal{O}(KN)$ algoritme. Ook de complexiteit van de inverse wordt op dezelfde manier van orde $KN$.
 
 \section{Meer dimensies: de Mallatdecompositie}
-NOOT: meer stressen dat je een algemene vorm hebt die 2 decomposities geeft
-
 Met een orthonormale waveletbasis $\{ \psi_{j,n}: (j,n) \in \Z^2\}$ van $L_2(\R)$ volgt een natuurlijke voortzetting naar twee dimensies door
 \[
 \{ \psi_{j_1,n_1}(x_1) \psi_{j_2,n_2}(x_2): (j_i,n_i) \in \Z^4 \},
@@ -436,6 +444,7 @@ We weten dat $V_j^{(2)}$ bevat is in $V_{j+1}^{(2)}$. Bekijk het orthogonale com
 \end{equation}
 Om nu een orthogonale waveletbasis voor $\boldsymbol{U}_j$ en (dus in de limiet) $L^2(\R^2)$ te vinden, gaan we als volgt te werk.
 \begin{stelling}[{\cite[T7.24]{mallat}}]
+\label{mallatbasis}
   Laat $\phi$ een schalingsfunctie en $\psi$ de bijhorende wavelet die en basis voor de $L^2(\R)$ voortbrengt. Maak drie wavelets
   \begin{equation}
     \label{psi_k_defs}
@@ -518,7 +527,7 @@ dat we de basis-functies op het niveau $j$ kunnen ontbinden volgens:
   \inpr{\psi^p_{j,(n_1,n_2)}}{\phi_{j+1,k_1}\otimes\phi_{j+1,k_2}}
   \phi^{(2)}_{j+1,(k_1,k_2)}
 \end{equation}
-We maken nu gebruik van \emph{TODO ref} om het inproduct behorende bij het tensorproduct
+We maken nu gebruik van \ref{weidmann}[\S 3.4] om het inproduct horende bij het tensorproduct
 van twee \emph{Hilbertruimten} uit te schrijven volgens:
 \[
 \inpr{a\otimes b}{c\otimes d} = \inpr{a}{c}\cdot \inpr{b}{d}
@@ -877,8 +886,7 @@ De norm op $H^p$ wordt nu
 \end{definitie}
 
 \subsection{Fout van de Mallatdecompositie}
-NOOT: mallat-waveletbasis uitwerken/vermelden
-Wij zijn op het moment ge\"interesseerd in de Mallat-waveletbasis $\boldsymbol\Phi$. Deze is ook duidelijk aftelbaar dus we kunnen gevolg~\ref{linfout} gebruiken. 
+Wij zijn op het moment ge\"interesseerd in de Mallat-waveletbasis $\boldsymbol\Phi$ die we vonden in stelling \ref{mallatbasis}. Deze is ook duidelijk aftelbaar dus we kunnen gevolg~\ref{linfout} gebruiken. 
 
 Defini\"eer $J_M := \{ l \in \N^n: \| l \|_\infty \leq M \}$. Laat $\boldsymbol\Phi_M := \{ \boldsymbol{\psi}_{\boldsymbol{\lambda}} \in \boldsymbol\Phi: |\boldsymbol\lambda| \in J_M \}$ met $|\boldsymbol\lambda| = (|\lambda_1, \ldots, |\lambda_n|)$ de verzameling basisfuncties tot een niveau $M$.
 

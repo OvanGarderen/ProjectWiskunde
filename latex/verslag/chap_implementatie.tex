@@ -156,6 +156,7 @@ def next_2d( wavelet, signal ):
 		signal[j, :] = next( wavelet, signal[j, :] )
 	for i in range(y): #1d-fwt op de kolommen
 		signal[:, i] = next( wavelet, signal[:, i] )
+	return signal
 
 def fwt2d(wavelet, signal):
 	signal = zero_pad_2d(signal)
@@ -173,6 +174,7 @@ def prev_2d( wavelet, signal ):
 		signal[j, :] = prev( wavelet, signal[j, :] )
 	for i in range(y): #1d-ifwt op de kolommen
 		signal[:, i] = prev( wavelet, signal[:, i] )
+	return signal
 
 def ifwt2d( wavelet, signal, N, M ): #N en M zijn originele lengte en breedte
 	steps = int( log( len(signal), 2) ) #neem de 2-log van de lengte
@@ -182,4 +184,108 @@ def ifwt2d( wavelet, signal, N, M ): #N en M zijn originele lengte en breedte
 		k = len(signal) / 2**j
 		signal[0:k,0:k] = prev_2d( signal[0:k,0:k], wavelet)
 	return signal[0:N,0:M]
+\end{lstlisting}
+
+\subsection{Tensorproduct}
+Het Tensorproduct in meer dimensies gaat eigenlijk net zoals de Fouriertransformatie in meer dimensies, door op rijen en kolommen het algoritme in 1 dimensie toe te passen.
+\begin{lstlisting}[caption=De 2d FWT in het Tensorgeval]
+def fwt2d_tensor(wavelet, signal):
+	signal = zero_pad(signal)
+	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte
+	
+	for i in range( steps ):
+		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		for p in range( len( signal ) ):
+			signal[p, 0:k] = next( signal[p, 0:k], wavelet )
+		for q in range( len( signal ) ):
+			signal[0:k, q] = next( signal[0:k, q], wavelet )
+	return signal
+\end{lstlisting}
+\begin{lstlisting}[caption=De 2d iFWT in het Tensorgeval]
+def ifwt2d_tensor( wavelet, signal, original_length ):
+	steps = int( log( len(signal), 2) ) #neem de 2-log van de lengte
+	
+	for i in range( steps ):
+		j = steps - i - 1 #we gaan andersom
+		k = len(signal) / 2**j
+		for q in range( len( signal ) ):
+			signal[0:k, q] = prev( signal[0:k, q], wavelet )
+		for p in range( len( signal ) ):
+			signal[p, 0:k] = prev( signal[p, 0:k], wavelet )
+	return signal[0:original_length] #het signaal was aangevuld tot een tweemacht
+\end{lstlisting}
+
+\section{Hogere dimensies}
+In hogere dimensies wordt het nog interessanter. In bijvoorbeeld drie dimensies kunnen we naast de Mallatdecompositie en het Tensorproduct, ook een \emph{mengvorm} toepassen. Wij hebben er voor gekozen om in dit geval de Mallatdecompositie in het $x,y$-vlak te gebruiken, en het Tensorproduct in de $z$-richting hier loodrecht op.
+
+\subsection{Mallatdecompositie}
+De Mallatdecompositie is werkelijk echt niet zo interessant, maar omdat we overal al stappen over het meerdimensionale geval, here goes:
+\begin{lstlisting}[caption=De Mallatdecompositie in 3 dimensies]
+def next_3d( wavelet, signal ):
+	x, y, z = signal.shape
+	for j in range(x): #2d-fwt op de rijen
+		signal[j, :, :] = next_2d( wavelet, signal[j, :, :] )
+	for k in range(y):
+		for l in range(z): #1d-fwt op de kolommen
+			signal[:,k,l] = next( wavelet, signal[:,k,l] )
+	return signal
+
+def fwt3d(wavelet, signal):
+	signal = zero_pad_3d(signal)
+	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte in 1 richting
+	
+	for i in range( steps ):
+		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		signal[0:k,0:k,0:k] = next_3d( signal[0:k,0:k,0:k], wavelet )
+	return signal
+\end{lstlisting}
+\begin{lstlisting}[caption=De omgekeerde Mallatdecompositie in 3 dimensies]
+def prev_3d( wavelet, signal ):
+	x, y, z = signal.shape
+	for j in range(x): #2d-ifwt op de rijen
+		signal[j, :, :] = prev_2d( wavelet, signal[j, :, :] )
+	for k in range(y):
+		for l in range(z): #1d-ifwt op de kolommen
+			signal[:,k,l] = prev( wavelet, signal[:,k,l] )
+	return signal
+
+def ifwt3d( wavelet, signal, N, M, O ): #N, M en O zijn originele lengte, breedte en diepte
+	steps = int( log( len(signal), 2) )
+	
+	for i in range( steps ):
+		j = steps - i - 1 #we gaan andersom
+		k = len(signal) / 2**j
+		signal[0:k,0:k,0:k] = prev_3d( signal[0:k,0:k,0:k], wavelet)
+	return signal[0:N,0:M,0:O]
+\end{lstlisting}
+
+\subsection{Mengvorm}
+\begin{lstlisting}[caption=De mengvorm in 3 dimensies]
+def fwt3d_mix(wavelet, signal):
+	signal = zero_pad_3d(signal)
+	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte in 1 richting
+	
+	for i in range( steps ):
+		m = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		for j in range(len( signal )): #2d-fwt op de rijen
+			signal[j, 0:k, 0:k] = next_2d( wavelet, signal[j, 0:k, 0:k] )
+		for k in range(len( signal )):
+			for l in range(len( signal )): #1d-fwt op de kolommen
+				signal[0:k,m,l] = next( wavelet, signal[0:k,m,l] )
+
+	return signal
+\end{lstlisting}
+\begin{lstlisting}[caption=De omgekeerde mengvorm in 3 dimensies]
+def ifwt3d_mix( wavelet, signal, N, M, O ): #N, M en O zijn originele lengte, breedte en diepte
+	steps = int( log( len(signal), 2) )
+	
+	for i in range( steps ):
+		j = steps - i - 1 #we gaan andersom
+		m = len(output) / 2**j #pak eerst alles, dan de helft, dan een kwart etc.
+		for n in range(len( signal )): #2d-fwt op de rijen
+			signal[n, 0:k, 0:k] = prev_2d( wavelet, signal[n, 0:k, 0:k] )
+		for k in range(len( signal )):
+			for l in range(len( signal )): #1d-fwt op de kolommen
+				signal[0:k,m,l] = prev( wavelet, signal[0:k,m,l] )
+	return signal[0:N,0:M,0:O]
 \end{lstlisting}
