@@ -8,7 +8,7 @@ In dit hoofdstuk zullen we een kwantitatieve vergelijking tussen de verschillend
   \]
   waarbij
   \[
-  M := \max( \max_{\boldsymbol j \in \Z^k} (f[\boldsymbol k]), \max_{\boldsymbol j \in \Z^k} (\hat f[\boldsymbol k]))
+  M := \max( \max_{\boldsymbol j \in \Z^k} (f[\boldsymbol j]), \max_{\boldsymbol j \in \Z^k} (\hat f[\boldsymbol j]))
   \]
   en
   \[
@@ -55,7 +55,9 @@ echter een slechte reconstructie.}
 \end{figure}
 
 \subsection{3D signalen}
-Behalve de illustraties die op de volgende pagina's te zien zijn, hebben we ook een aantal filmpjes (3D-signalen) gecomprimeerd. Deze kunt u als lezer vinden door te navigeren naar de \url{gifjes/} submap en daar dubbel te klikken op \url{index.html}.
+Behalve de illustraties die op de volgende pagina's te zien zijn, hebben we ook een aantal bewegende beelden (3D-signalen) gecomprimeerd. Deze kunt u als lezer vinden door te navigeren naar de \url{gifjes/} submap en daar dubbel te klikken op \url{index.html}.
+
+We hebben bij deze 3D signalen niet Fourier vergeleken met Wavelets, enkel door praktische bezwaren (het duurt met de Fouriertransformatie gewoon te lang). Wel hebben we de Mallatdecompositie vergeleken met onze mengvorm: in het $(x,y)$-vlak gebruiken we de Mallatdecompositie in twee dimensies, met daar loodrecht op een Tensorproduct in de tijdsrichting.
 
 \pagebreak
 \newgeometry{left=2cm,right=2cm,top=1cm,bottom=1cm}
@@ -339,6 +341,46 @@ Behalve de illustraties die op de volgende pagina's te zien zijn, hebben we ook 
     \includegraphics[height=\textwidth]{plaatjes/grafiek_shyguy_0_15-0_01.png}
   \end{subfigure}
   \caption{Grafiek en PSNR.}
+\end{figure}
+\pagebreak
+\begin{figure}
+	\centering
+	\begin{subfigure}[t]{0.32\textwidth}
+	\includegraphics[width=\linewidth]{plaatjes/spongebob.jpg}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\textwidth}
+	\includegraphics[width=\linewidth]{plaatjes/spongebob_db2_0_025.jpg}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\textwidth}
+	\includegraphics[width=\linewidth]{plaatjes/spongebob_db2_t_0_025.jpg}
+	\end{subfigure}
+	\caption{Links: de originele Spongebob-afbeelding. Midden: compressieniveau 0.025 met Daubechies 2. Rechts: compressie 0.025 met Daubechies-2 Tensor.}
+	\label{fig:tensor_start}
+\end{figure}
+\begin{figure}
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+	\includegraphics[width=\linewidth]{plaatjes/grafiek_bonkers.png}
+	\caption{Grafiek horende bij de onderstaande afbeeldingen.}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.48\textwidth}
+	\includegraphics[width=\linewidth]{plaatjes/grafiek_spongebob_0_15-0_01.png}
+	\caption{Grafiek horende bij de bovenstaande afbeeldingen.}
+	\end{subfigure}
+\end{figure}
+\begin{figure}
+	\centering
+	\begin{subfigure}[t]{0.32\textwidth}
+	\includegraphics[width=\linewidth]{plaatjes/bonkers.png}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\textwidth}
+	\includegraphics[width=\linewidth]{plaatjes/bonkers_haar_0_025.png}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\textwidth}
+	\includegraphics[width=\linewidth]{plaatjes/bonkers_haar_t_0_025.png}
+	\end{subfigure}
+	\caption{Links: de originele afbeelding. Midden: compressieniveau 0.025 met Haar. Rechts: compressie 0.025 met Haar Tensor.}
+	\label{fig:tensor_end}
 \end{figure}
 \restoregeometry
 \pagebreak
