@@ -1,4 +1,4 @@
-\chapter{Intro}
+\chapter{Basisbegrippen}
 
 \section{Signaaluitbreiding}
 \label{signaal}
@@ -26,3 +26,25 @@ enkele redenen hiervoor waren:
 \end{itemize}
 Het enige nadeel dat deze keuze teweeg heeft gebracht is dat de snelheid van al onze algoritmes tegenvalt
 omdat we ons niet bezighouden met kleine optimalisaties en vertrouwen op de Python \emph{interpreter}.
+
+\section{Notatie}
+
+De blokhaaknotatie $f[x]\in K$ duidt op een discrete functie $A\subset \Z\to K$ met $K$ een willekeurige ruimte.
+Als $A$ bovendien eindig is, dan is $f$ ook te karakteriseren aan de hand van zijn beeld, een vector in $K^{N}$.
+In het bijzonder is deze notatie dus een manier om een vector aan te duiden.
+Evenzo kunnen we de notatie uitbreiden naar meer dimensies door te schrijven
+$f[x_1,\ldots,x_n] : A_1\times \cdots \times A_n\subset \Z^n \to K$, waarbij de $A_i$'s meestal eindige intervallen zijn. 
+
+
+\section{Complexiteit}
+
+Aangezien er enkele algoritmes behandeld worden in het verslag willen we hiervan de tijdscomplexiteit bepalen.
+Deze eigenschap bepaalt namelijk hoe de tijd die het een machine kost oploopt met de grootte van de input.
+We voeren daarom zowel \emph{Big O} als \emph{theta} notatie in.
+\begin{eqnarray}
+  f \in \O(g)     \Leftrightarrow \exists x_0,c \,:&\,\forall x>x_0 \quad|f(x)| \leq c|g(x)|  \\
+  f \in \theta(g) \Leftrightarrow \exists x_0,k_1,k_2 \,:&\,\forall x>x_0 \quad k_1|g(x)| \leq |f(x)|\leq k_2|g(x)|
+\end{eqnarray}
+We zullen in de praktijk algoritmes $f$ bekijken die een 1,2 of 3 dimensionale lijst data als input hebben.
+We zijn dan ge\"interesseerd in de tijdscomplexiteit in termen van de grootte van bijvoorbeeld een $N\times N$ 
+afbeelding, dus is $f$ een functie van $N$.
