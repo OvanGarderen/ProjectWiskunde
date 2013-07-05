@@ -101,7 +101,7 @@ Per definitie van de multiresolutie weten we dat $V_{j-1} \subset V_j$. In het b
   \]
   wordt nu ook wel de \emph{filter} van $\phi$ genoemd.
 \end{definitie}
-\begin{stelling}[{\cite{mallat}[T7.2]}]
+\begin{stelling}[{\cite[T7.2]{mallat}}]
   \label{filter}
   Laat $\phi \in L^2(\R)$ een schalingsfunctie die ook integreerbaar is. Dan ligt de multiresolutie vast.
 
@@ -139,7 +139,7 @@ De projectie van $f$ op $V_{j-1}$ kan dus geschreven worden als som van projecti
 \end{equation}
 Omdat $V_j \subset V_{j+1}$ is alle informatie over $f$ die beschikbaar is in $V_j$, ook beschikbaar in $V_{j+1}$. Ook is het goed mogelijk dat door deze grovere benadering, informatie zoek gaat. Deze `details' worden op die manier zichtbaar in $P_{W_j} f$.
 
-Het kan bewezen worden \cite{mallat}[T7.3] dat, gegeven een schalingsfunctie $\phi$ (en daarmee een filter $h$) er een functie $\psi$ bestaat zo dat
+Het kan bewezen worden \cite[T7.3]{mallat} dat, gegeven een schalingsfunctie $\phi$ (en daarmee een filter $h$) er een functie $\psi$ bestaat zo dat
 \[
 \left\{ \psi_{j,n}(t) := \sqrt{2^j} \psi\left(2^jt - n\right) : n \in \Z \right\}
 \] een orthonormale basis is voor $W_j$ en $\{ \psi_{j,n}: (j,n) \in \Z^2 \}$ een basis voor $L_2(\R)$. Deze functie is dan een \emph{orthogonale} wavelet, omdat $W_j \perp V_j$.
@@ -151,7 +151,7 @@ Ook deze inproducten hebben een speciale naam: de rij $g[n]$ met
 \[
 g[n] := \left\langle \psi\left(t\right), \sqrt{2}\phi(2t-n) \right\rangle
 \]
-wordt nu ook wel de filter van $\psi$ genoemd. De twee filters zijn gerelateerd aan elkaar volgens de vergelijking\cite{wavelet_filter[V13]}\cite{daubechies[P958]}
+wordt nu ook wel de filter van $\psi$ genoemd. De twee filters zijn gerelateerd aan elkaar volgens de vergelijking\cite[V13]{wavelet_filter}\cite[P958]{daubechies}
 \begin{equation}
 \label{highpassfilter}
 g[n] = (-1)^{n}h[1-n].
@@ -210,7 +210,7 @@ Hoewel $\phi$ een functie uit $L_2$ is, en $h$ een functie uit $\ell_2$, is het 
   \[
   h[n] = \left\langle \sqrt{2} \phi\left(2t-n\right), \phi(t) \right\rangle,
   \]
-  dus er kunnen maar eindig veel $n$ ongelijk nul zijn. De omgekeerde bewering staat bewezen in \cite{daubechies[P965-967]}. TODO?
+  dus er kunnen maar eindig veel $n$ ongelijk nul zijn. De omgekeerde bewering staat bewezen in \cite[P965-967]{daubechies}. TODO?
 
   Om deze dragers gelijk te krijgen, stel dat de drager van $h[n]$ gelijk $[N_1,N_2]$ is, en die van $\phi$ $[K_1, K_2]$. De drager van $\phi(t/2)$ is $[2K_1, 2K_2]$ en de drager van de rechterzijde van $\ref{phi_t2}$ is $[N_1 + K_1, N_2 + K_2]$. We concluderen dat $K_1 = N_1$ en $K_2 = N_2$.
 \end{proof}
