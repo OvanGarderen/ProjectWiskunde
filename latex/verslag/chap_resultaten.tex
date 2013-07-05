@@ -18,6 +18,43 @@ In dit hoofdstuk zullen we een kwantitatieve vergelijking tussen de verschillend
   Hoe hoger de PSNR is, hoe beter de reconstructie (over het algemeen) zal zijn.
 \end{definitie}
 
+\subsection{Gebruikte testbeelden}
+Met een beetje kwade wil kan altijd een beeld geconstrueerd worden dat met minder co\"effici\"enten is te schrijven
+in de ene basis dan in de andere, voor een extreem voorbeeld zie figuur \ref{fig:sinus_fig}.
+Omdat het object van studie een beeldcompressie algoritme is, hebben wij ons gericht op een realistische vari\"eteit
+beeldmateriaal waarvoor dit algoritme gebruikt zou kunnen worden. 
+Dit kan ruwweg verdeeld worden in een aantal catagori\"en:
+\begin{itemize}
+\item Fotorealistische beelden, worden gekarakteriseerd door het ontbreken van scherpe randen hoewel
+  er veel \emph{details} belangrijk zijn. Ook is het verloop in het beeld voornamelijk \emph{vloeiend}. 
+  (zie figuren \ref{fig:lenna_start} - \ref{fig:lenna_eind})
+\item Cartoony beelden, over het algemeen minder complex (weinig belangrijke details en minder vloeiend) 
+  en bestaat in het algemeen uit \emph{kleurvlakken} omgeven met \emph{scherpe randen}.
+  (zie figuren \ref{fig:shyguy_start} - \ref{fig:shyguy_eind})
+\item Computer Graphics, een grotere catagorie die de \emph{scherpe randen} deelt met de Cartoony beelden
+  maar ook veel \emph{vloeiende} verlopen (gradients) heeft in plaats van kleurvlakken.
+  (zie figuren \ref{fig:gentoo_start} - \ref{fig:gentoo_eind})
+\item Pixel Art, lijkt op de Cartoony beelden vanwege de \emph{scherpe randen} en \emph{kleurvlakken}
+  maar heeft bijna altijd een enorme hoeveelheid \emph{details} aangezien het beeld pixel voor pixel vervaardigd is.
+\end{itemize}
+
+
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[b]{0.25\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plaatjes/sin_fourier.png}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.25\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plaatjes/sin.png}
+  \end{subfigure}
+  \caption{Een periodiek signaal wordt perfect door de Fouriertransformatie gereconstrueerd door 1 \% van de data; de wavelettransformatie geeft hier een
+echter een slechte reconstructie.}
+  \label{fig:sinus_fig}
+\end{figure}
+
+\subsection{3D signalen}
 Behalve de illustraties die op de volgende pagina's te zien zijn, hebben we ook een aantal filmpjes (3D-signalen) gecomprimeerd. Deze kunt u als lezer vinden door te navigeren naar de \url{gifjes/} submap en daar dubbel te klikken op \url{index.html}.
 
 \pagebreak
@@ -41,6 +78,7 @@ Behalve de illustraties die op de volgende pagina's te zien zijn, hebben we ook 
     \includegraphics[width=\textwidth]{plaatjes/gentoo_fourier_0_01.png}
   \end{subfigure}
   \caption{Fourier op compressieniveaus 0.15, 0.10, 0.05, 0.01.}
+  \label{fig:gentoo_start}
 \end{figure}
 \begin{figure}
   \centering
@@ -81,6 +119,7 @@ Behalve de illustraties die op de volgende pagina's te zien zijn, hebben we ook 
     \includegraphics[width=\textwidth]{plaatjes/gentoo_db2_0_01.png}
   \end{subfigure}
   \caption{Daubechies 2 op compressieniveaus 0.15, 0.10, 0.05, 0.01.}
+  \label{fig:gentoo_eind}
 \end{figure}
 \begin{figure}
   \centering
@@ -136,6 +175,7 @@ Behalve de illustraties die op de volgende pagina's te zien zijn, hebben we ook 
     \includegraphics[width=\textwidth]{plaatjes/Lenna_fourier_0_01.png}
   \end{subfigure}
   \caption{Fourier op compressieniveaus 0.10, 0.05, 0.03, 0.01.}
+  \label{fig:lenna_start}
 \end{figure}
 \begin{figure}
   \centering
@@ -176,6 +216,7 @@ Behalve de illustraties die op de volgende pagina's te zien zijn, hebben we ook 
     \includegraphics[width=\textwidth]{plaatjes/Lenna_db2_0_01.png}
   \end{subfigure}
   \caption{Daubechies 2 op compressieniveaus 0.10, 0.05, 0.05, 0.01.}
+  \label{fig:lenna_eind}
 \end{figure}
 \begin{figure}
   \centering
@@ -228,6 +269,7 @@ Behalve de illustraties die op de volgende pagina's te zien zijn, hebben we ook 
     \includegraphics[width=\textwidth]{plaatjes/shyguy_fourier_0_01.png}
   \end{subfigure}
   \caption{Fourier op compressieniveaus 0.10, 0.05, 0.03, 0.01.}
+  \label{fig:shyguy_start}
 \end{figure}
 \begin{figure}
   \centering
@@ -268,6 +310,7 @@ Behalve de illustraties die op de volgende pagina's te zien zijn, hebben we ook 
     \includegraphics[width=\textwidth]{plaatjes/shyguy_db2_0_01.png}
   \end{subfigure}
   \caption{Daubechies 2 op compressieniveaus 0.10, 0.05, 0.05, 0.01.}
+  \label{fig:shyguy_eind}
 \end{figure}
 \begin{figure}
   \centering
