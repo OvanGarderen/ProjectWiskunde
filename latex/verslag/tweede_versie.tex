@@ -125,7 +125,13 @@
 \maketitle
 
 \begin{abstract}
-\lipsum[2-3]
+In dit projectverslag zullen wij twee verschillende algoritmes bekijken die in de signaalverwerking van groot belang zijn en zijn geweest. De eerste van deze twee is de Discrete Fouriertransformatie welke ten grondslag ligt aan het JPEG beeldcompressie-algoritme. Daarna zullen we een overzicht geven van de zogenaamde orthogonale discrete wavelettransformatie, een versimpelde vorm van het algoritme achter JPEG-2000.
+
+Beide algoritmes zijn \emph{lossy}, wat betekent dat we niet ge\"interesseerd zijn in \emph{perfecte reconstructie} maar in een benadering. We zullen concluderen dat voor bepaalde klassen functies de Fouriertransformatie goed werkt maar dat zij praktische nadelen heeft bij signalen met grote sprongen als gevolg van haar globale \emph{dragers}. Verder werpen we in ons verslag een licht op de zogenaamde Fast Fourier Transform, die in $\mathcal{O}(n \log n)$ de transformatie kan vinden.
+
+De Wavelettransformatie is geconstrueerd met de gedachte dat een lokale drager in het geval van signalen met grote sprongen, beter werkt. We zullen beredeneren dat op tweedimensionale signalen er twee verschillende decomposities mogelijk zijn. Beide decomposities zullen we uitvoerig behandelen en analyseren. Naast de eerder genoemde eigenschap heeft de Wavelettransformatie ook een ander praktisch nut: de algoritme loopt in $\mathcal{O}(n)$. Dit  feit stelt ons in staat \'o\'ok bewegend beeld te comprimeren. 
+
+Naast een wiskundige analyse heeft dit project ook een groot praktisch deel gekend, waar we uiteraard ook aandacht aan besteden.
 
 Op het voorblad is te zien, vanaf linksboven en dan met de klok mee:
 \begin{itemize}
@@ -138,6 +144,10 @@ Op het voorblad is te zien, vanaf linksboven en dan met de klok mee:
 
 \tableofcontents
 \newpage
+
+\chapter*{Inleiding}
+TODO
+
 \include{chap_intro}
 
 \include{chap_fourier}
@@ -198,6 +208,9 @@ Joachim Weidmann, \emph{Linear operators in Hilbert spaces}, 1980.
 
 \bibitem{topo}
 Ben Moonen, \emph{Syllabus Topologie}, 2008.
+
+\bibitem{tensor_vs_mallat}
+\url{http://videoprocessing.ucsd.edu/publications/Year_1999/File9.pdf}
 
 \end{thebibliography}
 
