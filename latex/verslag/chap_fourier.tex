@@ -1,181 +1,140 @@
 \chapter{Fourier}
 
-NOOT: meer gekut over C versus R, 
-
 Bij het analyseren van periodieke functies is de Fourier-transformatie het gereedschap bij uitstek.
 Het is een manier om een signaal te karakteriseren aan de hand van een bereik aan frequenties.
 Dit maakt het een overtuigende manier om `nette' periodieke functies te beschrijven.
 We kunnen de eis van periodiciteit ook loslaten als we naar functies op een interval kijken door dit op te vatten
 als \'e\'en fase van een periodieke functie.
 
-De basisfuncties waarmee we deze analyse uitvoeren worden gegeven door de complexe $e$-machten.
-Hiermee zijn de functies te transformeren naar een vector op $\C$.
-\begin{definitie}[FourierBasis] Zij gegeven een interval $[a,b]$, en bekijk de functieruimte $L_2([a,b])$. 
-Laat de verzameling $F_{[a,b]}$ gedefinieerd zijn door:
-\eq{
-  F_{[a,b]} := \left\{ \phi_k(x) = \tfrac{1}{\sqrt{b-a}} e^{2 \pi i \cdot k \frac{x-a}{b-a}} \largediv k \in \Z \right\}
-}
-Dan noemen we $F_{[a,b]}$ de Fourier`basis' van $L_2([a,b])$
+Iets concreter kijken we naar functies $f\in L_2(a,b)$ waarbij we $L_2$ defini\"eren volgens
+\[
+L_2(a,b) = \{ f:(a,b)\to\C \largediv \Ldnorm{f}{a,b} = \sqrt{\int_a^b \abso{f(x)}^2 \d{x}} < \infty \},
+\]
+hier is meteen de norm gegeven voor functies in deze ruimte. Deze norm is afkomstig van het inproduct op deze ruimte:
+\[
+\inpr{f}{g} = \int_a^b f(x)\cdot g^*(x) \d{x}
+\]
+De basisfuncties waarmee we vervolgens de analyse uitvoeren worden gegeven door de complexe $e$-machten.
+\begin{definitie}[Fourierbasis] Bekijk de functieruimte $L_2(a,b)$, we defini\"eren de verzameling $F_{a,b}$ 
+door:
+\[
+  F_{a,b} := \left\{ \phi_k(x) = \tfrac{1}{\sqrt{b-a}} e^{\dpii \cdot k \frac{x-a}{b-a}} \largediv k \in \Z \right\}
+\]
+We noemen $F_{a,b}$ de Fourierbasis van $L_2(a,b)$
 \end{definitie}
-Merk op dat hier het woord \emph{basis} hier tussen aanhalingstekens staat aangezien de elementen van $F_{[a,b]}$ 
-complexe functies zijn, ze spannen een grotere ruimte op dat nodig voor deze re\"ele analyse.
-We kunnen echter wel degelijk een functie ontbinden in deze Fourierbasis en deze vervolgens bijna-overal reconstrueren.
-We zullen hier een aantal handige definities voor introduceren.
-
+Het woord basis is hier met recht gebruikt, het is immers bekend dat de complexe $e$-machten loodrecht staan onder
+het inproduct dat we gedefinieerd hebben. Om nu een willekeurige functie te schrijven in deze basis, introduceren
+we de Fouriergetransformeerde.
 \begin{definitie}[Fouriergetransformeerde]
-Zij gegeven een functie $f\in L_2({[a,b]})$, schrijf dan een vector $\hat f : \Z\to\C$ met entries gedefinieerd volgens (hier aangegeven met blokhaken):
-\eq{
-  \hat f [n] = \frac{1}{\sqrt{b-a}} \cdot \inpr{f}{\phi_n} = \frac{1}{b-a} \int_{[a,b]} f(x) \cdot e^{-2 \pi i \cdot k \frac{x-a}{b-a}}\dx.
-}
+Zij gegeven een functie $f\in L_2(a,b)$, schrijf dan $\hat f : \Z\to\C$ met entries gedefinieerd volgens:
+\[
+  \hat f [n] = \frac{1}{\sqrt{b-a}} \cdot \inpr{f}{\phi_n} = \frac{1}{b-a} \int_a^b f(x) \cdot e^{-2 \pi i \cdot k \frac{x-a}{b-a}}\d{x}.
+\]
 We noemen $\hat f$ de Fouriergetransformeerde van $f$.
 \end{definitie}
 \begin{definitie}[Inverse Fouriertransformatie]
-  Gegeven een Fouriergetransformeerde $\hat f$ van een functie $f \in L_2([a,b])$ is de reconstructie van $f$ mogelijk volgens:
-  \eq{
-    f(x) = \sum_{k=-\infty}^\infty \hat f [k] \phi_k(x)
-  }
-  In alle $x \in [a,b]$ met uitzondering van een aantal geisoleerde punten. We noemen dit de inverse Fouriertransformatie.
+  Gegeven een Fouriergetransformeerde $\hat f$ van een functie $f \in L_2(a,b)$ is de reconstructie $f^\circ$ van $f$ gegeven door:
+  \[
+    f^\circ (x) = \sum_{k=-\infty}^\infty \hat f [k] \phi_k(x)
+  \]
 \end{definitie}
 
-Het kan worden aangetoond dat deze inverse Fouriertransformatie perfecte reconstructie geeft wanneer de functie
-$f$ continu differentieerbaar is.\cite{fourier-rec} 
-NOOT: Doe hier iets mee (puntsgewijs of in de 2-norm)
+Het kan worden aangetoond dat $f^\circ$ een reconstructie geeft van $f$ die voldoet aan: \cite{fourier-rec} 
+\begin{eqnarray}
+  \Ldnorm{f-f^\circ}{a,b}=0 \quad\quad \text{wanneer }& f\in L_2(a,b) \\
+  f(x) = f^\circ(x) \quad\quad \text{wanneer }& f \in C^1 
+\end{eqnarray}
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{De \emph{Discrete Fourier Transform}}
-Zoals we gezien hebben in het vorige hoofdstuk kan de Fouriertransformatie gebruikt worden om continue signalen te karakteriseren voor verschillende frequenties. Een groot gebied binnen de signaalanalyse is echter van discrete aard aangezien hier toch veelal digitale instrumenten voor worden gebruikt. De toepassingen waar wij op zoek zijn liggen ook in dit digitale domein (JPEG is immers een beeldcompressie-algoritme) en dus zal ons verslag zich verder afspelen in deze discrete setting.
+Zoals we gezien hebben in het vorige hoofdstuk kan de Fouriertransformatie gebruikt worden om continue signalen te karakteriseren voor verschillende frequenties. Een groot gebied binnen de signaalanalyse is echter van discrete aard aangezien hier veelal digitale instrumenten worden gebruikt. De toepassingen waarnaar wij op zoek zijn liggen in dit digitale domein (JPEG is een beeldcompressie-algoritme) en dus zal het verslag zich verder afspelen in deze discrete setting.
 
-Om discrete signalen te analyseren lijkt het in eerste instantie voor de hand te liggen om het discrete signaal als stapfunctie te bekijken, deze is immers ook kwadratisch integreerbaar. Dit leidt echter tot ongewenste resultaten, zoals is te zien aan de reconstructie van een blokgolf door middel van Fouriertransformatie. Erger nog, elke eindige som van continue functies is weer continu dus voor een perfecte reconstructie van een discreet signaal is met deze methode altijd een oneindige rij \coefficient en nodig. Bovendien is het moeilijk om uit deze \coefficient en relevante informatie te destilleren over de aard van het signaal.
+Om discrete signalen te analyseren lijkt het voor de hand te liggen om een deze als stapfuncties te zien. Een stapfunctie zit immers in $L_2$. De discontinuiteiten van de stapfunctie leiden echter tot ongewenste resultaten, zoals is te zien aan de reconstructie van een blokgolf door middel van Fouriertransformatie. TODO MISCHIEN PLAATJE?
+Erger nog, elke eindige som van continue functies is weer continu dus voor een perfecte reconstructie van een discreet signaal is met deze methode altijd een oneindige rij \coefficient en nodig. Bovendien is het moeilijk om uit deze \coefficient en relevante informatie te destilleren over de aard van het signaal.
 
-In plaats van de discrete signalen in te bedden in $L_2$ zullen we een discreet analogon gebruiken om de Fouriertransformatie van praktisch nut te laten zijn in de analyse van discrete signalen. 
-Hiervoor zullen we de Fourier-basis moeten discretiseren en ons moeten richten op de ruimte $\R^n$.
-We doen dit op zo'n manier dat deze discretisatie in de limiet naar het continue geval overgaat. 
-Zo zullen we uiteindelijk tot de \emph{Discrete Fourier Transform} komen.
+In plaats van de discrete signalen in te bedden in $L_2$ zullen we een discreet analogon gebruiken voor de Fouriertransformatie.
+Hiervoor zullen we de Fourier-basis discretiseren en ons richten op de ruimte $\R^n$.
+We veranderen daarvoor de co\"ordinaten naar een discrete $j$ volgens
+\[
+\frac{x-a}{b-a} \leftrightarrow \frac j n 
+\]
+Op deze manier zal de discretisatie in de limiet naar het continue geval overgaan. 
 
-NOOT: link met voorafgaande a=1 b=0
-
-\begin{definitie}[Discrete Fourierbasis] Gegeven de ruimte $\R^n$, definieer dan de verzameling
-\eq{
-  S_n := \left\{ s_k [j] = e^{\dpii k j/n } \largediv k,j \in \{1, \ldots, n\} \right\}
-}
-Als zijnde de discrete Fourierbasis met basisvectoren $s_k$.
+\begin{definitie}[Discrete Fourierbasis] Gegeven de ruimte $\C^n$, definieer dan de verzameling
+\[
+  S_n := \left\{ s_k [j] = e^{\dpii\cdot k j/n } \largediv k,j \in \{1, \ldots, n\} \right\},
+\]
+als de \emph{discrete Fourierbasis} op deze ruimte met basisvectoren $s_k$.
 \end{definitie}
-
-NOOT: Orthonormaal + perfecte reconstructie kan korter 
-NOOT: leg uit $s_j^-1 = (s_j[1]^-1,...)$
-
-Met deze basis in de hand kunnen we vervolgens de discrete Fouriergetransformeerde (DFT) van een signaal schrijven als de vector van (complexe) inproducten van dit signaal met de DFT-basisfuncties. Laat voor een signaal $x$ van lengte $n$ de DFT (aangeduid met $X$) gegeven zijn door:
-\eq{
+We weten dat de basisvectoren loodrecht staan vanwege de eigenschap:
+\[
+  \inpr{s_k}{s_j} = 
+  \sum_{m=1}^n s_k[m]\cdot \overline{s_j[m]} = 
+  \sum_{m=1}^n e^{\dpii\cdot m (k-j)/n} =
+  \begin{cases}
+    0 \quad \text{als } k\neq j\\
+    n \quad \text{als } k = j
+  \end{cases}
+\]
+Vanwege deze eigenschap kunnen we een discreet signaal $x$ schrijven in termen van deze basis door 
+een vector van inproducten te defini\"eren.
+we noemen $X$ de discrete Fouriergetransformeerde (DFT) met entries:
+\[
   X[k] = \tfrac{1}{n} \inpr{x}{s_k} \quad k\in\{1, \ldots ,n\}
-}
-Ook defini\"eren we een operatie op zulke vectoren $X$ en beweren dat deze een inverse DFT -- ook wel iDFT -- voorstelt (dit bewijs volgt weldra in een volgende sectie). De iDFT wordt gegeven door
-\eq{
+\]
+Vervolgens hebben we een inverse voor deze operatie die $X$ afbeeldt op $x^\circ$ volgens:
+\[
   x[j] = \inpr{X}{s_j^{-1}} \quad j\in \{1, \ldots, n\}
-}
-We zullen nu enkele bewijzen geven om de term `Discrete Fourierbasis' te ondersteunen.
+\]
+Waarbij we de notatie $s_j^{-1} = (s_j[1]^{-1},...)$ gebruiken.
+Volgens de regels van de Lineaire Algebra is dit is een perfecte reconstructie ($x[k] = x^\circ[k]$).
 
-\begin{stelling}[Fourierbasis]
-  De vectoren $s_k$ zoals gedefinieerd voor de verzameling $S_k$ staan onderling loodrecht onder het complexe
-  inproduct en $S_k$ is dus een complexe basis voor $\C^n$.
-\end{stelling}
-\begin{proof}[Bewijs]
-  Bekijk het complexe inproduct tussen twee willekeurig gekozen elementen van deze verzameling:
-  \eq{
-    \inpr{s_k}{s_j} = 
-    \sum_{m=1}^n s_k[m]\cdot \overline{s_j[m]} = 
-    \sum_{m=1}^n e^{\dpii\cdot m (k-j)/n} =
-    \begin{cases}
-      0 \quad \text{als } k\neq j\\
-      n \quad \text{als } k = j
-    \end{cases}
-  }
-  Dus staan de vectoren van $S_n$ onderling loodrecht, zodat deze een complexe ruimte opspannen van dimensie $n$.
-\end{proof}
-
-Om de claim te ondersteunen dat de DFT-methode een echte discretisatie is van de continue Fouriertransformatie willen we bewijzen dat dit algoritme voor een steeds fijnere selectie van waardes van een functie in de limiet hetzelfde resultaat geeft als de continue Fouriertransformatie. 
-
+Om de claim te ondersteunen dat de DFT-methode een echte discretisatie is van de continue Fouriertransformatie 
+willen we bewijzen dat dit algoritme voor een steeds fijnere selectie van waardes van een functie in de 
+limiet hetzelfde resultaat geeft als de continue Fouriertransformatie. 
 Zoals gebruikelijk bij het overschakelen van een discrete naar een continue setting, kunnen we dit doen 
 door de definitie van de Riemann integraal toe te passen op de sommatie die voor handen ligt.
 
 \begin{stelling}[Limiet van discrete Fourier-transformatie]
-  Gegeven een interval $[a,b]$ en een functie $f\in L_2([a,b])$. 
-  Voor een discretisatie van $f$ in $n$ gelijke
-  intervallen zodat de discrete $f$ precies \'e\'en waarde uit elk interval inneemt geldt dat de discrete
-  Fouriergetransformeerde limiteert naar de algemene Fouriergetransformeerde wanneer $n\to\infty$.
+  Gegeven een functie $f\in L_2(a,b)$ op het interval $[a,b]$,
+  bekijk een discretisatie van $f$ in $n$ gelijke intervallen zodat de discrete $f$ precies 
+  de randwaarde waarde van elk interval inneemt.
+  Dan geldt dat de discrete Fouriergetransformeerde limiteert naar de algemene Fouriergetransformeerde wanneer $n\to\infty$.
 \end{stelling} 
 \begin{proof}[Bewijs]
-Gegeven een interval $[a,b]$ kunnen we een partitie $P$ maken in $n$ gelijke delen, ofwel laat $P=\{a=t_0,t_1,..,t_n=b\}$ met $t_j = \tfrac{na + j(b-a)}{n}$.
-We discretiseren onze functie $f$ door uit elk interval $[t_{j-1},t_{j}]$ van de partitie de waarde in $x_j = t_j - c_j(\tfrac{b-a}{n})$ te nemen met $c_j \in [0,1]$, ofwel
-$f[j] = f(\frac{b-a}{n}(j-c_j) + a)$.
-De DFT van de discrete functie $f[\cdot]$ wordt dan gegeven door het inproduct te nemen met de DFT-basisfuncties:
+Gegeven een interval $[a,b]$ kunnen we een partitie $P$ maken in $n$ gelijke delen, 
+ofwel laat $P=\{a=t_0,t_1,..,t_n=b\}$ met $t_j = a+\tfrac{j(b-a)}{n}$.
+We discretiseren onze functie $f$ door uit elk interval $[t_{j-1},t_{j}]$ van de partitie de randwaarde in 
+$x_j = t_j$ te selecteren, dus
 \[
-F[k] = \frac1n\sum_{j=1}^n f[j] \cdot \overline{s_k}[j].
+f[j] = f(x_j) = f(\frac{b-a}{n}j + a)
 \]
-
-NOOT: Partitie vast nemen.
-
-We schrijven dit om in termen van onze partitie, met de identificatie $n\cdot\tfrac{x_j-a}{b-a} + c_j= j$ 
-waarmee we de continue variable $x_j\in[a,b]$ omschrijven naar zijn discrete tegenhanger en krijgen zo:
-\eq{
-  F[k] =& \frac{1}{n} \sum_{j=1}^n f[j]\cdot \overline{s_k}[n\cdot\tfrac{x_j-a}{b-a} + c_j] \\
-       =& \frac{1}{n} \sum_{j=1}^n f(x_j)\cdot 
-       e^{-\dpii \cdot k \tfrac{x-a}{b-a}} \cdot e^{-\dpii \cdot k c_j/n} \\
-       =&  \frac{1}{\sqrt{b-a}}\sum_{j=1}^n f(x_j)\cdot \overline{\phi}_k(x_j) \cdot\frac{b-a}{n} 
-\cdot e^{-\dpii \cdot k c_j/n}
-}
-We merken op dat $c_j$ begrensd dus we weten dat de limiet van 
-$e^{-\dpii\cdot k c_j/n}$ voor $n\to\infty$ gelijk is aan $1$ voor elke $j$. 
-Dan is de limiet voor $F[k]$ gelijk aan de limiet van de overige factoren in de sommatie.
-We merken op dat de term $\frac{b-a}{n}$ precies de grootte is van ons interval en dat we het geheel
-omgeschreven hebben in termen van onze continue functies $f$ en $\phi_k$.
+De DFT van de discrete functie $f[\cdot]$ wordt dan gegeven door:
+\[
+F[k] = \frac1n\sum_{j=1}^n f[j] \cdot s_k^{-1}[j].
+\]
+We schrijven dit om in termen van onze non-discrete functie door $x_j\in[a,b]$ 
+omschrijven naar zijn discrete tegenhanger en krijgen zo:
+\begin{eqnarray*}
+  F[k] =& \frac{1}{n} \sum_{j=1}^n f[j]\cdot s_k^{-1}[n\cdot\tfrac{x_j-a}{b-a}] \\
+       =& \frac{1}{n} \sum_{j=1}^n f(x_j)\cdot e^{-\dpii \cdot k \tfrac{x_j-a}{b-a}}\\
+       =&  \frac{1}{\sqrt{b-a}}\sum_{j=1}^n f(x_j)\cdot \phi^*_k(x_j) \cdot\frac{b-a}{n} 
+\end{eqnarray*}
+We merken op dat de term $\frac{b-a}{n}$ precies de grootte is van de subintervallen van de partitie interval 
+en dat we het geheel omgeschreven hebben in termen van onze continue functies $f$ en $\phi_k$.
 Omdat het product $f\cdot\phi_k$ integreerbaar is moet voor elke partitie $P$ met 
 waarden in punten $x_j$ uit elk interval deze sommatie convergeren naar de integraal
-\eq{
-  \frac{1}{\sqrt{b-a}} \int_{[a,b]} f(x) \overline{\phi}_k(x) dx
-}
-wanneer we de maaswijdte ($\tfrac{b-a}{n}$) naar $0$ laten gaan. Dit is duidelijk het geval wanneer we de limiet $n\to\infty$ nemen. Daarmee is de DFT een goede discretisatie van de Fouriergetransformeerde. 
+\[
+  \frac{1}{\sqrt{b-a}} \int_{[a,b]} f(x) \phi^*_k(x) \d{x}
+\]
+wanneer we de maaswijdte ($\tfrac{b-a}{n}$) naar $0$ laten gaan. 
+Dit is duidelijk het geval wanneer we de limiet $n\to\infty$ nemen. 
+Dus is de DFT een goede discretisatie van de Fouriergetransformeerde. 
 \end{proof}
  
 Voor de werking van het DFT algoritme als signaalcompressie-algoritme is het van belang dat er een 
 inverse algoritme bestaat dat het getransformeerde inputsignaal weer terugtransformeert 
 zonder verlies van informatie. We zullen nu bewijzen dat dit mogelijk is door de DFT en iDFT te gebruiken.
-
-\begin{stelling}[Inverteerbaarheid van de DFT]
-  De samenstelling van de inverse Discrete Fouriertransformatie met de Discrete Fouriertransformatie is
-  gelijk aan de identiteit.
-\end{stelling}
-\begin{proof}[Bewijs]
-We bekijken daarvoor een signaal $x\in\R^n$ dat met de DFT methode getransformeerd wordt in een vector $X\in\C^n$.
-Hierbij hoort de discrete Fourier-basis $S_n$ met basisvectoren $s_k$. 
-De discrete Fourier transformatie en zijn inverse zijn gedefini\"eerd door:
-\eq{
-  X[k]      =& \tfrac 1 n \langle x, s_k \rangle \quad\quad \text{(DFT)}\\
-  \hat x[j] =&  \langle X, \repr{s_j} \rangle \quad\quad\text{(iDFT)}
-}
-Om te bewijzen dat de iDFT de DFT inverteert voldoet het om de iDFT uit te schrijven in termen van $x$ 
-door $X$ in te vullen volgens de formule van de DFT. Uitschrijven hiervan geeft:
-\eq{
-  \hat x[j] =&  \langle X , \repr{s_j} \rangle \\
-      =&  \sum_{i=1}^n X[i]\cdot \overline{\repr{s_j}}[i] \\
-      =&  \sum_{i=1}^n \tfrac1n\inpr{x}{s_i} \overline{\repr{s_j}}[i] \\
-      =& \langle x , \frac1n \sum_{i=1}^n s_i \repr{s_j}[i] \rangle
-}
-We schrijven nu de sommatie in de tweede term van het inproduct (die een vector van lengte $n$ representeert) uit in zijn componenten. 
-Merk op dat de discrete Fourier-basisvectoren zo gedefinieerd zijn dat $s_k[m] = s_m[k]$. 
-We verwisselen de indices in blokhaken met die in het subscript van $s$ en verkrijgen daarmee
-\eq{
-  \frac1n \sum_{i=1}^n s_i[m] \repr{s_j}[i] = \frac1n \sum_{i=1}^n s_m[i] \overline{s_j}[i] 
-=\tfrac1n \inpr{s_m}{s_j} = \begin{cases}0\quad\text{als }m\neq j\\1\quad\text{als }m=j\end{cases}.\\
-}
-Hier gebruiken we dus de eerdere vergelijking voor het inproduct van twee basisfuncties.
-We gebruiken deze eigenschap van de sommatie om ons eerder inproduct uit te schrijven. 
-We hebben nu een gelijkheid
-\eq{
-  \hat x_j = \inpr{x}{e_j} = x_j
-}
-Door de iDFT toe te passen op het resultaat van de DFT zullen we altijd het origineel terug krijgen,
-dus de iDFT samengesteld met de DFT geeft een identiteit.
-\end{proof}
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{De Fast Fourier Transform}
@@ -190,9 +149,9 @@ Gegeven zij een inputsignaal $x$ van lengte $n=2^m$, dan geeft het algoritme $\F
 een lijst terug van waardes $X$ van lengte $n=2^m$ als volgt:
 
 Als $m=0$ dan geeft de $\FFT$ de lijst (van \'e\'en element) direct terug:
-\eq{
+\[
 X = x.
-}
+\]
 Wanneer $m\neq0$ splitsen we de lijst $x$ op in lijsten $\e,o$ van zijn even en oneven indices:
 \eq{
   \e[k]   =& x[2k]   &\quad \text{voor } k < n/2\\
@@ -204,12 +163,12 @@ Vervolgens voeren we hierop het $\FFT$ algoritme uit om de volgende lijsten te v
   O =& \FFT(o)
 }
 Hiermee wordt de output van het algoritme geconstrueerd als volgt:
-\eq{
+\[
   X[k] = \left\{\begin{array}{llll}
     E[k]         &+& e^{-\dpii k/n}\cdot O[k] &  k< n/2 \\
     E[k-n/2] &-& e^{-\dpii (k-n/2)/n}\cdot O[k-n/2] &  k\geq n/2 
   \end{array}\right.
-}
+\]
 \end{algo}
 %%%%%
 
@@ -273,26 +232,25 @@ een 2-macht zijn opgelost met signaalextensie, zoals eerder beschreven.
 
 %-----------------------------------------------------------------------------------------------------------------
 \subsection{Complexiteit van de Fast Fourier Transform}
-Wat in de huidige tijd van computers ook een belangrijk punt geworden is, is complexiteit van een algoritme.
-
-De complexiteit vertaalt namelijk direct naar de tijd die nodig is om een resultaat te krijgen. We hebben, om de complexiteit te vinden, de volgende stelling uit de Complexiteitstheorie nodig.\footnote{Dit is een speciaal geval van de stelling, voor de volledige stelleing en het bewijs zie \cite{akra-bazzi}.}
+We zullen de claim bewijzen dat de complexiteit van de FFT werkelijk beter lager is dan die van de DFT.
+Hiervoor hebben we de volgende stelling uit de Complexiteitstheorie nodig.\footnote{Dit is een speciaal geval van de stelling, voor de volledige stelleing en het bewijs zie \cite{akra-bazzi}.}
 
 \begin{stelling}[Akra-Bazzi]
-    Zij $T(n)$ een recurrente betrekking van de vorm
+    Zij $T:\N\to\R$ een recurrente betrekking van de vorm
     \[
     T(n) = \begin{cases}
       c_0 &\text{ als } n \leq d \\
-      a T(n/b) + f(n) &\text{ anders}, \\
-    \end{cases}
+      a T(n/b) + f(n) &\text{ anders} \\
+    \end{cases},
     \]
-    waarbij $a,b,d\in\N$, $c\in\R$ en $f$ een functie $f:\N\rightarrow\R$ die voldoet aan 
-    \eq{
-  \exists k \in \N \,:\, f(n) \in \theta(n^{\log a/\log b} \log^k n).
-    }
-    Dan wordt de orde van $T(n)$ gegeven door:
-    \eq{
+    waarbij $a,b,d\in\N$, $c_0\in\R$ en $f$ een functie $f:\N\rightarrow\R$ die voldoet aan 
+    \[
+    \exists k \in \N \,:\, f(n) \in \theta(n^{\log a/\log b} \log^k n),
+    \]
+    dan wordt de orde van $T(n)$ gegeven door:
+    \[
       T(n) \in \theta(n^{\log a / \log b} \log^{k+1}n).
-    }
+    \]
 \end{stelling}
 We beschouwen hier $T(n)$ als het aantal stappen dat een machine nodig heeft om het algoritme uit te voeren.
 Deze stelling is voldoende om een uitspraak te kunnen doen over de complexiteit 
@@ -333,7 +291,7 @@ We zullen nu bovenstaande (vereenvoudigde) stelling van Akra-Bazzi gebruiken. We
 \[
 f \in \theta(g) \Leftrightarrow \exists c \in \R_+: \lim_{n \to \infty} \frac{f(n)}{g(n)} = c
 \]
-Zonder verder al te veel in te gaan op de implicaties die $\theta$ heeft op het gedrag van de FFT gebruiken we dan dat in ieder geval geldt dat $f \in \theta(g)$ impliceert dat $f \in \O(g)$. 
+Zonder verder al te veel in te gaan op de implicaties die $\theta$ heeft op het gedrag van de FFT vermelden we dat in ieder geval geldt dat $f \in \theta(g)$ impliceert dat $f \in \O(g)$. 
 
 De recurrente betrekking voor de complexiteit van de FFT is inderdaad van dezelfde vorm als die van $T(n)$ in bovenstaande stelling.
 Laat hiervoor namelijk $a=b=2$, $c_0=d=1$ en $f (n) = N\cdot n$:
@@ -344,9 +302,11 @@ Dit betekent dat $T(n) \in \theta(n \log n)$ en dus zeker $T(n) \in \O(n \log n)
 Hiermee hebben we bewezen dat de FFT en daarmee de iFFT binnen tijdscomplexiteit $\O(n\log n)$ lopen. 
 \end{proof}
 
-\begin{gevolg}
-Omdat het algoritme niet in lineaire tijd loopt, wordt het al snel lang wachten bij grote signalen. In meer dimensies is er al helemaal snel een groot praktisch bezwaar. Dit wachten is ook precies de reden dat we driedimensionale signalen niet verder bekeken hebben met de Fouriertransformatie.
-\end{gevolg}
+\begin{opmerking}
+Omdat het algoritme niet in lineaire tijd loopt, neemt de wachttijd snel toe bij grote signalen. 
+In meer dimensies wordt dit al snel een praktisch bezwaar, dit is dan ook een reden waarom we geen driedimensionale 
+signalen hebben bekeken bij de implementatie van de Fouriertransformatie.
+\end{opmerking}
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{Discrete Fourier Transform in meer dimensies}
@@ -356,30 +316,36 @@ Het idee hierbij is om het Tensorproduct te nemen van meerdere bases.
 
 \begin{definitie}[Multidimensionale Discrete Fourierbasis] 
 Gegeven zij een signaalruimte van de vorm
-$\R^{n_1} \times \R^{n_2} \times \ldots \times \R^{n_m}$ welke we opvatten als
-een $m$-dimensionaal discreet signaal waarbij de $i$-de orthogonale richting een lengte $n_i$ heeft.
-Dan defini\"eren we de multidimensionale discrete Fourierbasis behorende bij deze signaalruimte als
-\eq{
+$\R^{n_1} \times \R^{n_2} \times \ldots \times \R^{n_m}$ 
+waarvan de elementen $m$-dimensionale discrete signalen zijn waarbij de $i$-de richting een lengte $n_i$ heeft.
+We defini\"eren de multidimensionale discrete Fourierbasis behorende bij deze signaalruimte als
+\[
   S_{\bold n}= S_{n_1}\otimes S_{n_2} \otimes \ldots \otimes S_{n_m} = 
   \left\{s_{\bold k}[{\bold j}]  = s_{k_1}[j_1]\cdot s_{k_2}[j_2]\cdot\ldots\cdot s_{k_m}[j_m] 
   \largediv s_{k_i} \in S_{n_i}, j_i \in \{1,\ldots, n_i\} \right\}
-}
+\]
 Met basisvectoren $s_{\bold k}$, waar $\bold k$ een indexvector uit $\{1, \ldots, n_1\}\times\ldots\times\{1\ldots, n_m\}$ is.
-
-Het feit dat dit een basis is, kan gevonden worden in \ref{topo}.
+Het feit dat dit een basis is, kan gevonden worden in \cite{topo}.
 \end{definitie}
 
-NOOT: bewijs dat dit een basis is, want tensor=loodrecht
-
-Wanneer we nu een $m$-dimensionaal signaal bekijken van lengte $n_1$ bij $n_2$ etc., dan kunnen we
+Wanneer we nu een $m$-dimensionaal signaal bekijken van lengte $n_1 \times \cdots \times n_m$ etc., dan kunnen we
 hierop een multidimensionale Fouriertransformatie op defini\"eren door het inproduct te generaliseren naar 
 onze $m$-dimensionale signaalruimte.
-\eq{
-  X[\bold k] = \tfrac{1}{\bold n}\sum_{\bold j = \bold 1}^{\bold n} x[\bold j] \overline{s_{\bold k}}[{\bold j}] =
-  \left(\prod_{i=1}^m \tfrac{1}{n_i}\right) \cdot \sum_{j_1=1}^{n_1} \ldots \sum_{j_m=1}^{n_m} x[j_1,\ldots,j_m] \cdot 
+\[
+  X[\bold k] = \tfrac{1}{\bold n}
+  \sum_{\bold j = \bold 1}^{\bold n} x[\boldsymbol j] s^{-1}_{\bold k}[\boldsymbol j] 
+  =
+  \left(\prod_{i=1}^m \tfrac{1}{n_i}\right) \cdot 
+  \sum_{j_1=1}^{n_1} \ldots \sum_{j_m=1}^{n_m} 
+  x[j_1,\ldots,j_m] \cdot 
   e^{-\dpii\cdot k_m \cdot j_m /n_m } \cdot \ldots \cdot e^{-\dpii\cdot k_1 \cdot j_1 /n_1 } 
-}
-We zullen echter een andere definitie gebruiken die equivalent is aan deze methode, maar recursief gedefinieerd.
+\]
+
+TODO: Wat wil ik hier nou notationeel eigenlijk doen, mischien dat het mappen van FFT wel gewoon makkelijker kan
+
+Maar zoals we voor de DFT al gezien hadden is het uitrekenen van al deze inproducten erg complex (in de tijd).
+We zullen daarom de Multidimentionale Discrete FourierTransformatie (MDFT) op een andere manier defini\"eren 
+zodat we beter gebruik kunnen maken van de dere definitie gebruiken die equivalent is aan deze methode, maar recursief gedefinieerd.
 We noteren deze transformatie als $\DFT_m$, een functie die een $m$-dimensionaal ingangssignaal transformeert.
 \begin{definitie}[Multidimensionale Discrete Fouriertransformatie]
 Definieer $\DFT_0$ als de inbedding van $\R$ in $\C$.
@@ -538,5 +504,4 @@ NOOT: integraal kenmerk? sommatie voor n>1 meetkundige reeks
 \subsection{De fout in discrete geval}
 
 TODO: discreet $\to$ continu voor grote dataset, maak een definitie van smooth op discrete functies
-Kankermoeilijk, fuck dit
 
