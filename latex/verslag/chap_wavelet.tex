@@ -407,7 +407,7 @@ Als de lengte van de filter $h$ gelijk is aan $K$, en de lengte van het originel
 \[
 \sum_{j=L}^0 2^{j} \cdot K = K \sum_{j=L}^0 2^{j} = K \cdot (2^{1+L} - 1) < 2 \cdot K 2^{L} = 2KN
 \]
-operaties. Dus deze DWT is een $\mathcal{O}(KN)$ algoritme. Ook de complexiteit van de inverse wordt op dezelfde manier van orde $KN$.
+operaties. Dus deze DWT is een $\theta(KN)$ algoritme. Ook de complexiteit van de inverse wordt op dezelfde manier van orde $KN$.
 
 \section{Meer dimensies: de Mallatdecompositie}
 Met een orthonormale waveletbasis $\{ \psi_{j,n}: (j,n) \in \Z^2\}$ van $L_2(\R)$ volgt een natuurlijke voortzetting naar twee dimensies door
@@ -891,7 +891,8 @@ Wij zijn op het moment ge\"interesseerd in de Mallat-waveletbasis $\boldsymbol\P
 Defini\"eer $J_M := \{ l \in \N^n: \| l \|_\infty \leq M \}$. Laat $\boldsymbol\Phi_M := \{ \boldsymbol{\psi}_{\boldsymbol{\lambda}} \in \boldsymbol\Phi: |\boldsymbol\lambda| \in J_M \}$ met $|\boldsymbol\lambda| = (|\lambda_1, \ldots, |\lambda_n|)$ de verzameling basisfuncties tot een niveau $M$.
 
 \begin{stelling}[Fout van Mallatdecompositie]
-Wanneer $f \in H^p(\Box)$, zal de fout $\| f - f_{\mathcal{\boldsymbol\Phi}_M} \|$ bij een Mallatdecompositie met de basisfuncties tot niveau $M$ hoogstens proportioneel met $N^{-p/n}$ zijn, met $N := \# \boldsymbol\Phi_M$ het aantal basisfuncties tot niveau $M$.
+\label{thm:foutmallat}
+Wanneer $f \in H^p(\Box)$, zal de fout $\| f - f_{\boldsymbol\Phi_M} \|$ bij een Mallatdecompositie met de basisfuncties tot niveau $M$ hoogstens $\theta(N^{-p/n})$ zijn, met $N := \# \boldsymbol\Phi_M$ het aantal basisfuncties tot niveau $M$.
 \end{stelling}
 \begin{proof}
 
@@ -901,7 +902,7 @@ Wanneer $f \in H^p(\Box)$, zal de fout $\| f - f_{\mathcal{\boldsymbol\Phi}_M} \
   \]
   wanneer $f \in H^p(\Box)$.
 
-  Voor elke dimensie zitten er $\mathcal{O}(2^M)$ basisfuncties in $\{ \psi_\lambda: |\lambda| \leq M \}$. Er zijn $n$ dimensies dus $2^{Mn} = N$ basisfuncties in totaal.
+  Voor elke dimensie zitten er $\theta(2^M)$ basisfuncties in $\{ \psi_\lambda: |\lambda| \leq M \}$. Er zijn $n$ dimensies dus $2^{Mn} = N$ basisfuncties in totaal.
 
   Bekijk de fout:
   \[
@@ -959,6 +960,7 @@ Het aantal elementen in deze verzameling $\boldsymbol{\nabla}_M$ nu, kunnen we v
 
 Met bovenstaande drie lemma's is het nu mogelijk een goede afschatting te maken.
 \begin{stelling}[Fout van het Tensorproduct]
+\label{thm:fouttensor}
   Laat $f \in H^p(\Box)$ en $N = \#\boldsymbol{\nabla}_M$. Dan:
   \[
   \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim N^{-p} \log_2(N)^{(n-1)(1/2 + p)} \| f \|_{H^p(\Box)}.
