@@ -331,7 +331,8 @@ Het feit dat dit een basis is, kan gevonden worden in \cite{topo}.
 Wanneer we nu een $m$-dimensionaal signaal bekijken van lengte $n_1 \times \cdots \times n_m$ etc., dan kunnen we
 hierop een multidimensionale Fouriertransformatie op defini\"eren door het inproduct te generaliseren naar 
 onze $m$-dimensionale signaalruimte.
-\[
+\begin{equation}
+  \label{algemeen_fourier_schema}
   X[\bold k] = \tfrac{1}{\bold n}
   \sum_{\bold j = \bold 1}^{\bold n} x[\boldsymbol j] s^{-1}_{\bold k}[\boldsymbol j] 
   =
@@ -339,78 +340,74 @@ onze $m$-dimensionale signaalruimte.
   \sum_{j_1=1}^{n_1} \ldots \sum_{j_m=1}^{n_m} 
   x[j_1,\ldots,j_m] \cdot 
   e^{-\dpii\cdot k_m \cdot j_m /n_m } \cdot \ldots \cdot e^{-\dpii\cdot k_1 \cdot j_1 /n_1 } 
-\]
-
-TODO: Wat wil ik hier nou notationeel eigenlijk doen, mischien dat het mappen van FFT wel gewoon makkelijker kan
+\end{equation}
 
 Maar zoals we voor de DFT al gezien hadden is het uitrekenen van al deze inproducten erg complex (in de tijd).
 We zullen daarom de Multidimentionale Discrete FourierTransformatie (MDFT) op een andere manier defini\"eren 
-zodat we beter gebruik kunnen maken van de dere definitie gebruiken die equivalent is aan deze methode, maar recursief gedefinieerd.
-We noteren deze transformatie als $\DFT_m$, een functie die een $m$-dimensionaal ingangssignaal transformeert.
-\begin{definitie}[Multidimensionale Discrete Fouriertransformatie]
-Definieer $\DFT_0$ als de inbedding van $\R$ in $\C$.
+zodat we beter gebruik kunnen maken van de DFT en FFT algoritmen die we al gevonden hebben.
 
-NOOT: Doe hier iets mee
-
-We defini\"eren dan een DFT van orde $m$ (notatie $\DFT_m$) als een transformatie 
-$\R^{n_1}\times\ldots\times\R^{n_m} \to \C^{n_1}\times\ldots\times\C^{n_m}$ aan de hand van het beeld $X$ van een $m$-dimensionaal ingangssignaal $x$:
-\eq{
-  X[k_1,\ldots,k_m] = \tfrac{1}{n_m}\sum_{j_m=1}^{n_m} \DFT_{m-1}(x[j_m])[k_1,\ldots,k_{m-1}] \cdot s_{k_m}[j_m]  
-}
-Hier staat de notatie $x[j_m]$ voor een $(m-1)$-dimensionaal signaal dat we verkrijgen door de co\"ordinaat
-in de $m$-de richting vast te zetten.
-\end{definitie}
-
-NOOT: leg uit hoe het vastleggen van een coordinaat werkt
-
-Dit is duidelijk dezelfde definitie als eerder gegeven in termen van herhaalde sommatie. Voor $m=1$ staat er immers de gewone DFT en voor hogere machten schaalt dit met een factor $\tfrac{1}{n}$ en een extra sommatie.
-Het voordeel van deze definitie is dat het makkelijk om te schrijven is naar een algoritme dat 
-herhaald $\DFT$ toepast.
 \begin{algo}[Multidimensionaal DFT-algoritme]
 Gegeven is een $m$-dimensionale input $x$ en een huidig level $t$, 
-we schrijven het algoritme met output $X_t$ als:
-\eq{
-  X_{t}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m] = \DFT(X_{t-1}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m]) \\
-  \text{voor } k_1\leq n_1, \ldots ,k_{t-1}\leq n_{t-1}, k_{t+1}\leq n_{t+1}, \ldots k_m \leq n_m
-}
-Waarbij we de randvoorwaarde $X_0 = x$ gebruiken. We beweren dat dit algoritme de multidimensionale Fouriertransformatie van een $m$-dimensionaal signaal geeft.
+we schrijven het algoritme met output $X_t$ volgens
+\begin{equation}
+  \label{mdft_cases}
+  X_{t}[\boldsymbol k] = \begin{cases}
+  \DFT(X_{t-1}\largediv_{x_1 = k_1,\ldots,x_{t-1} = k_{t-1},x_{t+1} = k_{t+1},\ldots,x_m =k_m})[k_t] & \text{als } t>0\\
+  x[k_t] & \text{als } t=0
+  \end{cases}
+\end{equation}
+Waar we de notatie $X\largediv_{x_i=c}$ gebruiken voor het object van kleinere dimensie dat verkregen
+wordt door de $i$-de co\"ordinaat vast te leggen op $c$.
+We beweren dat vervolgens $X_m$ de multidimensionale Fouriertransformatie van een $m$-dimensionaal signaal geeft zoals
+in \ref{algemeen_fourier_schema}.
 \end{algo}
 \begin{proof}[Bewijs]
-Om te bewijzen dat dit de MDFT geeft volstaat het om aan te tonen dat
-\eq{
-  X_t [k_1,\ldots,k_m] = 
-  \sum_{j_t = 1}^{n_t}\DFT_{t-1}(x[j_t,k_{t+1},\ldots,k_m])[k_1,\ldots,k_{t-1}] \cdot s_{k_t}[j_t]
-}
-Wanneer dit geldt voor elke $t$ dan geldt dit namelijk in het bijzonder voor het geval $t=m$, 
-zodat $X_m$ gegeven wordt voor de formule voor de MDFT.
-
-Laat $t=1$ dan geldt:
-\eq{
-  X_1[k_1,\ldots,k_m] =& \DFT(X_0[k_2,\ldots,k_m])[k_1] \\
- =&  \sum_{j_1=1}^{n_1} x[j_1,k_2,\ldots,k_m]\cdot s_{k_1}[j_1] \\
- =& \sum_{j_1=1}^{n_1} \DFT_0(x[j_1,k_2,\ldots,k_m])\cdot s_{k_1}[j_1]
-}
-Nu geldt verder voor $t>1$:
-\eq{
-  X_t[k_1,\ldots,k_m] =& DFT(X_{t-1}[k_1,\ldots,k_{t-1},k_{t+1},\ldots,k_m])[k_t] \\
-           =& \sum_{j_t =1}^{n_t} X_{t-1}[k_1,\ldots,k_{t-1},j_t,k_{t+1},\ldots,k_m] \cdot s_{k_t}[j_t] \\
-           =& \sum_{j_t =1}^{n_t} 
-           \sum_{j_{t-1} = 1}^{n_{t-1}}
-           \DFT_{t-2}(x[j_{t-1},k_t,\ldots,k_m])[k_1,\ldots,k_{t-2}] \cdot s_{k_{t-1}}[j_{t-1}]
-                         \cdot s_{k_t}[j_t] \\
-=&  \sum_{j_t = 1}^{n_t}\DFT_{t-1}(x[j_t,k_{t+1},\ldots,k_m])[k_1,\ldots,k_{t-1}] \cdot s_{k_t}[j_t]
-}
-Waarbij we opeenvolgend onze de inductieaanname gebruiken en vervolgens de definitie van de MDFT.
-Hiermee geldt de relatie dus ook voor $X_m$, zodat dit algoritme de MDFT geeft.
+We voeren inductie naar de dimensie $m$ uit met de inductiehypothese dat voor een dimensie $m$ 
+de vergelijking voor $X_m$ uit het algoritme gegeven wordt door \ref{algemeen_fourier_schema}.\\ 
+Als $m=1$ dan geldt:
+\[
+X_1[k_1] = DFT(X_0)[k_1] = DFT(x)[k_1]
+\]
+Wat dus inderdaad de DFT in 1 dimensie geeft.
+We gaan nu door met de inductiestap, voor algemene $m>1$ geldt:
+Schrijf even kort
+\[
+\tilde X_{t-1}[k_t] = 
+X_{t-1}\largediv_{x_1 = k_1,\ldots,x_{t-1} = k_{t-1},x_{t+1} = k_{t+1},\ldots,x_m =k_m}[k_t]
+\]
+\[
+  X_m [\boldsymbol k] = 
+  \DFT(\tilde X_{m-1})[k_m]
+  = \frac 1 {n_m}\sum_{j_m=1}^{n_m} \tilde X_{m-1}[j_m] s^{-1}_{k_m}[j_m]
+\]
+We vatten nu $\tilde X$ op als een vector van lengte $n_m$ van $m-1$ dimensionale Fouriergetransformeerden
+dit mag omdat
+\[
+X_{m-1}\largediv_{x_1=k_1,\ldots,x_{m-1}=k_{m-1}}[k_m] = X_{m-1}\largediv_{x_m=k_m}[k_1,\ldots,k_{m-1}]
+\]
+en daarmee $X_{m-1}\largediv_{x_m=k_m}$ een $m-1$-dimensionaal object is dat weer wordt gegeven door de relatie
+in \ref{mdft_cases}.
+Omdat we de aanname voor $m-1$ dimensies al bewezen hebben geldt nu:
+\[
+X_m[\boldsymbol k]  = \frac 1 {n_m}\sum_{j_m=1}^{n_m} 
+\left( \frac 1 {n_{m-1}} \sum_{j_{m-1}=1}^{n_{m-1}} \left ( \cdots 
+\frac 1 {n_1} \sum_{j_1=1}^{n_1} 
+x[j_1,\ldots,j_m] 
+\cdot s^{-1}_{k_1}[j_1]
+\cdots \right ) s^{-1}_{k_{m-1}}[j_{m-1}] \right) 
+s^{-1}_{k_m}[j_m]
+\]
+Wat precies is wat we wilden aantonen.
 \end{proof}
 
-Een belangrijk gevolg is nu dat het algoritme in termen van de DFT direct vertaalt naar een multidimentionaal algoritme voor de FFT: beiden geven immers dezelfde output. 
-Wanneer we overal de functie DFT vervangen door FFT dan geeft dit de Multidimentionale Fast Fourier Transform.
-De complexiteit van zo'n algoritme is $\O( \sum_{i=1}^m \log(n_i) \prod_{j=1}^m n_j)$ t.o.v.
-$\O( \sum_{i=1}^m n_i \prod_{j=1}^m n_j)$ voor de MDFT.
+Een belangrijk gevolg van de definitie van dit algoritme is dat de DFT term in \ref{mdft_cases}
+gemakkelijk vervangen kan worden door een FFT term, beiden geven immers dezelfde output. 
+Daarmee hebben we ook direct een MFFT gevonden.
+De complexiteit van deze algoritmen is dan $\O( \sum_{i=1}^m \log(n_i) \prod_{j=1}^m n_j)$  voor de MFFT
+t.o.v. $\O( \sum_{i=1}^m n_i \prod_{j=1}^m n_j)$ voor de MDFT.
 
 %-----------------------------------------------------------------------------------------------------------------
-\section{Compressie van signaal onder FFT}
+\section{Compressie van een signaal onder FFT}
 Tot zover is de Discrete Fourieranalyse besproken aan de hand van perfecte reconstructie, 
 aan de hand van een  complete set co\"efficienten. Het doel van dit project is echter om
 signalen te comprimeren; te reconstrueren aan de hand van een gelimiteerde dataset.
@@ -476,7 +473,7 @@ Wanneer $g \in L_1(\R)$, dan geldt
   \[
   (\tfrac{2 \pi}{b-a} |k|)^n \abso{\inpr{f}{\phi_k}} \to 0 \text{ als } |k| \to \infty.
   \]
-  Maar dit betekent precies dat $\abso{\inpr{f}{\phi_k}} \in  O((\tfrac{2 \pi}{b-a} |k|)^{-n}) = O(|k|^{-n})$
+  Maar dit betekent precies dat $\abso{\inpr{f}{\phi_k}} \in  \O((\tfrac{2 \pi}{b-a} |k|)^{-n}) = \O(|k|^{-n})$
 \end{proof}
 
 De analyse van de co\"effici\"enten die we hier gegeven hebben vertaalt direct naar de fout die we krijgen
@@ -484,7 +481,7 @@ bij reconstructie van een Fourier-getransformeerde functie wanneer we een gelimi
 Schrijf namelijk $F$ voor de terug getransformeerde met een dataset waarbij $k$ gelimiteerd is, en $f$ voor
 de perfecte reconstructie. Dan hebben we de relatie:
 \eq{
-  \Ldnorm{ f - F }^2 =& 
+  \Ldnorm{ f - F }{a,b}^2 =& 
   \abso{\int_a^b \left (\sum_{k=1}^\infty \hat f [k] \phi_k(x) 
     - \sum_{k=1}^{m-1} \hat f[k] \phi_k(x) \right)^2\dx } \\
   =& \abso{\int_a^b \left( \sum_{k=m}^\infty \hat f [k] \phi_k(x) \right)^2\dx } \\
