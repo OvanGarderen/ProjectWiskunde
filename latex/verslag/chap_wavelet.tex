@@ -831,8 +831,8 @@ immers de identiteit, zodat het toepassen op kolommen en rijen van de iFWT de $\
 \subsection{Meer dan twee dimensies}
 \label{tensor_md}
 Er is nu een natuurlijke voortzetting van het Tensorproduct naar meerdimensionale signalen.
-Dit doen we namelijk door voor bijvoorbeeld $n$ dimensies als basis voor $V^{(n)}_j$ de basis te kiezen die we verkrijgen 
-door de basis van $V_j$ met tensorproducten tot de $n$-de macht te verheffen.
+Dit doen we namelijk door voor bijvoorbeeld $m$ dimensies als basis voor $V^{(m)}_j$ de basis te kiezen die we verkrijgen 
+door de basis van $V_j$ met tensorproducten tot de $m$-de macht te verheffen.
 Vervolgens is het algoritme aan te passen zodat het steeds over \'e\'en co\"ordinaat de FWT uitvoert, 
 met bijbehorende inverse.
 
@@ -887,25 +887,12 @@ Laat $f$ een functie in $L^2(\Box)$ met aftelbare orthonormale basis $\mathcal{B
 \[
 f = \sum_{m = 0}^\infty \langle f, g_m \rangle g_m.
 \]
-
 \begin{lemm}[Parsevalgelijkheid\cite{parseval}]
   Als nu een functie $f$ in $L^2(\Box)$ geschreven wordt in $\mathcal{B}$ dan geldt
   \[
   \|f\|^2 = \sum_{m=1}^\infty | \langle f, g_m \rangle |^2.
   \]
 \end{lemm}
-\begin{proof}[Bewijs]
-  TODO: bewijs skippen, reference er in?
-  We hebben te maken met een Hilbertruimte dus
-  \[
-  \|f\|^2 = \langle f, f \rangle = \left\langle \sum_{m=1}^\infty \langle f, g_m \rangle g_m, \sum_{n=0}^\infty \langle f, g_n \rangle g_n \right\rangle = \sum_{m=1}^\infty \sum_{n=0}^\infty \left\langle \langle f, g_m \rangle g_m, \langle f, g_n \rangle g_n \right \rangle
-  \]
-  \[
-  = \sum_{m=1}^\infty \sum_{n=1}^\infty \langle f, g_m \rangle \overline{\langle f, g_n \rangle}\langle g_m, g_n \rangle = \sum_{m=1}^\infty \sum_{n=1}^\infty \langle f, g_m \rangle \overline{\langle f, g_n \rangle} \delta_{m,n}
-  \]
-  \[ = \sum_{m=1}^\infty \langle f, g_m \rangle \overline{\langle f, g_m \rangle} = \sum_{m=1}^\infty |\langle f, g_m \rangle |^2.
-  \]
-\end{proof}
 
 \begin{gevolg}
 \label{linfout}

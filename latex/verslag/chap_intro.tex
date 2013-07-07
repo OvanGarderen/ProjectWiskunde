@@ -1,6 +1,7 @@
 \chapter{Basisbegrippen}
 
-\section{Signaaluitbreiding}
+\section{Implementatie}
+\subsection{Signaaluitbreiding}
 \label{signaal}
 Beide algoritmes kunnen enkel omgaan met signalen die een tweemacht lang zijn. Om te zorgen dat een willekeurig signaal ook getransformeerd kan worden, moet het dus uitgebreid worden voorbij zijn definitiegebied. De meeste bronnen onderscheiden de volgende manieren om het signaal uit te breiden. Laat $x_1, x_2, \ldots x_n$ het signaal.
 \begin{description}
@@ -11,7 +12,7 @@ Beide algoritmes kunnen enkel omgaan met signalen die een tweemacht lang zijn. O
 \end{description}
 Wij hebben ervoor gekozen om signalen uit te breiden door middel van zero-padding.
 
-\section{Python?}
+\subsection{Gebruik van Python}
 Voor de implementatie van de Fourier-transformatie is de taal Python gebruikt,
 enkele redenen hiervoor waren:
 \begin{itemize}
@@ -27,24 +28,60 @@ enkele redenen hiervoor waren:
 Het enige nadeel dat deze keuze teweeg heeft gebracht is dat de snelheid van al onze algoritmes tegenvalt
 omdat we ons niet bezighouden met kleine optimalisaties en vertrouwen op de Python \emph{interpreter}.
 
-\section{Notatie}
+\section{Wiskunde}
 
+\subsection{Notatie}
 De blokhaaknotatie $f[x]\in K$ duidt op een discrete functie $A\subset \Z\to K$ met $K$ een willekeurige ruimte.
 Als $A$ bovendien eindig is, dan is $f$ ook te karakteriseren aan de hand van zijn beeld, een vector in $K^{N}$.
 In het bijzonder is deze notatie dus een manier om een vector aan te duiden.
 Evenzo kunnen we de notatie uitbreiden naar meer dimensies door te schrijven
-$f[x_1,\ldots,x_n] : A_1\times \cdots \times A_n\subset \Z^n \to K$, waarbij de $A_i$'s meestal eindige intervallen zijn. 
+\begin{equation*}
+\begin{split}
+f: A_1\times \cdots \times A_n\subset \Z^n \to& K \\
+       (x_1,\ldots,x_n) \mapsto& f[x_1,\ldots,x_n],
+\end{split}
+\end{equation*}
+waarbij de $A_i$'s meestal eindige intervallen zijn. 
+Uit zo'n $m$-dimensionale functie $f$ kunnen we vervolgens op een natuurlijke manier een $m-k$-dimensionale
+functie contrueren door $k$ co\"ordinaten vast te nemen:
+\begin{equation*}
+\begin{split}
+f\largediv_{x_{i_1}=a_{i_1},\ldots,x_{i_k}=a_{i_k}}: A_{i_{k+1}}\times\cdots\times A_{i_{m}} \to& K \\
+(a_{i_{k+1}},\ldots,a_{i_{m}}) \mapsto& f[a_1,\ldots,a_m]
+\end{split}
+\end{equation*}
+Hier zijn $i_1$'de tot en met de $i_k$'de co\"ordinaat vast genomen. Voor een matrix kan deze functie
+bijvoorbeeld gezien worden als een rij of een kolom, in dat voorbeeld geeft $i_1$ aan of de rij of kolom
+vast staat en geeft $a_{i_1}$ aan welke rij respectievelijk kolom bekeken wordt.
 
+\subsection{Complexiteit}
 
-\section{Complexiteit}
-
-Aangezien er enkele algoritmes behandeld worden in het verslag willen we hiervan de tijdscomplexiteit bepalen.
+Aangezien er algoritmes behandeld worden in het verslag willen we hiervan de tijdscomplexiteit bepalen.
 Deze eigenschap bepaalt namelijk hoe de tijd die het een machine kost oploopt met de grootte van de input.
-We voeren daarom zowel \emph{Big O} als \emph{theta} notatie in.
-\begin{eqnarray}
-  f \in \O(g)     \Leftrightarrow \exists x_0,c \,:&\,\forall x>x_0 \quad|f(x)| \leq c|g(x)|  \\
-  f \in \theta(g) \Leftrightarrow \exists x_0,k_1,k_2 \,:&\,\forall x>x_0 \quad k_1|g(x)| \leq |f(x)|\leq k_2|g(x)|
-\end{eqnarray}
+We voeren daarom zowel \emph{Big O} als \emph{Little O} en \emph{Theta} notatie in.
+\begin{equation*}
+\begin{array}{cccccccc}
+  f \in \O(g)     &\Leftrightarrow& \exists c     \,&\exists x_0  \,:&\, 
+  \forall x>x_0 \quad&& |f(x)| &\leq c|g(x)|  \\
+  f \in o(g)      &\Leftrightarrow& \forall c     \,&\exists x_0  \,:&\, 
+  \forall x>x_0 \quad&& |f(x)| &\leq c |g(x)| \\ 
+  f \in \theta(g) &\Leftrightarrow& \exists c_1,c_2\,&\exists x_0  \,:&\, 
+  \forall x>x_0 \quad& c_1|g(x)| \leq & |f(x)| &\leq c_2|g(x)| 
+\end{array}
+\end{equation*}
+Merk op dat geldt $f\in o(g) \implies f\in \O(g)$ en $f\in \theta(g) \implies f\in \O(g)$.
 We zullen in de praktijk algoritmes $f$ bekijken die een 1,2 of 3 dimensionale lijst data als input hebben.
 We zijn dan ge\"interesseerd in de tijdscomplexiteit in termen van de grootte van bijvoorbeeld een $N\times N$ 
 afbeelding, dus is $f$ een functie van $N$.
+
+\subsection{Ruimtes}
+Een belangrijk 
+\begin{lemm}[Parsevalgelijkheid\cite{parseval}]
+  \label{parseval}
+  Laat $f$ een functie in $L^2(K)$ met $K \subset \C^n$ of $K\subset\R^n$, die geschreven kan worden in een aftelbare 
+  orthonormale basis $\mathcal{B}=\{g_m\}$ dan geldt
+  \[
+  \|f\|^2 = \sum_{g_m\in\mathcal{B}} | \langle f, g_m \rangle |^2.
+  \]
+\end{lemm}
+
