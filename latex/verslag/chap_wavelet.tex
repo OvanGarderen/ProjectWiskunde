@@ -691,7 +691,18 @@ x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
 \end{proof}
 
 \subsection{Meer dan twee dimensies}
-Het $n$-dimensionale geval van de Mallatdecompositie is nog TODOOO
+\label{mallat_md}
+De Mallatdecompositie is op een natuurlijke manier voort te zetten naar meerdimensionale signalen.
+De precieze definitie is notationeel nogal ingewikkeld en laten we hier daarom achterwege.
+Informeel geldt dat we een $m$-dimensionale ruimte $V_{j}^{(m)}$ 
+weer kunnen schrijven zoals \ref{2d_ruimte_decomp}
+waarbij we nu het tensorproduct nemen van $m$ factoren $V_{j-1}$ en $W_{j-1}$.
+De basisfuncties van deze ruimtes zijn vervolgens de tensorproducten van $m$ 
+factoren die ofwel $\phi$ of $\psi$ zijn.
+Vervolgens kan het algoritme verder doorgezet worden naar de ruimte $V_{j-1}^{(m)}$.
+Dit vertaalt ook weer naar een $m$ dimensionale convolutie van $a_j$ met 
+filters die het tensorproduct zijn van $m$ factoren $h$ of $g$.
+
 
 \subsection{Eindige signalen in $n$ dimensies}
 De notie van eindige signalen is al eerder langsgekomen. We bekijken functies met een compacte drager $[0,1]$. Het gevolg hiervan is dat de complete waveletbasis teveel elementen bevat. Alleen wavelets waarvan de drager het interval doorsnijdt, zijn voor ons interessant. Wanneer we nu naar meer dimensies gaan, praten we over een $n$-dimensionaal eenheidsinterval $[0,1]^n =: \Box$. 
@@ -802,7 +813,7 @@ y \mapsto \inpr{f\largediv_{x_2=y}}{\psi_\lambda}
 Wanneer we nu voor elke functie in deze vector de FWT bereken zullen we weer een vector inproducten krijgen
 voor elke co\"ordinaat in de originele vector, schrijf deze vector van vectoren (equivalent met een matrix) uit als 
 $M[\lambda_1,\lambda_2]$,
-\footnote{Hier wordt het inproduct van $\phi_0$ weggelaten om de schrijfwijze te verduidelijken.}
+\footnote{Hier wordt het inproduct met $\phi_0$ weggelaten om de schrijfwijze te verduidelijken.}
 dan volgt:
 \[
 M[\lambda_1,\lambda_2] = \inpr{y\mapsto \inpr{f\largediv_{x_2=y}}{\psi_{\lambda_1}}}{\psi_{\lambda_2}}
@@ -818,6 +829,7 @@ Het vinden van een inverse voor dit algoritme is nu ook triviaal, de iFWT geeft 
 immers de identiteit, zodat het toepassen op kolommen en rijen van de iFWT de $\mathrm{TFWT}_2$ inverteert.
 
 \subsection{Meer dan twee dimensies}
+\label{tensor_md}
 Er is nu een natuurlijke voortzetting van het Tensorproduct naar meerdimensionale signalen.
 Dit doen we namelijk door voor bijvoorbeeld $n$ dimensies als basis voor $V^{(n)}_j$ de basis te kiezen die we verkrijgen 
 door de basis van $V_j$ met tensorproducten tot de $n$-de macht te verheffen.
@@ -828,8 +840,44 @@ Omdat de stap in complexiteit van de notatie vele male groter is dan de benodigd
 behandeling van de meerdimensionale Tensor Fast Wavelet Transform achterwege.
 
 \subsection{Mengvormen van Tensor en Mallat}
+Zoals uitgelegd in de secties \ref{tensor_md} en \ref{mallat_md} kunnen zowel de Mallatdecompositie en 
+het Tensorproduct toegepast worden op meer dan $2$ dimensies. We zullen nu beargumenteren dat de beide
+vormen ook naar eigen inzicht gemengd kunnen worden. We schrijven daarvoor de $m$ dimensionale 
+ruimte $V_j^{(m)}$ op als een tensorproduct:
+\begin{equation*}
+\begin{array}{ccccccc}
+  V_j^{(m)} &=& V_j^{(k-1)} &\otimes&              V_j                     &\otimes& V_j^{(m-k)} \\
+            &=& V_j^{(k-1)} &\otimes& (V_0 \otimes \cdots \otimes W_{j-1}) &\otimes& V_j^{(m-k)}
+\end{array}
+\end{equation*}
+Hier is te zien dat we de $k$-de term $V_j$ weer uitgeschreven hebben volgens de gewone $FWT$
+decompositie. Het staat ons nu vrij om de term $V_j^{(k-1)}$ en $V_j^{m-k}$ te ontbinden
+op een andere manier. De gebruikte algoritmes volgen nu analoog aan de implementatie van het Tensorproduct
+en de Mallatdecompositie door steeds weer co\"ordinaten vast te houden.
+\footnote{De notatie voor de mengvorm en de specifieke bewijzen laten we achterwege, deze leiden teveel af van het
+doel van het project }
 
-TODO :D:D:D:D:D:D
+\begin{voorbeeld}
+We kunnen in 3 dimensies een Tensor-Mallat mengvorm maken:
+\begin{equation}
+\label{3d_mengvorm}
+\begin{split}
+V_j^{(3)} = &
+\left (V^{(2)}_{j-1} 
+\oplus (W_{j-1}\otimes V_{j-1}) 
+\oplus (V_{j-1}\otimes W_{j-1}) 
+\oplus (W_{j-1}\otimes W_{j-1}) \right ) \\
+&\otimes (V_0\otimes\cdots\otimes W_{j-1})
+\end{split}
+\end{equation}
+Hier is de eerste term ontbonden volgens de Mallatdecompositie en hebben we met het tensorproduct
+een normale FWT decompositie recht op gezet.
+\end{voorbeeld}
+\begin{gevolg}
+Wanneer we nu de eerste term opvatten als een ruimte van afbeelding op een bepaald moment en
+de tweede term als de tijdruimte die het verloop van deze afbeelding geeft dan kunnen we deze
+decompositie toepassen op videomateriaal. 
+\end{gevolg}
 
 \section{Analyse van de fout van beide decomposities}
 
