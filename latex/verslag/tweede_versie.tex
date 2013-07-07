@@ -147,7 +147,25 @@ Op het voorblad is te zien, vanaf linksboven en dan met de klok mee:
 \newpage
 
 \chapter*{Inleiding}
-TODO
+
+
+\section*{Onze implementatie}
+Voor de implementatie van de algoritmes uit dit verslag is de taal Python gebruikt.
+Enkele redenen hiervoor waren:
+\begin{itemize}
+\item Voorzieningen om beeld en geluid te laden m.b.v. de \emph{scipy}\cite{scipy} en \emph{Python Image Library}\cite{pil} pakketten.
+  Deze pakketten lieten ons bijvoorbeeld toe om beelden te laden als matrix van kleurwaarden en deze weer op te slaan
+  nadat we deze gereconstrueerd hadden. Zo hoefden we ons niet te bekommeren om het inladen van de verschillende beeldformaten.
+\item Geweldige pakketten voor wiskunde zoals \emph{numpy}\cite{numpy} en \emph{scipy}. Dit stelde ons in staat gemakkelijk om te gaan met matrices en lijsten van arbitraire dimensie.
+\item Duidelijke relatie van wiskunde naar code. Python heeft een syntax die een wiskundige manier van denken en werken
+  ondersteunt, in tegenstelling tot meer declaratieve talen zoals \emph{C} of object-georienteerde talen zoals \emph{Java}.
+\item Goede abstractie van onderliggende processen. Python is een geinterpreteerde taal, dit betekent in concreto
+  dat onze programma's draaien op een platform dat de allocatie van geheugen en rekenkracht. Dit vergemakkelijkt
+  de implementatie en zorgt dat er makkelijk veranderingen zijn aan tee brengen in de code zonder het programma te crashen.
+\end{itemize}
+Het enige nadeel dat deze keuze teweeg heeft gebracht is dat de snelheid van al onze algoritmes tegenvalt
+omdat we ons niet bezighouden met kleine optimalisaties en vertrouwen op de Python \emph{interpreter}.
+
 
 \include{chap_intro}
 
@@ -210,6 +228,14 @@ Joachim Weidmann, \emph{Linear operators in Hilbert spaces}, 1980.
 \bibitem{topo}
   Ben Moonen, \emph{Syllabus Topologie}, 2008.
 
+\bibitem{numpy}
+	Numpy, \url{www.numpy.org}
+	
+\bibitem{scipy}
+	Scipy, \url{www.scipy.org}
+\bibitem{pil}
+	Python Image Library, \url{http://www.pythonware.com/products/pil/}
+
 \bibitem{fourier-rec}
   Carleson L.
   \emph{On convergence and growth of partial sums of Fourier series}. 
@@ -217,8 +243,14 @@ Joachim Weidmann, \emph{Linear operators in Hilbert spaces}, 1980.
   116 (1): 135 – 157,
   1966.
 
+\bibitem{signal}
+Roland Priemer, \emph{Introductory Signal Processing}, 1991. 
+
 \bibitem{tensor_vs_mallat}
 \url{http://videoprocessing.ucsd.edu/publications/Year_1999/File9.pdf}
+
+\bibitem{pywt}
+	Python Wavelets, \url{http://www.pybytes.com/pywavelets/ref/signal-extension-modes.html}
 
 \end{thebibliography}
 
