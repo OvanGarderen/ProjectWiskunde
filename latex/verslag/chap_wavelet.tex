@@ -37,11 +37,11 @@ De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er
 \label{fig:wavelets}
 \end{figure}
 
-\begin{gevolg}We kunnen een functie $f$ in $L^2(\R)$ schrijven in deze basis:
+\begin{gevolg}We kunnen een functie $f$ in $L_2(\R)$ schrijven in deze basis:
   \[
   f(t) = \sum_{j=-\infty}^{\infty} \sum_{n=-\infty}^{\infty} \langle f, \psi_{j,n} \rangle \psi_{j,n}(t),
   \]
-  waarbij $\langle \cdot, \cdot \rangle$ het standaardinproduct op de $L_2(\R)$ aangeeft.
+  waarbij $\langle \cdot, \cdot \rangle$ het standaardinproduct op de $L_2(\R)$ aangeeft (cf.\~\S \ref{ruimtes}.
 \end{gevolg}
 
 Het grote nadeel van de Fouriertransformatie maakt compressie van discrete signalen moeilijk. Veel van deze wavelets worden nu z\'o geconstrueerd dat dit probleem (deels) verholpen wordt. We zijn namelijk op zoek naar een wavelet die een eindige drager heeft. Het blijkt dat deze bestaat en dat er zelfs een hele grote verzameling wavelets is, elk met eigen gewilde eigenschappen.
@@ -103,7 +103,7 @@ Per definitie van de multiresolutie weten we dat $V_{j-1} \subset V_j$. In het b
 \end{definitie}
 \begin{stelling}[{\cite[T7.2]{mallat}}]
   \label{filter}
-  Laat $\phi \in L^2(\R)$ een schalingsfunctie die ook integreerbaar is. Dan ligt de multiresolutie vast.
+  Laat $\phi \in L_2(\R)$ een schalingsfunctie die ook integreerbaar is. Dan ligt de multiresolutie vast.
 
   Andersom, als $h[n]$ een filter is zodat $\hat{h}(\omega)$ periodiek $2\pi$ is en continu differentieerbaar in een omgeving van $\omega = 0$ en als daarnaast geldt
   \begin{align*}
@@ -115,7 +115,7 @@ Per definitie van de multiresolutie weten we dat $V_{j-1} \subset V_j$. In het b
   \[
   \hat{\phi}(\omega) = \prod_{p=1}^\infty \frac{\hat{h}(2^{-p}\omega)}{\sqrt{2}}
   \]
-  een schalingsfunctie in $L^2(\R)$.
+  een schalingsfunctie in $L_2(\R)$.
 \end{stelling}
 We zullen enkel de gevolgen gebruiken: namelijk dat de multiresolutie vast ligt met een goede keuze van $\phi$, en dat voor een goed gekozen $h[n]$, $\phi$ ook vast ligt.
 
@@ -901,7 +901,7 @@ decompositie toepassen op videomateriaal.
 
 Bij compressie is men op zoek naar een manier om stukjes data weg te kunnen gooien of te schrijven op zo'n manier dat het minder ruimte inneemt. Wij zijn in het bijzonder ge\"interesseerd naar \emph{hoe dichtbij} we bij perfecte reconstructie zitten wanneer we een vooraf bepaald aantal data opslaan. Er is al uitgebreid onderzoek gedaan naar hoe dit werkt bij de waveletbasis en een aantal resultaten hiervan zullen we opnemen in ons verslag.
 
-Laat $f$ een functie in $L^2(\Box)$ met aftelbare orthonormale basis $\mathcal{B} = \{ g_m \}$. Dan valt $f$ in deze basis te schrijven als (zie Lemma \ref{parseval})
+Laat $f$ een functie in $L_2(\Box)$ met aftelbare orthonormale basis $\mathcal{B} = \{ g_m \}$. Dan valt $f$ in deze basis te schrijven als (zie Lemma \ref{parseval})
 \begin{equation}
 \label{linfout}
 f = \sum_{m = 0}^\infty \langle f, g_m \rangle g_m.
@@ -967,7 +967,7 @@ Volgens \cite[L3.1.7]{tammo} is
 \[ 
   \boldsymbol\Psi = \Psi \otimes \cdots \otimes \Psi = \{ \boldsymbol{\psi_\lambda} := \psi_{\lambda_1} \otimes \cdots \otimes \psi_{\lambda_n}: \lambda_i \in \nabla \}
 \]
-met $\boldsymbol\lambda := (\lambda_1, \ldots, \lambda_n) \in \boldsymbol{\nabla} := \nabla^n$ nu een orthogonale basis voor $L^2(\Box)$.
+met $\boldsymbol\lambda := (\lambda_1, \ldots, \lambda_n) \in \boldsymbol{\nabla} := \nabla^n$ nu een orthogonale basis voor $L_2(\Box)$.
 
 Laat vervolgens $I_M := \{ l \in \N^n_0: ||l||_1 \leq M \}$ en maak de \emph{sparse grid index set} $\boldsymbol{\nabla}_M := \{ \boldsymbol{(j,n)} \in \boldsymbol{\nabla}: \boldsymbol{j} \in I_M \}$.
 

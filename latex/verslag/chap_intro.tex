@@ -31,22 +31,6 @@ Daarnaast zijn er nog twee types die een niet-vloeiende overgang kunnen veroorza
 
 De keuze van de \emph{signal extension mode} kan gevolgen hebben voor de mogelijkheid tot compressie op de rand. Verder in het verslag (zie stelling \ref{daling_fourier} en sectie \ref{daling_wavelets}) wordt duidelijk dat de functie $f$ moet voldoen aan bepaalde continu\"iteitseisen. Wanneer hier niet aan wordt voldaan, is het gevolg meestal dat compressie slecht mogelijk is.
 
-\subsection{Gebruik van Python}
-Voor de implementatie van de Fourier-transformatie is de taal Python gebruikt,
-enkele redenen hiervoor waren:
-\begin{itemize}
-\item Voorzieningen om beeld en geluid te laden m.b.v. het \emph{scipy} pakket.
-  Dit pakket liet ons bijvoorbeeld toe om beelden te laden als matrix van kleurwaarden en deze weer op te slaan
-  nadat we deze gereconstrueerd hadden. Zo hoefden we ons niet te bekommeren om andere beeldcompressie implementaties.
-\item Duidelijke relatie van wiskunde naar code. Python heeft een syntax die een wiskundige manier van denken en werken
-  ondersteunt, in tegenstelling tot meer declaratieve talen zoals \emph{C} of object-georienteerde talen zoals \emph{Java}.
-\item Goede abstractie van onderliggende processen. Python is een geinterpreteerde taal, dit betekent in concreto
-  dat onze programma's draaien op een platform dat de allocatie van geheugen en rekenkracht. Dit vergemakkelijkt
-  de implementatie en zorgt dat er makkelijk veranderingen zijn aan tee brengen in de code zonder het programma te crashen.
-\end{itemize}
-Het enige nadeel dat deze keuze teweeg heeft gebracht is dat de snelheid van al onze algoritmes tegenvalt
-omdat we ons niet bezighouden met kleine optimalisaties en vertrouwen op de Python \emph{interpreter}.
-
 \section{Wiskunde}
 
 \subsection{Notatie}
@@ -95,20 +79,39 @@ We voeren daarom $o$, $\O$ en $\theta$ als notatie in.
 
 \end{array}
 \end{equation*}
-Merk op dat $o$ een \emph{sterker} begrip is dan $\O$: als $f \in o(g)$ dan $f \in \O(g)$. Verder betekent $f \in \theta(g)$ dat $f$ gaat precies even snel omhoog als $g$. Ook geldt dat $f\simeq g \implies f\in\theta(g)$.
+Merk op dat $o$ een \emph{sterker} begrip is dan $\O$: als $f \in o(g)$ dan $f \in \O(g)$. Ook geldt dat $f\simeq g \implies f\in\theta(g)$. Verder is $\theta$ ook sterker dan $\O$. We zouden dus ook alles over \'e\'en kam kunnen strijken en enkel $\O$ gebruiken (maar voor de volledigheid zullen we dit niet doen).
+
+Als laatste is er ook een eenzijdige variant van $\simeq$ en dit is $\lesssim$: $f \lesssim g$ betekent dat er een $C$ is z\'o dat $f \leq C \cdot g$.
 
 We zullen in de praktijk algoritmes $f$ bekijken die een 1,2 of 3 dimensionale lijst data als input hebben.
 We zijn dan ge\"interesseerd in de tijdscomplexiteit in termen van de grootte van bijvoorbeeld een $N\times N$ 
 afbeelding, dus is $f$ een functie van $N$.
 
 \subsection{Ruimtes}
+\label{ruimtes}
+Een familie van ruimtes die wij gedurende het hele verslag zullen gebruiken is de familie van Lebesgue-ruimtes. De $L_p$-ruimte is de ruimte over functies van $\R$ naar $\R$ die $p$'e-machts integreerbaar zijn:
+\begin{equation}
+	\label{lebesgue}
+	\| f \|_{L_p} := \left(\int_{-\infty}^\infty |f(t)|^p dt\right)^{1/p} < \infty.
+\end{equation}
+
+Wij zullen vooral de $L_2$-ruimte bekijken. Deze heeft als extra eigenschap dat zij een Hilbertruimte is, met als inproduct
+\begin{equation}
+	\label{l2}
+	\langle f, g \rangle = \int_{-\infty}^\infty f(t) \overline{g(t)} dt.
+\end{equation}
+Het is duidelijk dat $\sqrt{\langle f, f \rangle}$ nu overeenkomt met vergelijking \ref{lebesgue}, zodat we inderdaad de $L_2$-ruimte bekijken. Merk op dat $L_2$ ook de \emph{enige} Hilbertruimte is van deze vorm.
+
+Naast deze $L_2$-ruimte over $\R$ zullen we ook haar tegenhanger over $\R^n$ bekijken. Integraaltekens uit de vergelijkingen \ref{lebesgue} en \ref{l2} worden nu gewoon integralen over $\R^n$. Wanneer we spreken over $L_2(\Omega)$ voor $\Omega \subset \R^n$, wordt een integraal over $\Omega$ bedoeld.
+
 Een belangrijk lemma dat we zullen gebruiken is het volgende lemma van Parseval.
 \begin{lemm}[Parsevalgelijkheid\cite{parseval}]
   \label{parseval}
-  Laat $f$ een functie in $L^2(K)$ met $K \subset \C^n$ of $K\subset\R^n$, die geschreven kan worden in een aftelbare 
+  Laat $f$ een functie in $L^2(\Omega)$ met $\Omega \subset \C^n$ of $\Omega\subset\R^n$, die geschreven kan worden in een aftelbare 
   orthonormale basis $\mathcal{B}=\{g_m\}$ dan geldt
   \[
   \|f\|^2 = \sum_{g_m\in\mathcal{B}} | \langle f, g_m \rangle |^2.
   \]
 \end{lemm}
+
 

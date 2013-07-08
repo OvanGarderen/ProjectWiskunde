@@ -6,34 +6,29 @@ Dit maakt het een overtuigende manier om `nette' periodieke functies te beschrij
 We kunnen de eis van periodiciteit ook loslaten als we naar functies op een interval kijken door dit op te vatten
 als \'e\'en fase van een periodieke functie.
 
-Iets concreter kijken we naar functies $f\in L_2(a,b)$ waarbij we $L_2$ defini\"eren volgens
-\[
-L_2(a,b) = \{ f:(a,b)\to\C \largediv \Ldnorm{f}{a,b} = \sqrt{\int_a^b \abso{f(x)}^2 \d{x}} < \infty \},
-\]
-hier is meteen de norm gegeven voor functies in deze ruimte. Deze norm is afkomstig van het inproduct op deze ruimte:
-\[
-\inpr{f}{g} = \int_a^b f(x)\cdot g^*(x) \d{x}
-\]
+Iets concreter kijken we naar functies $f\in L_2([a,b])$.
+
+
 De basisfuncties waarmee we vervolgens de analyse uitvoeren worden gegeven door de complexe $e$-machten.
-\begin{definitie}[Fourierbasis] Bekijk de functieruimte $L_2(a,b)$, we defini\"eren de verzameling $F_{a,b}$ 
+\begin{definitie}[Fourierbasis] Bekijk de functieruimte $L_2([a,b])$, we defini\"eren de verzameling $F_{a,b}$ 
 door:
 \[
   F_{a,b} := \left\{ \phi_k(x) = \tfrac{1}{\sqrt{b-a}} e^{\dpii \cdot k \frac{x-a}{b-a}} \largediv k \in \Z \right\}
 \]
-We noemen $F_{a,b}$ de Fourierbasis van $L_2(a,b)$
+We noemen $F_{a,b}$ de Fourierbasis van $L_2([a,b])$
 \end{definitie}
 Het woord basis is hier met recht gebruikt, het is immers bekend dat de complexe $e$-machten loodrecht staan onder
 het inproduct dat we gedefinieerd hebben. Om nu een willekeurige functie te schrijven in deze basis, introduceren
 we de Fouriergetransformeerde.
 \begin{definitie}[Fouriergetransformeerde]
-Zij gegeven een functie $f\in L_2(a,b)$, schrijf dan $\hat f : \Z\to\C$ met entries gedefinieerd volgens:
+Zij gegeven een functie $f\in L_2([a,b])$, schrijf dan $\hat f : \Z\to\C$ met entries gedefinieerd volgens:
 \[
   \hat f [n] = \frac{1}{\sqrt{b-a}} \cdot \inpr{f}{\phi_n} = \frac{1}{b-a} \int_a^b f(x) \cdot e^{-2 \pi i \cdot k \frac{x-a}{b-a}}\d{x}.
 \]
 We noemen $\hat f$ de Fouriergetransformeerde van $f$.
 \end{definitie}
 \begin{definitie}[Inverse Fouriertransformatie]
-  Gegeven een Fouriergetransformeerde $\hat f$ van een functie $f \in L_2(a,b)$ is de reconstructie $f^\circ$ van $f$ gegeven door:
+  Gegeven een Fouriergetransformeerde $\hat f$ van een functie $f \in L_2([a,b])$ is de reconstructie $f^\circ$ van $f$ gegeven door:
   \[
     f^\circ (x) = \sum_{k=-\infty}^\infty \hat f [k] \phi_k(x)
   \]
@@ -41,7 +36,7 @@ We noemen $\hat f$ de Fouriergetransformeerde van $f$.
 
 Het kan worden aangetoond dat $f^\circ$ een reconstructie geeft van $f$ die voldoet aan: \cite{fourier-rec} 
 \begin{eqnarray}
-  \Ldnorm{f-f^\circ}{a,b}=0 \quad\quad \text{wanneer }& f\in L_2(a,b) \\
+  \Ldnorm{f-f^\circ}{a,b}=0 \quad\quad \text{wanneer }& f\in L_2([a,b]) \\
   f(x) = f^\circ(x) \quad\quad \text{wanneer }& f \in C^1 
 \end{eqnarray}
 
@@ -96,7 +91,7 @@ Zoals gebruikelijk bij het overschakelen van een discrete naar een continue sett
 door de definitie van de Riemann integraal toe te passen op de sommatie die voor handen ligt.
 
 \begin{stelling}[Limiet van discrete Fourier-transformatie]
-  Gegeven een functie $f\in L_2(a,b)$ op het interval $[a,b]$,
+  Gegeven een functie $f\in L_2([a,b])$ op het interval $[a,b]$,
   bekijk een discretisatie van $f$ in $n$ gelijke intervallen zodat de discrete $f$ precies 
   de randwaarde waarde van elk interval inneemt.
   Dan geldt dat de discrete Fouriergetransformeerde limiteert naar de algemene Fouriergetransformeerde wanneer $n\to\infty$.
@@ -480,22 +475,27 @@ Wanneer $g \in L_1(\R)$, dan geldt
 
 De analyse van de co\"effici\"enten die we hier gegeven hebben vertaalt direct naar de fout die we krijgen
 bij reconstructie van een Fourier-getransformeerde functie wanneer we een gelimiteerde dataset gebruiken.
-Schrijf namelijk $F$ voor de terug getransformeerde met een dataset waarbij $k$ gelimiteerd is tot $m$ en $f$ voor
-de perfecte reconstructie, dan hebben we de relatie
-\[
-  || f - F||^2_{L_2(a,b)} = \sum_{k=1}^\infty |\inpr{f-F,\phi_k}|^2 = \sum_{k=1}^\infty |\inpr{f}{\phi_k} 
-  - \inpr{F}{\phi_k}|^2 = \sum_{k=m+1}^\infty |\inpr{f}{\phi_k}|^2,
-\]
-vanwege de Parseval gelijkheid \ref{parseval}.
 
-WAAROM VOLGT DIT NOU EIGENLIJK, JAN BETER KIJK JIJ HIER NAAR ALS COMPLEXITEITS-MAGICUS
+\begin{gevolg}
+Schrijf namelijk $f|_{N}$ voor de reconstructie met de eerste $N$ basisfuncties. Dan hebben we de relatie
 \[
-|m|^{2n} \cdot \sum_{m+1}^\infty |\inpr{f}{\phi_k}|^2 \to 0 \quad \text{als } m\to\infty
+  || f - f|_N||^2_{L_2([a,b])} = \sum_{k=1}^\infty |\inpr{f-f|_N}{\phi_k}|^2 = \sum_{k=1}^\infty |\inpr{f}{\phi_k} 
+  - \inpr{f|_N}{\phi_k}|^2 = \sum_{k=N+1}^\infty |\inpr{f}{\phi_k}|^2,
 \]
-Daarmee wordt de orde van de totale fout:
+vanwege de Parsevalgelijkheid \ref{parseval}. Omdat stelling \label{fourier_daling} geldt, zijn er $k_0, c$ zodat $\abso{\inpr{f}{\phi_k}} < c\cdot k^{-n}$ voor $k > k_0$. Dus
 \[
-\|f-F\|_{L_2(a,b)}^2 \in o\left ( |m|^{-2n} \right)
+	\sum_{k=N+1}^\infty | \langle f, \phi_{k} \rangle |^2 \leq \sum_{k=N+1}^\infty c \cdot k^{-2n} < c \cdot \int_{N}^\infty x^{-2n} dx = c \cdot \left[ \frac{x^{1-2n}}{1-2n} \right]^\infty_N = c \cdot \frac{N^{1-2n}}{2n-1}.
 \]
+Dan
+\[
+N^{2(n-1)} \cdot \sum_{N+1}^\infty |\inpr{f}{\phi_k}|^2 < N^{2(n-1)} \cdot c \cdot \frac{N^{1-2n}}{2n-1} = \frac{c}{2n-1} N^{-1} \to 0 \quad \text{als } N\to\infty,
+\]
+wat precies betekent dat
+\[
+\|f-f|_{N}\|^2_{L_2([a,b])} \in o\left ( N^{-2(n-1)} \right) 
+\implies ||f - f|_{N}||_{L_2([a,b])} \in o\left(N^{-(n-1)}\right).
+\]
+\end{gevolg}
 
 \subsection{De fout in discrete geval}
 Wanneer we een discrete functie bekijken zullen we het criterium van \emph{gladheid} niet kunnen gebruiken.
