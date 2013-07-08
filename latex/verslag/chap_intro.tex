@@ -50,8 +50,6 @@ omdat we ons niet bezighouden met kleine optimalisaties en vertrouwen op de Pyth
 \section{Wiskunde}
 
 \subsection{Notatie}
-TODO: ik snap dit niet hoor :s -- jan
-
 Analoog aan de notatie $f(x)$ die we in het algemeen voor een functie gebruiken, voeren we de blokhaaknotatie $f[x]$ in die duidt op een discrete functie
 \[
 f:A\subset \Z\to \R \text{ of } f:A\subset \Z\to \C.  
@@ -68,7 +66,7 @@ f: A_1\times \cdots \times A_n\subset \Z^n \to& K \\
 \end{split}
 \end{equation*}
 Uit zo'n $m$-dimensionale functie $f$ kunnen we vervolgens op een natuurlijke manier een $m-k$-dimensionale
-functie contrueren door $k$ co\"ordinaten vast te nemen:
+functie construeren door $k$ co\"ordinaten vast te nemen:
 \begin{equation*}
 \begin{split}
 f\largediv_{x_{i_1}=a_{i_1},\ldots,x_{i_k}=a_{i_k}}: A_{i_{k+1}}\times\cdots\times A_{i_{m}} \to& K \\
@@ -91,10 +89,13 @@ We voeren daarom $o$, $\O$ en $\theta$ als notatie in.
   f \in o(g)      &\Leftrightarrow& \forall c     \,:&\exists x_0  \,:&\, 
   \forall x>x_0 \quad&& |f(x)| &\leq c |g(x)| \\ 
   f \in \theta(g) &\Leftrightarrow& \exists c_1,c_2\,:&\exists x_0  \,:&\, 
-  \forall x>x_0 \quad& c_1|g(x)| \leq & |f(x)| &\leq c_2|g(x)| 
+  \forall x>x_0 \quad& c_1|g(x)| \leq & |f(x)| &\leq c_2|g(x)|  \\
+  f \simeq g & \Leftrightarrow& \exists c_1,c_2\,:& \,&\, 
+  \forall x \quad& c_1|g(x)| \leq & |f(x)| &\leq c_2|g(x)| 
+
 \end{array}
 \end{equation*}
-Merk op dat $o$ een \emph{sterker} begrip is dan $\O$: als $f \in o(g)$ dan $f \in \O(g)$. Verder betekent $f \in \theta(g)$ dat $f$ gaat, op een constante na, precies even snel omhoog als $g$'.
+Merk op dat $o$ een \emph{sterker} begrip is dan $\O$: als $f \in o(g)$ dan $f \in \O(g)$. Verder betekent $f \in \theta(g)$ dat $f$ gaat precies even snel omhoog als $g$. Ook geldt dat $f\simeq g \implies f\in\theta(g)$.
 
 We zullen in de praktijk algoritmes $f$ bekijken die een 1,2 of 3 dimensionale lijst data als input hebben.
 We zijn dan ge\"interesseerd in de tijdscomplexiteit in termen van de grootte van bijvoorbeeld een $N\times N$ 
