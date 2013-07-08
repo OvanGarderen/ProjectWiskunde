@@ -430,6 +430,7 @@ Wanneer $g \in L_1(\R)$, dan geldt
 \end{lemm}
 
 \begin{stelling}[Daling van de co\"effici\"enten van de Fouriergetransformeerde]
+\label{fourier_daling}
   Laat $f \in L_2([a,b])$. Stel er is een $n$ z\'o dat $f \in C^n$ en voor $0\leq j\leq n$ geldt dat $f^{(j)}(a) = f^{(j)}(b)$. Dan geldt dat de $k$-de entry van de Fouriergetransformeerde $\hat f[k]$ in absolute waarde
   daalt met $k$ volgens $\O(|k|^{-n})$.
 \end{stelling}
@@ -473,32 +474,36 @@ Wanneer $g \in L_1(\R)$, dan geldt
   \[
   (\tfrac{2 \pi}{b-a} |k|)^n \abso{\inpr{f}{\phi_k}} \to 0 \text{ als } |k| \to \infty.
   \]
-  Maar dit betekent precies dat $\abso{\inpr{f}{\phi_k}} \in  \O((\tfrac{2 \pi}{b-a} |k|)^{-n}) = \O(|k|^{-n})$
+  Maar dit betekent precies dat $\abso{\inpr{f}{\phi_k}} \in  o((\tfrac{2 \pi}{b-a} |k|)^{-n}) = o(|k|^{-n})$
 \end{proof}
 
 De analyse van de co\"effici\"enten die we hier gegeven hebben vertaalt direct naar de fout die we krijgen
 bij reconstructie van een Fourier-getransformeerde functie wanneer we een gelimiteerde dataset gebruiken.
-Schrijf namelijk $F$ voor de terug getransformeerde met een dataset waarbij $k$ gelimiteerd is, en $f$ voor
-de perfecte reconstructie. Dan hebben we de relatie:
-\eq{
-  \Ldnorm{ f - F }{a,b}^2 =& 
-  \abso{\int_a^b \left (\sum_{k=1}^\infty \hat f [k] \phi_k(x) 
-    - \sum_{k=1}^{m-1} \hat f[k] \phi_k(x) \right)^2\dx } \\
-  =& \abso{\int_a^b \left( \sum_{k=m}^\infty \hat f [k] \phi_k(x) \right)^2\dx } \\
-  \leq& \abso{\sum_{k=m}^\infty \hat f^2 [k] \cdot \int_a^b \phi_k^2(x) \dx}
-  \leq \sum_{k=m}^\infty \abso{\hat f[k]}^2.
-}
+Schrijf namelijk $F$ voor de terug getransformeerde met een dataset waarbij $k$ gelimiteerd is tot $m$ en $f$ voor
+de perfecte reconstructie, dan hebben we de relatie
+\[
+  || f - F||^2_{L_2(a,b)} = \sum_{k=1}^\infty |\inpr{f-F,\phi_k}|^2 = \sum_{k=1}^\infty |\inpr{f}{\phi_k} 
+  - \inpr{F}{\phi_k}|^2 = \sum_{k=m+1}^\infty |\inpr{f}{\phi_k}|^2,
+\]
+vanwege de Parseval gelijkheid \ref{parseval}.
 
-NOOT: we vinden zelfs kleine $o$ door Riemann-Lebesgue + Parseval
-
-Omdat de orde van deze vergelijking in termen van $m$ bepaald wordt door de grootste term kunnen we zeggen 
-dat de orde van de fout gelijk is aan de orde van het grootste co\"effici\"ent:
-\eq{
-  ||f-F||_{L_2([a,b])} \in \O\left(\abso{\hat f[m]}\right) = \O(m^{-n})
-}
-NOOT: integraal kenmerk? sommatie voor n>1 meetkundige reeks
+WAAROM VOLGT DIT NOU EIGENLIJK, JAN BETER KIJK JIJ HIER NAAR ALS COMPLEXITEITS-MAGICUS
+\[
+|m|^{2n} \cdot \sum_{m+1}^\infty |\inpr{f}{\phi_k}|^2 \to 0 \quad \text{als } m\to\infty
+\]
+Daarmee wordt de orde van de totale fout:
+\[
+||f-F||^2 \in o\left ( |m|^{-2n} \right)
+\]
 
 \subsection{De fout in discrete geval}
-
-TODO: discreet $\to$ continu voor grote dataset, maak een definitie van smooth op discrete functies
+Wanneer we een discrete functie bekijken zullen we het criterium van \emph{gladheid} niet kunnen gebruiken,
+we bekijken de functie immers op een deelverzameling van $\Z$ en daar is geen enkele 
+niet-constante functie continu op.
+We beroepen ons daarom op de analogie tussen het discrete en non-discrete geval.
+De gladheid van een discrete functie $f:A\to\R$ wordt bepaald door de verschillen $f[x]-f[x+1]$,
+wanneer de verschillen klein zijn en de verzameling $A$ groot is komt dit overeen met de afgeleide van een 
+continue functie en zeggen we dat de functie glad is. Zo kunnen we analoga geven voor hogere afgeleiden.
+Het is mogelijk om een rigoreuze beschrijving van gladheid te geven door parti\"eele sommaties te gebruiken,
+maar daar zullen we niet op in gaan.
 
