@@ -403,6 +403,7 @@ t.o.v. $\O( \sum_{i=1}^m n_i \prod_{j=1}^m n_j)$ voor de MDFT.
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{Compressie van een signaal onder FFT}
+\label{daling_FFT}
 Tot zover is de Discrete Fourieranalyse besproken aan de hand van perfecte reconstructie, 
 aan de hand van een  complete set co\"efficienten. Het doel van dit project is echter om
 signalen te comprimeren; te reconstrueren aan de hand van een gelimiteerde dataset.
@@ -491,18 +492,19 @@ N^{2(n-1)} \cdot \sum_{N+1}^\infty |\inpr{f}{\phi_k}|^2 < N^{2(n-1)} \cdot c \cd
 \]
 wat precies betekent dat
 \[
-||f-F||^2_{L_2([a,b])} \in o\left ( N^{-2(n-1)} \right) \implies ||f - F||_{L_2([a,b])} \in o\left(N^{-(n-1)}\right).
+\|f-f|_{N}\|^2_{L_2([a,b])} \in o\left ( N^{-2(n-1)} \right) 
+\implies ||f - f|_{N}||_{L_2([a,b])} \in o\left(N^{-(n-1)}\right).
 \]
 \end{gevolg}
 
-\subsection{De fout in het discrete geval}
-Wanneer we een discrete functie bekijken zullen we het criterium van \emph{gladheid} niet kunnen gebruiken,
-we bekijken de functie immers op een deelverzameling van $\Z$ en daar is geen enkele 
-niet-constante functie continu op.
+\subsection{De fout in discrete geval}
+Wanneer we een discrete functie bekijken zullen we het criterium van \emph{gladheid} niet kunnen gebruiken.
 We beroepen ons daarom op de analogie tussen het discrete en non-discrete geval.
+
 De gladheid van een discrete functie $f:A\to\R$ wordt bepaald door de verschillen $f[x]-f[x+1]$,
 wanneer de verschillen klein zijn en de verzameling $A$ groot is komt dit overeen met de afgeleide van een 
 continue functie en zeggen we dat de functie glad is. Zo kunnen we analoga geven voor hogere afgeleiden.
-Het is mogelijk om een rigoreuze beschrijving van gladheid te geven door parti\"eele sommaties te gebruiken,
-maar daar zullen we niet op in gaan.
+
+We zullen in onze resultaten de discrete fout in kaart brengen door de zogenaamde PSNR functie te gebruiken,
+een logaritmische schaal die het analogon van de $L_2$ norm gebruikt, zie hiervoor sectie \ref{sectie_psnr}.
 

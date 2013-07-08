@@ -1,4 +1,5 @@
 \chapter{Resultaten}
+\label{sectie_psnr}
 In dit hoofdstuk zullen we een kwantitatieve vergelijking tussen de verschillende algoritmes maken. Hierbij zullen we het begrip \emph{Peak Signal To Noise Ratio} gebruiken. Dit is een veelgebruikte methode om de reconstructiequaliteit van een lossy compressie-algoritme te testen.
 
 \begin{definitie}[Peak Signal To Noise Ratio (PSNR)]
@@ -14,8 +15,9 @@ In dit hoofdstuk zullen we een kwantitatieve vergelijking tussen de verschillend
   \[
   S := \sum_{\boldsymbol j \in \Z^k} (f[\boldsymbol j] - \hat f[\boldsymbol j])^2.
   \]
-
   Hoe hoger de PSNR is, hoe beter de reconstructie (over het algemeen) zal zijn.
+  Merk op dat deze $S$ een discrete variant is van de fout in de $L_2$ norm op non-discrete functies,
+  precies wat we beschreven hebben in secties \ref{daling_FFT} en \ref{daling_wavelet}
 \end{definitie}
 
 \subsection{Gebruikte testbeelden}

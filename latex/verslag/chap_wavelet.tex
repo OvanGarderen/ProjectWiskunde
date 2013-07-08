@@ -210,7 +210,7 @@ Hoewel $\phi$ een functie uit $L_2$ is, en $h$ een functie uit $\ell_2$, is het 
   \[
   h[n] = \left\langle \sqrt{2} \phi\left(2t-n\right), \phi(t) \right\rangle,
   \]
-  dus er kunnen maar eindig veel $n$ ongelijk nul zijn. De omgekeerde bewering staat bewezen in \cite[P965-967]{daubechies}. TODO?
+  dus er kunnen maar eindig veel $n$ ongelijk nul zijn. De omgekeerde bewering staat bewezen in \cite[P965-967]{daubechies}.
 
   Om deze dragers gelijk te krijgen, stel dat de drager van $h[n]$ gelijk $[N_1,N_2]$ is, en die van $\phi$ $[K_1, K_2]$. De drager van $\phi(t/2)$ is $[2K_1, 2K_2]$ en de drager van de rechterzijde van $\ref{phi_t2}$ is $[N_1 + K_1, N_2 + K_2]$. We concluderen dat $K_1 = N_1$ en $K_2 = N_2$.
 \end{proof}
@@ -402,7 +402,6 @@ Een probleem waar we in het geval van eindige signalen nog meer mee te maken kri
 Om niet te veel tijd te verliezen met het ondersteunen van meerdere mogelijkheden hebben wij er voor gekozen om \emph{periodic padding} op alle signalen toe te passen. Dit omdat de zogenaamde \emph{circulaire convolutie} ingebouwd zit in de bibliotheek die wij gebruikt hebben.
 
 \subsection{Complexiteit van de algoritme}
-NOOT: rob heeft hier "nog niet" staan. wat?
 Als de lengte van de filter $h$ gelijk is aan $K$, en de lengte van het originele signaal $a_L$ gelijk is aan $N = 2^{L}$, kunnen we voor $j \in \{0, \ldots, L\}$ zien dat $a_j$ en $d_j$ beide $2^{j}$ elementen bevatten. Nu kunnen $a_{j-1}$ en $d_{j-1}$ gemaakt worden door $2^{j}K$ operaties zodat elke stap van de algoritme $2^{j} \cdot K$ operaties kost. Dan kost het hele algoritme
 \[
 \sum_{j=L}^0 2^{j} \cdot K = K \sum_{j=L}^0 2^{j} = K \cdot (2^{1+L} - 1) < 2 \cdot K 2^{L} = 2KN
@@ -428,7 +427,7 @@ een orthonormale basis voor $V_j^{(2)}$ is.
 \begin{voorbeeld}
 Bekijk weer $V_j$ de ruimte van stuksgewijs constante functies op het interval 
 \[
- [2^{-j} m, 2^{-j}(m+1) ), m \in \Z.
+ [2^{-j} m, 2^{-j}(m+1) ) \quad m \in \Z.
 \] 
 We vinden voor $V_j^{(2)}$ nu de ruimte van stuksgewijs constante functies op vierkanten $[2^{-j}n_1, 2^{-j}(n_1+1)) \times [2^{-j}n_2, 2^{-j}(n_2+1))$. De tweedimensionale schalingsfunctie wordt op die manier
 \[
@@ -440,62 +439,78 @@ We vinden voor $V_j^{(2)}$ nu de ruimte van stuksgewijs constante functies op vi
 We weten dat $V_j^{(2)}$ bevat is in $V_{j+1}^{(2)}$. Bekijk het orthogonale complement $\boldsymbol{U}_j \perp V_j^{(2)}$:
 \begin{equation}
   \label{2d_ruimte_rec}
-  V_j^{(2)} \oplus \boldsymbol{U}_j = V_{j+1}^{(2)}.
+  V_{j+1}^{(2)} =  V_j^{(2)} \oplus \boldsymbol{U}_j
 \end{equation}
-Om nu een orthogonale waveletbasis voor $\boldsymbol{U}_j$ en (dus in de limiet) $L_2(\R^2)$ te vinden, gaan we als volgt te werk.
+Om nu een orthogonale waveletbasis voor $\boldsymbol{U}_j$ te vinden, gaan we als volgt te werk.
+Gegeven een waveletbasis voor $V_j$ geinduceerd door de functies $\phi$ en $\psi$, maken we
+tweedimensionale wavelets in de ruimte $V_j^{(2)}$ gegeven door:
+\begin{equation}
+  \label{psi_k_defs}
+  \psi^1(x_1,x_2) = \phi(x_1)\psi(x_2) 
+  \quad \psi^2(x_1,x_2) = \psi(x_1) \phi(x_2) 
+  \quad \psi^3(x_1,x_2) = \psi(x_1)\psi(x_2).
+\end{equation}
+Deze functies kunnen we vervolgens schuiven en dilateren, hiermee verkrijgen we
+\[
+\psi^k_{j,n=(n_1,n_2)}(x_1,x_2) = 2^j \psi^k\left( 2^jx_1 - n_1, 2^j x_2 - n_2 \right)
+\]
+we zullen nu bewijzen dat deze functies tezamen met $\phi^{(2)}_{0,n}$een basis vormen voor $L_2(\R)$
 \begin{stelling}[{\cite[T7.24]{mallat}}]
-\label{mallatbasis}
-  Laat $\phi$ een schalingsfunctie en $\psi$ de bijhorende wavelet die en basis voor de $L_2(\R)$ voortbrengt. Maak drie wavelets
-  \begin{equation}
-    \label{psi_k_defs}
-    \psi^1(x) = \phi(x_1)\psi(x_2) \quad \psi^2(x) = \psi(x_1) \phi(x_2) \quad \psi^3(x) = \psi(x_1)\psi(x_2)
-  \end{equation}
-  en laat voor $k \in \{1,2,3\}$ nu
+  \label{mallatbasis}
+  Laat $\phi^{(2)}$ en de $\psi^k$'s zoals hierboven gedefinieerd,
+  dan kunnen we hiermee een basis $\boldsymbol{\Psi}_j$ maken voor $\boldsymbol{U}_j$ volgens:
   \[
-  \psi^k_{j,n}(x) = 2^j \psi^k\left( 2^jx_1 - n_1, 2^j x_2 - n_2 \right).
-  \]
-
-  Dan is
+  \boldsymbol\Psi_j := \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \},
+  \] 
+  het samennemen van deze bases gecombineerd met een basis voor $V_0^{(2)}$ geeft bovendien 
   \[
-  \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}
-  \] een basis voor $\boldsymbol{U}_j$
-  en
-  \[
-  \{ \phi_{0, n}^2: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}
-  \] een basis voor $L_2(\R^2)$.
+  \boldsymbol\Phi := \{ \phi^{(2)}_{0, n}: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \},
+  \] 
+  wat een basis vormt voor $L_2(\R^2)$.
 \end{stelling}
 \begin{proof}[Bewijs]
-  We weten
+  We schrijven de ruimte $V_{j+1}^{(2)}$ uit als een tensorproduct van ruimtes
   \[
-  V_{j+1}^{(2)} = V_j^{(2)} \oplus \boldsymbol{U}_j \implies V_{j+1} \otimes V_{j+1} = ( V_j \otimes V_j ) \oplus \boldsymbol{U}_j.
+  V_{j+1}^{(2)} = V_{j+1} \otimes V_{j+1}
   \]
-  Vul nu $V_{j+1} = V_j \oplus W_j$ in om te vinden
+  en splitsen de termen, die \'e\'en-dimensionale ruimtes zijn, op in de volgende niveau's
+  ($V_{j+1} = V_j \oplus W_j$) en vinden dat:
+  \begin{equation*}
+  \begin{split}
+    V_{j+1} \otimes V_{j+1} =& ( V_j \oplus W_j ) \otimes (V_j \oplus W_j ) \\ 
+                            =& (V_j \otimes V_j) \oplus (V_j \otimes W_j) 
+                        \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j)
+  \end{split}
+  \end{equation*}
+  Gebruik makende van de relatie \ref{2d_ruimte_rec} geldt nu dat 
   \[
-  ( V_j \oplus W_j ) \otimes (V_j \oplus W_j ) = (V_j \otimes V_j) \oplus \boldsymbol{U}_j
+    \boldsymbol{U}_j = (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j)
   \]
-  \[
-  \implies (V_j \otimes V_j) \oplus (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = (V_j \otimes V_j) \oplus \boldsymbol{U}_j
-  \]
-  \[
-  \implies (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j) = \boldsymbol{U}_j.
-  \]
-  Nu is het duidelijk dat $\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}$ een basis is voor $\boldsymbol{U}_j$.
+  Omdat de $\psi^k$'s nu ieder tensorproducten zijn van functies in de ruimtes $V_j$ en $W_j$ volgt
+  dat $\boldsymbol\Psi_j = \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n} \largediv  n \in \Z^2 \}$ 
+  een basis is voor $\boldsymbol{U}_j$.
 
-Omdat nu via vergelijking \ref{ruimterec} moet gelden
-\[
-	L_2(\R^2) = \lim_{j \to \infty} V_j^{(2)} = \lim_{j \to \infty} ( V_0^{(2)} \oplus \boldsymbol{U}_0 \oplus \cdots \oplus \boldsymbol{U}_{j-1} ) = \left( \bigoplus_{j=0}^\infty \boldsymbol{U}_j \right) \oplus V_0^{(2)}
-\]
-is $\{ \phi_{0, n}^2: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}$ een basis voor $L_2(\R^2)$.
+  Met de basis van $\boldsymbol{U}_j$ kunnen we nu een basis voor $L_2(\R^2)$ vinden. We schrijven daarvoor
+  \[
+  L_2(\R^2) = \lim_{j \to \infty} V_j^{(2)} = 
+  \lim_{j \to \infty} ( V_0^{(2)} \oplus \boldsymbol{U}_0 \oplus \cdots \oplus \boldsymbol{U}_{j-1} ) = 
+   V_0^{(2)} \oplus \left( \bigoplus_{j=0}^\infty \boldsymbol{U}_j \right),
+  \]
+  zodat
+  $\boldsymbol{\Phi} = \{ \phi^{(2)}_{0, n}: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}$
+  een basis is voor $L^2(\R^2)$.
 \end{proof}
 \begin{gevolg}
 In het bewijs wordt nu ook duidelijk dat 
 \[
-	\left\{ \phi_{0, n}^2: n \in \Z^2 \right\} \cup \left\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \{0, \ldots, L \}  \right\}
+\left\{ \phi^{(2)}_{0, n}: n \in \Z^2 \right\} \cup \left\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \{0, \ldots, L \}  \right\}
 \]
 een basis voor $V_L^{(2)}$ is.
 \end{gevolg}
 
-Bovenstaande basis heeft dus schalingsfuncties op \'e\'en niveau en waveletfuncties op alle niveaus. Net zoals in het eendimensionale geval kunnen we met deze basis een algoritme formuleren.
+Bovenstaande basis heeft dus het tensorproduct van twee schalingsfuncties op \'e\'en niveau 
+en verder combinaties van schaling en wavelet op alle niveaus. 
+Net zoals in het eendimensionale geval kunnen we met deze basis een algoritme formuleren.
 
 \subsection{Naar een tweedimensionaal algoritme}
 Nu we een relatie hebben gevonden $(\ref{2d_ruimte_rec})$ tussen de ruimtes op verschillende
@@ -527,7 +542,7 @@ dat we de basis-functies op het niveau $j$ kunnen ontbinden volgens:
   \inpr{\psi^p_{j,(n_1,n_2)}}{\phi_{j+1,k_1}\otimes\phi_{j+1,k_2}}
   \phi^{(2)}_{j+1,(k_1,k_2)}
 \end{equation}
-We maken nu gebruik van \ref{weidmann}[\S 3.4] om het inproduct horende bij het tensorproduct
+We maken nu gebruik van \cite{weidmann}[\S 3.4] om het inproduct horende bij het tensorproduct
 van twee \emph{Hilbertruimten} uit te schrijven volgens:
 \[
 \inpr{a\otimes b}{c\otimes d} = \inpr{a}{c}\cdot \inpr{b}{d}
@@ -702,22 +717,25 @@ factoren die ofwel $\phi$ of $\psi$ zijn.
 Vervolgens kan het algoritme verder doorgezet worden naar de ruimte $V_{j-1}^{(m)}$.
 Dit vertaalt ook weer naar een $m$ dimensionale convolutie van $a_j$ met 
 filters die het tensorproduct zijn van $m$ factoren $h$ of $g$.
-
+\begin{voorbeeld}
+  In drie dimensies maken we een Mallat-decompositie van de ruimte $V_{j+1}^{(3)}$ door:
+  \[
+  \begin{split}
+    V_{j+1}^{(3)} = V_{j}^{(3)} \oplus& \left (V_j^{(2)} \otimes W_j \right) 
+                              \oplus \left (V_j\otimes W_j \otimes V_j \right) 
+                              \oplus \left (W_j\otimes V_j^{(2)} \right)\\ 
+                              \oplus& \left (V_j\otimes W_j^{(2)} \right)  
+                              \oplus \left (W_j\otimes V_j \otimes W_j \right) 
+                              \oplus \left (W_j^{(2)} \otimes V_j \right) 
+                              \oplus W_j^{(3)}
+  \end{split}
+  \]
+  De basisfuncties en filters die hier bijhoren zijn analoog aan de bijbehorende ruimtes.
+  Deze filters kunnen we vervolgens toepassen op bijvoorbeeld filmmateriaal.
+\end{voorbeeld}
 
 \subsection{Eindige signalen in $n$ dimensies}
-De notie van eindige signalen is al eerder langsgekomen. We bekijken functies met een compacte drager $[0,1]$. Het gevolg hiervan is dat de complete waveletbasis teveel elementen bevat. Alleen wavelets waarvan de drager het interval doorsnijdt, zijn voor ons interessant. Wanneer we nu naar meer dimensies gaan, praten we over een $n$-dimensionaal eenheidsinterval $[0,1]^n =: \Box$. 
-
-\iffalse
-Zoals in een eerdere sectie in 1 dimensie al aan werd gegeven, kijken we in de praktijk vaak naar signalen met een compacte drager, zeg $\Box := [0,1]^n$. Dan focussen we ons dus op functies $f \in L_2(\Box)$ en niet meer op functies in $L_2(\R^n)$. Net zoals eerder komen er problemen voor wavelets `op de rand'. Wij zullen hier wederom geen verdere aandacht aan besteden.
-
-Wanneer we $L_2(\Box)$ als deelruimte van $L_2(\R^n)$ beschouwen, is er een natuurlijke basis voor deze deelruimte te vinden. Neem namelijk alle basisfuncties met een drager die $\Box$ doorsnijdt (de rest is op $\Box$ namelijk gewoon de nulfunctie). Definieer $\nabla$ als de verzameling indices $\lambda := (j, n)$ van wavelets die drager doorsnijden met $[0,1]$. Dan wordt $\Psi := \{ \psi_\lambda: \lambda \in \nabla \}$ een basis voor $L_2([0,1])$. Definieer daarnaast $|\lambda| := |(j,n)| = j$ als het niveau.
-
-NOOT: dit stukje is poep.
-
-
-Concreet zullen we echter niet gebruik maken van signalen die leven in $L_2(\R^n)$. We zullen eerder op zoek zijn naar de Wavelettransformatie van een signaal met compacte drager. Neem dus aan dat $f$ leeft in $L_2([0,1]^n)$. Dit $n$-dimensionale eenheidsinterval wordt ook wel met $\Box$ aangegeven. Omdat $\Box \subset \R^n$, kunnen we een waveletbasis voor $L_2(\R^n)$ ook als basis nemen voor $L_2(\Box)$. Maar eigenlijk is dit iets te veel (gezien het feit dat veel basisfuncties hun drager geheel buiten het interval zullen hebben). Daarom wordt de verzameling van indices $\lambda := (j,n)$ van wavelets die drager doorsnijden met $[0,1]$ ook wel $\nabla$ genoemd. Dus $\Psi = \{ \psi_\lambda: \lambda \in \nabla \}$ wordt nu een basis voor $L_2([0,1])$. Defini\"eer $|\lambda| = |(j,n)| = j$ als het niveau.
-Verder zullen we vanaf nu aannemen dat $\boldsymbol\psi$ een compacte drager heeft (zoals we in de praktijk altijd willen) en van orde $p$ is.
-\fi
+De notie van eindige signalen is al eerder langsgekomen. We bekijken functies met een compacte drager $[0,1]$. Het gevolg hiervan is dat de complete waveletbasis teveel elementen bevat. Alleen wavelets waarvan de drager het interval doorsnijdt, zijn voor ons interessant. Wanneer we nu naar meer dimensies gaan, praten we over een $n$-dimensionaal eenheidsinterval $[0,1]^n =: \Box$. Wederom zijn nu alleen de functies van belang wiens drager $\Box$ doorsnijdt.
 
 \section{Tensorproduct}
 Herinner dat we voor de Mallat-decompositie gebruik maakte van de gelijkheid (zie \ref{2d_ruimte_decomp}):
@@ -747,7 +765,7 @@ en schalingsfuncties. We doelen echter in onze naamgeving op \emph{het tensorpro
 \begin{equation}
   \label{tensor_basis_def}
   \begin{split}
-    \boldsymbol \Psi_T :=& (\{\phi_{0,n}\largediv n\in\Z\}\cup \{\psi_{j,n}\largediv j\in\N_0\quad n\in\Z\})^2\\
+    \boldsymbol\Phi_T :=& (\{\phi_{0,n}\largediv n\in\Z\}\cup \{\psi_{j,n}\largediv j\in\N_0\quad n\in\Z\})^2\\
                         =& \{\phi_{0,n_1}\otimes\phi_{0,n_2}\largediv n_1,n_2\in\Z\} 
                         \cup \{\phi_{0,n_1}\otimes\psi_{j,n_2}\largediv j\in\N_0\quad n_1,n_2\in\Z\} \\    
                          & \cup \{\psi_{j,n_1}\otimes\phi_{0,n_2}\largediv j\in\N_0\quad n_1,n_2\in\Z\} \\
@@ -884,23 +902,21 @@ decompositie toepassen op videomateriaal.
 Bij compressie is men op zoek naar een manier om stukjes data weg te kunnen gooien of te schrijven op zo'n manier dat het minder ruimte inneemt. Wij zijn in het bijzonder ge\"interesseerd naar \emph{hoe dichtbij} we bij perfecte reconstructie zitten wanneer we een vooraf bepaald aantal data opslaan. Er is al uitgebreid onderzoek gedaan naar hoe dit werkt bij de waveletbasis en een aantal resultaten hiervan zullen we opnemen in ons verslag.
 
 Laat $f$ een functie in $L_2(\Box)$ met aftelbare orthonormale basis $\mathcal{B} = \{ g_m \}$. Dan valt $f$ in deze basis te schrijven als (zie Lemma \ref{parseval})
-\[
-f = \sum_{m = 0}^\infty \langle f, g_m \rangle g_m.
-\]
-
-\begin{gevolg}
+\begin{equation}
 \label{linfout}
+f = \sum_{m = 0}^\infty \langle f, g_m \rangle g_m.
+\end{equation}
+
 Wanneer we nu niet de hele basis, maar zeg alleen de eerste $N$ elementen pakken, krijgen we een verzameling $\mathcal{B}_N \subset \mathcal{B}$ zodat
 \[
 f_{\mathcal{B}_N} := \sum_{m = 1}^N \langle f, g_m \rangle g_m.
 \]
-
 In het bijzonder zijn we nu op zoek naar de \emph{fout} $\| f - f_{\mathcal{B}_N} \|$:
 \[
 \| f - f_{\mathcal{B}_N} \|^2 = \left\| \sum_{m=1}^\infty\langle f, g_m \rangle g_m - \sum_{m=1}^N \langle f, g_m \rangle g_m \right\|^2 = \left\| \sum_{m=N+1}^\infty\langle f, g_m \rangle g_m \right\|^2 = \sum_{m=N+1}^\infty | \langle f, g_m \rangle |^2.
 \]
 Duidelijk moge zijn dat voor $N \to \infty$, $\| f - f_{\mathcal{B}_N} \|^2 \to 0$.
-\end{gevolg}
+
 
 \begin{definitie}[Sobolevruimte]
 Een Sobolevruimte $H^p(\Omega)$ over $\Omega \subset \R^n$ is de verzameling van alle functies $u \in L_2(\Omega)$ z\'o dat voor elke $\alpha \in \N_0^n$ geldt dat $|\alpha| = \alpha_1 + \cdots + \alpha_n \leq p \implies D^\alpha u \in L_2(\Omega)$. De zwakke parti\"ele afgeleide $D^\alpha u$ betekent
@@ -956,6 +972,7 @@ met $\boldsymbol\lambda := (\lambda_1, \ldots, \lambda_n) \in \boldsymbol{\nabla
 Laat vervolgens $I_M := \{ l \in \N^n_0: ||l||_1 \leq M \}$ en maak de \emph{sparse grid index set} $\boldsymbol{\nabla}_M := \{ \boldsymbol{(j,n)} \in \boldsymbol{\nabla}: \boldsymbol{j} \in I_M \}$.
 
 \begin{lemm}{\cite[P3.2.3]{tammo}}
+  \label{en_daarom_jongens_en_meisjes}
   Voor $f \in H^p(\Box)$ geldt dat de fout van de benadering op basis van de sparse grid index set $\boldsymbol{\nabla}_M$ hoogstens voldoet aan
   \[
   \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim 2^{-pM} M^{(n-1)/2} \| f \|_{H^p(\Box)}
@@ -964,11 +981,13 @@ Laat vervolgens $I_M := \{ l \in \N^n_0: ||l||_1 \leq M \}$ en maak de \emph{spa
 
 Het aantal elementen in deze verzameling $\boldsymbol{\nabla}_M$ nu, kunnen we vinden.
 \begin{lemm}{\cite[L3.3.1]{tammo}}
+  \label{gebruiken_we_referenties}
   Het aantal elementen in $\boldsymbol{\nabla}_M$ is proportioneel met $2^M M^{n-1}$.
 \end{lemm}
 
 \begin{lemm}{\cite[L3.4.1]{tammo}}
-  Wanneer er voor twee functies $h, g$ geldt dat $h(J) \lesssim J^{-s}\log_2(J)^\mu$ en $g(J) = \log_2(J)^\nu J =: N$, dan
+  \label{want_dit_werkt_goed_zo}
+  Wanneer er voor twee functies $h, g$ geldt dat $h(J) \lesssim J^{-s}\log_2(J)^\mu$ en $g(J) \simeq= \log_2(J)^\nu J =: N$, dan
   \[
   (h \circ g^{-1})(N) \lesssim N^{-s} \log_2{N}^{\mu + \nu s}.
   \]
@@ -983,30 +1002,64 @@ Met bovenstaande drie lemma's is het nu mogelijk een goede afschatting te maken.
   \]
 \end{stelling}
 \begin{proof}
-  Gebruik het tweede lemma om te vinden dat $N \simeq M^{n-1}2^M$. Nu vinden we via het eerste lemma dat
+  We kunnen met het lemma \ref{en_daarom_jongens_en_meisjes} om de fout af te schatten:
   \[
   \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim M^{(n-1)/2}2^{-Mp}\| f \|_{H^p(\Box)}
   \]
-  zodat
+  We verplaatsen alle termen die niet van $M$ afhangen naar het linkerlid, dit geeft:
   \[
   \frac{\left\| f - f_{\boldsymbol\nabla_M}  \right\|_{L_2(\Box)}}{\| f \|_{H^p(\Box)}} \lesssim M^{(n-1)/2}2^{-Mp}.
   \]
-
-  We willen graag lemma drie toepassen. Door
+  We defini\"eren nu de functie die voor een gegeven niveau $2^M$ 
+  het linkerlid van deze vergelijking geeft door:
   \[
-  J^{-p}\log_2(J)^\mu = M^{(n-1)/2} 2^{-Mp}
+  \begin{split}
+    h: \N \to& \R \\
+    2^M \mapsto& \frac{\left\| f - f_{\boldsymbol\nabla_M}  \right\|_{L_2(\Box)}}{\| f \|_{H^p(\Box)}}
+  \end{split}
   \]
-  volgt $J = 2^M$ en $\mu = (n-1)/2$. Door
+  Vervolgens defini\"eren we de functie $g$ die het aantal wavelets geeft van dit niveau:
   \[
-  N = M^{n-1}2^M = \log_2(J)^\nu J = 2^M M^\nu
-  \] volgt $\nu = n-1$. TODO: wat is $f$ en $g$?
+  \begin{split}
+    g: \N \to& \N\\
+    2^M \mapsto& N = \#\boldsymbol{\nabla}_M
+  \end{split}
+  \]
+  Gebruik lemma \ref{gebruiken_we_referenties} om te vinden dat 
+  \[
+  g(2^M) = N \simeq M^{n-1}2^M
+  \]
+  Met deze definities kunnen we lemma \ref{want_dit_werkt_goed_zo} toepassen. Neem $J=2^M$
+  dan voldoen $h$ en $g$ aan de voorwaarden van het lemma voor $s=p$, $\mu=\tfrac{n-1}{2}$ en $\nu=n-1$,
+  waaruit volgt dat:
+  \[
+    (h \circ g^{-1})(N) \lesssim N^{-p} \log_2(N)^{(n-1)\left(\tfrac12 + p\right)}. 
+  \]
+  Maar dit betekent precies dat de orde van $h$ nu herschreven wordt in termen van $N$ door
+  \[
+  \frac{\left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)}}{\| f \|_{H^p(\Box)}}
+  \lesssim N^{-p} \log_2(N)^{(n-1)(1/2 + p)}, 
+  \]
+  en dit is precies wat we willen bewijzen.
 \end{proof}
 
-\subsection{Vergelijkend}
+\subsection{Vergelijking van Mallat en Tensor}
 We vinden dus dat voor een voldoend gladde $f$ dat (gebruikend een beperkte hoeveelheid basisfuncties) de Mallatdecompositie hoogstens een convergentiesnelheid $N^{-p/n}$ bereikt, terwijl het Tensorproduct een snelheid $N^{-p} \log_2(N)^{(n-1)(p+1/2)}$ bereikt. De zogenaamde \emph{curse of dimensionality} kan dus verbroken worden door het gebruik van een Tensorproduct.
 
+In de praktijk hebben we echter nooit te maken met compleet gladde functies. 
+Gevolg is dat deze stellingen niet helemaal opgaan. 
+Niet \emph{helemaal}, omdat per constructie van onze wavelets de basis compact is zijn alleen 
+lokaal wavelets nodig zijn om een discontinuiteit te reconstrueren;
+we `zoomen we in' op de functie. Lokaal is de functie $f$ meestal wel glad zodat de benadering daar goed is.
 
-In de praktijk hebben we echter nooit te maken met compleet gladde functies. Gevolg is dat deze stellingen niet helemaal opgaan. Niet \emph{helemaal}, omdat per constructie van onze wavelet, de basis compact is en dus `zoomen we in' op de functie. Lokaal is de mogelijkheid dat $f$ glad genoeg is ineens een stuk meer in zicht. Het gevolg is wel dat je op zo'n moment waarschijnlijk lokaal een hoger niveau wil gebruiken. De bewijzen van hierboven zijn op basis van een \emph{niet-adaptieve} deelverzameling, dat wil zeggen dat ze geen rekening houden met lokaal een hoger niveau.
+Een gevolg van de verschillen in lokale gladheid is dat we wavelets beter moeten selecteren: meer wavelets rond een discontinuiteit en minder op de gladde delen. Hiervoor gebruiken we een zogenaamde \emph{adaptieve} deelverzameling die selecteert op de grootte van de co\"efficienten.
 
-Hoewel de vorige zin misschien klinkt alsof er roet in ons eten gegooid wordt, is het in de praktijk toch goed mogelijk om de gevolgen te zien. Dit zullen we zien wanneer we de twee decomposities zullen gaan vergelijken.
+\subsection{Vergelijking met Fouriertransformatie}
+Wanneer we nu het convergentiegedrag van de wavelet co\"efficienten vergelijken met de daling 
+van de co\"effici\"enten van de Fouriertransformatie dan zien we dat de convergentie van zijn
+co\"efficienten loopt volgens $N^{-(k-1)}$ voor $f\in C^k$. De convergentie hangt dus sterk samen
+met de gladheid van de functie, terwijl dit bij de wavelets afhangt van de gekozen wavelet.
 
+Zodra de functie een discontinuiteit vertoont treden er problemen op met de Fouriertransformatie,
+het reconstrueren van de discontinuiteit wordt bemoeilijkt en de reconstructie heeft enkel nog zachte
+randen. In zo'n situatie verwachten we dan ook dat de wavelettransformatie betere resultaten vertoont.
