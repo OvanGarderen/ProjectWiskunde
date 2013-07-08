@@ -82,7 +82,7 @@
 \newtheorem{definitie}[stelling]{Definitie}  
 
 \theoremstyle{remark}
-\newtheorem{gevolg}{Gevolg}[stelling]
+\newtheorem{gevolg}[stelling]{Gevolg}
 \newtheorem*{opmerk}{Opmerking}
 \newtheorem*{opmerking}{Opmerking}
 \newtheorem*{voorbeeld}{Voorbeeld}
@@ -148,6 +148,22 @@ Op het voorblad is te zien, vanaf linksboven en dan met de klok mee:
 
 \chapter*{Inleiding}
 \addcontentsline{toc}{chapter}{Inleiding}
+Wanneer we foto's naar elkaar versturen, wanneer we grote bestanden downloaden, bij het opslaan van muziek: iedereen heeft te maken met compressie. Compressie is het encoderen van informatie met minder bits dan de originele representatie. In het bijzonder heeft beeldcompressie als doel om irrelevante en redundante informatie in het beeld te verminderen zodat zij effici\"enter opgeslagen of verstuurd kan worden.
+
+Beeldcompressie kan \emph{lossy} of \emph{lossless} zijn. Lossless compressie wordt veelal gebruikt bij medische doeleinden. De naam zegt het al: lossless compressie gooit geen informatie weg. De reconstructie blijft perfect.
+
+Lossy compressie wordt veel meer gebruikt bij afbeeldingen van natuurlijk beeld zoals foto's, waar een (klein) verlies van weergave niet erg is wanneer het een substanti\"eel verschil in grootte oplevert. Wij zullen naar dit soort compressie kijken. Er zijn een aantal types van compressie te onderscheiden, te kennen:
+\begin{itemize}
+	\item Het verkleinen van het kleurenpallet. Hiermee worden de meestgebruikte kleuren eruit gepikt om zo het aantal bits per pixel te verkleinen;
+	\item Het verlagen van de resolutie. Het gevolg is dat er minder pixels opgeslagen hoeven worden maar de details verdwijnen snel;
+	\item Fractale compressie, wat gebruik maakt van de notie dat er vaak herhalingen in afbeeldingen zitten;
+	\item Compressie op basis van een basistransformatie. Het beeld wordt als functie beschouwd, wat daarna getransformeerd kan worden in een andere basis.
+\end{itemize}
+Ons project draait helemaal om het laatste punt. Wij zullen dan ook twee algoritmes aan de lezer voorleggen.
+
+\section*{JPEG}
+In 1974 hebben een drietal onderzoekers een transformatie bedacht op basis van de Fouriertransformatie. De \emph{discrete cosine transform} werkt in twee stappen. In de eerste stap wordt het originele beeld `opgehakt' in blokken van 8 bij 8 pixels. Daarna komt de stap die voor ons interessant is. Blabla TODO
+
 
 \section*{Onze implementatie}
 Voor de implementatie van de algoritmes uit dit verslag is de taal Python gebruikt.

@@ -481,7 +481,7 @@ Schrijf namelijk $f|_{N}$ voor de reconstructie met de eerste $N$ basisfuncties.
   || f - f|_N||^2_{L_2([a,b])} = \sum_{k=1}^\infty |\inpr{f-f|_N}{\phi_k}|^2 = \sum_{k=1}^\infty |\inpr{f}{\phi_k} 
   - \inpr{f|_N}{\phi_k}|^2 = \sum_{k=N+1}^\infty |\inpr{f}{\phi_k}|^2,
 \]
-vanwege de Parsevalgelijkheid \ref{parseval}. Omdat stelling \label{fourier_daling} geldt, zijn er $k_0, c$ zodat $\abso{\inpr{f}{\phi_k}} < c\cdot k^{-n}$ voor $k > k_0$. Dus
+vanwege de Parsevalgelijkheid \ref{parseval}. Door stelling \ref{fourier_daling} zijn er $k_0, c$ zodat $\abso{\inpr{f}{\phi_k}} < c\cdot k^{-n}$ voor $k > k_0$. Dus
 \[
 	\sum_{k=N+1}^\infty | \langle f, \phi_{k} \rangle |^2 \leq \sum_{k=N+1}^\infty c \cdot k^{-2n} < c \cdot \int_{N}^\infty x^{-2n} dx = c \cdot \left[ \frac{x^{1-2n}}{1-2n} \right]^\infty_N = c \cdot \frac{N^{1-2n}}{2n-1}.
 \]
@@ -495,7 +495,7 @@ wat precies betekent dat
 \]
 \end{gevolg}
 
-\subsection{De fout in discrete geval}
+\subsection{De fout in het discrete geval}
 Wanneer we een discrete functie bekijken zullen we het criterium van \emph{gladheid} niet kunnen gebruiken,
 we bekijken de functie immers op een deelverzameling van $\Z$ en daar is geen enkele 
 niet-constante functie continu op.
