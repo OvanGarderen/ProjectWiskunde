@@ -37,11 +37,11 @@ De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er
 \label{fig:wavelets}
 \end{figure}
 
-\begin{gevolg}We kunnen een functie $f$ in $L^2(\R)$ schrijven in deze basis:
+\begin{gevolg}We kunnen een functie $f$ in $L_2(\R)$ schrijven in deze basis:
   \[
   f(t) = \sum_{j=-\infty}^{\infty} \sum_{n=-\infty}^{\infty} \langle f, \psi_{j,n} \rangle \psi_{j,n}(t),
   \]
-  waarbij $\langle \cdot, \cdot \rangle$ het standaardinproduct op de $L_2(\R)$ aangeeft.
+  waarbij $\langle \cdot, \cdot \rangle$ het standaardinproduct op de $L_2(\R)$ aangeeft (cf.\~\S \ref{ruimtes}.
 \end{gevolg}
 
 Het grote nadeel van de Fouriertransformatie maakt compressie van discrete signalen moeilijk. Veel van deze wavelets worden nu z\'o geconstrueerd dat dit probleem (deels) verholpen wordt. We zijn namelijk op zoek naar een wavelet die een eindige drager heeft. Het blijkt dat deze bestaat en dat er zelfs een hele grote verzameling wavelets is, elk met eigen gewilde eigenschappen.
@@ -103,7 +103,7 @@ Per definitie van de multiresolutie weten we dat $V_{j-1} \subset V_j$. In het b
 \end{definitie}
 \begin{stelling}[{\cite[T7.2]{mallat}}]
   \label{filter}
-  Laat $\phi \in L^2(\R)$ een schalingsfunctie die ook integreerbaar is. Dan ligt de multiresolutie vast.
+  Laat $\phi \in L_2(\R)$ een schalingsfunctie die ook integreerbaar is. Dan ligt de multiresolutie vast.
 
   Andersom, als $h[n]$ een filter is zodat $\hat{h}(\omega)$ periodiek $2\pi$ is en continu differentieerbaar in een omgeving van $\omega = 0$ en als daarnaast geldt
   \begin{align*}
@@ -115,7 +115,7 @@ Per definitie van de multiresolutie weten we dat $V_{j-1} \subset V_j$. In het b
   \[
   \hat{\phi}(\omega) = \prod_{p=1}^\infty \frac{\hat{h}(2^{-p}\omega)}{\sqrt{2}}
   \]
-  een schalingsfunctie in $L^2(\R)$.
+  een schalingsfunctie in $L_2(\R)$.
 \end{stelling}
 We zullen enkel de gevolgen gebruiken: namelijk dat de multiresolutie vast ligt met een goede keuze van $\phi$, en dat voor een goed gekozen $h[n]$, $\phi$ ook vast ligt.
 
@@ -442,10 +442,10 @@ We weten dat $V_j^{(2)}$ bevat is in $V_{j+1}^{(2)}$. Bekijk het orthogonale com
   \label{2d_ruimte_rec}
   V_j^{(2)} \oplus \boldsymbol{U}_j = V_{j+1}^{(2)}.
 \end{equation}
-Om nu een orthogonale waveletbasis voor $\boldsymbol{U}_j$ en (dus in de limiet) $L^2(\R^2)$ te vinden, gaan we als volgt te werk.
+Om nu een orthogonale waveletbasis voor $\boldsymbol{U}_j$ en (dus in de limiet) $L_2(\R^2)$ te vinden, gaan we als volgt te werk.
 \begin{stelling}[{\cite[T7.24]{mallat}}]
 \label{mallatbasis}
-  Laat $\phi$ een schalingsfunctie en $\psi$ de bijhorende wavelet die en basis voor de $L^2(\R)$ voortbrengt. Maak drie wavelets
+  Laat $\phi$ een schalingsfunctie en $\psi$ de bijhorende wavelet die en basis voor de $L_2(\R)$ voortbrengt. Maak drie wavelets
   \begin{equation}
     \label{psi_k_defs}
     \psi^1(x) = \phi(x_1)\psi(x_2) \quad \psi^2(x) = \psi(x_1) \phi(x_2) \quad \psi^3(x) = \psi(x_1)\psi(x_2)
@@ -462,7 +462,7 @@ Om nu een orthogonale waveletbasis voor $\boldsymbol{U}_j$ en (dus in de limiet)
   en
   \[
   \{ \phi_{0, n}^2: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}
-  \] een basis voor $L^2(\R^2)$.
+  \] een basis voor $L_2(\R^2)$.
 \end{stelling}
 \begin{proof}[Bewijs]
   We weten
@@ -483,9 +483,9 @@ Om nu een orthogonale waveletbasis voor $\boldsymbol{U}_j$ en (dus in de limiet)
 
 Omdat nu via vergelijking \ref{ruimterec} moet gelden
 \[
-	L^2(\R^2) = \lim_{j \to \infty} V_j^{(2)} = \lim_{j \to \infty} ( V_0^{(2)} \oplus \boldsymbol{U}_0 \oplus \cdots \oplus \boldsymbol{U}_{j-1} ) = \left( \bigoplus_{j=0}^\infty \boldsymbol{U}_j \right) \oplus V_0^{(2)}
+	L_2(\R^2) = \lim_{j \to \infty} V_j^{(2)} = \lim_{j \to \infty} ( V_0^{(2)} \oplus \boldsymbol{U}_0 \oplus \cdots \oplus \boldsymbol{U}_{j-1} ) = \left( \bigoplus_{j=0}^\infty \boldsymbol{U}_j \right) \oplus V_0^{(2)}
 \]
-is $\{ \phi_{0, n}^2: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}$ een basis voor $L^2(\R^2)$.
+is $\{ \phi_{0, n}^2: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}$ een basis voor $L_2(\R^2)$.
 \end{proof}
 \begin{gevolg}
 In het bewijs wordt nu ook duidelijk dat 
@@ -715,7 +715,7 @@ Wanneer we $L_2(\Box)$ als deelruimte van $L_2(\R^n)$ beschouwen, is er een natu
 NOOT: dit stukje is poep.
 
 
-Concreet zullen we echter niet gebruik maken van signalen die leven in $L^2(\R^n)$. We zullen eerder op zoek zijn naar de Wavelettransformatie van een signaal met compacte drager. Neem dus aan dat $f$ leeft in $L^2([0,1]^n)$. Dit $n$-dimensionale eenheidsinterval wordt ook wel met $\Box$ aangegeven. Omdat $\Box \subset \R^n$, kunnen we een waveletbasis voor $L^2(\R^n)$ ook als basis nemen voor $L^2(\Box)$. Maar eigenlijk is dit iets te veel (gezien het feit dat veel basisfuncties hun drager geheel buiten het interval zullen hebben). Daarom wordt de verzameling van indices $\lambda := (j,n)$ van wavelets die drager doorsnijden met $[0,1]$ ook wel $\nabla$ genoemd. Dus $\Psi = \{ \psi_\lambda: \lambda \in \nabla \}$ wordt nu een basis voor $L^2([0,1])$. Defini\"eer $|\lambda| = |(j,n)| = j$ als het niveau.
+Concreet zullen we echter niet gebruik maken van signalen die leven in $L_2(\R^n)$. We zullen eerder op zoek zijn naar de Wavelettransformatie van een signaal met compacte drager. Neem dus aan dat $f$ leeft in $L_2([0,1]^n)$. Dit $n$-dimensionale eenheidsinterval wordt ook wel met $\Box$ aangegeven. Omdat $\Box \subset \R^n$, kunnen we een waveletbasis voor $L_2(\R^n)$ ook als basis nemen voor $L_2(\Box)$. Maar eigenlijk is dit iets te veel (gezien het feit dat veel basisfuncties hun drager geheel buiten het interval zullen hebben). Daarom wordt de verzameling van indices $\lambda := (j,n)$ van wavelets die drager doorsnijden met $[0,1]$ ook wel $\nabla$ genoemd. Dus $\Psi = \{ \psi_\lambda: \lambda \in \nabla \}$ wordt nu een basis voor $L_2([0,1])$. Defini\"eer $|\lambda| = |(j,n)| = j$ als het niveau.
 Verder zullen we vanaf nu aannemen dat $\boldsymbol\psi$ een compacte drager heeft (zoals we in de praktijk altijd willen) en van orde $p$ is.
 \fi
 
@@ -883,7 +883,7 @@ decompositie toepassen op videomateriaal.
 
 Bij compressie is men op zoek naar een manier om stukjes data weg te kunnen gooien of te schrijven op zo'n manier dat het minder ruimte inneemt. Wij zijn in het bijzonder ge\"interesseerd naar \emph{hoe dichtbij} we bij perfecte reconstructie zitten wanneer we een vooraf bepaald aantal data opslaan. Er is al uitgebreid onderzoek gedaan naar hoe dit werkt bij de waveletbasis en een aantal resultaten hiervan zullen we opnemen in ons verslag.
 
-Laat $f$ een functie in $L^2(\Box)$ met aftelbare orthonormale basis $\mathcal{B} = \{ g_m \}$. Dan valt $f$ in deze basis te schrijven als (zie Lemma \ref{parseval})
+Laat $f$ een functie in $L_2(\Box)$ met aftelbare orthonormale basis $\mathcal{B} = \{ g_m \}$. Dan valt $f$ in deze basis te schrijven als (zie Lemma \ref{parseval})
 \[
 f = \sum_{m = 0}^\infty \langle f, g_m \rangle g_m.
 \]
@@ -951,7 +951,7 @@ Volgens \cite[L3.1.7]{tammo} is
 \[ 
   \boldsymbol\Psi = \Psi \otimes \cdots \otimes \Psi = \{ \boldsymbol{\psi_\lambda} := \psi_{\lambda_1} \otimes \cdots \otimes \psi_{\lambda_n}: \lambda_i \in \nabla \}
 \]
-met $\boldsymbol\lambda := (\lambda_1, \ldots, \lambda_n) \in \boldsymbol{\nabla} := \nabla^n$ nu een orthogonale basis voor $L^2(\Box)$.
+met $\boldsymbol\lambda := (\lambda_1, \ldots, \lambda_n) \in \boldsymbol{\nabla} := \nabla^n$ nu een orthogonale basis voor $L_2(\Box)$.
 
 Laat vervolgens $I_M := \{ l \in \N^n_0: ||l||_1 \leq M \}$ en maak de \emph{sparse grid index set} $\boldsymbol{\nabla}_M := \{ \boldsymbol{(j,n)} \in \boldsymbol{\nabla}: \boldsymbol{j} \in I_M \}$.
 
