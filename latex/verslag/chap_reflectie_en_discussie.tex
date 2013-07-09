@@ -110,19 +110,25 @@ Wanneer er w\'el een grote sprong in de tijd optreedt, zoals bij een scenewissel
 het Tensorproduct ineens een stuk groter dan die van de Mallatdecompositie. 
 Dit is vooral duidelijk bij de typmachinescene, die voor zowel de Mallatdecompositie als de mengvorm
 weergegeven is in figuren \ref{fig:frames_tensor} en \ref{fig:frames_nontensor}.
-Het gele mannetje verdwijnt in de Mallatdecompositie na ongeveer 5 tijdseenheden terwijl deze bij 
-de mengvorm na 8 frames nog steeds zichtbaar is.
+Het gele mannetje vervaagt in de Mallatdecompositie gedurende ongeveer 5 tijdseenheden 
+terwijl de randen in de mengvorm voor 7 frames zichtbaar blijven.
+
+Dit resultaat is ten eerste te wijten aan de grote drager van de Daubechies wavelet, 
+waardoor harde randen slechter gereconstrueerd worden.
+Het effect wordt echter versterkt in de mengvorm doordat hier veel wavelets een langwerpige
+drager in de tijdsrichting hebben, wanneer de scherpe randen in frame $71$ gereconstrueerd moeten worden
+zijn deze ook goed te zien in de volgende frames.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{frames_nontensor.png}
-\caption{croppedgif.gif, frames 71 t/m 77 met 2\% compressie door de Daubechies 2 wavelet in de Mallatdecompositie}
+\includegraphics[width=\linewidth]{plaatjes/frames_notensor_small.png}
+\caption{croppedgif.gif, ingezoomd op de verstoring, frames 71 t/m 80 met 2\% compressie door de Daubechies 2 wavelet in de Mallatdecompositie}
 \label{fig:frames_tensor}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{frames_tensor.png}
-\caption{croppedgif.gif, frames 71 t/m 77 met 2\% compressie door de Daubechies 2 wavelet in de mengvorm}
+\includegraphics[width=\linewidth]{plaatjes/frames_tensor_small.png}
+\caption{croppedgif.gif, ingezoomd op de verstoring, frames 71 t/m 80 met 2\% compressie door de Daubechies 2 wavelet in de mengvorm}
 \label{fig:frames_nontensor}
 \end{figure}

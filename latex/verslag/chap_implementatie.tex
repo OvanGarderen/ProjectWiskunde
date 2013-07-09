@@ -63,9 +63,13 @@ dit algoritme verwacht nu nog een $2^n \times 2^m$ matrix.
 Dit is echter gemakkelijk te implementeren door Zero-Padding toe te passen op rijen en kolommen.
 
 \subsection{Compressie}
-Zoals in de introductie van ons verslag al aan bod gekomen is, hebben we compressie bereikt door de kleinste co\"effici\"enten weg te gooien en aan de slag te gaan met een kleinere lijst. Dit brengt twee problemen met zich mee: (1) welke waarde nemen we als \emph{cutoff}, en (2) hoe slaan we de overgebleven co\"effici\"enten op?
+Zoals in de introductie van ons verslag al aan bod gekomen is, hebben we compressie bereikt door de kleinste 
+co\"effici\"enten weg te gooien en aan de slag te gaan met een kleinere lijst. 
+Dit brengt twee problemen met zich mee: (1) welke waarde nemen we als \emph{cutoff}, 
+en (2) hoe slaan we de overgebleven co\"effici\"enten op?
 \subsubsection{Cutoff}
-Hoewel ons eerste programma een voorgegeven cutoff verwachtte, hebben latere versies de volgende routine gebruikt. TODO: leg uit waarom die return waarde werkt.
+Hoewel ons eerste programma een voorgegeven cutoff verwachtte, wilden we liever op compressieratio selecteren.
+Daarom hebben latere versies de volgende routine gebruikt. 
 \begin{lstlisting}[caption=Het vinden van een goede cutoff-waarde gegeven een gewenst compressieniveau]
 def find_cutoff( mat, ratio ):
 	if ratio < 0 or ratio > 1: return
@@ -74,9 +78,16 @@ def find_cutoff( mat, ratio ):
 	sort(modulus(vector)) 							 #sorteer de vector
 	return vector[ int( ratio*len(vector) ) ]
 \end{lstlisting}
+We sorteren hier de co\"effici\"enten in \texttt{mat} op grootte en kiezen de cutoff als de co\"effici\"ent
+die de lijst opdeelt ten opzichte van de \texttt{ratio}.
 
 \subsubsection{Opslaan van de co\"effici\"enten}
-Het opslaan minder natuurlijk te implementeren dan men misschien zou denken, voornamelijk omdat er ineens bijgehouden moet worden \emph{welke} co\"effici\"enten er opgeslagen worden. Hier hebben wij een zogenaamd \emph{dictionary} voor gebruikt. Een dictionary in Python is niks meer dan een lijst van (naam, waarde)-paren. De naam is in ons geval de plek in de matrix en de waarde is het (complexe) getal wat in die cel hoort te staan. Dit geeft aanleiding tot het schrijven van twee routines \texttt{dict2mat} en \texttt{mat2dict}.
+Voor het opslaan van de co\"effici\"enten hebben we een adaptieve basis gebruikt
+we moesten daarom bijgehouden \emph{welke} co\"effici\"enten er opgeslagen worden. 
+Hier hebben wij een feature van Python gebruikt, de \emph{dictionary}.
+Een dictionary in Python is niks meer dan een lijst van (naam, waarde)-paren. 
+De naam is in ons geval de plek in de matrix en de waarde is het (complexe) getal wat in die cel hoort te staan. 
+Dit geeft aanleiding tot het schrijven van twee routines \texttt{dict2mat} en \texttt{mat2dict}.
 \begin{lstlisting}[caption=Matrix naar dictionary conversie]
 def mat2dict( mat, cutoff ):
 	N, M = mat.shape
@@ -108,7 +119,8 @@ Hoewel we een eigen beeldformaat gemaakt hebben, is het ons niet gelukt om de pl
 \section{Wavelets in 1 dimensie}
 Een orthogonale wavelet wordt discreet eigenlijk helemaal gekenmerkt door haar filter $h$. Zoals beschreven in de sectie over de FWT, hebben we daarmee (via vergelijkingen~\ref{highpassfilter}, \ref{approx_rec}, \ref{detail_rec}, \ref{reconstr_FWT}) eigenlijk het algoritme al helemaal in handen. Definieer
 \[
-	\texttt{dec\_l} := \bar{h}; \texttt{dec\_h} := \bar{g}; \texttt{rec\_l} := h; \texttt{rec\_h} := g.
+	\texttt{dec\_l} := \bar{h} \quad \texttt{dec\_h} := \bar{g} \quad 
+        \texttt{rec\_l} := h; \quad \texttt{rec\_h} := g.
 \]
 Dan kunnen we met twee routines in elke richting het algoritme simpel implementeren.
 \begin{lstlisting}[caption=De FWT]
@@ -148,7 +160,9 @@ def ifwt( wavelet, signal, original_length ):
 Zoals eerder beschreven is, kunnen we in meer dimensies eigenlijk twee kanten op: de Mallatdecompositie en het Tensorproduct.
 
 \subsection{Mallatdecompositie}
-De Mallatdecompositie is in de implementatie eigenlijk heel simpel. We gebruiken nog steeds de eendimensionale \texttt{next} en \texttt{prev} routines. Omdat we hier in twee richtingen kunnen werken, moet het signaal aangevuld worden tot een vierkante tweemacht.\footnote{Het is in theorie mogelijk om een rechthoek te transformeren maar deze abstractie heeft weinig practisch nut.}
+De Mallatdecompositie is in de implementatie eigenlijk heel simpel. We gebruiken nog steeds de eendimensionale \texttt{next} en \texttt{prev} routines door deze bij elke stap op rijen en kolommen uit te voeren, dit is equivalent
+met een tweedimensionale convolutie.
+Omdat we hier in twee richtingen kunnen werken, moet het signaal aangevuld worden tot een vierkante tweemacht.\footnote{Het is in theorie mogelijk om een rechthoek te transformeren maar deze abstractie heeft weinig practisch nut.}
 
 \begin{lstlisting}[caption=De Mallatdecompositie in 2 dimensies]
 def next_2d( wavelet, signal ):

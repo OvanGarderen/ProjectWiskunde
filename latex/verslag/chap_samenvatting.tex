@@ -6,7 +6,7 @@ Bij deze compressie zijn twee types te onderscheiden. Bijvoorbeeld tekst moet na
 
 In het bijzonder zullen wij ons vizier richten op beeldmateriaal, eerst stil en daarna bewegend. Foto's worden veelal opgeslagen in het zogenaamde JPEG-beeldformaat: \texttt{.jpg}. De wiskunde achter dit compressie-algoritme is niet triviaal en wij zullen hier dan ook grondig op ingaan in ons verslag. De Fouriertransformatie wordt in \emph{signaalverwerking} al honderden jaren toegepast om signalen (functies, geluid, foto's, films) te schrijven in een andere \emph{basis}, namelijk de basis van de complexe $e$-machten $e^{2 \pi i t}$. We hopen hierbij maar dat ons signaal goed te benaderen valt in deze basis.
 
-Het lot wil is dat dit helemaal niet altijd goed werkt. Mede door dit nadeel is in de laatste dertig jaar een nieuwe speler op het gebied van signaalverwerking opgedoken en dat is de zogenaamde Wavelettransformatie. In de praktijk worden deze wavelets gebruikt in een nieuwere variant van JPEG: JPEG-2000. Een wavelet is niks anders dan een functie $\psi: \R \to \R$ waarvoor geldt $\int_{-\infty}^\infty \psi(t) dt = 0$. Dit op zich is nog niet handig, maar er zijn wavelets met een zogenaamde \emph{compacte drager}. Merk op dat voor de complexe $e$-machten geldt dat de drager $\mathbb{F} = \overline{\{ t \in \R: e^{2 \pi i t} \not= 0 \}}$ gelijk is aan $\R$. Een wavelet heeft een compacte drager wanneer deze drager een compacte verzameling in $\R$ is. Zie figuur \ref{fig:samenv}.
+Het lot wil dat dit helemaal niet altijd goed werkt. Mede door dit nadeel is er in de laatste dertig jaar een nieuwe speler op het gebied van signaalverwerking opgedoken, de \mbox{\emph{Wavelettransformatie}}. In de praktijk worden deze wavelets gebruikt in een nieuwere variant van JPEG: JPEG-2000. Een wavelet is niks anders dan een functie $\psi: \R \to \R$ waarvoor geldt $\int_{-\infty}^\infty \psi(t) dt = 0$. Dit op zich is nog niet handig, maar er zijn wavelets met een zogenaamde \emph{compacte drager}. Merk op dat voor de complexe $e$-machten geldt dat de drager $\mathbb{F} = \overline{\{ t \in \R: e^{2 \pi i t} \not= 0 \}}$ gelijk is aan $\R$. Een wavelet heeft een compacte drager wanneer deze drager een compacte verzameling in $\R$ is. Zie figuur \ref{fig:samenv}.
 
 \begin{figure}[h]
   \centering
@@ -20,7 +20,7 @@ Het lot wil is dat dit helemaal niet altijd goed werkt. Mede door dit nadeel is 
 \label{fig:samenv}
 \end{figure}
 
-Een zogenaamde orthogonale waveletbasis is nu een verzameling $\{ \psi_{j,n}: j \in \N_0, n \in \Z \}$ waarbij $\psi_{j,n}(t) = 2^{j/2} \psi(2^jt - n)$: een verschuiving over $n$ en een dilatie met factor $2^j$. Zij heet dan orthogonaal omdat de extra eis is dat zij een orthonormale basis opspant: \[\langle \psi_{a,b}, \psi_{c,d} \rangle = \delta_{a,c} \cdot \delta_{b,d}.\]
+Een orthogonale waveletbasis is nu een verzameling $\{ \psi_{j,n}: j \in \N_0, n \in \Z \}$ waarbij $\psi_{j,n}(t) = 2^{j/2} \psi(2^jt - n)$: een verschuiving over $n$ en een dilatie met factor $2^j$. Zij heet dan orthogonaal omdat de extra eis is dat zij een orthonormale basis opspant: \[\langle \psi_{a,b}, \psi_{c,d} \rangle = \delta_{a,c} \cdot \delta_{b,d}.\]
 
 Zie wederom figuur \ref{fig:samenv} voor een grafiek van $\psi_{0,0} = \psi$ en $\psi_{0,-1}$ voor twee wavelets. De Haarwavelet is de oudste (en meest simpele) wavelet in gebruik en staat centraal in ons verslag. Rechts is de Daubechies-2 wavelet te zien. Deze hebben we als tweede wavelet ook bekeken.
 
