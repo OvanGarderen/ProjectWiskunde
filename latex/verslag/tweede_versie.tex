@@ -132,7 +132,8 @@ Beide algoritmes zijn \emph{lossy}, wat betekent dat we niet ge\"interesseerd zi
 
 De Wavelettransformatie is geconstrueerd met de gedachte dat een lokale drager in het geval van signalen met grote sprongen, beter werkt. We zullen beredeneren dat op tweedimensionale signalen er twee verschillende decomposities mogelijk zijn. Beide decomposities zullen we uitvoerig behandelen en analyseren. Naast de eerder genoemde eigenschap heeft de Wavelettransformatie ook een ander praktisch nut: de algoritme loopt in $\mathcal{O}(n)$. Dit  feit stelt ons in staat \'o\'ok bewegend beeld te comprimeren. 
 
-Naast een wiskundige analyse heeft dit project ook een groot praktisch deel gekend, waar we uiteraard ook aandacht aan besteden.
+Naast een wiskundige analyse heeft dit project ook een groot praktisch deel gekend, namelijk het implementeren
+van beeldcompressie, waar we ook aandacht aan zullen besteden.
 
 Op het voorblad is te zien, vanaf linksboven en dan met de klok mee:
 \begin{itemize}
@@ -145,7 +146,7 @@ Op het voorblad is te zien, vanaf linksboven en dan met de klok mee:
 
 \tableofcontents
 \newpage
-
+`
 \chapter*{Inleiding}
 \addcontentsline{toc}{chapter}{Inleiding}
 Wanneer we foto's naar elkaar versturen, wanneer we grote bestanden downloaden, bij het opslaan van muziek: iedereen heeft te maken met compressie. Compressie is het encoderen van informatie met minder bits dan de originele representatie. In het bijzonder heeft beeldcompressie als doel om irrelevante en redundante informatie in het beeld te verminderen zodat zij effici\"enter opgeslagen of verstuurd kan worden.
