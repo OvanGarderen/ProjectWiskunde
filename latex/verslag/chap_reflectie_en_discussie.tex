@@ -21,6 +21,19 @@ We zullen geen uitspraak doen over de specifieke beeldcategori\"een (zoals boven
 omdat hier simpelweg te weinig studie naar is verricht, echter menen we dat de set beelden gevari\"eerd 
 genoeg is om algemene uitspraken te doen over de prestatie van de verschillende algoritmes.
 
+\subsection{Adaptieve basis}
+\label{adaptief_parseval}
+We hebben in onze implementatie een adaptieve basis gebruikt, het compressie algoritme selecteerde co\"effici\"enten
+die in absolute waarde het kleinst zijn. 
+We beweren dat dit de beste reconstructie geeft, preciezer: de totale kwadratische fout is zo het kleinst.
+We beroepen ons daarvoor op de Parseval gelijkheid. Wanneer we een selectie $S$ doen van basisfuncties
+waarvan we het inproduct weggelaten hebben wordt de totale fout na reconstructie
+\[
+\|f-f|_{S^c}\|^2 = \sum_{k\in S} |\inpr{f}{k}|^2 = \sum_{k\in S} |c_k|^2,
+\]
+waar $c_k$ de co\"efficienten is van de basisfunctie $k$ en $\|\cdot\|$ de norm op de betreffende ruimte. 
+Deze sommatie is nu het kleinst wanneer alle termen in de sommatie zo klein mogelijk zijn. 
+
 \section{Fourier/Wavelet compressie van afbeeldingen}
 
 \subsection{Prestatie van Fourier vs. Wavelets}
@@ -122,14 +135,17 @@ zijn deze ook goed te zien in de volgende frames.
 
 \begin{figure}[h]
 \centering
+\begin{subfigure}{\linewidth}
 \includegraphics[width=\linewidth]{plaatjes/frames_notensor_small.png}
-\caption{croppedgif.gif, ingezoomd op de verstoring, frames 71 t/m 80 met 2\% compressie door de Daubechies 2 wavelet in de Mallatdecompositie}
+\caption{Mallatdecompositie}
 \label{fig:frames_tensor}
-\end{figure}
-
-\begin{figure}[h]
+\end{subfigure}
 \centering
+\begin{subfigure}{\linewidth}
 \includegraphics[width=\linewidth]{plaatjes/frames_tensor_small.png}
-\caption{croppedgif.gif, ingezoomd op de verstoring, frames 71 t/m 80 met 2\% compressie door de Daubechies 2 wavelet in de mengvorm}
+\caption{Mengvorm}
 \label{fig:frames_nontensor}
+\end{subfigure}
+\caption{\texttt{croppedgif.gif} ingezoomd op de verstoring, frames 71 t/m 80 met 2\% compressie door de Daubechies 2 wavelet
+met de verschillende decomposities.}
 \end{figure}

@@ -19,7 +19,8 @@ door:
 We noemen $F_{a,b}$ de Fourierbasis van $L_2([a,b])$
 \end{definitie}
 Het woord basis is hier met recht gebruikt, het is immers bekend dat de complexe $e$-machten loodrecht staan onder
-het inproduct dat we gedefinieerd hebben. Om nu een willekeurige functie te schrijven in deze basis, introduceren
+het inproduct dat we gedefinieerd hebben. 
+Om nu een willekeurige functie te schrijven in deze basis, introduceren
 we de Fouriergetransformeerde.
 \begin{definitie}[Fouriergetransformeerde]
 Zij gegeven een functie $f\in L_2([a,b])$, schrijf dan $\hat f : \Z\to\C$ met entries gedefinieerd volgens:
@@ -46,7 +47,7 @@ Het kan worden aangetoond dat $f^\circ$ een reconstructie geeft van $f$ die vold
 Zoals we gezien hebben in het vorige hoofdstuk kan de Fouriertransformatie gebruikt worden om continue signalen te karakteriseren voor verschillende frequenties. Een groot gebied binnen de signaalanalyse is echter van discrete aard aangezien hier veelal digitale instrumenten worden gebruikt. De toepassingen waarnaar wij op zoek zijn liggen in dit digitale domein (JPEG is een beeldcompressie-algoritme) en dus zal het verslag zich verder afspelen in deze discrete setting.
 
 Om discrete signalen te analyseren lijkt het voor de hand te liggen om een deze als stapfuncties te zien. Een stapfunctie zit immers in $L_2$. De discontinuiteiten van de stapfunctie leiden echter tot ongewenste resultaten, zoals is te zien aan de reconstructie van een blokgolf door middel van Fouriertransformatie. TODO MISCHIEN PLAATJE?
-Erger nog, elke eindige som van continue functies is weer continu dus voor een perfecte reconstructie van een discreet signaal is met deze methode altijd een oneindige rij \coefficient en nodig. Bovendien is het moeilijk om uit deze \coefficient en relevante informatie te destilleren over de aard van het signaal.
+Erger nog, elke eindige som van continue functies is weer continu, zodat voor een perfecte reconstructie van een discreet signaal is met deze methode altijd een oneindige rij \coefficient en nodig. Bovendien is het moeilijk om uit deze \coefficient en relevante informatie te destilleren over de aard van het signaal.
 
 In plaats van de discrete signalen in te bedden in $L_2$ zullen we een discreet analogon gebruiken voor de Fouriertransformatie.
 Hiervoor zullen we de Fourier-basis discretiseren en ons richten op de ruimte $\R^n$.
@@ -169,7 +170,8 @@ Hiermee wordt de output van het algoritme geconstrueerd als volgt:
 %%%%%
 
 Dit is dus een recursief gedefinieerd algoritme dat een signaal meermaals halveert en in zichzelf terugvoert.
-Het is gegarandeerd dat dit algoritme afloopt vanwege de conditie op $n=0$ samen met de halvering van de input bij elke stap. Een belangrijke voorwaarde voor de relevantie van de FFT is nu dat het algoritme hetzelfde resultaat geeft als het DFT algoritme en dit zullen we nu dan ook bewijzen. 
+Het is gegarandeerd dat dit algoritme afloopt vanwege de conditie op $n=0$ samen met de halvering van de input bij elke stap. 
+Een belangrijke voorwaarde voor de relevantie van de FFT is nu dat het algoritme hetzelfde resultaat geeft als het DFT algoritme en dit zullen we dan ook bewijzen. 
 
 \begin{stelling}[]
   Het uitvoeren van het Fast Fourier Transform algoritme op een dataset van lengte $n=2^m$ geeft
@@ -276,14 +278,14 @@ We schrijven het FFT algoritme in pseudocode.
 \EndFunction
 \end{algorithmic}
 
-Dit algoritme is recursief, dus kunnen we de complexiteit schrijven door middel van een recurrente betrekking. Laat hiervoor $T(n)$ het aantal berekeningen zijn dat het algoritme kost bij een invoersignaal van lengte $n$. We maken een gevalsonderscheid: als de lijst lengte $1$ heeft geven we deze direct terug (1 berekening). Bij een lijst van lengte $>1$ splitsen we de lijst op in de even en oneven entries en voeren we op beiden weer het FFT algoritme uit, vervolgens voeren we nog $n$ maal een vast aantal ($N$) berekeningen uit om tot het eindresultaat te komen. In formulevorm geeft dit de \emph{recurrente betrekking}
+Dit algoritme is recursief, zodat we de complexiteit kunnen schrijven door middel van een recurrente betrekking. Laat hiervoor $T(n)$ het aantal berekeningen zijn dat het algoritme kost bij een invoersignaal van lengte $n$. We maken een gevalsonderscheid: als de lijst lengte $1$ heeft geven we deze direct terug (1 berekening). Bij een lijst van lengte $>1$ splitsen we de lijst op in de even en oneven entries en voeren we op beiden weer het FFT algoritme uit, vervolgens voeren we nog $n$ maal een vast aantal ($N$) berekeningen uit om tot het eindresultaat te komen. In formulevorm geeft dit de \emph{recurrente betrekking}
 \[
 T(n) = \begin{cases}
     1 &\text{ als } n = 1 \\
     2\cdot T(n/2) + N\cdot n &\text{ anders}. \\
 \end{cases}
 \]
-We zullen nu bovenstaande (vereenvoudigde) stelling van Akra-Bazzi gebruiken. We rekenen hierbij niet de $\O$ van de FFT uit maar de strictere $\theta$ die gedefinieerd is volgens:
+We zullen de bovenstaande (vereenvoudigde) stelling van Akra-Bazzi gebruiken. We rekenen hierbij niet de $\O$ van de FFT uit maar de strictere $\theta$ die gedefinieerd is volgens:
 \[
 f \in \theta(g) \Leftrightarrow \exists c \in \R_+: \lim_{n \to \infty} \frac{f(n)}{g(n)} = c
 \]
@@ -364,8 +366,8 @@ Als $m=1$ dan geldt:
 \[
 X_1[k_1] = DFT(X_0)[k_1] = DFT(x)[k_1]
 \]
-Wat dus inderdaad de DFT in 1 dimensie geeft.
-We gaan nu door met de inductiestap, voor algemene $m>1$ geldt:
+Wat inderdaad de DFT in 1 dimensie geeft.
+We gaan vervolgens door met de inductiestap, voor algemene $m>1$ geldt:
 Schrijf even kort
 \[
 \tilde X_{t-1}[k_t] = 
@@ -376,7 +378,7 @@ X_{t-1}\largediv_{x_1 = k_1,\ldots,x_{t-1} = k_{t-1},x_{t+1} = k_{t+1},\ldots,x_
   \DFT(\tilde X_{m-1})[k_m]
   = \frac 1 {n_m}\sum_{j_m=1}^{n_m} \tilde X_{m-1}[j_m] s^{-1}_{k_m}[j_m]
 \]
-We vatten nu $\tilde X$ op als een vector van lengte $n_m$ van $m-1$ dimensionale Fouriergetransformeerden
+We vatten $\tilde X$ op als een vector van lengte $n_m$ van $m-1$ dimensionale Fouriergetransformeerden
 dit mag omdat
 \[
 X_{m-1}\largediv_{x_1=k_1,\ldots,x_{m-1}=k_{m-1}}[k_m] = X_{m-1}\largediv_{x_m=k_m}[k_1,\ldots,k_{m-1}]
@@ -450,7 +452,7 @@ Wanneer $g \in L_1(\R)$, dan geldt
     = \tfrac{b-a}{2 \pi |k|} \left| \int_a^b f'(x) e^{-2 \pi i k \tfrac{x-a}{b-a}} dx \right|.
   }
   Hier hebben we gebruikt dat alle afgeleiden van $0$ tot $n$ periodiek zijn.
-  Omdat $f$ nu $C^n$ is en de afgeleiden weer periodiek zijn kunnen we dit herhaald toepassen,
+  Omdat $f$ van de klasse $C^n$ is en de afgeleiden weer periodiek zijn kunnen we dit herhaald toepassen,
   we verkrijgen daarmee
   \[
   \left| \int_a^b f(x) e^{-2 \pi i k \tfrac{x-a}{b-a}} dx \right| 
@@ -492,7 +494,7 @@ Dan
 N^{2(n-1)} \cdot \sum_{N+1}^\infty |\inpr{f}{\phi_k}|^2 < N^{2(n-1)} \cdot c \cdot \frac{N^{1-2n}}{2n-1} = \frac{c}{2n-1} N^{-1} \to 0 \quad \text{als } N\to\infty,
 \]
 wat precies betekent dat
-\[
+ \[
 \|f-f|_{N}\|^2_{L_2([a,b])} \in o\left ( N^{-2(n-1)} \right) 
 \implies ||f - f|_{N}||_{L_2([a,b])} \in o\left(N^{-(n-1)}\right).
 \]

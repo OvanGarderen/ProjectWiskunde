@@ -31,6 +31,22 @@ Daarnaast zijn er nog twee types die een niet-vloeiende overgang kunnen veroorza
 
 De keuze van de \emph{signal extension mode} kan gevolgen hebben voor de mogelijkheid tot compressie op de rand. Verder in het verslag (zie stelling \ref{daling_fourier} en sectie \ref{daling_wavelets}) wordt duidelijk dat de functie $f$ moet voldoen aan bepaalde continu\"iteitseisen. Wanneer hier niet aan wordt voldaan, is het gevolg meestal dat compressie slecht mogelijk is.
 
+\subsection{Python syntax}
+We zullen in de sectie over onze implementatie wat stukken Python code gebruiken, hoewel de taal
+voornamelijk leest alsof het pseudocode is dienen we wat syntactische elementen uit te leggen.
+\begin{description}
+\item[Blokhaaknotatie] De elementen van een lijst \texttt{x} worden in python met \texttt{x[i]} aangegeven,
+  waarbij \texttt{i} van $0$ oploopt tot de lengte van de lijst.
+\item[List-comprehensions] De notatie \texttt{[x for y in z]} is kortere schrijwijze voor een lijst die geconstrueerd
+  word door alle elementen \texttt{y} in \texttt{z} af te gaan en steeds 
+  $x$, een statement dat van \texttt{y} afhangt, toe te voegen aan de lijst.
+\item[Function-mapping] De functie \texttt{map(f,x)} is een mapping van een functie \texttt{f} over een lijst 
+  \texttt{x}, met gebruik van list-comprehensions word dit \texttt{[f(y) for y in x]}.
+\item[Reductie] De functie \texttt{reduce(f,x)} reduceert een lijst tot \'e\'en waarde, de functie \texttt{f} pakt
+  hiervoor de elementen \texttt{x[0],x[1]} en geeft \texttt{a = f(x[0],x[1])} terug, vervolgens wordt
+  de waarde \texttt{f(a,x[2])} berekend en weer in \texttt{a} opgeslagen, zo gaat de algoritme verder tot de lijst
+  afgelopen is.
+\end{description}
 \section{Wiskunde}
 
 \subsection{Notatie}
@@ -81,7 +97,7 @@ We voeren daarom $o$, $\O$ en $\theta$ als notatie in.
 \end{equation*}
 Merk op dat $o$ een \emph{sterker} begrip is dan $\O$: als $f \in o(g)$ dan $f \in \O(g)$. Ook geldt dat $f\simeq g \implies f\in\theta(g)$. Verder is $\theta$ ook sterker dan $\O$. We zouden dus ook alles over \'e\'en kam kunnen strijken en enkel $\O$ gebruiken (maar voor de volledigheid zullen we dit niet doen).
 
-Als laatste is er ook een eenzijdige variant van $\simeq$ en dit is $\lesssim$: $f \lesssim g$ betekent dat er een $C$ is z\'o dat $f \leq C \cdot g$.
+Als laatste is er ook een eenzijdige variant van $\simeq$, namelijk $\lesssim$: $f \lesssim g$ wat betekent dat er een $C$ is z\'o dat $f \leq C \cdot g$. Er geldt dus zeker dat $f\simeq g$ implicieert dat $f\lesssim g$.
 
 We zullen in de praktijk algoritmes $f$ bekijken die een 1,2 of 3 dimensionale lijst data als input hebben.
 We zijn dan ge\"interesseerd in de tijdscomplexiteit in termen van de grootte van bijvoorbeeld een $N\times N$ 
@@ -89,18 +105,19 @@ afbeelding, dus is $f$ een functie van $N$.
 
 \subsection{Ruimtes}
 \label{ruimtes}
-Een familie van ruimtes die wij gedurende het hele verslag zullen gebruiken is de familie van Lebesgue-ruimtes. De $L_p$-ruimte is de ruimte over functies van $\R$ naar $\R$ die $p$'e-machts integreerbaar zijn:
+Een familie van ruimtes die wij gedurende het hele verslag zullen gebruiken is de familie van Lebesgue-ruimtes. De $L_p$-ruimte is de ruimte over functies van $\R$ naar $\C$ die $p$'e-machts integreerbaar zijn:
 \begin{equation}
 	\label{lebesgue}
 	\| f \|_{L_p} := \left(\int_{-\infty}^\infty |f(t)|^p dt\right)^{1/p} < \infty.
 \end{equation}
 
-Wij zullen vooral de $L_2$-ruimte bekijken. Deze heeft als extra eigenschap dat zij een Hilbertruimte is, met als inproduct
+Wij zullen vooral de $L_2$-ruimte bekijken. Deze heeft als extra eigenschap dat zij een Hilbertruimte is, 
+met als inproduct
 \begin{equation}
 	\label{l2}
 	\langle f, g \rangle = \int_{-\infty}^\infty f(t) \overline{g(t)} dt.
 \end{equation}
-Het is duidelijk dat $\sqrt{\langle f, f \rangle}$ nu overeenkomt met vergelijking \ref{lebesgue}, zodat we inderdaad de $L_2$-ruimte bekijken. Merk op dat $L_2$ ook de \emph{enige} Hilbertruimte is van deze vorm.
+Het is duidelijk dat de geinduceerde norm $\sqrt{\langle f, f \rangle}$ nu overeenkomt met vergelijking \ref{lebesgue}, zodat we inderdaad de $L_2$-ruimte bekijken. Merk op dat $L_2$ ook de \emph{enige} Hilbertruimte is van deze vorm.
 
 Naast deze $L_2$-ruimte over $\R$ zullen we ook haar tegenhanger over $\R^n$ bekijken. Integraaltekens uit de vergelijkingen \ref{lebesgue} en \ref{l2} worden nu gewoon integralen over $\R^n$. Wanneer we spreken over $L_2(\Omega)$ voor $\Omega \subset \R^n$, wordt een integraal over $\Omega$ bedoeld.
 

@@ -1,5 +1,5 @@
 \chapter{Onze implementie}
-
+\label{implementatieH}
 Een discreet signaal in 1 dimensie kan over het algemeen geschreven worden als een vector re\"ele getallen van een bepaalde lengte (de signaallengte). Wanneer we plaatjes willen beschrijven, bekijken we daarom vaak matrices. Dit is een matrix van grijswaardes, waarbij vier kanalen (rood, groen, blauw, doorzichtigheid) elk een eigen matrix hebben die bij elkaar de representatie geven van een kleurenplaatje.
 
 Omdat het menselijk oog niet heel nauwkeurig is, en door de limitaties van computers, slaan we de matrixco\"effici\"enten niet op als re\"ele getallen. In plaats daarvan worden vaak integerwaardes tussen 0 en 255 gebruikt. Omdat elk van de 3 kleurenkanalen zo 256 waardes krijgt, is het kleurenpallet toch groot. In elk van onze implementaties worden beelden gescheiden in haar vier kanalen en wordt op elk kanaal afzonderlijk het algoritme toegpast. De reden voor deze keuze is dat de verschillende kanalen niet veel met elkaar van doen hoeven hebben.
@@ -28,7 +28,8 @@ def FFT( xs ):
                [0.5*(even[k] - exp(-2j*pi*k/N)*odd[k]) for k in range(N/2)]
 \end{lstlisting}as
 
-Hierbij dient uitgelegd te worden dat de notatie $[x \text{ for } y] + [z \text{ for } w]$ twee lijsten construeert en achter elkaar zet. Dit algoritme werkt -- zoals eerder beschreven -- enkel op signalen waarvan de lengte
+Hierbij dient uitgelegd te worden dat de notatie \texttt{a + b} voor twee lijsten de \emph{concatenatie} van de lijsten geeft.
+Dit algoritme werkt -- zoals eerder beschreven -- enkel op signalen waarvan de lengte
 $N$ een macht van $2$ is. We hebben daarom signaalextensie toe moeten passen door middel van zero-padding
 om het programma ook op andersvormige signalen te laten werken.
 
@@ -54,13 +55,10 @@ def FFT_2D( xss ):
 
     return xss
 \end{lstlisting}
-Hier is de Pythonfunctie \texttt{map} gebruikt die ruwweg gedefinieerd is als 
-\[
-	\texttt{map}(f,x) = [f(y) \text{ for } y \text{ in } x]
-\]
+Hier is dus gebruik gemaakt van function-mapping.
 Met het oog op duidelijkheid is hier de Zero-Padding fase weggelaten, 
-dit algoritme verwacht nu nog een $2^n \times 2^m$ matrix.
-Dit is echter gemakkelijk te implementeren door Zero-Padding toe te passen op rijen en kolommen.
+dit algoritme verwacht nu nog een $2^n \times 2^m$ matrix maar dit i
+s gemakkelijk te implementeren door Zero-Padding toe te passen op rijen en kolommen.
 
 \subsection{Compressie}
 Zoals in de introductie van ons verslag al aan bod gekomen is, hebben we compressie bereikt door de kleinste 
@@ -117,7 +115,7 @@ Duidelijk moge zijn dat we, door deze twee functies na elkaar uit te voeren, een
 Hoewel we een eigen beeldformaat gemaakt hebben, is het ons niet gelukt om de plaatjes echt in minder ruimte op te slaan dan hun ongecomprimeerde versie. Dit heeft met twee dingen te maken. Ten eerste is de manier waarop wij de dictionaries opgeslagen hebben niet optimaal geweest.\footnote{Later bedachten we nog een manier die ongeveer 50\% van de oorspronkelijke ruimte in zou nemen, door niet (index, waarde)-paren op te slaan maar met een zogenaamde bitmap.} Ten tweede is de Fouriertransformatie een complex algoritme in de zin dat zij complexe co\"effici\"enten teruggeeft. Door het isomorfisme $\C \simeq \R^2$ moesten wij zodoende twee waardes voor elke co\"effici\"ent opslaan.
 
 \section{Wavelets in 1 dimensie}
-Een orthogonale wavelet wordt discreet eigenlijk helemaal gekenmerkt door haar filter $h$. Zoals beschreven in de sectie over de FWT, hebben we daarmee (via vergelijkingen~\ref{highpassfilter}, \ref{approx_rec}, \ref{detail_rec}, \ref{reconstr_FWT}) eigenlijk het algoritme al helemaal in handen. Definieer
+Een orthogonale wavelet wordt discreet helemaal gekenmerkt door haar filter $h$. Zoals beschreven in de sectie over de FWT, hebben we daarmee (via vergelijkingen~\ref{highpassfilter}, \ref{approx_rec}, \ref{detail_rec}, \ref{reconstr_FWT}) feitelijk het algoritme al helemaal in handen. Definieer
 \[
 	\texttt{dec\_l} := \bar{h} \quad \texttt{dec\_h} := \bar{g} \quad 
         \texttt{rec\_l} := h; \quad \texttt{rec\_h} := g.
@@ -157,12 +155,15 @@ def ifwt( wavelet, signal, original_length ):
 \end{lstlisting}
 
 \section{Wavelets in twee dimensies}
-Zoals eerder beschreven is, kunnen we in meer dimensies eigenlijk twee kanten op: de Mallatdecompositie en het Tensorproduct.
+Zoals eerder beschreven is, kunnen we in meer dimensies twee kanten op: de Mallatdecompositie en het Tensorproduct.
+We zullen aan beiden wat aandacht besteden.
 
 \subsection{Mallatdecompositie}
-De Mallatdecompositie is in de implementatie eigenlijk heel simpel. We gebruiken nog steeds de eendimensionale \texttt{next} en \texttt{prev} routines door deze bij elke stap op rijen en kolommen uit te voeren, dit is equivalent
-met een tweedimensionale convolutie.
-Omdat we hier in twee richtingen kunnen werken, moet het signaal aangevuld worden tot een vierkante tweemacht.\footnote{Het is in theorie mogelijk om een rechthoek te transformeren maar deze abstractie heeft weinig practisch nut.}
+De Mallatdecompositie is qua implementatie vrij simpel. 
+We gebruiken nog steeds de eendimensionale \texttt{next} en \texttt{prev} routines 
+door deze bij elke stap op rijen en kolommen uit te voeren, wat equivalent is met een tweedimensionale convolutie.
+Omdat we hier in twee richtingen werken, moet het signaal bovendien aangevuld worden tot een vierkante tweemacht.
+\footnote{Het is mogelijk om een rechthoek te transformeren maar daar hebben wij hier geen aandacht aan besteed.}
 
 \begin{lstlisting}[caption=De Mallatdecompositie in 2 dimensies]
 def next_2d( wavelet, signal ):
@@ -202,7 +203,7 @@ def ifwt2d( wavelet, signal, N, M ): #N en M zijn originele lengte en breedte
 \end{lstlisting}
 
 \subsection{Tensorproduct}
-Het Tensorproduct in meer dimensies gaat eigenlijk net zoals de Fouriertransformatie in meer dimensies, door op rijen en kolommen het algoritme in 1 dimensie toe te passen.
+Het Tensorproduct in meer dimensies gaat in principe net zoals de Fouriertransformatie in meer dimensies, door op rijen en kolommen het algoritme in 1 dimensie toe te passen.
 \begin{lstlisting}[caption=De 2d FWT in het Tensorgeval]
 def fwt2d_tensor(wavelet, signal):
 	signal = zero_pad(signal)
@@ -234,7 +235,9 @@ def ifwt2d_tensor( wavelet, signal, original_length ):
 In hogere dimensies wordt het nog interessanter. In bijvoorbeeld drie dimensies kunnen we naast de Mallatdecompositie en het Tensorproduct, ook een \emph{mengvorm} toepassen. Wij hebben er voor gekozen om in dit geval de Mallatdecompositie in het $x,y$-vlak te gebruiken, en het Tensorproduct in de $z$-richting hier loodrecht op.
 
 \subsection{Mallatdecompositie}
-De Mallatdecompositie is werkelijk echt niet zo interessant, maar omdat we overal al stappen over het meerdimensionale geval, here goes:
+De Mallatdecompositie in drie dimensies is gemakkelijk voort te zetten uit de tweedimensionale variant interessant,
+er moet nu tijdens elke stap naast een \texttt{next} of \texttt{prev} stap in de $y$ en $z$ richting ook nog een 
+in de $z$ richting gedaan worden. 
 \begin{lstlisting}[caption=De Mallatdecompositie in 3 dimensies]
 def next_3d( wavelet, signal ):
 	x, y, z = signal.shape
@@ -275,6 +278,9 @@ def ifwt3d( wavelet, signal, N, M, O ): #N, M en O zijn originele lengte, breedt
 \end{lstlisting}
 
 \subsection{Mengvorm}
+Bij de mengvorm gaan we iets interessanters doen, zoals bij het tweedimensionale Tensorproduct
+voeren we weer functionmapping uit, echter dit maal voeren we de tweedimensionale Mallatdecompositie
+uit op elk $x,y$ vlak en voeren we vervolgens de \emph{FWT} uit op elke rij in de $z$ richting.
 \begin{lstlisting}[caption=De mengvorm in 3 dimensies]
 def fwt3d_mix(wavelet, signal):
 	signal = zero_pad_3d(signal)
