@@ -153,14 +153,16 @@ Wanneer we foto's naar elkaar versturen, wanneer we grote bestanden downloaden, 
 
 Beeldcompressie kan \emph{lossy} of \emph{lossless} zijn. Lossless compressie wordt veelal gebruikt bij medische doeleinden. De naam zegt het al: lossless compressie gooit geen informatie weg. De reconstructie blijft perfect.
 
-Lossy compressie wordt veel meer gebruikt bij afbeeldingen van natuurlijk beeld zoals foto's, waar een (klein) verlies van weergave niet erg is wanneer het een substanti\"eel verschil in grootte oplevert. Wij zullen naar dit soort compressie kijken. Er zijn een aantal types van compressie te onderscheiden, te kennen:
+Lossy compressie wordt veel meer gebruikt bij afbeeldingen van natuurlijk beeld zoals foto's, waar een (klein) verlies van weergave niet erg is terwijl de compressie een substanti\"eel verschil in grootte oplevert. 
+Wij zullen naar dit soort compressie kijken. Er zijn een aantal types compressie te onderscheiden, te kennen:
 \begin{itemize}
 	\item Het verkleinen van het kleurenpallet. Hiermee worden de meestgebruikte kleuren eruit gepikt om zo het aantal bits per pixel te verkleinen;
 	\item Het verlagen van de resolutie. Het gevolg is dat er minder pixels opgeslagen hoeven worden maar de details verdwijnen snel;
 	\item Fractale compressie, wat gebruik maakt van de notie dat er vaak herhalingen in afbeeldingen zitten;
 	\item Compressie op basis van een basistransformatie. Het beeld wordt als functie beschouwd, wat daarna getransformeerd kan worden in een andere basis.
 \end{itemize}
-Ons project draait helemaal om het laatste punt. Wij zullen dan ook twee algoritmes aan de lezer voorleggen.
+Vooral het laatste punt wordt in de praktijk veel gebruikt en ons project zal hier dan ook volledig om draaien.
+We zullen hiervoor twee algoritmes aan de lezer voorleggen.
 
 \section*{JPEG}
 In 1974 hebben een drietal onderzoekers een transformatie bedacht op basis van de Fouriertransformatie: de \emph{Discrete Cosine Transform}. Deze algoritme werkt -- in \'e\'en dimensie -- eigenlijk heel simpel. Laat $x[n]$ het originele signaal van lengte $N$ zijn. Dan wordt
@@ -194,12 +196,16 @@ Wat uit de figuur ook direct duidelijk wordt, is dat de keuze om blokjes van con
 Door dilaties wordt steeds het zichtsveld van de basisfunctie verkleind met als gevolg dat er blokken van verschillende grootte komen. We zullen bovendien zien dat deze blokken op twee fundamenteel verschillende manieren gemaakt kunnen worden: zowel met vierkanten (de Mallatdecompositie) als met rechthoeken (het Tensorproduct).
 
 \section*{Compressie en praktijk}
-De vraag die misschien opkomt is, ``hoe krijgen we nou compressie?". Het antwoord is tweeledig. In theorie is het het makkelijkst om (bijvoorbeeld) de eerste $K$ basisfuncties te gebruiken voor de reconstructie. De verwachte fout die hiermee bereikt kan worden staat beschreven in het vervolg. Dit is wel onder sterke aannames over het beginsignaal die over het algemeen niet opgaan.
+De vraag die misschien opkomt is, ``hoe krijgen we nou compressie?". Het antwoord is tweeledig. In theorie is het het makkelijkst om (bijvoorbeeld) de eerste $K$ basisfuncties te gebruiken voor de reconstructie. De verwachte fout die hiermee bereikt kan worden staat beschreven in hoofdstukken \ref{fourierH} en \ref{waveletsH}. Dit is wel onder sterke aannames over het beginsignaal die over het algemeen niet opgaan.
 
-In de praktijk zijn we slimmer te werk gegaan. We laten namelijk de kleinste co\"effici\"enten weg. Met de Parsevalgelijkheid (zie \S \ref{ruimtes}) kunnen we dan concluderen dat de fout ook ``klein'' zal zijn. TODO: OF weghalen OF in conclusie opnemen Het praktische deel van ons project is te vinden in hoofdstukken \ref{sectie_psnr} en \ref{discH}. Hierin zullen we kijken naar de algoritmes door reconstructies met verschillende algoritmes te vergelijken.
+In de praktijk zijn we slimmer te werk gegaan. We laten namelijk de kleinste co\"effici\"enten weg. Met de Parsevalgelijkheid (zie \S \ref{ruimtes}) kunnen we dan concluderen dat de fout ook ``klein'' zal zijn. 
+We zullen dit onderbouwen in sectie \ref{adaptief_parseval}
+Het praktische deel van ons project is te vinden in hoofdstukken \ref{sectie_psnr} en \ref{discH}. Hierin zullen we kijken naar de algoritmes door reconstructies met verschillende algoritmes te vergelijken.
 
 \section*{Onze implementatie}
-Het laatste belangrijk deel van ons project is de implementatie. Voor de implementatie van de algoritmes uit dit verslag is de taal Python gebruikt.
+Een belangrijk deel van ons project is de implementatie, waarover is te lezen is in 
+\mbox{hoofdstuk \ref{implementatieH}}. 
+Voor de implementatie van de algoritmes uit dit verslag is de taal Python gebruikt.
 Enkele redenen hiervoor waren:
 \begin{itemize}
 \item Voorzieningen om beeld en geluid te laden m.b.v. de \emph{scipy}\cite{scipy} en \emph{Python Image Library}\cite{pil} pakketten.
