@@ -162,11 +162,43 @@ Lossy compressie wordt veel meer gebruikt bij afbeeldingen van natuurlijk beeld 
 Ons project draait helemaal om het laatste punt. Wij zullen dan ook twee algoritmes aan de lezer voorleggen.
 
 \section*{JPEG}
-In 1974 hebben een drietal onderzoekers een transformatie bedacht op basis van de Fouriertransformatie. De \emph{discrete cosine transform} werkt in twee stappen. In de eerste stap wordt het originele beeld `opgehakt' in blokken van 8 bij 8 pixels. Daarna komt de stap die voor ons interessant is. Blabla TODO
+In 1974 hebben een drietal onderzoekers een transformatie bedacht op basis van de Fouriertransformatie: de \emph{Discrete Cosine Transform}. Deze algoritme werkt -- in \'e\'en dimensie -- eigenlijk heel simpel. Laat $x[n]$ het originele signaal van lengte $N$ zijn. Dan wordt
+\[
+	X[k] = \sum_{n=1}^N x[n] \cos\left(\frac{\pi}{N}\left[ n + \frac{1}{2}\right]k\right)
+\]
+de getransformeerde. In twee dimensies wordt dit gedaan door eerst op elke rij de DCT toe te passen en daarna op elke kolom.
 
+
+De algoritme die wij bekeken hebben -- genaamd de \emph{Discrete Fourier Transform} -- ligt dicht bij de DCT en zullen we grondig behandelen in hoofdstuk \ref{fourierH}.
+
+In beide algoritmes wordt het hele originele signaal $x[n]$ gebruikt voor het vinden van de transformatie op positie $k$. Oneffenheden (zoals randen in de afbeelding) spelen zo in elke co\"effici\"ent een rol. De uiteindelijke JPEG-algoritme is om deze reden nog iets slimmer. Zij `hakt' het beeld op in blokken van 8 bij 8 pixels en transformeert elk blok apart. Zo zijn de randen slechts \emph{lokaal} zichtbaar. Op hoge compressieniveaus is dit al snel duidelijk, zoals te zien is in de figuur.
+\begin{figure*}[h]
+\label{duidelijk}
+	\centering
+	\begin{subfigure}{0.32\linewidth}
+		\includegraphics[width=\linewidth]{plaatjes/jpeg_crop.jpg}
+	\end{subfigure}
+	\begin{subfigure}{0.32\linewidth}
+		\includegraphics[width=\linewidth]{plaatjes/jpeg_jpeg_crop.jpg}
+	\end{subfigure}
+	\begin{subfigure}{0.32\linewidth}
+		\includegraphics[width=\linewidth]{plaatjes/jpeg_jpeg2k_crop.jpg}
+	\end{subfigure}
+	\caption{Links: (detail) van een afbeelding. Midden: dit detail onder hoge JPEG-compressie. Rechts: hetzelfde detail onder hoge JPEG-2000-compressie.}
+\end{figure*}
+
+\section*{JPEG-2000}
+Wat uit de figuur ook direct duidelijk wordt, is dat de keuze om blokjes van constant 8 bij 8 pixels te nemen nogal arbitrair lijkt. Het zou veel natuurlijker zijn om de grootte van de blokjes gekozen te laten worden \emph{op een slimme manier}. Met deze gedachte is in de jaren 90 van de vorige eeuw een andere algoritme bedacht op basis van de zogenaamde Wavelettransformatie, welke in hoofdstuk \ref{waveletsH} aan bod zullen komen. 
+
+Door dilaties wordt steeds het zichtsveld van de basisfunctie verkleind met als gevolg dat er blokken van verschillende grootte komen. We zullen bovendien zien dat deze blokken op twee fundamenteel verschillende manieren gemaakt kunnen worden: zowel met vierkanten (de Mallatdecompositie) als met rechthoeken (het Tensorproduct).
+
+\section*{Compressie en praktijk}
+De vraag die misschien opkomt is, ``hoe krijgen we nou compressie?". Het antwoord is tweeledig. In theorie is het het makkelijkst om (bijvoorbeeld) de eerste $K$ basisfuncties te gebruiken voor de reconstructie. De verwachte fout die hiermee bereikt kan worden staat beschreven in het vervolg. Dit is wel onder sterke aannames over het beginsignaal die over het algemeen niet opgaan.
+
+In de praktijk zijn we slimmer te werk gegaan. We laten namelijk de kleinste co\"effici\"enten weg. Met de Parsevalgelijkheid (zie \S \ref{ruimtes}) kunnen we dan concluderen dat de fout ook ``klein'' zal zijn. TODO: OF weghalen OF in conclusie opnemen Het praktische deel van ons project is te vinden in hoofdstukken \ref{sectie_psnr} en \ref{discH}. Hierin zullen we kijken naar de algoritmes door reconstructies met verschillende algoritmes te vergelijken.
 
 \section*{Onze implementatie}
-Voor de implementatie van de algoritmes uit dit verslag is de taal Python gebruikt.
+Het laatste belangrijk deel van ons project is de implementatie. Voor de implementatie van de algoritmes uit dit verslag is de taal Python gebruikt.
 Enkele redenen hiervoor waren:
 \begin{itemize}
 \item Voorzieningen om beeld en geluid te laden m.b.v. de \emph{scipy}\cite{scipy} en \emph{Python Image Library}\cite{pil} pakketten.
