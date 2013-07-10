@@ -1,8 +1,11 @@
 \chapter{Wavelets}
 \label{waveletsH}
-De Fouriertransformatie bestaat al honderden jaren en is een grote speler geworden in de \emph{signal processing}. Een groot nadeel van deze transformatie is dat zij slecht reageert op discontinue signalen door de globale dragers van de basisfuncties. Hierdoor worden alle Fourierco\"effici\"enten be\"invloed door een discontinu\"iteit.
-
-In de loop van de vorige eeuw is een nieuwe transformatie ontstaan met een eigenschap die de Fouriertransformatie nooit kende. Deze noemt men ook wel de Wavelettransformatie.
+De Fouriertransformatie bestaat al honderden jaren en is een grote speler geworden in de \emph{signal processing}. 
+Een groot nadeel van deze transformatie is dat zij slecht reageert op discontinue signalen 
+door de globale dragers van de basisfuncties. 
+Hierdoor worden alle Fourierco\"effici\"enten be\"invloed door een discontinu\"iteit.
+In de laatste dertig jaar is daarom een nieuwe transformatie ontwikkeld die beter blijkt om te gaan
+met discontinu\"iteiten. We hebben het hier over de \emph{Wavelettransformatie}.
 
 \begin{definitie}
   Een wavelet is simpelweg een functie $\psi: \R \to \R$ die voldoet aan
@@ -11,11 +14,11 @@ In de loop van de vorige eeuw is een nieuwe transformatie ontstaan met een eigen
   \]
   Met deze functie $\psi$ kunnen we een familie functies $\psi_{u,s}$ bouwen door middel van schaling en translatie:
   \[
-  \psi_{u,s}(t) := \frac{1}{\sqrt{s}} \psi\left(\frac{t-u}{s}\right).
+  \psi_{u,s}(t) := \sqrt{s} \psi\left(s\cdot t-u\right).
   \]
 \end{definitie}
 
-Deze familie geeft aanleiding tot een Wavelettransformatie $W_f$ van $f$:
+Deze familie geeft aanleiding tot een Wavelettransformatie $W_f$ van $f$ in $(u,s)$:
 \[
 W_f(u,s) = \int_{-\infty}^\infty f(t) \psi^*_{u,s}(t) dt.
 \]
@@ -25,7 +28,9 @@ Over het algemeen kijken we dan naar
 \[
 \left\{ \psi_{j,n}(t) = \sqrt{2^j} \psi\left( 2^j t - n\right) : (j,n) \in \Z^2 \right\}.
 \]
-De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er een orthogonale (en dus een orthonormale) basis gevormd wordt. Zie figuur~\ref{fig:wavelets} voor twee wavelets.
+De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er een orthogonale 
+(en met de juiste factoren zelfs een orthonormale) basis gevormd wordt. 
+Zie figuur~\ref{fig:wavelets} voor twee wavelets.
 
 \begin{figure}[h]
   \centering
@@ -35,28 +40,27 @@ De kunst is nu om de basiselementen loodrecht op elkaar te laten staan, zodat er
   \begin{subfigure}{0.48\linewidth}
     \includegraphics[width=\linewidth]{plaatjes/db4.pdf}
   \end{subfigure}
-  \caption{Links: Haar. Rechts: De Daubechies-4. De gestippelde grafiek is een translatie naar rechts en staat in beide gevallen loodrecht op de continue lijn die de waveletfunctie voorstelt.}
+  \caption{Links: De Haarwavelet. Rechts: De Daubechies-2-wavelet. De gestippelde grafiek is een translatie naar rechts en staat in beide gevallen loodrecht op de continue lijn die de waveletfunctie voorstelt.}
 \label{fig:wavelets}
 \end{figure}
 
-\begin{gevolg}We kunnen een functie $f$ in $L_2(\R)$ schrijven in deze basis:
-  \[
-  f(t) = \sum_{j=-\infty}^{\infty} \sum_{n=-\infty}^{\infty} \langle f, \psi_{j,n} \rangle \psi_{j,n}(t),
-  \]
-  waarbij $\langle \cdot, \cdot \rangle$ het standaardinproduct op de $L_2(\R)$ aangeeft (cf.\~\S \ref{ruimtes}.
-\end{gevolg}
+Het gedrag bij discontinuiteiten van de Fouriertransformatie maakt compressie van signalen met harde randen moeilijk. 
+Veel wavelets worden daarom z\'o geconstrueerd dat dit probleem (deels) verholpen wordt. 
+We zijn namelijk op zoek naar een wavelet die een eindige drager heeft. 
+Het blijkt dat deze wavelets bestaan en dat er zelfs een hele grote verzameling van zulke wavelets is, 
+elk met eigen gewilde eigenschappen.
 
-Het grote nadeel van de Fouriertransformatie maakt compressie van discrete signalen moeilijk. Veel van deze wavelets worden z\'o geconstrueerd dat dit probleem (deels) verholpen wordt. We zijn namelijk op zoek naar een wavelet die een eindige drager heeft. Het blijkt dat deze bestaat en dat er zelfs een hele grote verzameling wavelets is, elk met eigen gewilde eigenschappen.
-
-Omdat wij naar de toepassing van wavelets binnen de beeldcompressie bekijken, zijn we natuurlijk vooral ge\"interesseerd in het discrete geval. We kijken dus naar de benadering van $f$. Dit geeft aanleiding tot een rij geneste ruimtes die uiteindelijk naar de $L_2(\R)$ toe gaat:
-
+Omdat wij naar de toepassing van wavelets binnen de beeldcompressie bekijken, 
+zijn we natuurlijk vooral ge\"interesseerd in discrete toepassingen.
+We kijken dus naar een benadering van een functie $f$. Hiervoor gebruiken we een rij geneste ruimtes die 
+uiteindelijk naar de $L_2(\R)$ toe gaat:
 \begin{equation}
   \label{multires}
-  V_0 \subset V_1 \subset \ldots \subset L_2(\R)
+  V_0 \subset V_1 \subset \ldots \subset L_2(\R).
 \end{equation}
-genaamd een multiresolutie.
+We noemen deze rij een multiresolutie.
 \begin{definitie}
-  Een rij geneste ruimtes $\{ V_j: j \in \N_0 \}$ zoals in~\ref{multires} heet een multiresolutie wanneer voldaan wordt aan de volgende eigenschappen:
+  Een rij geneste ruimtes $\{ V_j: j \in \N_0 \}$ zoals in~\eqref{multires} heet een multiresolutie wanneer voldaan wordt aan de volgende eigenschappen:
   \begin{eqnarray}
     \forall j, k: f(t) \in V_j \implies f(t - 2^j k) \in V_j, \\
     \forall j: V_{j-1} \subset V_j, \\
@@ -66,36 +70,43 @@ genaamd een multiresolutie.
   \end{eqnarray}
 \end{definitie}
 
-\begin{voorbeeld} We bekijken een multiresolutie van stuksgewijs constante functies. De ruimte $V_j$ wordt hiermee
+\begin{voorbeeld} We bekijken een multiresolutie van ruimtes over stuksgewijs constante functies, 
+  de ruimte $V_j$ die we hiervoor bekijken is:
   \[
-  V_j = \left\{ g(t) \in L_2(\R): g(t)\text{ is constant voor }t \in [n 2^{-j}, (n+1)2^{-j}) \right \}
+  V_j = \left\{ g(t) \in L_2(\R) \largediv g(t)\text{ constant voor }t \in [n 2^{-j}, (n+1)2^{-j}) \right \}
+    \text{ met } n \in \Z.
     \]
-    met $n \in \Z$. De basisfunctie $\phi$ voor $V_0$ wordt in dit geval $\phi(t) = 1_{[0,1)}(t)$.
+    De basisfunctie $\phi$ voor $V_0$ wordt in dit geval $\phi(t) = 1_{[0,1)}(t)$.
 \end{voorbeeld}
 
 \section{Schalingsfuncties}
-Gegeven zo'n orthonormale basis voor $V_0$ willen we graag een orthonormale basis voor $V_j$ construeren.
+Wanneer we nu een orthonormale basis hebben voor $V_0$, willen we graag een orthonormale basis voor $V_j$ construeren.
 \begin{stelling}[{\cite[T7.1]{mallat}}]
   Laat $\{ V_j \}$ een multiresolutie en laat $\{\phi(t-n) \}$ de basis voor $V_0$. Laat verder
   \[
   \phi_{j,n}(t) := \sqrt{2^j} \phi\left( t2^j - n \right).
   \]
-  Dan is $\{ \phi_{j,n}: n \in \Z \}$ een orthonormale basis voor $V_j$. De functie $\phi$ is ook wel de \emph{schalingsfunctie}.
+  Dan is $\{ \phi_{j,n}: n \in \Z \}$ een orthonormale basis voor $V_j$. 
 \end{stelling}
+De functie $\phi$ heet ook wel de \emph{schalingsfunctie}.
 \subsection{Benadering} De orthogonale projectie van $f$ op $V_j$ is, zoals we weten, de beste benadering van $f$ in $V_j$. 
 Deze is te vinden door
 \[
 P_{V_j} f = \sum_{n=-\infty}^\infty \langle f, \phi_{j,n} \rangle \phi_{j,n}.
 \]
-De co\"effici\"enten $a_j[n] = \langle f, \phi_{j,n} \rangle$ geven ons op deze manier een discrete benadering van $f$ op resolutie $2^j$.
+De co\"effici\"enten $a_j[n] = \langle f, \phi_{j,n} \rangle$ geven ons op deze manier een gedeeltelijke benadering 
+van $f$ op resolutie $2^j$.
 
 \section{Filters}
-Wanneer we een schalingsfunctie $\phi$ defini\"eren (en dus een $V_0$), dan lijkt $V_1$ (en dus $V_j$) al redelijk beschreven te worden.\footnote{In stelling \ref{filter} wordt bewezen dat deze hele multiresolutie vast ligt.} We zullen daarom deze schalingsfunctie nader onderzoeken.
+Wanneer we een schalingsfunctie $\phi$ defini\"eren (en dus een $V_0$), dan wordt $V_1$ hierdoor al bijna beschreven. 
+We zullen daarom deze schalingsfunctie nader onderzoeken.
 
 Per definitie van de multiresolutie weten we dat $V_{j-1} \subset V_j$. In het bijzonder geldt dat $\phi(t) \in V_0 \subset V_1$ en omdat $\{ \sqrt{2}\phi(2t - n): n \in \Z\}$ een orthonormale basis voor $V_1$ is, kunnen we $\phi(t)$ schrijven als
-\[
-\phi(t) = \sum_{n=-\infty}^{\infty} \left\langle \sqrt{2} \phi\left(2t-n\right), \phi(t) \right\rangle \sqrt{2}\phi(2t-n).
-\]
+\begin{equation}
+  \label{phi_t2}
+  \phi(t) = \sum_{n=-\infty}^{\infty} \left\langle \sqrt{2} \phi\left(2t-n\right), \phi(t) \right\rangle 
+  \sqrt{2}\phi(2t-n).
+\end{equation}
 
 \begin{definitie}
   Deze inproducten hebben een speciale naam, want de rij $\{h[n]: n \in \Z\}$ met
@@ -120,7 +131,7 @@ Per definitie van de multiresolutie weten we dat $V_{j-1} \subset V_j$. In het b
   \]
   een schalingsfunctie in $L_2(\R)$.
 \end{stelling}
-We zullen enkel de gevolgen gebruiken: namelijk dat de multiresolutie vast ligt met een goede keuze van $\phi$, en dat voor een goed gekozen $h[n]$, $\phi$ ook vast ligt.
+We zullen verder niet ingaan op deze stelling maar enkel de gevolgen gebruiken, namelijk dat de multiresolutie vast ligt met een goede keuze van $\phi$ en dat voor een goed gekozen $h[n]$, $\phi$ ook vast ligt.
 
 \begin{voorbeeld}
   Bekijk weer het geval $\phi(t) = 1_{[0,1)}(t)$. Dan vinden we dat
@@ -130,23 +141,30 @@ We zullen enkel de gevolgen gebruiken: namelijk dat de multiresolutie vast ligt 
 \end{voorbeeld}
 
 \section{Terugkeer van de wavelet}
-We weten dat $V_{j-1}$ bevat is in $V_{j}$. Laat nu $W_{j-1}$ het orthogonale complement van $V_{j-1}$ in $V_{j}$:
+We weten dat $V_{j-1}$ bevat is in $V_{j}$. Laat nu $W_{j-1}$ het orthogonale complement van $V_{j-1}$ in $V_{j}$,
+dan spannnen zij samen $V_j$ op:
 \begin{equation}
   \label{ruimterec}
-  V_{j} = W_{j-1} \oplus V_{j-1}
+  V_{j} = V_{j-1} \oplus W_{j-1} 
 \end{equation}
-De projectie van $f$ op $V_{j-1}$ kan dus geschreven worden als som van projecties:
+De projectie van $f$ op $V_{j}$ kan dus geschreven worden als som van projecties:
 \begin{equation}
   \label{projectie_rec}
   P_{V_{j}} f = P_{V_{j-1}} f + P_{W_{j-1}} f.
 \end{equation}
-Omdat $V_j \subset V_{j+1}$ is alle informatie over $f$ die beschikbaar is in $V_j$, ook beschikbaar in $V_{j+1}$. Ook is het goed mogelijk dat door deze grovere benadering, informatie zoek gaat. Deze `details' worden op die manier zichtbaar in $P_{W_j} f$.
+Omdat $V_{j-1} \subset V_{j}$ is alle informatie over $f$ die beschikbaar is in $V_{j-1}$, ook beschikbaar in $V_{j}$. 
+We missen echter nog wat informatie; de `details' die zichtbaar zijn in $P_{W_{j-1}} f$.
 
-Het kan bewezen worden \cite[T7.3]{mallat} dat, gegeven een schalingsfunctie $\phi$ (en daarmee een filter $h$) er een functie $\psi$ bestaat zo dat
+Het kan bewezen worden \cite[T7.3]{mallat} dat, voor een schalingsfunctie $\phi$ (en daarmee een filter $h$) 
+er een wavelet $\psi$ bestaat zo dat
 \[
 \left\{ \psi_{j,n}(t) := \sqrt{2^j} \psi\left(2^jt - n\right) : n \in \Z \right\}
-\] een orthonormale basis is voor $W_j$ en $\{ \psi_{j,n}: (j,n) \in \Z^2 \}$ een basis voor $L_2(\R)$. Deze functie is dan een \emph{orthogonale} wavelet, omdat $W_j \perp V_j$.
-Omdat $W_j \subset V_{j+1}$ en dus in het bijzonder $\psi(t) \in W_0 \subset V_1$ en omdat $\{ \sqrt{2}\phi(2t-n): n \in \Z \}$ een orthonormale basis is voor $V_1$, kunnen we ook $\psi(t)$ in termen schrijven als:
+\] 
+een orthonormale basis is voor $W_j$ en $\{ \psi_{j,n}: (j,n) \in \Z^2 \}$ een basis voor $L_2(\R)$. 
+Deze functie is dan een \emph{orthogonale} wavelet, omdat $W_{j-1} \perp V_{j-1}$.
+
+Vanwege de relatie $W_{j-1} \subset V_{j}$, waaruit volgt dat $\psi(t) \in W_0 \subset V_1$,
+kunnen we $\psi(t)$ schrijven in termen van  $\{ \sqrt{2}\phi(2t-n): n \in \Z \}$, de orthonormale basis van $V_1$: 
 \[
 \psi\left(t\right) = \sum_{n=-\infty}^{\infty} \left\langle \psi\left(t\right), \sqrt{2}\phi(2t-n) \right\rangle \sqrt{2}\phi(2t-n).
 \]
@@ -154,20 +172,23 @@ Ook deze inproducten hebben een speciale naam: de rij $g[n]$ met
 \[
 g[n] := \left\langle \psi\left(t\right), \sqrt{2}\phi(2t-n) \right\rangle
 \]
-wordt nu ook wel de filter van $\psi$ genoemd. De twee filters zijn gerelateerd aan elkaar volgens de vergelijking\cite[V13]{wavelet_filter}\cite[P958]{daubechies}
+wordt ook wel de filter van $\psi$ genoemd. 
+De twee filters zijn gerelateerd aan elkaar volgens de vergelijking \cite[V13]{wavelet_filter}\cite[P958]{daubechies}
 \begin{equation}
 \label{highpassfilter}
 g[n] = (-1)^{n}h[1-n].
 \end{equation}
 
-Zoals nu wel duidelijk geworden is, wordt met een filter $h$ (die voldoet aan bepaalde eigenschappen: zie stelling~\ref{filter}) een schalingsfunctie $\phi$ en een filter $g$ met waveletfunctie $\psi$ geconstrueerd.
+Met een filter $h$ (die voldoet aan bepaalde eigenschappen: zie stelling~\ref{filter}) worden dus een schalingsfunctie $\phi$ en een filter $g$ met waveletfunctie $\psi$ geconstrueerd.
 
 \begin{voorbeeld}
-  We keren nog een laatste keer terug naar het voorbeeld waarin $\phi(t) = 1_{[0,1)}$. We vinden met de gelijkheden uit voorgaande paragrafen dat
+  We keren nog een laatste keer terug naar het voorbeeld waarin $\phi(t) = 1_{[0,1)}$. 
+    We vinden met de gelijkheden uit voorgaande paragrafen dat
     \[
     \psi\left(t\right) = \sum_{n=-\infty}^{\infty} (-1)^{n}h[1-n] \sqrt{2}\phi(2t-n),
     \]
-    en omdat $h[0] = h[1] = 2^{-1/2}, h[n] = 0$ voor $n \in \Z \setminus \{0,1\}$ zoals we eerder vonden, herschrijft dit tot
+    en omdat $h[0] = h[1] = \frac 1 {\sqrt{2}},\quad h[n] = 0$ voor $n \in \Z \setminus \{0,1\}$, 
+    zoals we eerder vonden. Dit herschrijft daarom tot
     \[
     \psi\left(t\right) = \sqrt{2}\left(\phi(2t) - \phi(2t - 1)\right)
     \]
@@ -176,31 +197,33 @@ Zoals nu wel duidelijk geworden is, wordt met een filter $h$ (die voldoet aan be
     \psi(t) = \begin{cases} 1 & \text{ als } t \in [0,1/2) \\ -1 & \text{ als } t \in [1/2,1) \\ 0 & \text{ anders.} \end{cases}
     \]
 
-    Deze wavelet $\psi$ wordt ook wel de Haarwavelet genoemd en is uitgevonden voor Alfred Haar in 1909, hoewel het onderzoeksgebied van de wavelets toen nog niet bestond. In het vervolg zullen we nog verdere aandacht aan deze wavelet besteden.
+    Deze wavelet $\psi$ wordt ook wel de Haarwavelet genoemd en is uitgevonden door Alfred Haar in 1909, hoewel het onderzoeksgebied van de wavelets toen nog niet bestond. In het vervolg zullen we verdere aandacht aan deze wavelet besteden.
 \end{voorbeeld}
 
 \section{Het kiezen van een wavelet}
 Bij het kiezen of vinden van een wavelet is men over het algemeen op zoek naar bepaalde eigenschappen. Voor compressie zijn we op zoek naar een wavelet die een klein aantal grote co\"effici\"enten en een groot aantal kleine teweeg brengt: een soort concentratie van de belangrijke informatie. Dit wordt vooral bepaald door drie factoren: gladheid van $f$ (waar we niks aan kunnen doen), de grootte van de drager (welke hierna aan bod komt) en de zogenaamde orde van de wavelet.
 
 \begin{definitie}
-  Wanneer de waveletfunctie loodrecht staat ($\langle \psi, q\rangle = 0$) op alle polynomen van graad $p-1$ of lager, spreken we van een wavelet van orde $p$. Dit komt overeen met te zeggen dat
+  Wanneer de waveletfunctie loodrecht staat op alle polynomen van graad $p-1$ of lager ($\langle \psi, q\rangle = 0$), 
+  spreken we van een wavelet van orde $p$. Dit komt overeen met de uitspraak dat
   \[
   \int_{-\infty}^\infty x^k \psi(x) dx = 0 \text{ voor } k \in \{ 0, \ldots p-1 \}.
   \]
 \end{definitie}
 
-\begin{gevolg}
-  Gevolg van deze eigenschap is dat we van de functie $f$ elk polynoom van graad $p-1$ af mogen trekken zonder een verschil in inproduct:
-  \[
-  \langle f, \psi_{j,n} \rangle = \langle f - q, \psi_{j,n} \rangle \text{ voor $q$ een polynoom van graad $p-1$}.
-  \]
-  Intu\"itief is deze eigenschap natuurlijk gewild: we winnen immers een heel stel keuzevrijheden. We zullen dit argument in een volgende sectie formaliseren.
-\end{gevolg}
+Gevolg van deze eigenschap is dat we van de functie $f$ elk polynoom van graad $p-1$ af mogen trekken zonder een verschil in inproduct:
+\[
+\langle f, \psi_{j,n} \rangle = \langle f - q, \psi_{j,n} \rangle \text{ voor $q$ een polynoom van graad $p-1$}.
+\]
+Intu\"itief is deze eigenschap gewild: we willen immers een heel stel vrijheidsgraden. 
+We zullen dit argument in een volgende sectie formaliseren.
 
-Eerder spraken we het verlangen uit om een wavelet met eindige drager te vinden zodat discontinu\"iteiten alleen lokaal zichtbaar zijn. We zullen hier de dragers van $h[n], \psi$ en $\phi$ aan elkaar relateren.
+Een andere eigenschap waar we eerder al naar verlangden, is om een wavelet te vinden met eindige drager, 
+zodat discontinu\"iteiten alleen lokaal zichtbaar zijn. 
+We zullen hiervoor de dragers van $h[n], \psi$ en $\phi$ aan elkaar relateren.
 
 \subsection{Compacte drager}
-Hoewel $\phi$ een functie uit $L_2$ is, en $h$ een functie uit $\ell_2$, is het toch mogelijk het begrip drager in beide ruimtes te beschrijven alsof ze hetzelfde zijn. Laat daartoe $h'$ de stuksgewijs constante functie van $\R$ naar $\R$ die $x$ stuurt naar $h(\lfloor x \rfloor)$. Dan is de drager van $h$ gedefini\"eerd als de drager van $h'$.
+Hoewel $\phi$ een functie uit $L_2$ is, en $h$ een functie uit $\ell_2$, is het toch mogelijk het begrip drager in beide ruimtes te beschrijven alsof ze hetzelfde zijn. Laat daartoe $h'$ de stuksgewijs constante functie van $\R$ naar $\R$ die $x$ stuurt naar $h\left [\lfloor x \rfloor\right ]$. Dan is de drager van $h$ gedefini\"eerd als de drager van $h'$.
 
 \begin{stelling}[{\cite[P7.2]{mallat}}]
   De volgende relaties gelden voor de dragers.
@@ -210,12 +233,15 @@ Hoewel $\phi$ een functie uit $L_2$ is, en $h$ een functie uit $\ell_2$, is het 
   \end{enumerate}
 \end{stelling}
 \begin{proof}[Bewijs 1] Als $\phi$ een compacte drager heeft dan $h[n]$ ook: we weten dat
-  \[
-  h[n] = \left\langle \sqrt{2} \phi\left(2t-n\right), \phi(t) \right\rangle,
-  \]
-  dus er kunnen maar eindig veel $n$ ongelijk nul zijn. De omgekeerde bewering staat bewezen in \cite[P965-967]{daubechies}.
+  \begin{equation*}
+    h[n] = \left\langle \sqrt{2} \phi\left(2t-n\right), \phi(t) \right\rangle,
+  \end{equation*}
+  dus er kunnen maar eindig veel $n$ ongelijk nul zijn. De omgekeerde bewering staat bewezen in 
+  \cite[P965-967]{daubechies}.
 
-  Om deze dragers gelijk te krijgen, stel dat de drager van $h[n]$ gelijk $[N_1,N_2]$ is, en die van $\phi$ $[K_1, K_2]$. De drager van $\phi(t/2)$ is $[2K_1, 2K_2]$ en de drager van de rechterzijde van $\ref{phi_t2}$ is $[N_1 + K_1, N_2 + K_2]$. We concluderen dat $K_1 = N_1$ en $K_2 = N_2$.
+  Om deze dragers gelijk te krijgen: stel dat de drager van $h[n]$ gelijk $[N_1,N_2]$ is
+  en die van $\phi$ is $[K_1, K_2]$. De drager van $\phi(t/2)$ is $[2K_1, 2K_2]$ en de drager van de rechterzijde 
+  van $\eqref{phi_t2}$ is $[N_1 + K_1, N_2 + K_2]$. We concluderen dat $K_1 = N_1$ en $K_2 = N_2$.
 \end{proof}
 \begin{proof}[Bewijs 2]
   Kijk nu naar
@@ -243,46 +269,45 @@ Wij hebben in het praktische deel van ons project aandacht besteed aan de zogena
 
 \section{Fast Wavelet Transform}
 
-Door de recursieve relatie van de ruimtes in \ref{ruimterec} herhaald toe te passen,
+Door de recursieve relatie van de ruimtes in \eqref{ruimterec} herhaald toe te passen,
 kunnen we de ruimte $V_j$ schrijven in termen van $V_0$ en een scala aan
-orthogonaal-complementsruimtes $W_k$.
+orthogonaal-complementsruimtes $W_k$, volgens:
 \begin{equation}
   \label{ruimte_splitsing}
   V_j = V_k \oplus W_k \oplus \cdots \oplus W_{j-1} = \ldots
-  = V_0 \oplus W_0 \oplus \cdots \oplus W_{j-1}
+  = V_0 \oplus W_0 \oplus \cdots \oplus W_{j-1}.
 \end{equation}
 We willen een functie $f$ benaderen in de ruimte $V_j$ door $P_{V_j}f$ te schrijven in
-de basis van de ruimtes $V_0$ en de verschillende $W_k$. Hiervoor dienen we de inproducten
-te bereken van $f$ met de basisvectoren in deze ruimtes.
-We onderscheiden dan de \emph{approximatie}
-co\"efficienten $a_j[n]$ en de \emph{detail} co\"efficienten $d_j[n]$, die
+de basis van de ruimtes $V_0$ en de verschillende ruimtes $W_k$. Hiervoor dienen we de inproducten
+te berekenen van $f$ met de basisvectoren in deze ruimtes.
+We onderscheiden dan de \emph{approximatie}-
+co\"effici\"enten $a_j[n]$ en de \emph{detail}-co\"effici\"enten $d_j[n]$, die
 $f$ geven als projectie op  respectievelijk $V_j$ en $W_j$.
 
-Het is echter veel rekenwerk om al deze co\"efficienten uit te rekenen, dit gebeurt immers
-door het berekenen van integralen. We beperken ons daarom tot her uit rekenen van de
-co\"efficienten op het niveau $j$ en proberen vervolgens een recursieve relatie te vinden
-om hieruit de approximatie en detailco\"efficienten te vinden.
+Het is echter veel rekenwerk om al deze co\"effici\"enten uit te rekenen. Dit gebeurt immers
+door het berekenen van integralen. We beperken ons daarom tot het uit rekenen van de
+co\"effici\"enten op het niveau $j$ en proberen vervolgens een recursieve relatie te vinden
+om hieruit de approximatie- en detailco\"efficienten van het volgende niveau te vinden.
 
-Vanwege de relatie in \ref{ruimterec} kunnen we de basisfuncties uit de ruimtes $W_{j-1}$,
+Vanwege de relatie in \eqref{ruimterec} kunnen we de basisfuncties uit de ruimtes $W_{j-1}$,
 $V_{j-1}$ schrijven in termen van de basisfuncties van de ruimte $V_j$.
-We schrijven daarvoor $\phi_{j-1,n}$ om in termen van de basisfuncties $\phi_{j,k}$; evenzo
-voor $\psi_{j-1,n}$.
+We schrijven daarvoor $\phi_{j-1,n}$ om in termen van de basisfuncties $\phi_{j,k}$ 
+en doen dit ook voor $\psi_{j-1,n}$:
 \begin{equation}
   \label{phi_rec}
-  \phi_{j-1,n} = \sum_{k=-\infty}^{\infty} \inpr{\phi_{j-1,n}}{\phi_{j,k}} \phi_{j,k}
+  \phi_{j-1,n} = \sum_{k=-\infty}^{\infty} \inpr{\phi_{j-1,n}}{\phi_{j,k}} \phi_{j,k},
 \end{equation}
 \begin{equation}
   \label{psi_rec}
-  \psi_{j-1,n} = \sum_{k=-\infty}^{\infty} \inpr{\psi_{j-1,n}}{\phi_{j,k}} \phi_{j,k}
+  \psi_{j-1,n} = \sum_{k=-\infty}^{\infty} \inpr{\psi_{j-1,n}}{\phi_{j,k}} \phi_{j,k}.
 \end{equation}
-We rekenen vervolgens de inproducten uit om deze om te schrijven naar een filterco\"efficient,
-bekijk
+We rekenen vervolgens de inproducten uit in termen van filterco\"effici\"enten, bekijk:
 \eq{
   \inpr{\phi_{j-1,n}}{\phi_{j,k}}
   =& \int_{-\infty}^\infty \sqrt{2^{j-1}}\phi(2^{j-1}t -n)
   \sqrt{2^{j}}\phi^\star(2^j t - k) \d{t}\\
-  =& \int_{-\infty}^\infty \tfrac{1}{2^j} 2^{j-1}
-  \sqrt{2} \phi(t') \phi(2t' - k + 2n) \d{t'}\\
+  =& \int_{-\infty}^\infty \tfrac{1}{2^{j-1}} 2^{j-1}
+  \sqrt{2} \phi(t') \phi^\star(2t' - k + 2n) \d{t'}\\
   =& \inpr{\phi(t)}{\sqrt{2}\phi(2t-k+2n)} \\
   =& h[k-2n],
 }
@@ -290,15 +315,15 @@ bekijk
   \inpr{\psi_{j-1,n}}{\phi_{j,k}}
   =& \int_{-\infty}^\infty \sqrt{2^{j-1}}\psi(2^{j-1}t -n)
   \sqrt{2^{j}}\phi^\star(2^j t - k) \d{t}\\
-  =& \int_{-\infty}^\infty \tfrac{1}{2^j} 2^{j-1}
-  \sqrt{2} \psi(t') \phi(2t' - k + 2n) \d{t'}\\
+  =& \int_{-\infty}^\infty \tfrac{1}{2^{j-1}} 2^{j-1}
+  \sqrt{2} \psi(t') \phi^\star(2t' - k + 2n) \d{t'}\\
   =& \inpr{\psi(t)}{\sqrt{2}\phi(2t-k+2n)} \\
   =& g[k-2n],
 }
-waarbij we de co\"ordinaat-transformatie $t' = 2^{j-1}t - n$ hebben gebruikt.
-Door vervolgens aan beide zijden van vergelijkingen \ref{phi_rec}, \ref{psi_rec} het
-inproduct met $f$ te nemen kunnen we de coe\"fficienten van de resolutie $2^{j-1}$ schrijven
-in termen van de coe\"fficienten op de resolutie $2^j$.
+waarbij we de co\"ordinaattransformatie $t' = 2^{j-1}t - n$ hebben gebruikt.
+Door vervolgens aan beide zijden van vergelijkingen \eqref{phi_rec}, \eqref{psi_rec} het
+inproduct met $f$ te nemen kunnen we de coe\"ffici\"enten van de resolutie $2^{j-1}$ schrijven
+in termen van de coe\"ffici\"enten op de resolutie $2^j$.
 \begin{equation}
   \label{approx_rec}
   a_{j-1}[n] = \inpr{f}{\phi_{j-1,n}}
@@ -324,7 +349,7 @@ De relatie die hier gevonden is geeft aanleiding tot een algoritme.
   \[
   \mathrm{FWT}(a_j)[n] = a_j[n]
   \]
-  Als $j>0$ bereken $a_{j-1}$ en $d_{j-1}$ volgens \ref{approx_rec}, \ref{detail_rec}.
+  Als $j>0$ bereken $a_{j-1}$ en $d_{j-1}$ volgens \eqref{approx_rec}, \eqref{detail_rec}.
   Vervolgens geldt
   \begin{equation}
     \label{FWT_cases}
@@ -334,8 +359,8 @@ De relatie die hier gevonden is geeft aanleiding tot een algoritme.
   \end{equation}
 \end{algo}
 We gaan uit van een eindige filter en beschouwen onze ruimte $V_j$ als functies
-op een interval in $\R$, dan versimpelen namelijk de oneindige sommaties in \ref{approx_rec},
-\ref{detail_rec}. Voor een discrete functie $f\in\R^{2^j}$ kunnen we nu
+op een interval in $\R$, dan versimpelen namelijk de oneindige sommaties in \eqref{approx_rec},
+\eqref{detail_rec}. Voor een discrete functie $f\in\R^{2^j}$ kunnen we nu
 $\mathrm{FWT}(f)$ nemen als de fast wavelet transform,
 we nemen dan aan dat $\inpr{f}{a_{j,k}} = f[k]$ voor het
 grootste niveau $V_j$. Deze aannames komen ruwweg neer op de bewering dat
@@ -366,8 +391,8 @@ We kunnen vervolgens de transformatie inverteren aan de hand van het volgende al
   \[
   \mathrm{iFWT}(\mathrm{FWT}(a_0)) = \mathrm{iFWT}(a_0) = a_0.
   \]
-  We zullen dus verder moeten bewijzen dat \ref{reconstr_FWT} een inverse vormt voor
-  \ref{FWT_cases}.
+  We zullen dus verder moeten bewijzen dat \eqref{reconstr_FWT} een inverse vormt voor
+  \eqref{FWT_cases}.
   Schrijf hiervoor de basisfuncties van $V_j$ in termen van de basisfuncties van $V_{j-1}$
   en $W_{j-1}$, ofwel:
   \[
@@ -489,7 +514,7 @@ we zullen bewijzen dat deze functies tezamen met $\phi^{(2)}_{0,n}$een basis vor
                         \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j)
   \end{split}
   \end{equation*}
-  Gebruik makende van de relatie \ref{2d_ruimte_rec} leiden we af dat 
+  Gebruik makende van de relatie \eqref{2d_ruimte_rec} leiden we af dat 
   \[
     \boldsymbol{U}_j = (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j)
   \]
@@ -520,7 +545,7 @@ en verder combinaties van schaling en wavelet op alle niveaus.
 Net zoals in het eendimensionale geval kunnen we met deze basis een algoritme formuleren.
 
 \subsection{Naar een tweedimensionaal algoritme}
-Nu we een relatie hebben gevonden $(\ref{2d_ruimte_rec})$ tussen de ruimtes op verschillende
+Nu we een relatie hebben gevonden $(\eqref{2d_ruimte_rec})$ tussen de ruimtes op verschillende
 niveau's volgens
 \begin{equation}
   \label{2d_ruimte_decomp}
@@ -535,7 +560,7 @@ van \emph{detail}~co\"effici\"enten volgens.
 \[
 a_j[n] := \langle f, \phi^{(2)}_{j,n} \rangle \quad d^k_j[n] := \langle f, \psi^k_{j,n} \rangle ,\quad k \in \{1,2,3\}.
 \]
-We zullen in het bijzonder kunnen zeggen (maak gebruik van $\ref{phi_phi_basis}$)
+We zullen in het bijzonder kunnen zeggen (maak gebruik van $\eqref{phi_phi_basis}$)
 dat we de basis-functies op het niveau $j$ kunnen ontbinden volgens:
 \begin{equation}
   \label{phi_phi_som}
@@ -568,7 +593,7 @@ dan is:
 h\otimes h : \Z\times\Z \to \R :: (x_1,x_2) \mapsto h[x_1]\cdot h[x_2]
 \]
 Deze stappen kunnen ook met hetzelfde argument toegepast worden op de $\psi^k$'s,
-we verkrijgen dan met een blik op de definities in ($\ref{psi_k_defs}$) de vergelijkingen:
+we verkrijgen dan met een blik op de definities in ($\eqref{psi_k_defs}$) de vergelijkingen:
 \[
 \inpr{\psi^1_{j,(n_1,n_2)}}{\phi^{(2)}_{j+1,(k_1,k_2)}} = (h\otimes g) [k_1-2n_1,k_2-2n_2]
 \]
@@ -579,7 +604,7 @@ we verkrijgen dan met een blik op de definities in ($\ref{psi_k_defs}$) de verge
 \inpr{\psi^3_{j,(n_1,n_2)}}{\phi^{(2)}_{j+1,(k_1,k_2)}} = (g\otimes g) [k_1-2n_1,k_2-2n_2]
 \]
 Vervolgens richten we ons weer op de \emph{approximatie} en \emph{detail}~co\"effici\"enten door
-aan beide zeiden van de vergelijkingen $\ref{phi_phi_som}$,$\ref{psi_k_som}$ het inproduct
+aan beide zeiden van de vergelijkingen $\eqref{phi_phi_som}$,$\eqref{psi_k_som}$ het inproduct
 met $f$ te nemen. We kunnen dit aan de hand van onze nieuwe 2-dimensionale filters
 opschrijven met een convolutie in twee dimensies, namelijk
 \begin{eqnarray}
@@ -606,7 +631,7 @@ x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
   \mathrm{FWT}_2(a_j)[n_1,n_2] = a_j[n_1,n_2]
   \]
   Als $j>0$ bereken $a_{j-1}$,$d^1_{j-1}$,$d^2_{j-1}$ en $d^3_{j-1}$ uit $a_{j}$
-  volgens $(\ref{2d_coef_rec}-\ref{2d_coef_rec_last})$
+  volgens $(\eqref{2d_coef_rec}-\eqref{2d_coef_rec_last})$
   Vervolgens geldt
   \begin{equation}
     \label{FWTd_def}
@@ -661,8 +686,8 @@ x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
   \]
   Voor het geval $j>0$ merken we op dat wanneer de $\mathrm{iFWT}_2$ werkt voor $j'<j$ de co\"effici\"enten-matrices
   $a,d^1,d^2,d^3$ precies zijn wat de $\mathrm{FWT}_2$ zou geven op dit niveau. 
-  We zullen dus verder moeten bewijzen dat \ref{iFWTd_def} een inverse vormt voor
-  \ref{FWTd_def}.
+  We zullen dus verder moeten bewijzen dat \eqref{iFWTd_def} een inverse vormt voor
+  \eqref{FWTd_def}.
   Schrijf hiervoor de basisfuncties van $V^{(2)}_j$ in termen van de basisfuncties van 
   $V_{j-1}\otimes V_{j-1}$, $V_{j-1}\otimes W_{j-1}$, $W_{j-1}\otimes V_{j-1}$ en $W_{j-1}\otimes W_{j-1}$
   dit is geoorloofd zoals we gezien hebben in een vorige sectie.
@@ -709,7 +734,7 @@ x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
       (g\otimes g)[n_1-k_1',n_2-k_2'] \breve d^3_{j-1}[k_1',k_2']
       \end{split}
   \end{equation*}
-  Wat precies gelijk is aan de convolutie in \ref{iFWTd_def}. Daarmee geeft de iFWT een inverse voor de FWT.
+  Wat precies gelijk is aan de convolutie in \eqref{iFWTd_def}. Daarmee geeft de iFWT een inverse voor de FWT.
 \end{proof}
 
 \subsection{Meer dan twee dimensies}
@@ -717,7 +742,7 @@ x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
 De Mallatdecompositie is op een natuurlijke manier voort te zetten naar meerdimensionale signalen.
 De precieze definitie is notationeel nogal ingewikkeld en laten we hier daarom achterwege.
 Informeel geldt dat we een $m$-dimensionale ruimte $V_{j}^{(m)}$ 
-weer kunnen schrijven zoals \ref{2d_ruimte_decomp}
+weer kunnen schrijven zoals \eqref{2d_ruimte_decomp}
 waarbij we ditmaal het tensorproduct nemen van $m$ factoren $V_{j-1}$ en $W_{j-1}$.
 De basisfuncties van deze ruimtes zijn vervolgens de tensorproducten van $m$ 
 factoren die ofwel $\phi$ of $\psi$ zijn.
@@ -749,7 +774,7 @@ Wanneer we meer dimensies bekijken, praten we over een $n$-dimensionaal eenheids
 Wederom zijn alleen de functies van belang wiens drager $\Box$ doorsnijdt.
 
 \section{Tensorproduct}
-Herinner dat we voor de Mallat-decompositie gebruik maakte van de gelijkheid (zie \ref{2d_ruimte_decomp}):
+Herinner dat we voor de Mallat-decompositie gebruik maakte van de gelijkheid (zie \eqref{2d_ruimte_decomp}):
 \[
 V_{j}^{(2)} = (V_{j-1}\otimes W_{j-1}) \oplus (W_{j-1}\otimes V_{j-1}) \oplus
 (W_{j-1}\otimes W_{j-1}) \oplus (V^{(2)}_{j-1})
@@ -760,7 +785,7 @@ Door dit herhaald toe te passen kregen we een basis van de vorm:
 \{\psi^k_{j,(n_1,n_2)} \largediv k=1,2,3\quad j\in \N_0 \quad n_1,n_2\in\Z\}
 \]
 We zullen echter zien dat er ook een andere manier is om deze ruimte te decomposeren.
-Bedenk dat we in 1 dimensie de decompositie zoals in \ref{ruimte_splitsing} gebruiken volgens:
+Bedenk dat we in 1 dimensie de decompositie zoals in \eqref{ruimte_splitsing} gebruiken volgens:
 \[
 V_j = V_0 \oplus W_0 \oplus \cdots \oplus W_{j-1}
 \]
@@ -852,7 +877,7 @@ We kunnen dit omschrijven door de definitie van het inproduct op functieruimten 
 \inpr{y\mapsto \inpr{f\largediv_{x_2=y}}{a}}{b} = 
 \int_{-\infty}^\infty\int_{-\infty}^\infty f(x_1,x_2) \cdot a(x_1) \d{x_1} \cdot b(x_2) \d{x_2} = \inpr{f}{a\otimes b} 
 \]
-Waardoor de matrix $M$ identiek is aan \ref{TFWT_mat}. 
+Waardoor de matrix $M$ identiek is aan \eqref{TFWT_mat}. 
 
 Het vinden van een inverse voor dit algoritme is hiermee ook triviaal, de iFWT geeft samengesteld met de FWT
 immers de identiteit, zodat het toepassen op kolommen en rijen van de iFWT de $\mathrm{TFWT}_2$ inverteert.
