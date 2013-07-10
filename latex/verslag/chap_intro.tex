@@ -1,14 +1,14 @@
 \chapter{Basisbegrippen}
-In dit verslag zullen een aantal termen worden ge\"introduceerd die wellicht niet bekend zijn. De eerste en meest belangrijke notie is dat wij \emph{signalen} analyseren. Een signaal is door \cite{signal} gedefinieerd als
+In dit verslag zullen een aantal termen worden ge\"introduceerd die wellicht niet bekend zijn. De eerste en meest belangrijke notie is dat wij \emph{signalen} analyseren. Een signaal is door \cite{signal} gedefinieerd:
 \begin{quote}
-Een signaal een functie die informatie over de kenmerken of het gedrag van een of ander fenomeen overdraagt.
+Een signaal is een functie die informatie over de kenmerken of het gedrag van een of ander fenomeen overdraagt.
 \end{quote}
 
 Enkele voorbeelden van een signaal zijn:
 \begin{description}
-	\item[Geluid] Geluid is de vibratie van een medium (zoals lucht) en een geluidssignaal associeert een bepaalde druk met elk moment in de tijd (en mogelijk op elk punt in de ruimte). Geluid wordt door een microfoon omgezet naar een elektrisch signaal welke weer ge\emph{sampled} kan worden tot een discrete lijst waardes in de tijd. Hiermee is geluid een eendimensionaal signaal.
-	\item[Afbeeldingen] Een afbeelding bestaat uit een helderheidssignaal als functie van twee dimensies. Een afbeelding kan bestaan uit een continu domein, zoals bij een schilderij of een analoge foto, of een discreet raster zoals op de computer. Een kleurenafbeelding bestaat meestal uit drie kanalen, een voor de helderheid van elke primaire kleur.
-	\item[Video] Een video is een lijst van afbeeldingen en een punt in een video wordt op deze manier gekarakteriseerd door een punt in de tijd samen met een punt in het vlak. Bewegend beeld is hiermee een driedimensionaal signaal met een al dan niet discreet domein.
+	\item[Geluid] is de vibratie van een medium (zoals lucht) en een geluidssignaal associeert een bepaalde druk met elk moment in de tijd (en mogelijk op elk punt in de ruimte). Geluid wordt door een microfoon omgezet naar een elektrisch signaal welke weer ge\emph{sampled} kan worden tot een discrete lijst waardes in de tijd. Geluid is dus een eendimensionaal signaal.
+	\item[Afbeeldingen] bestaan uit een helderheidssignaal als functie van twee dimensies. Een afbeelding kan bestaan uit een continu domein, zoals bij een schilderij of een analoge foto, of een discreet raster zoals op de computer. Een kleurenafbeelding bestaat meestal uit vier kanalen, \'e\'en voor de helderheid van elke primaire kleur en een vierde voor het $\alpha$- of doorzichtigheidskanaal.
+	\item[Video] is een lijst van afbeeldingen. Een punt in een video wordt op deze manier gekarakteriseerd door een punt in de tijd samen met een punt in het vlak. Bewegend beeld is hiermee een driedimensionaal signaal met een al dan niet discreet domein.
 \end{description}
 
 In het vervolg zullen we de termen `signaal' en `functie' door elkaar gebruiken, tenzij anders aangegeven. Tijdens het project hebben we elk van deze drie voorbeelden bekeken, hoewel de twee- en driedimensionale signalen in ons verslag onze focus zullen krijgen.
@@ -16,7 +16,7 @@ In het vervolg zullen we de termen `signaal' en `functie' door elkaar gebruiken,
 \section{Implementatie}
 \subsection{Signaaluitbreiding}
 \label{signaal}
-Beide algoritmes die we zullen behandelen kunnen enkel omgaan met signalen die een tweemacht lang zijn. Om te zorgen dat een willekeurig signaal ook getransformeerd kan worden, moet het dus uitgebreid worden voorbij zijn definitiegebied. De meeste bronnen onderscheiden de volgende manieren om het signaal uit te breiden.\cite{mallat,pywt} Laat $x_1, x_2, \ldots x_n$ het signaal.
+Beide algoritmes die we zullen behandelen kunnen enkel omgaan met signalen die een tweemacht lang zijn. Om te zorgen dat een willekeurig signaal ook getransformeerd kan worden, moet het dus uitgebreid worden voorbij zijn definitiegebied. De meeste bronnen onderscheiden de volgende manieren om het signaal $x_1, x_2, \ldots x_n$ uit te breiden. \cite{mallat,pywt}
 
 Er zijn twee types die grote sprongen in het signaal kunnen veroorzaken (de discrete variant van een \emph{discontinu\"iteit}).
 \begin{description}
@@ -29,7 +29,7 @@ Daarnaast zijn er nog twee types die een niet-vloeiende overgang kunnen veroorza
 \item[Symmetric padding] $x' = x_n, \ldots, x_1| x_1, x_2, \ldots, x_n| x_n, \ldots, x_1$.
 \end{description}
 
-De keuze van de \emph{signal extension mode} kan gevolgen hebben voor de mogelijkheid tot compressie op de rand. Verder in het verslag (zie stelling \ref{daling_fourier} en sectie \ref{daling_wavelets}) wordt duidelijk dat de functie $f$ moet voldoen aan bepaalde continu\"iteitseisen. Wanneer hier niet aan wordt voldaan, is het gevolg meestal dat compressie slecht mogelijk is.
+De keuze van de \emph{signal extension mode} kan gevolgen hebben voor de mogelijkheid tot compressie op de rand. Verder in het verslag (zie \S \ref{daling_FFT} en \S \ref{daling_wavelet}) wordt duidelijk dat de functie $f$ moet voldoen aan bepaalde continu\"iteitseisen. Wanneer hier niet aan wordt voldaan, is het gevolg meestal dat compressie slecht mogelijk is.
 
 \subsection{Python syntax}
 We zullen in de sectie over onze implementatie wat stukken Python code gebruiken, hoewel de taal
@@ -52,20 +52,20 @@ voornamelijk leest alsof het pseudocode is dienen we wat syntactische elementen 
 \subsection{Notatie}
 Analoog aan de notatie $f(x)$ die we in het algemeen voor een functie gebruiken, voeren we de blokhaaknotatie $f[x]$ in die duidt op een discrete functie
 \[
-f:A\subset \Z\to \R \text{ of } f:A\subset \Z\to \C.  
+f:A\subset \Z\to \R \text{\quad of\quad} f:A\subset \Z\to \C.  
 \]
 Vaak zullen we voor $A$ het interval $\{1,\ldots,n\}$ nemen, 
-dan is $f$ gelijk aan een vector in $\R^n$ of $\C^n$.
-In het bijzonder duiden we met deze notatie dus de entries van een vector aan.
+dan is $f$ te zien als een vector in $\R^n$ of $\C^n$.
+In het bijzonder duiden we met deze notatie dus de cellen van een vector aan.
 
-We zullen de notatie ook uitbreiden naar meer dimensies door te schrijven
+We zullen de notatie ook uitbreiden naar meer dimensies door de notatie uit te breiden volgens
 \begin{equation*}
 \begin{split}
-f: A_1\times \cdots \times A_n\subset \Z^n \to& K \\
-       (x_1,\ldots,x_n) \mapsto& f[x_1,\ldots,x_n],
+f: A_1\times \cdots \times A_m\subset \Z^m \to& K \\
+       (x_1,\ldots,x_m) \mapsto& f[x_1,\ldots,x_m],
 \end{split}
 \end{equation*}
-Uit zo'n $m$-dimensionale functie $f$ kunnen we vervolgens op een natuurlijke manier een $m-k$-dimensionale
+Uit zo'n $m$-dimensionale functie $f$ kunnen we vervolgens op een natuurlijke manier een \mbox{$(m-k)$-dimensionale}
 functie construeren door $k$ co\"ordinaten vast te nemen:
 \begin{equation*}
 \begin{split}
@@ -73,13 +73,13 @@ f\largediv_{x_{i_1}=a_{i_1},\ldots,x_{i_k}=a_{i_k}}: A_{i_{k+1}}\times\cdots\tim
 (a_{i_{k+1}},\ldots,a_{i_{m}}) \mapsto& f[a_1,\ldots,a_m]
 \end{split}
 \end{equation*}
-Hier zijn $i_1$'de tot en met de $i_k$'de co\"ordinaat vast genomen. Voor een matrix kan deze functie
-bijvoorbeeld gezien worden als een rij of een kolom, in dat voorbeeld geeft $i_1$ aan of de rij of kolom
+Hier zijn $i_1$'de tot en met de $i_k$'de co\"ordinaat vastgenomen. Voor een matrix kan deze functie
+bijvoorbeeld gezien worden als een rij of een kolom. Dan geeft $i_1$ aan of de rij of kolom
 vast staat en geeft $a_{i_1}$ aan welke rij respectievelijk kolom bekeken wordt.
 
 \subsection{Complexiteit}
 
-Aangezien er algoritmes behandeld worden in het verslag willen we hiervan de tijdscomplexiteit bepalen.
+Aangezien we algoritmes behandelen in het verslag willen we hiervan de tijdscomplexiteit bepalen.
 Deze eigenschap bepaalt namelijk hoe de tijd die het een machine kost oploopt met de grootte van de input.
 We voeren daarom $o$, $\O$ en $\theta$ als notatie in.
 \begin{equation*}
@@ -95,17 +95,13 @@ We voeren daarom $o$, $\O$ en $\theta$ als notatie in.
 
 \end{array}
 \end{equation*}
-Merk op dat $o$ een \emph{sterker} begrip is dan $\O$: als $f \in o(g)$ dan $f \in \O(g)$. Ook geldt dat $f\simeq g \implies f\in\theta(g)$. Verder is $\theta$ ook sterker dan $\O$. We zouden dus ook alles over \'e\'en kam kunnen strijken en enkel $\O$ gebruiken (maar voor de volledigheid zullen we dit niet doen).
+Merk op dat $o$ een \emph{sterker} begrip is dan $\O$: als $f \in o(g)$ dan $f \in \O(g)$. Ook geldt dat $f\simeq g \implies f\in\theta(g) \implies f \in \O(g)$. We zouden dus ook alles over \'e\'en kam kunnen strijken en enkel $\O$ gebruiken (maar voor de volledigheid zullen we dit niet doen). Als laatste is er ook een eenzijdige variant van $\simeq$, namelijk $\lesssim$: $f \lesssim g$ wat betekent dat er een $C$ is z\'o dat $f \leq C \cdot g$. Er geldt dus zeker dat $f\simeq g$ implicieert dat $f\lesssim g$.
 
-Als laatste is er ook een eenzijdige variant van $\simeq$, namelijk $\lesssim$: $f \lesssim g$ wat betekent dat er een $C$ is z\'o dat $f \leq C \cdot g$. Er geldt dus zeker dat $f\simeq g$ implicieert dat $f\lesssim g$.
-
-We zullen in de praktijk algoritmes $f$ bekijken die een 1,2 of 3 dimensionale lijst data als input hebben.
-We zijn dan ge\"interesseerd in de tijdscomplexiteit in termen van de grootte van bijvoorbeeld een $N\times N$ 
-afbeelding, dus is $f$ een functie van $N$.
+We zullen in de praktijk algoritmes bekijken die een 1-, 2- of 3-dimensionale lijst data als input hebben en zijn dan ge\"interesseerd in de complexiteit als functie van de grootte.
 
 \subsection{Ruimtes}
 \label{ruimtes}
-Een familie van ruimtes die wij gedurende het hele verslag zullen gebruiken is de familie van Lebesgue-ruimtes. De $L_p$-ruimte is de ruimte over functies van $\R$ naar $\C$ die $p$'e-machts integreerbaar zijn:
+Een familie van ruimtes die wij gedurende het hele verslag zullen gebruiken is die van de Lebesgue-ruimtes. De $L_p$-ruimte is de ruimte over functies van $\R$ naar $\C$ die $p$'e-machts integreerbaar zijn:
 \begin{equation}
 	\label{lebesgue}
 	\| f \|_{L_p} := \left(\int_{-\infty}^\infty |f(t)|^p dt\right)^{1/p} < \infty.
@@ -115,11 +111,12 @@ Wij zullen vooral de $L_2$-ruimte bekijken. Deze heeft als extra eigenschap dat 
 met als inproduct
 \begin{equation}
 	\label{l2}
-	\langle f, g \rangle = \int_{-\infty}^\infty f(t) \overline{g(t)} dt.
+	\langle f, g \rangle = \int_{-\infty}^\infty f(t) g^*(t) dt,
 \end{equation}
-Het is duidelijk dat de geinduceerde norm $\sqrt{\langle f, f \rangle}$ nu overeenkomt met vergelijking \ref{lebesgue}, zodat we inderdaad de $L_2$-ruimte bekijken. Merk op dat $L_2$ ook de \emph{enige} Hilbertruimte is van deze vorm.
+waarbij $g^*(t)$ de complex geconjugeerde van $g$ aangeeft.
+Het is duidelijk dat $ || f ||_{L_2} := \sqrt{\langle f, f \rangle}$ nu overeenkomt met \eqref{lebesgue}, zodat we inderdaad de $L_2$-ruimte bekijken. Merk op dat $L_2$ ook de \emph{enige} Hilbertruimte is van deze vorm.
 
-Naast deze $L_2$-ruimte over $\R$ zullen we ook haar tegenhanger over $\R^n$ bekijken. Integraaltekens uit de vergelijkingen \ref{lebesgue} en \ref{l2} worden nu gewoon integralen over $\R^n$. Wanneer we spreken over $L_2(\Omega)$ voor $\Omega \subset \R^n$, wordt een integraal over $\Omega$ bedoeld.
+Naast deze $L_2$-ruimte over $\R$ zullen we ook haar tegenhanger over $\R^n$ bekijken. Integraaltekens uit \eqref{lebesgue} en \eqref{l2} worden nu gewoon integralen over $\R^n$. Wanneer we spreken over $L_2(\Omega)$ voor $\Omega \subset \R^n$, wordt een integraal over $\Omega$ bedoeld.
 
 Een belangrijk lemma dat we zullen gebruiken is het volgende lemma van Parseval.
 \begin{lemm}[Parsevalgelijkheid\cite{parseval}]

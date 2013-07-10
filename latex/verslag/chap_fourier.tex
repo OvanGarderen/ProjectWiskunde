@@ -1,46 +1,43 @@
 \chapter{Fourier}
 \label{fourierH}
 
-Bij het analyseren van periodieke functies is de Fourier-transformatie het gereedschap bij uitstek.
-Het is een manier om een signaal te karakteriseren aan de hand van een bereik aan frequenties.
-Dit maakt het een overtuigende manier om `nette' periodieke functies te beschrijven.
+Bij het analyseren van periodieke functies is de Fouriertransformatie het gereedschap bij uitstek.
+Het is een manier om een signaal te karakteriseren aan de hand van een bereik aan frequenties en dit maakt het een overtuigende manier om `nette' periodieke functies te beschrijven.
 We kunnen de eis van periodiciteit ook loslaten als we naar functies op een interval kijken door dit op te vatten
 als \'e\'en fase van een periodieke functie.
 
-Iets concreter kijken we naar functies $f\in L_2([a,b])$.
-
-
-De basisfuncties waarmee we vervolgens de analyse uitvoeren worden gegeven door de complexe $e$-machten.
-\begin{definitie}[Fourierbasis] Bekijk de functieruimte $L_2([a,b])$, we defini\"eren de verzameling $F_{a,b}$ 
+Iets concreter kijken we dus naar functies $f \in L_2([a,b])$. De basisfuncties waarmee we vervolgens de analyse uitvoeren worden gegeven door de complexe $e$-machten.
+\begin{definitie}[Fourierbasis] Bekijk de functieruimte $L_2([a,b])$. We defini\"eren de verzameling $F_{a,b}$ 
 door:
 \[
   F_{a,b} := \left\{ \phi_k(x) = \tfrac{1}{\sqrt{b-a}} e^{\dpii \cdot k \frac{x-a}{b-a}} \largediv k \in \Z \right\}
 \]
-We noemen $F_{a,b}$ de Fourierbasis van $L_2([a,b])$
+We noemen $F_{a,b}$ de Fourierbasis van $L_2([a,b])$.
 \end{definitie}
-Het woord basis is hier met recht gebruikt, het is immers bekend dat de complexe $e$-machten loodrecht staan onder
-het inproduct dat we gedefinieerd hebben. 
+Het woord basis is hier met recht gebruikt. Het is immers bekend dat de complexe $e$-machten loodrecht staan onder
+het inproduct op $L_2$. 
 Om nu een willekeurige functie te schrijven in deze basis, introduceren
 we de Fouriergetransformeerde.
-\begin{definitie}[Fouriergetransformeerde]
-Zij gegeven een functie $f\in L_2([a,b])$, schrijf dan $\hat f : \Z\to\C$ met entries gedefinieerd volgens:
+\begin{definitie}[Fouriertransformatie]
+Zij gegeven een functie $f\in L_2([a,b])$. Schrijf dan $\hat f : \Z\to\C$ met entries gedefinieerd volgens:
 \[
-  \hat f [n] = \frac{1}{\sqrt{b-a}} \cdot \inpr{f}{\phi_n} = \frac{1}{b-a} \int_a^b f(x) \cdot e^{-2 \pi i \cdot k \frac{x-a}{b-a}}\d{x}.
+  \hat f [k] = \frac{1}{\sqrt{b-a}} \cdot \inpr{f}{\phi_k} = \frac{1}{b-a} \int_a^b f(x) \cdot e^{-2 \pi i \cdot k \frac{x-a}{b-a}}\d{x}.
 \]
 We noemen $\hat f$ de Fouriergetransformeerde van $f$.
 \end{definitie}
 \begin{definitie}[Inverse Fouriertransformatie]
-  Gegeven een Fouriergetransformeerde $\hat f$ van een functie $f \in L_2([a,b])$ is de reconstructie $f^\circ$ van $f$ gegeven door:
+  Gegeven een Fouriergetransformeerde $\hat f$ van een functie $f \in L_2([a,b])$, is de reconstructie $f^\circ$ van $f$ gegeven door:
   \[
-    f^\circ (x) = \sum_{k=-\infty}^\infty \hat f [k] \phi_k(x)
+    f^\circ (x) = \sum_{k=-\infty}^\infty \hat f [k] \phi_k(x).
   \]
 \end{definitie}
 
-Het kan worden aangetoond dat $f^\circ$ een reconstructie geeft van $f$ die voldoet aan: \cite{fourier-rec} 
+In \cite{fourier-rec} is aangetoond dat $f^\circ$ een reconstructie geeft van $f$ die voldoet aan: 
 \begin{eqnarray}
   \Ldnorm{f-f^\circ}{a,b}=0 \quad\quad \text{wanneer }& f\in L_2([a,b]) \\
-  f(x) = f^\circ(x) \quad\quad \text{wanneer }& f \in C^1 
+  f(x) = f^\circ(x) \quad\quad \text{wanneer }& f \in C^1.
 \end{eqnarray}
+Merk op dat $\Ldnorm{f-f^\circ}{a,b}=0$ niet betekent dat $f - f^\circ = 0$.
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{De \emph{Discrete Fourier Transform}}
@@ -57,7 +54,7 @@ We veranderen daarvoor de co\"ordinaten naar een discrete $j$ volgens
 \]
 Op deze manier zal de discretisatie in de limiet naar het continue geval overgaan. 
 
-\begin{definitie}[Discrete Fourierbasis] Gegeven de ruimte $\C^n$, definieer dan de verzameling
+\begin{definitie}[Discrete Fourierbasis] Gegeven zij de ruimte $\C^n$. Defini\"er dan de verzameling
 \[
   S_n := \left\{ s_k [j] = e^{\dpii\cdot k j/n } \largediv k,j \in \{1, \ldots, n\} \right\},
 \]
@@ -70,79 +67,73 @@ We weten dat de basisvectoren loodrecht staan vanwege de eigenschap:
   \sum_{m=1}^n e^{\dpii\cdot m (k-j)/n} =
   \begin{cases}
     0 \quad \text{als } k\neq j\\
-    n \quad \text{als } k = j
+    n \quad \text{als } k = j.
   \end{cases}
 \]
-Vanwege deze eigenschap kunnen we een discreet signaal $x$ schrijven in termen van deze basis door 
+Hierdoor kunnen we een discreet signaal $x$ schrijven in termen van $S_n$ 
 een vector van inproducten te defini\"eren.
-we noemen $X$ de discrete Fouriergetransformeerde (DFT) met entries:
+We noemen $X$ de discrete Fouriertransformatie (DFT) met entries:
 \[
-  X[k] = \tfrac{1}{n} \inpr{x}{s_k} \quad k\in\{1, \ldots ,n\}
+  X[k] = \tfrac{1}{n} \inpr{x}{s_k} \quad k\in\{1, \ldots ,n\}.
 \]
-Vervolgens hebben we een inverse voor deze operatie die $X$ afbeeldt op $x^\circ$ volgens:
+Vervolgens hebben we een inverse voor deze operatie die $X$ afbeeldt op de reconstructie $x^\circ$ volgens:
 \[
-  x[j] = \inpr{X}{s_j^{-1}} \quad j\in \{1, \ldots, n\}
+  x^\circ[j] = \inpr{X}{s_j^{-1}} \quad j\in \{1, \ldots, n\}.
 \]
-Waarbij we de notatie $s_j^{-1} = (s_j[1]^{-1},...)$ gebruiken.
+Waarbij we de notatie $s_j^{-1} = (s_j[1]^{-1},\ldots, s_j[n]^{-1})$ gebruiken.
 Volgens de regels van de Lineaire Algebra is dit is een perfecte reconstructie ($x[k] = x^\circ[k]$).
 
-Om de claim te ondersteunen dat de DFT-methode een echte discretisatie is van de continue Fouriertransformatie 
-willen we bewijzen dat dit algoritme voor een steeds fijnere selectie van waardes van een functie in de 
+Om de claim te ondersteunen dat de DFT-methode een echte discretisatie is van de continue Fouriertransformatie ,
+willen we bewijzen dat deze algoritme voor een steeds fijnere selectie van waardes van een functie in de 
 limiet hetzelfde resultaat geeft als de continue Fouriertransformatie. 
-Zoals gebruikelijk bij het overschakelen van een discrete naar een continue setting, kunnen we dit doen 
-door de definitie van de Riemann integraal toe te passen op de sommatie die voor handen ligt.
+Zoals gebruikelijk bij het overschakelen van een discrete naar een continue setting kunnen we dit doen 
+door de definitie van de Riemannintegraal toe te passen op de sommatie die voor handen ligt.
 
-\begin{stelling}[Limiet van discrete Fourier-transformatie]
-  Gegeven een functie $f\in L_2([a,b])$ op het interval $[a,b]$,
-  bekijk een discretisatie van $f$ in $n$ gelijke intervallen zodat de discrete $f$ precies 
-  de randwaarde waarde van elk interval inneemt.
+\begin{stelling}[Limiet van discrete Fouriertransformatie]
+  Gegeven zij een functie $f\in L_2([a,b])$. Bekijk een discretisatie van $f$ in $n$ gelijke intervallen zodat de discrete $f$ precies 
+  de randwaarde van elk interval inneemt.
   Dan geldt dat de discrete Fouriergetransformeerde limiteert naar de algemene Fouriergetransformeerde wanneer $n\to\infty$.
 \end{stelling} 
 \begin{proof}[Bewijs]
-Gegeven een interval $[a,b]$ kunnen we een partitie $P$ maken in $n$ gelijke delen, 
-ofwel laat $P=\{a=t_0,t_1,..,t_n=b\}$ met $t_j = a+\tfrac{j(b-a)}{n}$.
+Gegeven een interval $[a,b]$ kunnen we een partitie $P$ maken in $n$ gelijke delen: laat $P=\{a=t_0,t_1,..,t_n=b\}$ met $t_j = a+\tfrac{j(b-a)}{n}$.
 We discretiseren onze functie $f$ door uit elk interval $[t_{j-1},t_{j}]$ van de partitie de randwaarde in 
 $x_j = t_j$ te selecteren, dus
 \[
-f[j] = f(x_j) = f(\frac{b-a}{n}j + a)
+f[j] = f(x_j) = f(\frac{b-a}{n}j + a).
 \]
 De DFT van de discrete functie $f[\cdot]$ wordt dan gegeven door:
 \[
 F[k] = \frac1n\sum_{j=1}^n f[j] \cdot s_k^{-1}[j].
 \]
 We schrijven dit om in termen van onze non-discrete functie door $x_j\in[a,b]$ 
-omschrijven naar zijn discrete tegenhanger en krijgen zo:
+te vervangen door zijn discrete tegenhanger en krijgen zo:
 \begin{eqnarray*}
   F[k] =& \frac{1}{n} \sum_{j=1}^n f[j]\cdot s_k^{-1}[n\cdot\tfrac{x_j-a}{b-a}] \\
        =& \frac{1}{n} \sum_{j=1}^n f(x_j)\cdot e^{-\dpii \cdot k \tfrac{x_j-a}{b-a}}\\
        =&  \frac{1}{\sqrt{b-a}}\sum_{j=1}^n f(x_j)\cdot \phi^*_k(x_j) \cdot\frac{b-a}{n} 
 \end{eqnarray*}
-We merken op dat de term $\frac{b-a}{n}$ precies de grootte is van de subintervallen van de partitie interval 
+We merken op dat de term $\frac{b-a}{n}$ precies de grootte is van de intervallen van de partitie 
 en dat we het geheel omgeschreven hebben in termen van onze continue functies $f$ en $\phi_k$.
 Omdat het product $f\cdot\phi_k$ integreerbaar is moet voor elke partitie $P$ met 
 waarden in punten $x_j$ uit elk interval deze sommatie convergeren naar de integraal
 \[
   \frac{1}{\sqrt{b-a}} \int_{[a,b]} f(x) \phi^*_k(x) \d{x}
 \]
-wanneer we de maaswijdte ($\tfrac{b-a}{n}$) naar $0$ laten gaan. 
+wanneer we de maaswijdte ($\tfrac{b-a}{n}$) naar $0$ laten gaan. \cite{shilov}
 Dit is duidelijk het geval wanneer we de limiet $n\to\infty$ nemen. 
 Dus is de DFT een goede discretisatie van de Fouriergetransformeerde. 
 \end{proof}
- 
-Voor de werking van het DFT algoritme als signaalcompressie-algoritme is het van belang dat er een 
-inverse algoritme bestaat dat het getransformeerde inputsignaal weer terugtransformeert 
-zonder verlies van informatie. We zullen nu bewijzen dat dit mogelijk is door de DFT en iDFT te gebruiken.
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{De Fast Fourier Transform}
 \label{fft_sec}
-De snelheid van het DFT algoritme valt in de praktijk nogal tegen, het nemen van $n$ inproducten over vectoren 
+De snelheid van de DFT-algoritme valt in de praktijk nogal tegen. Het nemen van $n$ inproducten over vectoren 
 van lengte $n$ heeft namelijk een tijdscomplexiteit van $\O(n^2)$. Dit staat de directe implementatie van de DFT 
-voor praktische toepassingen in de weg. Daarom is er een alternatief algoritme, de \emph{Fast Fourier Transform}.  \bigskip
+voor praktische toepassingen in de weg. Daarom is er een alternatieve algoritme, de \emph{Fast Fourier Transform}.
 
 %%%%%
 \begin{algo}[Fast Fourier Transform]
-Gegeven zij een inputsignaal $x$ van lengte $n=2^m$, dan geeft het algoritme $\FFT$ 
+Gegeven een inputsignaal $x$ van lengte $n=2^m$, geeft het algoritme $\FFT$ 
 een lijst terug van waardes $X$ van lengte $n=2^m$ als volgt:
 
 Als $m=0$ dan geeft de $\FFT$ de lijst (van \'e\'en element) direct terug:
@@ -151,43 +142,42 @@ X = x.
 \]
 Wanneer $m\neq0$ splitsen we de lijst $x$ op in lijsten $\e,o$ van zijn even en oneven indices:
 \eq{
-  \e[k]   =& x[2k]   &\quad \text{voor } k < n/2\\
-   o[k]   =& x[2k+1] &\quad \text{voor } k < n/2
+  \e[k]   =& x[2k]   &\quad \text{voor } k < n/2,\\
+   o[k]   =& x[2k+1] &\quad \text{voor } k < n/2.
 }
 Vervolgens voeren we hierop het $\FFT$ algoritme uit om de volgende lijsten te verkrijgen:
 \eq{
-  E =& \FFT(\e) \\
-  O =& \FFT(o)
+  E =& \FFT(\e), \\
+  O =& \FFT(o).
 }
-Hiermee wordt de output van het algoritme geconstrueerd als volgt:
+Hiermee wordt de output van de algoritme geconstrueerd volgens:
 \[
   X[k] = \left\{\begin{array}{llll}
-    E[k]         &+& e^{-\dpii k/n}\cdot O[k] &  k< n/2 \\
-    E[k-n/2] &-& e^{-\dpii (k-n/2)/n}\cdot O[k-n/2] &  k\geq n/2 
+    E[k]         &+& e^{-\dpii k/n}\cdot O[k] &  k< n/2, \\
+    E[k-n/2] &-& e^{-\dpii (k-n/2)/n}\cdot O[k-n/2] &  k\geq n/2.
   \end{array}\right.
 \]
 \end{algo}
 %%%%%
 
-Dit is dus een recursief gedefinieerd algoritme dat een signaal meermaals halveert en in zichzelf terugvoert.
-Het is gegarandeerd dat dit algoritme afloopt vanwege de conditie op $n=0$ samen met de halvering van de input bij elke stap. 
-Een belangrijke voorwaarde voor de relevantie van de FFT is nu dat het algoritme hetzelfde resultaat geeft als het DFT algoritme en dit zullen we dan ook bewijzen. 
-
-\begin{stelling}[]
-  Het uitvoeren van het Fast Fourier Transform algoritme op een dataset van lengte $n=2^m$ geeft
+Dit is dus een recursief gedefinieerde algoritme dat een signaal meermaals halveert.
+Het is gegarandeerd dat deze algoritme afloopt vanwege de conditie op $m=0$ samen met de halvering van de input bij elke stap. 
+Een belangrijke voorwaarde voor de relevantie van de FFT is nu dat de algoritme hetzelfde resultaat geeft als de DFT-algoritme en dit zullen.
+\begin{stelling}
+  Het uitvoeren van de Fast Fourier Transform algoritme op een datasetgeeft
   dezelfde getransformeerde als de discrete Fouriertranformatie.
 \end{stelling}
 \begin{proof}[Bewijs]
-We gebruiken hier een inductief bewijs met inductie naar $n$. Onze aanname is dat het FFT-algoritme voor $x$ van lengte $n=2^m$ gelijk is aan de DFT van $x$, ofwel
+We bewijzen met inductie naar $n$. Onze aanname is dat de FFT-algoritme voor $x$ van lengte $n=2^m$ gelijk is aan de DFT van $x$, ofwel
 \eq{
-  X[k] = \sum^{n}_{k=1} x[j] \cdot e^{-2\pi i \cdot jk/n}
+  X[k] = \sum^{n}_{k=1} x[j] \cdot e^{-2\pi i \cdot jk/n}.
 }
-Dit geldt duidelijkerwijs wanneer $m=0$, onze basistap. Hiervoor geldt namelijk:
+Dit geldt duidelijkerwijs wanneer $m=0$, onze basisstap. Hiervoor geldt namelijk:
 \eq{
-  X[k] = x[k] = x[1] = \sum^{2^0}_{k=1} x[j] \cdot e^{-2\pi i \cdot 1/2^0}
+  X[k] = x[k] = x[1] = \sum^{2^0}_{k=1} x[j] \cdot e^{-2\pi i \cdot 1/2^0}.
 }
 Vervolgens passen we inductie toe naar $m$ door onze aanname voor $m-1$ te gebruiken,
-we vullen hiermee $E[k]$ en $O[k]$ in de vergelijking voor $X[k]$ in, deze hebben immers lengte $n=2^{m-1}$.
+we vullen hier $E[k]$ en $O[k]$ in de vergelijking voor $X[k]$ in, deze hebben immers lengte $n=2^{m-1}$.
 \eq{
   X[k] = \left\{\begin{array}{llll}
     \sum^{n/2}_{j=1} \e[j] 
@@ -201,14 +191,14 @@ we vullen hiermee $E[k]$ en $O[k]$ in de vergelijking voor $X[k]$ in, deze hebbe
     \sum^{n/2}_{j=1} o[j] \cdot e^{-2\pi i\cdot (k-n/2)j\cdot 2/n} &  k\geq n/2 
   \end{array}\right.
 }
-We merken op dat we de e-machten in het tweede geval kunnen vereenvoudigen volgens
+We merken op dat we de $e$-machten in het tweede geval kunnen vereenvoudigen volgens
 \eq{
   e^{-2\pi i\cdot (k-n/2)j \cdot 2/n} 
-  = - e^{-2\pi i\cdot kj\cdot 2/n} \quad,\quad e^{-2\pi i\cdot(k-n/2)/n} 
+  = e^{-2\pi i\cdot kj\cdot 2/n} \quad,\quad e^{-2\pi i\cdot(k-n/2)/n} 
 = -e^{-2\pi i\cdot k/n},
 }
 waardoor het gevalsonderscheid wegvalt, aangezien beide vergelijkingen nu identiek zijn.
-We verkrijgen $X[k]$ als sommatie over de lijsten $e$ en $o$, we vullen de relatie voor $e,o$ met $x$ in, en nemen de factor voor de oneven indices mee in de sommatie.
+We verkrijgen $X[k]$ als sommatie over de lijsten $\e$ en $o$, we vullen de relatie voor $\e,o$ met $x$ in, en nemen de factor voor de oneven indices mee in de sommatie.
 \eq{
   X[k] = \sum^{n/2}_{j=1} x[2j] \cdot e^{-2\pi i\cdot k (2j)/n} + 
     \sum^{n/2}_{j=1} x[2j+1] \cdot e^{-2\pi i\cdot k (2j+1)/n} 
