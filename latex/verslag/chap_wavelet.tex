@@ -280,14 +280,15 @@ orthogonaal-complementsruimtes $W_k$, volgens:
 We willen een functie $f$ benaderen in de ruimte $V_j$ door $P_{V_j}f$ te schrijven in
 de basis van de ruimtes $V_0$ en de verschillende ruimtes $W_k$. Hiervoor dienen we de inproducten
 te berekenen van $f$ met de basisvectoren in deze ruimtes.
-We onderscheiden dan de \emph{approximatie}-
-co\"effici\"enten $a_j[n]$ en de \emph{detail}-co\"effici\"enten $d_j[n]$, die
+We onderscheiden dan de \emph{approximatie}-co\"effici\"enten $a_j[n]$ en 
+de \emph{detail}-co\"effici\"enten $d_j[n]$, die
 $f$ geven als projectie op  respectievelijk $V_j$ en $W_j$.
 
-Het is echter veel rekenwerk om al deze co\"effici\"enten uit te rekenen. Dit gebeurt immers
-door het berekenen van integralen. We beperken ons daarom tot het uit rekenen van de
-co\"effici\"enten op het niveau $j$ en proberen vervolgens een recursieve relatie te vinden
-om hieruit de approximatie- en detailco\"efficienten van het volgende niveau te vinden.
+Het is echter veel rekenwerk om al deze co\"effici\"enten uit te rekenen. 
+Dit gebeurt immers door het berekenen van integralen. 
+We beperken ons daarom tot het uit rekenen van de co\"effici\"enten op het niveau $j$ 
+en proberen vervolgens een recursieve relatie te vinden
+om hieruit de approximatie- en detailco\"effici\"enten van het volgende niveau te vinden.
 
 Vanwege de relatie in \eqref{ruimterec} kunnen we de basisfuncties uit de ruimtes $W_{j-1}$,
 $V_{j-1}$ schrijven in termen van de basisfuncties van de ruimte $V_j$.
@@ -323,71 +324,66 @@ We rekenen vervolgens de inproducten uit in termen van filterco\"effici\"enten, 
 waarbij we de co\"ordinaattransformatie $t' = 2^{j-1}t - n$ hebben gebruikt.
 Door vervolgens aan beide zijden van vergelijkingen \eqref{phi_rec}, \eqref{psi_rec} het
 inproduct met $f$ te nemen kunnen we de coe\"ffici\"enten van de resolutie $2^{j-1}$ schrijven
-in termen van de coe\"ffici\"enten op de resolutie $2^j$.
+in termen van de co\"effici\"enten op de resolutie $2^j$:
 \begin{equation}
   \label{approx_rec}
   a_{j-1}[n] = \inpr{f}{\phi_{j-1,n}}
   = \sum_{k=-\infty}^{\infty} h[k-2n] \inpr{f}{\phi_{j,k}}
   = \sum_{k=-\infty}^\infty h[k-2n] a_{j}[k]
-  = (a_j \star \bar h)[2n]
+  = (a_j \star \bar h)[2n],
 \end{equation}
 \begin{equation}
   \label{detail_rec}
   d_{j-1}[n] = \inpr{f}{\psi_{j-1,n}}
   = \sum_{k=-\infty}^{\infty} g[k-2n] \inpr{f}{\phi_{j,k}}
   = \sum_{k=-\infty}^\infty g[k-2n] a_{j}[k]
-  = (a_j \star \bar g)[2n]
+  = (a_j \star \bar g)[2n].
 \end{equation}
 Waarbij $\bar f: x \mapsto f(-x)$ en $x\star y$ de discrete convolutie aangeeft,
 als kortere schrijfwijze van deze sommatie.
 De relatie die hier gevonden is geeft aanleiding tot een algoritme.
 
 \begin{algo}[Fast Wavelet Transform]
-  Gegeven een rij co\"effici\"enten $a_j\in\R^{2^j}$ dan definie\"eren we een recursief
-  algoritme $\mathrm{FWT}:\R^{2^j}\to\R^{2^j}$ volgens:\\
+  Gegeven een rij co\"effici\"enten $a_j\in\R^{2^j}$ defini\"eeren we een recursief
+  algoritme $\mathrm{FWT}:\R^{2^j}\to\R^{2^j}$ met een gevalsonderscheid over $j$.\\
   Als $j=0$ dan geldt
   \[
-  \mathrm{FWT}(a_j)[n] = a_j[n]
+  \mathrm{FWT}(a_j)[n] = a_j[n].
   \]
   Als $j>0$ bereken $a_{j-1}$ en $d_{j-1}$ volgens \eqref{approx_rec}, \eqref{detail_rec}.
-  Vervolgens geldt
+  Hiermee berekenen we de $\mathrm{FWT}$ als:
   \begin{equation}
     \label{FWT_cases}
     \mathrm{FWT}(a_j)[n] = \begin{cases}
       \mathrm{FWT}(a_{j-1})[n] & \text{als } n\leq 2^{j-1} \\
-      d_{j-1}[n] & \text{als } n>2^{j-1} \end{cases}
+      d_{j-1}[n] & \text{als } n>2^{j-1} \end{cases}.
   \end{equation}
 \end{algo}
-We gaan uit van een eindige filter en beschouwen onze ruimte $V_j$ als functies
-op een interval in $\R$, dan versimpelen namelijk de oneindige sommaties in \eqref{approx_rec},
-\eqref{detail_rec}. Voor een discrete functie $f\in\R^{2^j}$ kunnen we nu
-$\mathrm{FWT}(f)$ nemen als de fast wavelet transform,
-we nemen dan aan dat $\inpr{f}{a_{j,k}} = f[k]$ voor het
-grootste niveau $V_j$. Deze aannames komen ruwweg neer op de bewering dat
-$V_0 = \{\phi_{0,0}\}$ en dat zowel $\phi$ als $\psi$ een compacte drager heeft.
+We gaan uit van een eindige filter en beschouwen $V_j$ als een ruimte van functies op een interval in $\R$, 
+dan versimpelen de oneindige sommaties in \eqref{approx_rec}, \eqref{detail_rec} tot een eindige som. 
 
-We kunnen vervolgens de transformatie inverteren aan de hand van het volgende algoritme
+We kunnen nu de transformatie inverteren aan de hand van het volgende algoritme
 \begin{algo}[Inverse Fast Wavelet Transform]
-  Gegeven een rij co\"effici\"enten $x_j\in\R^{2^j}$ dan definie\"eren we een recursief
-  algoritme $\mathrm{iFWT}:\R^{2^j}\to\R^{2^j}$ volgens:\\
+  Gegeven een rij co\"effici\"enten $x_j\in\R^{2^j}$ definie\"eren we een recursief
+  algoritme $\mathrm{iFWT}:\R^{2^j}\to\R^{2^j}$ met een gevalsonderscheid in $j$.\\
   Als $j=0$ dan geldt
   \[
   \mathrm{iFWT}(x_j)[n] = x_j[n]
   \]
-  Als $j>0$ laat $x_{j-1}[n] = x_j[n]$ en $d_{j-1}[n] = x_j[n+2^{j-1}]$ voor
-  $1\leq n\leq 2^{j-1}$. Bereken hiermee $a_{j-1} = iFWT(x_{j-1})$,
+  Als $j>0$, laat $x_{j-1}[n] = x_j[n]$ en $d_{j-1}[n] = x_j[n+2^{j-1}]$ voor $1\leq n\leq 2^{j-1}$. 
+  Bereken hiermee $a_{j-1} = iFWT(x_{j-1})$,
   dan geldt
   \begin{equation}
     \label{reconstr_FWT}
-    \mathrm{iFWT}(x_j)[n] = (\breve a_{j-1}\star h)[n] + (\breve d_{j-1}\star g)[n]
+    \mathrm{iFWT}(x_j)[n] = (\breve a_{j-1}\star h)[n] + (\breve d_{j-1}\star g)[n],
   \end{equation}
-  Waarbij $\breve y [2n] = y[n]$ en $\breve y [2n+1] = 0$.
+  waarbij $\breve y [2n] = y[n]$ en $\breve y [2n+1] = 0$.
 \end{algo}
 \begin{stelling}
-  De iFWT (links) samengesteld met de FWT geeft de identiteit voor een signaal.
+  De iFWT (links) samengesteld met de FWT geeft de identiteit.
 \end{stelling}
 \begin{proof}[Bewijs]
-  We bekijken de verschillende gevallen.Voor het geval $j=0$ geldt duidelijk dat
+  We bekijken de verschillende gevallen. Voor het geval $j=0$ geldt duidelijk dat
   \[
   \mathrm{iFWT}(\mathrm{FWT}(a_0)) = \mathrm{iFWT}(a_0) = a_0.
   \]
@@ -397,104 +393,139 @@ We kunnen vervolgens de transformatie inverteren aan de hand van het volgende al
   en $W_{j-1}$, ofwel:
   \[
   \phi_{j,n} = \sum_{k=-\infty}^\infty \inpr{\phi_{j,n}}{\phi_{j-1,k}}\phi_{j-1,k}
-  + \sum_{-\infty}^\infty \inpr{\phi_{j,n}}{\psi_{j-1,k}}\psi_{j-1,k}
+  + \sum_{-\infty}^\infty \inpr{\phi_{j,n}}{\psi_{j-1,k}}\psi_{j-1,k}.
   \]
-  Deze inproducten komen weer overeen met de filterco\"efficienten, nemen we dus aan
+  Deze inproducten komen weer overeen met de filterco\"effici\"enten. Nemen we dus aan
   beide zeiden het inproduct dan volgt
   \[
   a_j[n] = \sum_{k=-\infty}^\infty h[n-2k]a_{j-1}[k]
-  + \sum_{-\infty}^\infty g[n-2k]d_{j-1}[k]
+  + \sum_{-\infty}^\infty g[n-2k]d_{j-1}[k].
   \]
   Door in de sommatie de variabele $k$ te vervangen door $k'=2k$ vereenvoudigt dit tot
   \[
   a_j[n] = \sum_{k'=-\infty}^\infty h[n-k']\breve a_{j-1}[k']
-  + \sum_{-\infty}^\infty g[n-2k]\breve d_{j-1}[k']
+  + \sum_{-\infty}^\infty g[n-k']\breve d_{j-1}[k'].
   \]
   Daarmee geeft de iFWT een inverse voor de FWT.
 \end{proof}
+
 \section{Analyse van de Wavelettransformatie}
-Met de theoretische beschouwing van wavelets en de Fast Wavelet Transform achter de rug, kunnen we wat verder kijken naar practische obstakels.
+Met de theoretische beschouwing van wavelets en de Fast Wavelet Transform achter de rug, 
+zullen we kijken naar practische obstakels.
 
 \subsection{Eindige signalen}
-Een van de eerste aannames die we tot nu toe steeds maakten is die van de oneindige signalen. Wanneer echter de functie $f$ een compacte drager heeft, worden een aantal zaken wat lastiger. Neem als eerste aan dat de drager van $f$ gewoon $[0,1]$ is.\footnote{Door translatie en dilatie kan elk signaal met compacte basis omgevormd worden tot een signaal met drager in $[0,1]$. We verliezen hier dus geen algemeenheid.} In dit geval zou het kunnen dat de waveletfuncties met een drager die $t=0$ of $t=1$ doorsnijdt, niet meer de gewenste eigenschappen heeft. Er zijn in de literatuur oplossingen voor dit probleem gevonden. Hier zullen wij verder niet op in gaan.
+Een van de eerste aannames die we tot nu toe steeds maakten is dat de signalen oneindig lang zijn. 
+Wanneer echter de functie $f$ een compacte drager heeft, worden een aantal zaken wat lastiger. 
+Neem als eerste aan dat de drager van $f$ binnen $[0,1]$ ligt.
+\footnote{Door translatie en dilatie kan elk signaal met compacte basis omgevormd worden tot 
+  een signaal met drager binnen $[0,1]$. We verliezen hier dus geen algemeenheid.} 
+In dit geval zou het kunnen dat de waveletfuncties met een drager die $t=0$ of $t=1$ doorsnijden, 
+niet meer de gewenste eigenschappen hebeben. 
+Er zijn in de literatuur oplossingen voor dit probleem gevonden maar hier zullen wij verder niet op in gaan.
 
-Wanneer we een benadering van $f$ maken op resolutie $2^J$ (door bijvoorbeeld een Fast Wavelet Transform), bekijken we
+Verder namen we ook aan dat de signalen non-discreet zijn. In de praktijk zullen we discrete functies bekijken
+die bijvoorbeeld op de resolutie $2^j$ in elk interval een waarde aannemen. We bekijken de multiresolutie
 \[
-V_0 \subset V_{1} \subset \ldots \subset V_{J}.
+V_0 \subset V_{1} \subset \ldots \subset V_{j}.
 \]
-Een discreet signaal van lengte $2^{J}$ kan zo perfect getransformeerd worden in een waveletbasis op resolutie $2^{J}$. Dit is precies waarom de Fast Wavelet Transform zo veel gebruikt wordt bij het analyseren van discrete signalen.
+We weten nu dat er in $V_j$ een functie $h$ bevat ligt zodat $\inpr{h}{\phi_{j,k}} = f[k]$, deze komt
+overeen met onze $f$.
+Dit discrete signaal kan dus perfect geschreven worden in de waveletbasis op resolutie $2^{j}$. 
+Om deze reden wordt de Fast Wavelet Transform veel gebruikt bij de analyse van discrete signalen.
 
 \subsection{Signaaluitbreiding}
-Een probleem waar we in het geval van eindige signalen nog meer mee te maken krijgen is dat de algoritme niet goed omgaat met de randen. De convolutie moet nu ineens \emph{buiten het definitiegebied} van het signaal `kijken'. Eerder in sectie \ref{signaal} hebben we al gezien hoe signalen naar een tweemacht uitgebreid kunnen worden. Precies dezelfde methoden kunnen gebruikt worden om het signaal nog verder uit te breiden.
+Een probleem waar we in het geval van eindige signalen nog meer mee te maken krijgen is dat de 
+algoritme niet goed omgaat met de `randen' van de functie. 
+De convolutie heeft ineens informatie nodig die \emph{buiten het definitiegebied} van het signaal ligt. 
+Eerder in sectie \ref{signaal} hebben we al gezien hoe signalen naar een tweemacht uitgebreid kunnen worden. 
+Precies dezelfde methoden kunnen gebruikt worden om het signaal nog verder uit te breiden.
 
-Om niet te veel tijd te verliezen met het ondersteunen van meerdere mogelijkheden hebben wij er voor gekozen om \emph{periodic padding} op alle signalen toe te passen. Dit omdat de zogenaamde \emph{circulaire convolutie} ingebouwd zit in de bibliotheek die wij gebruikt hebben.
+Om niet te veel tijd te verliezen met het ondersteunen van meerdere mogelijkheden hebben wij er voor gekozen om \emph{periodic padding} op alle signalen toe te passen. 
+Dit omdat de zogenaamde \emph{circulaire convolutie} ingebouwd zit in de bibliotheek die wij gebruikt hebben.
 
 \subsection{Complexiteit van de algoritme}
-Als de lengte van de filter $h$ gelijk is aan $K$, en de lengte van het originele signaal $a_L$ gelijk is aan $N = 2^{L}$,
+Als de lengte van de filter $h$ gelijk is aan $K$, en de lengte van het originele signaal $a_L$ 
+gelijk is aan $N = 2^{L}$,
  kunnen we voor $j \in \{0, \ldots, L\}$ zien dat $a_j$ en $d_j$ beide $2^{j}$ elementen bevatten. 
 Vervolgens kunnen $a_{j-1}$ en $d_{j-1}$ gemaakt worden door $2^{j}K$ operaties zodat elke stap van de algoritme 
 $2^{j} \cdot K$ operaties kost. 
 Daarmee kost het hele algoritme
 \[
-\sum_{j=L}^0 2^{j} \cdot K = K \sum_{j=L}^0 2^{j} = K \cdot (2^{1+L} - 1) < 2 \cdot K 2^{L} = 2KN
+\sum_{j=0}^L 2^{j} \cdot K = K \sum_{j=0}^L 2^{j} = K \cdot (2^{1+L} - 1) \simeq 2 \cdot K 2^{L} = 2KN
 \]
-operaties. Dus deze DWT is een $\theta(KN)$ algoritme. Ook de complexiteit van de inverse wordt op dezelfde manier van orde $KN$.
+operaties. Dus deze DWT is een $\theta(KN)$ algoritme. 
+Ook de complexiteit van de inverse wordt zo van orde $KN$.
 
 \section{Meer dimensies: de Mallatdecompositie}
-Met een orthonormale waveletbasis $\{ \psi_{j,n}: (j,n) \in \Z^2\}$ van $L_2(\R)$ volgt een natuurlijke voortzetting naar twee dimensies door
+Met een orthonormale waveletbasis $\{ \psi_{j,n}: (j,n) \in \Z^2\}$ van $L_2(\R)$ volgt een natuurlijke voortzetting
+van de waveletfamilie naar twee dimensies door
 \[
 \{ \psi_{j_1,n_1}(x_1) \psi_{j_2,n_2}(x_2): (j_i,n_i) \in \Z^4 \},
 \]
-welke een orthonormale basis voor $L_2(\R^2)$ is. We zien direct dat we op de $x_1$-as met resolutie $2^{j_1}$ kijken terwijl de $x_2$-as resolutie $2^{j_2}$ kent.
+wat een orthonormale basis voor $L_2(\R^2)$ is. 
+We zien direct dat we met zulke wavelets op de $x_1$-as met resolutie $2^{j_1}$ kijken 
+terwijl de $x_2$-as een resolutie $2^{j_2}$ kent.
 
-Mallat vond dit iets om te vermijden \cite[\S 7.7]{mallat} en legt in zijn analyse dan ook de eis $j_1 = j_2 =: j$ op. Wij zullen in het vervolg \'o\'ok kijken naar het zogenaamde Tensorproduct, wat de eis $j_1 = j_2$ \emph{niet} oplegt.
+Mallat vond dit iets om te vermijden \cite[\S 7.7]{mallat} en legt in zijn analyse dan ook de eis $j_1 = j_2 =: j$ op. 
+Wij zullen in het vervolg \'o\'ok kijken naar het zogenaamde Tensorproduct, wat de eis $j_1 = j_2$ \emph{niet} oplegt,
+dit volgt in sectie \ref{tensorS}.
 
-Zoals in 1 dimensie is de notie van `resolutie' geformaliseerd in het begrip multiresolutie. De definitie van deze multiresolutie is wederom een natuurlijke voortzetting van het eendimensionale geval. Wanneer we spreken over een separeerbare multiresolutie, gaat het om een ruimte $V_j^{(2)} := V_j \otimes V_j$. In \cite[A.5]{mallat} wordt bewezen dat, gegeven een orthonormale basis $\{ \phi_{j,m}: m \in \Z \}$ voor $V_j$, de verzameling
+In 1 dimensie hebben de notie van `een resolutie' geformaliseerd in het begrip multiresolutie.
+De definitie van deze multiresolutie zullen we nu voortzetten naar een meerdimensionaal geval. 
+Wanneer we spreken over een separeerbare multiresolutie, bedoelen we een ruimte $V_j^{(2)} := V_j \otimes V_j$,
+waarbij $V_j$ tot een \'e\'en-dimensionale multiresolutie behoort.
+In \cite[A.5]{mallat} wordt bewezen dat, gegeven een orthonormale basis $\{ \phi_{j,m}: m \in \Z \}$ voor $V_j$, de verzameling
 \begin{equation}
   \label{phi_phi_basis}
-  \{ \phi^{(2)}_{j,n} := \phi_{j,n_1} \otimes \phi_{j,n_2}: n \in \Z^2 \}
+  \{ \phi^{(2)}_{j,n=(n_1,n_2)} := \phi_{j,n_1} \otimes \phi_{j,n_2}: n \in \Z^2 \}
 \end{equation}
 een orthonormale basis voor $V_j^{(2)}$ is.
 
 \begin{voorbeeld}
-Bekijk weer $V_j$ de ruimte van stuksgewijs constante functies op het interval 
+Bekijk weer $V_j$, de ruimte van stuksgewijs constante functies op het interval 
 \[
  [2^{-j} m, 2^{-j}(m+1) ) \quad m \in \Z.
 \] 
-We vinden voor $V_j^{(2)}$ de ruimte van stuksgewijs constante functies op vierkanten $[2^{-j}n_1, 2^{-j}(n_1+1)) \times [2^{-j}n_2, 2^{-j}(n_2+1))$. De tweedimensionale schalingsfunctie wordt op die manier
+We vinden voor $V_j^{(2)}$ de ruimte van stuksgewijs constante functies op vierkanten van de vorm 
+$[2^{-j}n_1, 2^{-j}(n_1+1)) \times [2^{-j}n_2, 2^{-j}(n_2+1))$. 
+De tweedimensionale schalingsfunctie wordt nu:
 \[
-	\phi^{(2)}(x_1,x_2) = \phi(x_1)\phi(x_2) = \begin{cases} 1 & \text{ als } x_1 \in [0,1)\text{ en }x_2 \in [0,1) \\ 0 & \text{ anders.} \end{cases}
+	\phi^{(2)}(x_1,x_2) = \phi(x_1)\phi(x_2) = 
+\begin{cases} 1 & \text{ als } x_1 \in [0,1)\text{ en }x_2 \in [0,1) \\ 0 & \text{ anders.} \end{cases}.
 \]
 \end{voorbeeld}
 
 \subsection{Tweedimensionale Waveletfuncties}
-We weten dat $V_j^{(2)}$ bevat is in $V_{j+1}^{(2)}$. Bekijk het orthogonale complement $\boldsymbol{U}_j \perp V_j^{(2)}$:
+Voor de tweedimensionale ruimtes $V^{(2)}_{j+1}$ die we gevonden hebben willen we nu weer een recursieve
+relatie vinden. We weten dat $V_j^{(2)}$ bevat is in $V_{j+1}^{(2)}$, bekijk daarom het orthogonale complement 
+$\boldsymbol{U}_j \perp V_j^{(2)}$:
 \begin{equation}
   \label{2d_ruimte_rec}
-  V_{j+1}^{(2)} =  V_j^{(2)} \oplus \boldsymbol{U}_j
+  V_{j+1}^{(2)} =  \boldsymbol{U}_j \oplus V_j^{(2)}
 \end{equation}
 Om een orthogonale waveletbasis voor $\boldsymbol{U}_j$ te vinden, gaan we als volgt te werk.
 Gegeven een waveletbasis voor $V_j$ geinduceerd door de functies $\phi$ en $\psi$, maken we
-tweedimensionale wavelets in de ruimte $V_j^{(2)}$ gegeven door:
+tweedimensionale wavelets in de ruimte $V_j^{(2)}$ volgens:
 \begin{equation}
   \label{psi_k_defs}
   \psi^1(x_1,x_2) = \phi(x_1)\psi(x_2) 
   \quad \psi^2(x_1,x_2) = \psi(x_1) \phi(x_2) 
   \quad \psi^3(x_1,x_2) = \psi(x_1)\psi(x_2).
 \end{equation}
-Deze functies kunnen we vervolgens schuiven en dilateren, hiermee verkrijgen we
-\[
+Deze functies kunnen we vervolgens schuiven en dilateren. Hiermee verkrijgen we
+\begin{equation}
+  \label{real_psi_k_defs}
 \psi^k_{j,n=(n_1,n_2)}(x_1,x_2) = 2^j \psi^k\left( 2^jx_1 - n_1, 2^j x_2 - n_2 \right)
-\]
-we zullen bewijzen dat deze functies tezamen met $\phi^{(2)}_{0,n}$een basis vormen voor $L_2(\R)$
+\end{equation}
+en we zullen bewijzen dat deze functies tezamen met $\phi^{(2)}_{0,n}$ een basis vormen voor $L_2(\R)$
 \begin{stelling}[{\cite[T7.24]{mallat}}]
   \label{mallatbasis}
-  Laat $\phi^{(2)}$ en de $\psi^k$'s zoals hierboven gedefinieerd,
-  dan kunnen we hiermee een basis $\boldsymbol{\Psi}_j$ maken voor $\boldsymbol{U}_j$ volgens:
+  Laat $\phi^{(2)}$ zoals in \eqref{phi_phi_basis}, de $\psi^k$'s zoals in \eqref{real_psi_k_defs} gedefinieerd.
+  Dan kunnen we een basis $\boldsymbol{\Psi}_j$ maken voor $\boldsymbol{U}_j$ volgens:
   \[
-  \boldsymbol\Psi_j := \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \},
+  \boldsymbol\Psi_j := \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2 \}.
   \] 
-  het samennemen van deze bases gecombineerd met een basis voor $V_0^{(2)}$ geeft bovendien 
+  Het samennemen van deze bases met een basis voor $V_0^{(2)}$ geeft bovendien 
   \[
   \boldsymbol\Phi := \{ \phi^{(2)}_{0, n}: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \},
   \] 
@@ -505,18 +536,18 @@ we zullen bewijzen dat deze functies tezamen met $\phi^{(2)}_{0,n}$een basis vor
   \[
   V_{j+1}^{(2)} = V_{j+1} \otimes V_{j+1}
   \]
-  en splitsen de termen, die \'e\'en-dimensionale ruimtes zijn, op in de volgende niveau's
-  ($V_{j+1} = V_j \oplus W_j$) en vinden dat:
+  en splitsen de termen, die allen \'e\'en-dimensionale ruimtes zijn, op in de volgende niveau's
+  ($V_{j+1} = V_j \oplus W_j$) om te vinden dat:
   \begin{equation*}
   \begin{split}
-    V_{j+1} \otimes V_{j+1} =& ( V_j \oplus W_j ) \otimes (V_j \oplus W_j ) \\ 
-                            =& (V_j \otimes V_j) \oplus (V_j \otimes W_j) 
-                        \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j)
+    V_{j+1} \otimes V_{j+1} =&\, ( V_j \oplus W_j ) \otimes (V_j \oplus W_j ) \\ 
+                            =&\, (V_j \otimes V_j) \oplus (V_j \otimes W_j) 
+                        \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j).
   \end{split}
   \end{equation*}
   Gebruik makende van de relatie \eqref{2d_ruimte_rec} leiden we af dat 
   \[
-    \boldsymbol{U}_j = (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j)
+    \boldsymbol{U}_j = (V_j \otimes W_j) \oplus (W_j \otimes V_j) \oplus (W_j \otimes W_j).
   \]
   Omdat de $\psi^k$'s allen tensorproducten zijn van functies in de ruimtes $V_j$ en $W_j$ volgt
   dat $\boldsymbol\Psi_j = \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n} \largediv  n \in \Z^2 \}$ 
@@ -533,35 +564,37 @@ we zullen bewijzen dat deze functies tezamen met $\phi^{(2)}_{0,n}$een basis vor
   een basis is voor $L^2(\R^2)$.
 \end{proof}
 \begin{gevolg}
-We kunnen de laatste regels van het bewijs ook gedeeltelijk toepassen om te vinden dat 
+We kunnen de laatste paar regels van het bewijs ook gedeeltelijk toepassen door te stoppen bij een ruimte $V_j$.
+We vinden dan dat: 
 \[
-\left\{ \phi^{(2)}_{0, n}: n \in \Z^2 \right\} \cup \left\{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \{0, \ldots, L \}  \right\}
+\left\{ \phi^{(2)}_{0, n}: n \in \Z^2 \right\} \cup 
+\left\{ \psi^1_{p,n}, \psi^2_{p,n}, \psi^3_{p,n}: n \in \Z^2, 
+p \in \{0, \ldots, j \}  \right\}
 \]
-een basis voor $V_L^{(2)}$ is.
+een orthonormale basis voor $V_j^{(2)}$ is.
 \end{gevolg}
 
-Bovenstaande basis heeft dus het tensorproduct van twee schalingsfuncties op \'e\'en niveau 
-en verder combinaties van schaling en wavelet op alle niveaus. 
+Bovenstaande basis bevat dus het tensorproduct van twee schalingsfuncties op \'e\'en niveau 
+en verder combinaties van schalings- en waveletfuncties van dezelfde resolutie op alle niveaus. 
 Net zoals in het eendimensionale geval kunnen we met deze basis een algoritme formuleren.
 
 \subsection{Naar een tweedimensionaal algoritme}
-Nu we een relatie hebben gevonden $(\eqref{2d_ruimte_rec})$ tussen de ruimtes op verschillende
-niveau's volgens
+Nu we volgens \eqref{2d_ruimte_rec} een relatie hebben gevonden tussen de ruimtes, namelijk
 \begin{equation}
   \label{2d_ruimte_decomp}
 V_{j+1}^{(2)} = (V_j\otimes W_j) \oplus (W_j\otimes V_j) \oplus
-(W_j\otimes W_j) \oplus (V_j\otimes V_j)
+(W_j\otimes W_j) \oplus (V_j\otimes V_j),
 \end{equation}
 kunnen we het eendimensionale algoritme uitbreiden naar twee dimensies.
-Hiervoor kijken we wederom naar de inproducten van een functie $f$ met
-onze basisfuncties.
-We defini\"eren daarvoor weer de \emph{approximatie}~co\"effici\"ent en een drietal
-van \emph{detail}~co\"effici\"enten volgens.
+Hiervoor kijken we wederom naar de inproducten van een functie $f$ met onze basisfuncties.
+We defini\"eren daarvoor weer de \emph{approximatie}-co\"effici\"ent en drietallen
+van \emph{detail}-co\"effici\"enten volgens:
 \[
-a_j[n] := \langle f, \phi^{(2)}_{j,n} \rangle \quad d^k_j[n] := \langle f, \psi^k_{j,n} \rangle ,\quad k \in \{1,2,3\}.
+a_j[n] := \langle f, \phi^{(2)}_{j,n} \rangle, 
+\quad d^p_j[n] := \langle f, \psi^p_{j,n} \rangle \text{voor} \quad p \in \{1,2,3\}.
 \]
-We zullen in het bijzonder kunnen zeggen (maak gebruik van $\eqref{phi_phi_basis}$)
-dat we de basis-functies op het niveau $j$ kunnen ontbinden volgens:
+We zullen in het bijzonder de basis-functies op het niveau $j$ kunnen ontbinden 
+door gebruik te maken van $\eqref{phi_phi_basis}$:
 \begin{equation}
   \label{phi_phi_som}
   \phi^{(2)}_{j,(n_1,n_2)} = \sum_{k_1=-\infty}^\infty \sum_{k_2=-\infty}^\infty
@@ -574,26 +607,26 @@ dat we de basis-functies op het niveau $j$ kunnen ontbinden volgens:
   \inpr{\psi^p_{j,(n_1,n_2)}}{\phi_{j+1,k_1}\otimes\phi_{j+1,k_2}}
   \phi^{(2)}_{j+1,(k_1,k_2)}
 \end{equation}
-We maken nu gebruik van \cite{weidmann}[\S 3.4] om het inproduct horende bij het tensorproduct
-van twee \emph{Hilbertruimten} uit te schrijven volgens:
+We maken nu gebruik van \cite[\S 3.4]{weidmann} om het inproduct horende bij het tensorproduct
+van twee \emph{Hilbertruimten} uit te schrijven als:
 \[
-\inpr{a\otimes b}{c\otimes d} = \inpr{a}{c}\cdot \inpr{b}{d}
+\inpr{a\otimes b}{c\otimes d} = \inpr{a}{c}\cdot \inpr{b}{d},
 \]
-Waarbij de inproducten lopen over de respectievelijke ruimtes.
+waarbij de inproducten behoren bij de respectievelijke ruimtes.
 Dit versimpelt de inproducten die we zoeken volgens:
 \[
 \inpr{\phi_{j,n_1}\otimes\phi_{j,n_2}}{\phi_{j+1,k_1}\otimes\phi_{j+1,k_2}}
 =\inpr{\phi_{j,n_1}}{\phi_{j+1,k_1}}\inpr{\phi_{j,n_2}}{\phi_{j+1,k_2}}
-=h[k_1-2n_1]\cdot h[k_2-2n_2]
+=h[k_1-2n_1]\cdot h[k_2-2n_2],
 \]
-Waarbij we de filterrelatie voor \'e\'en dimensie toepassen. We kunnen dit nog een
+waarbij we de filterrelatie voor \'e\'en dimensie toepassen. We kunnen dit nog een
 stuk verbeteren door het product $h[\_]\cdot h[\_]$ om te schrijven naar een tensorproduct,
-dan is:
+namelijk:
 \[
-h\otimes h : \Z\times\Z \to \R :: (x_1,x_2) \mapsto h[x_1]\cdot h[x_2]
+(h\otimes h)(x_1,x_2) =  h[x_1]\cdot h[x_2]
 \]
-Deze stappen kunnen ook met hetzelfde argument toegepast worden op de $\psi^k$'s,
-we verkrijgen dan met een blik op de definities in ($\eqref{psi_k_defs}$) de vergelijkingen:
+Deze stappen kunnen met hetzelfde argument toegepast worden op de $\psi^k$'s.
+We verkrijgen dan met een blik op de definities in $\eqref{psi_k_defs}$ de vergelijkingen:
 \[
 \inpr{\psi^1_{j,(n_1,n_2)}}{\phi^{(2)}_{j+1,(k_1,k_2)}} = (h\otimes g) [k_1-2n_1,k_2-2n_2]
 \]
@@ -603,36 +636,34 @@ we verkrijgen dan met een blik op de definities in ($\eqref{psi_k_defs}$) de ver
 \[
 \inpr{\psi^3_{j,(n_1,n_2)}}{\phi^{(2)}_{j+1,(k_1,k_2)}} = (g\otimes g) [k_1-2n_1,k_2-2n_2]
 \]
-Vervolgens richten we ons weer op de \emph{approximatie} en \emph{detail}~co\"effici\"enten door
-aan beide zeiden van de vergelijkingen $\eqref{phi_phi_som}$,$\eqref{psi_k_som}$ het inproduct
+Vervolgens richten we ons weer op de approximatie- en detail-co\"effici\"enten door
+aan beide zijden van de vergelijkingen $\eqref{phi_phi_som}$, $\eqref{psi_k_som}$ het inproduct
 met $f$ te nemen. We kunnen dit aan de hand van onze nieuwe 2-dimensionale filters
-opschrijven met een convolutie in twee dimensies, namelijk
+opschrijven met een convolutie in twee dimensies:
 \begin{eqnarray}
   \label{2d_coef_rec}
   a_{j}[n_1,n_2] =& (a_{j+1} \star (\bar{h} \otimes \bar{h}))[2n_1,2n_2] \\
   d^1_{j}[n_1,n_2] =&( a_{j+1} \star (\bar{h} \otimes \bar{g}))[2n_1,2n_2] \\
   d^2_{j}[n_1,n_2] =& (a_{j+1} \star (\bar{g} \otimes \bar{h}))[2n_1,2n_2] \\
   \label{2d_coef_rec_last}
-  d^3_{j}[n_1,n_2] =& (a_{j+1} \star (\bar{g} \otimes \bar{g}))[2n_1,2n_2]
+  d^3_{j}[n_1,n_2] =& (a_{j+1} \star (\bar{g} \otimes \bar{g}))[2n_1,2n_2].
 \end{eqnarray}
-waarbij de convolutie gegeven wordt door
+waarbij de tweedimensionale convolutie gegeven wordt door
 \[
 (x \star y)[n_1,n_2] := \sum_{p_1=-\infty}^\infty \sum_{p_2 = -\infty}^\infty
 x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
 \]
 
-
 \begin{algo}[Tweedimensionale Fast Wavelet Transform]
-  Gegeven een matrix van co\"effici\"enten $a_j\in\R^{2^j}\times\R^{2^j}$ dan definie\"eren
-  we een recursief algoritme $\mathrm{FWT}_2:\R^{2^j}\times\R^{2^j}\to\R^{2^j}\times\R^{2^j}$
-  volgens:\\
+  Gegeven een matrix van co\"effici\"enten $a_j\in\R^{2^j}\times\R^{2^j}$, definie\"eren
+  we een algoritme \mbox{$\mathrm{FWT}_2:\R^{2^j}\times\R^{2^j}\to\R^{2^j}\times\R^{2^j}$}.\\
   Als $j=0$ dan geldt
   \[
   \mathrm{FWT}_2(a_j)[n_1,n_2] = a_j[n_1,n_2]
   \]
   Als $j>0$ bereken $a_{j-1}$,$d^1_{j-1}$,$d^2_{j-1}$ en $d^3_{j-1}$ uit $a_{j}$
-  volgens $(\eqref{2d_coef_rec}-\eqref{2d_coef_rec_last})$
-  Vervolgens geldt
+  volgens $(\eqref{2d_coef_rec}-\eqref{2d_coef_rec_last})$.
+  Dan geldt
   \begin{equation}
     \label{FWTd_def}
   \mathrm{FWT}_2(a_j)[n_1,n_2] = \begin{cases}
@@ -644,9 +675,10 @@ x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
     d^3_{j-1}[n_1,n_2] & \text{als } n_1>2^{j-1} \text{ en } n_2>2^{j-1} \end{cases}
   \end{equation}
 \end{algo}
+Van dit tweedimensionale algoritme kunnen nu ook de inverse algoritme bepalen, analoog aan het eendimensionale geval.
 \begin{algo}[Inverse Tweedimensionale Fast Wavelet Transform]
-  Gegeven een matrix van  co\"effici\"enten $x_j\in\R^{2^j}\times\R^{2^j}$ dan definie\"eren we hierop het recursieve
-  algoritme $\mathrm{iFWT}_2:\R^{2^j}\times\R^{2^j}\to\R^{2^j}\times\R^{2^j}$ volgens:\\
+  Gegeven een matrix van  co\"effici\"enten $x_j\in\R^{2^j}\times\R^{2^j}$, defini\"eeren we hierop het
+  algoritme \mbox{$\mathrm{iFWT}_2:\R^{2^j}\times\R^{2^j}\to\R^{2^j}\times\R^{2^j}$}.\\
   Als $j=0$ dan geldt
   \[
   \mathrm{iFWT}_2(x_j)[n_1,n_2] = x_j[n_1,n_2]
@@ -663,9 +695,9 @@ x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
   \begin{equation}
     \label{iFWTd_def}
     \begin{split}
-      \mathrm{iFWT}_2(a_j)[n_1,n_2] =& \breve{a}_{j-1} \star (h \otimes h)[n_1,n_2] 
+      \mathrm{iFWT}_2(a_j)[n_1,n_2] =&\, \breve{a}_{j-1} \star (h \otimes h)[n_1,n_2] 
       + \breve{d}_{j-1}^1 \star (h \otimes g)[n_1,n_2] \\
-      +& \breve{d}_{j-1}^2 \star (g \otimes h)[n_1,n_2] 
+      +&\, \breve{d}_{j-1}^2 \star (g \otimes h)[n_1,n_2] 
       + \breve{d}_{j-1}^3 \star (g \otimes g)[n_1,n_2]
     \end{split}
   \end{equation}
@@ -677,7 +709,7 @@ x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
   \]
 \end{algo}
 \begin{stelling}
-  De $\mathrm{iFWT}_2$ (links) samengesteld met de $\mathrm{FWT}_2$ geeft de identiteit voor een signaal.
+  De $\mathrm{iFWT}_2$ (links) samengesteld met de $\mathrm{FWT}_2$ geeft de identiteit.
 \end{stelling}
 \begin{proof}[Bewijs]
   We bekijken de verschillende gevallen. Voor het geval $j=0$ geldt duidelijk dat
@@ -688,9 +720,8 @@ x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
   $a,d^1,d^2,d^3$ precies zijn wat de $\mathrm{FWT}_2$ zou geven op dit niveau. 
   We zullen dus verder moeten bewijzen dat \eqref{iFWTd_def} een inverse vormt voor
   \eqref{FWTd_def}.
-  Schrijf hiervoor de basisfuncties van $V^{(2)}_j$ in termen van de basisfuncties van 
-  $V_{j-1}\otimes V_{j-1}$, $V_{j-1}\otimes W_{j-1}$, $W_{j-1}\otimes V_{j-1}$ en $W_{j-1}\otimes W_{j-1}$
-  dit is geoorloofd zoals we gezien hebben in een vorige sectie.
+  Schrijf hiervoor de basisfuncties van $V^{(2)}_j$ in termen van de basisfuncties van
+  de tensorproductenruimte van $V_j$ en $W_j$ zoals in \eqref{2d_ruimte_decomp}:
   \begin{equation*}
     \begin{split}
       \phi_{j,(n_1,n_2)} = 
@@ -701,10 +732,10 @@ x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
       + \sum_{k_1=-\infty}^\infty\sum_{k_2=-\infty}^\infty 
       \inpr{\phi^{(2)}_{j,(n_1,n_2)}}{\psi^2_{j-1,(k_1,k_2)}} \psi^2_{j-1,(k_1,k_2)} \\
       + \sum_{k_1=-\infty}^\infty\sum_{k_2=-\infty}^\infty 
-      \inpr{\phi^{(2)}_{j,(n_1,n_2)}}{\psi^3_{j-1,(k_1,k_2)}} \psi^3_{j-1,(k_1,k_2)}
+      \inpr{\phi^{(2)}_{j,(n_1,n_2)}}{\psi^3_{j-1,(k_1,k_2)}} \psi^3_{j-1,(k_1,k_2)}.
       \end{split}
   \end{equation*}
-  Deze inproducten tussen basisfuncties komen weer overeen met de filterco\"efficienten. Nemen we dus aan
+  Deze inproducten tussen basisfuncties komen weer overeen met de filterco\"effici\"enten. Nemen we dus aan
   beide zeiden het inproduct met $f$ dan volgt de vergelijking voor de approximatie-co\"effici\"enten
   \begin{equation*}
     \begin{split}
@@ -716,7 +747,7 @@ x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
       + \sum_{k_1=-\infty}^\infty\sum_{k_2=-\infty}^\infty 
       (g\otimes h)[n_1-2k_1,n_2-2k_2] d^2_{j-1}[k_1,k_2] \\
       + \sum_{k_1=-\infty}^\infty\sum_{k_2=-\infty}^\infty 
-      (g\otimes g)[n_1-2k_1,n_2-2k_2] d^3_{j-1}[k_1,k_2]
+      (g\otimes g)[n_1-2k_1,n_2-2k_2] d^3_{j-1}[k_1,k_2].
       \end{split}
   \end{equation*}
   Door in de sommatie de variabelen $k_1,k_2$ te vervangen door $k_1'=2k_1$ respectievelijk $k_2'=2k_2$ 
@@ -731,10 +762,10 @@ x[n_1 - p_1,n_2 - p_2] \cdot y[n_1-p_1, n_2 - p_2].
       + \sum_{k_1'=-\infty}^\infty\sum_{k_2'=-\infty}^\infty 
       (g\otimes h)[n_1-k_1',n_2-k_2'] \breve d^2_{j-1}[k_1',k_2'] \\
       + \sum_{k_1'=-\infty}^\infty\sum_{k_2'=-\infty}^\infty 
-      (g\otimes g)[n_1-k_1',n_2-k_2'] \breve d^3_{j-1}[k_1',k_2']
+      (g\otimes g)[n_1-k_1',n_2-k_2'] \breve d^3_{j-1}[k_1',k_2'],
       \end{split}
   \end{equation*}
-  Wat precies gelijk is aan de convolutie in \eqref{iFWTd_def}. Daarmee geeft de iFWT een inverse voor de FWT.
+  wat precies de convolutie in \eqref{iFWTd_def} is. Daarmee geeft de iFWT een inverse voor de FWT.
 \end{proof}
 
 \subsection{Meer dan twee dimensies}
@@ -743,11 +774,11 @@ De Mallatdecompositie is op een natuurlijke manier voort te zetten naar meerdime
 De precieze definitie is notationeel nogal ingewikkeld en laten we hier daarom achterwege.
 Informeel geldt dat we een $m$-dimensionale ruimte $V_{j}^{(m)}$ 
 weer kunnen schrijven zoals \eqref{2d_ruimte_decomp}
-waarbij we ditmaal het tensorproduct nemen van $m$ factoren $V_{j-1}$ en $W_{j-1}$.
+waarbij we dit maal het tensorproduct nemen van $m$ factoren, $V_{j-1}$ en $W_{j-1}$.
 De basisfuncties van deze ruimtes zijn vervolgens de tensorproducten van $m$ 
 factoren die ofwel $\phi$ of $\psi$ zijn.
 Vervolgens kan het algoritme verder doorgezet worden naar de ruimte $V_{j-1}^{(m)}$.
-Dit vertaalt ook weer naar een $m$ dimensionale convolutie van $a_j$ met 
+In termen van algoritmen vertaalt dit alles naar een $m$ dimensionale convolutie van $a_j$ met 
 filters die het tensorproduct zijn van $m$ factoren $h$ of $g$.
 \begin{voorbeeld}
   In drie dimensies maken we een Mallat-decompositie van de ruimte $V_{j+1}^{(3)}$ door:
@@ -774,7 +805,9 @@ Wanneer we meer dimensies bekijken, praten we over een $n$-dimensionaal eenheids
 Wederom zijn alleen de functies van belang wiens drager $\Box$ doorsnijdt.
 
 \section{Tensorproduct}
-Herinner dat we voor de Mallat-decompositie gebruik maakte van de gelijkheid (zie \eqref{2d_ruimte_decomp}):
+\label{tensorS}
+
+Herinner dat we voor de Mallat-decompositie gebruik maakte van de gelijkheid:
 \[
 V_{j}^{(2)} = (V_{j-1}\otimes W_{j-1}) \oplus (W_{j-1}\otimes V_{j-1}) \oplus
 (W_{j-1}\otimes W_{j-1}) \oplus (V^{(2)}_{j-1})
@@ -785,7 +818,7 @@ Door dit herhaald toe te passen kregen we een basis van de vorm:
 \{\psi^k_{j,(n_1,n_2)} \largediv k=1,2,3\quad j\in \N_0 \quad n_1,n_2\in\Z\}
 \]
 We zullen echter zien dat er ook een andere manier is om deze ruimte te decomposeren.
-Bedenk dat we in 1 dimensie de decompositie zoals in \eqref{ruimte_splitsing} gebruiken volgens:
+Bedenk dat we in 1 dimensie de decompositie zoals in \eqref{ruimte_splitsing} gebruiken, namelijk:
 \[
 V_j = V_0 \oplus W_0 \oplus \cdots \oplus W_{j-1}
 \]
@@ -794,10 +827,11 @@ Daarmee schrijven we de ruimte $V^{(2)}_j$ als het tensorproduct van $V_j$ met z
 V^{(2)}_j = V_j\otimes V_j = (V_0\oplus W_0\oplus\cdots W_{j-1})\otimes(V_0\oplus W_0\oplus\cdots W_{j-1})
 \]
 Dit geeft aanleiding tot een nieuwe basis, namelijk het tensorproduct van de basis van $V_j$ met zichzelf,
-we duiden deze basis dan ook aan als de \emph{Tensorbasis}.
-\footnote{In de literatuur wordt de Mallatdecompositie ook regelmatig een Tensorproduct genoemd. 
-De verwarring ontstaat hier doordat in de Mallat Basis de basisfuncties ook tensorproducten zijn van wavelet- 
-en schalingsfuncties. We doelen echter in onze naamgeving op \emph{het tensorproduct van twee bases}.}
+we duiden deze basis dan ook aan als de \emph{Tensorbasis}~\footnote{In de literatuur wordt de Mallatdecompositie ook regelmatig een tensorproduct genoemd. 
+De verwarring ontstaat hier doordat in de Mallatbasis de basisfuncties ook tensorproducten zijn van wavelet- 
+en schalingsfuncties. We doelen echter in onze naamgeving op \emph{het tensorproduct van twee bases}.}.
+Schrijf namelijk $A^2 = \{a\otimes b \largediv a,b\in A\}$ voor het \emph{Tensorproduct} van een basis met zichzelf,
+dan krijgen we:
 \begin{equation}
   \label{tensor_basis_def}
   \begin{split}
@@ -805,22 +839,22 @@ en schalingsfuncties. We doelen echter in onze naamgeving op \emph{het tensorpro
                         =& \{\phi_{0,n_1}\otimes\phi_{0,n_2}\largediv n_1,n_2\in\Z\} 
                         \cup \{\phi_{0,n_1}\otimes\psi_{j,n_2}\largediv j\in\N_0\quad n_1,n_2\in\Z\} \\    
                          & \cup \{\psi_{j,n_1}\otimes\phi_{0,n_2}\largediv j\in\N_0\quad n_1,n_2\in\Z\} \\
-                         & \cup \{\psi_{j_1,n_1}\otimes\psi_{j_2,n_2}\largediv j_1,j_2\in\N_0\quad n_1,n_2\in\Z\} \\
+                         & \cup \{\psi_{j_1,n_1}\otimes\psi_{j_2,n_2}\largediv j_1,j_2\in\N_0\quad n_1,n_2\in\Z\}.
   \end{split}
 \end{equation}
-Waar $A^2 = \{a\otimes b \largediv a,b\in A\}$ een tensorproduct van een basis met zichzelf geeft.
 
-Een karakteristiek van de Mallatbasis is, dat deze $\psi \otimes \psi$ functies bevat van enkel dezelfde schaal,
-bij de Tensorbasis hebben we echter $j_1$ en $j_2$ die ongelijk aan elkaar zijn.
-De Mallatbasis moest door deze eis aangevuld worden met functies van de vorm $\phi\otimes\psi$ en $\psi\otimes\phi$,
-dit is bij de Tensorbasis niet meer aan de orde (met uitzondering van enkele samenstellingen van $\phi_0$ met $\psi_j$'s)
+Een karakteristiek van de Mallatbasis is dat deze $\psi \otimes \psi$ functies bevat van enkel dezelfde schaal,
+terwijl we bij de Tensorbasis te maken hebben met $j_1$ en $j_2$ die ongelijk aan elkaar zijn.
+De Mallatbasis moest door deze eis aangevuld worden met functies van de vorm $\phi\otimes\psi$ en $\psi\otimes\phi$.
+Dit is bij de Tensorbasis niet meer aan de orde (met uitzondering van enkele samenstellingen van $\phi_0$ met $\psi_j$'s)
 
-Met deze theoretische kennis willen we een algoritme bedenken dat een tweedimensionaal signaal schrijft in termen van de Tensorbasis,
-we zullen zien dat dit neerkomt op het uitvoeren van FWT op alle rijen en kolommen van de ingangssignaal (een matrix)
+Met deze theoretische kennis willen we een algoritme bedenken dat een tweedimensionaal signaal schrijft 
+in termen van de Tensorbasis. We zullen zien dat dit neerkomt op het uitvoeren van FWT op alle rijen en 
+kolommen van de ingangssignaal, die we voorstellen als een matrix.
 
 \begin{algo}[Tweedimensionale Tensor Fast Wavelet Transform]
-Gegeven een ingangssignaal $a_j\in\R^{2^j}\times\R^{2^j}$ dan defini\"eren we een bijbehorend sequentieel algoritme 
-$\mathrm{TFWT}_2:\R^{2^j}\times\R^{2^j}\to \R^{2^j}\times\R^{2^j}$ door het schema:\\
+Gegeven een ingangssignaal $a_j\in\R^{2^j}\times\R^{2^j}$, defini\"eren we een  algoritme 
+\mbox{$\mathrm{TFWT}_2:\R^{2^j}\times\R^{2^j}\to \R^{2^j}\times\R^{2^j}$} als volgt.\\
 Bereken $\tilde a_j$ zo dat geldt:
 \[
 \tilde a_j[n_1,n_2] = \mathrm{FWT}(a_j\largediv_{x_1=n_1})[n_2] 
@@ -829,8 +863,6 @@ Dan wordt de $\mathrm{TFWT}_2$ gegeven door:
 \[
 \mathrm{TFWT}_2(a_j)[n_1,n_2] = \mathrm{FWT}(\tilde a_j\largediv_{x_2=n_2})[n_1]
 \] 
-Waarbij de notatie $a\largediv_{x_i=c}$ staat voor de vector die verkregen wordt door uit $a$
-de $i$'de co\"ordinaat vast te zetten (e.g. $a\largediv_{x_1=c}[d] = a[c,d]$).
 \end{algo}
 
 We zullen aantonen dat de $\mathrm{TFWT}_2$ ook inderdaad een decompositie geeft in termen van de Tensorbasis.
@@ -838,14 +870,13 @@ We zijn namelijk op zoek naar een matrix van de vorm:
 \begin{equation}
 \label{TFWT_mat}
 \begin{bmatrix}
-\inpr{f}{\phi_0\otimes\phi_0}     & \inpr{f}{\phi_0\otimes\psi_0}     & \cdots & \inpr{f}{\phi_0\otimes\psi_\lambda} \\
-\inpr{f}{\psi_0\otimes\phi_0}     & \inpr{f}{\psi_0\otimes\psi_0}     & \cdots & \inpr{f}{\psi_0\otimes\psi_\lambda} \\ 
+\inpr{f}{\phi_0\otimes\phi_0}     & \inpr{f}{\phi_0\otimes\psi_0}     & \cdots & \inpr{f}{\phi_0\otimes\psi_j} \\
+\inpr{f}{\psi_0\otimes\phi_0}     & \inpr{f}{\psi_0\otimes\psi_0}     & \cdots & \inpr{f}{\psi_0\otimes\psi_j} \\ 
            \vdots                 &         \vdots                    & \ddots &                \vdots  \\ 
-\inpr{f}{\psi_\lambda\otimes\phi_0} & \inpr{f}{\psi_\lambda\otimes\psi_0} 
-& \cdots & \inpr{f}{\psi_\lambda\otimes\psi_\lambda} \\
+\inpr{f}{\psi_j\otimes\phi_0} & \inpr{f}{\psi_j\otimes\psi_0} 
+& \cdots & \inpr{f}{\psi_j\otimes\psi_j} \\
 \end{bmatrix}
 \end{equation}
-Waarbij $\lambda$ een index geeft over de interessante basisfuncties.
 We weten dat wanneer we de FWT nemen in \'e\'en co\"ordinaat door de andere co\"ordinaat vast te nemen,
  dit ons voor elke vaste waarde een vector geeft volgens:
 \[
@@ -853,7 +884,7 @@ y \mapsto
 \begin{bmatrix}
 \inpr{f\largediv_{x_2=y}}{\phi_0} & 
 \inpr{f\largediv_{x_2=y}}{\psi_0} & \cdots & 
-\inpr{f\largediv_{x_2=y}}{\psi_\lambda}
+\inpr{f\largediv_{x_2=y}}{\psi_j}
 \end{bmatrix}
 \]
 Hieruit kunnen we ook een vector van functies maken door de rol van functie en matrix-index om te wisselen:
@@ -861,16 +892,17 @@ Hieruit kunnen we ook een vector van functies maken door de rol van functie en m
 \begin{bmatrix}
 y \mapsto \inpr{f\largediv_{x_2=y}}{\phi_0} & 
 y \mapsto \inpr{f\largediv_{x_2=y}}{\psi_0} & \cdots & 
-y \mapsto \inpr{f\largediv_{x_2=y}}{\psi_\lambda}
+y \mapsto \inpr{f\largediv_{x_2=y}}{\psi_j}
 \end{bmatrix}
 \]
 Wanneer we vervolgens voor elke functie in deze vector de FWT bereken zullen we weer een vector inproducten krijgen
 voor elke co\"ordinaat in de originele vector, schrijf deze vector van vectoren (equivalent met een matrix) uit als 
-$M[\lambda_1,\lambda_2]$,
-\footnote{Hier wordt het inproduct met $\phi_0$ weggelaten om de schrijfwijze te verduidelijken.}
+$M[k_1,k_2]$,
+\footnote{Hier wordt het inproduct met $\phi_0$ weggelaten om de schrijfwijze te verduidelijken. We zien
+dan $\phi_0$ als een $\psi_k$ met een speciale index $k$.}
 dan volgt:
 \[
-M[\lambda_1,\lambda_2] = \inpr{y\mapsto \inpr{f\largediv_{x_2=y}}{\psi_{\lambda_1}}}{\psi_{\lambda_2}}
+M[k_1,k_2] = \inpr{y\mapsto \inpr{f\largediv_{x_2=y}}{\psi_{k_1}}}{\psi_{k_2}}
 \]
 We kunnen dit omschrijven door de definitie van het inproduct op functieruimten toe te passen:
 \[
@@ -885,18 +917,18 @@ immers de identiteit, zodat het toepassen op kolommen en rijen van de iFWT de $\
 \subsection{Meer dan twee dimensies}
 \label{tensor_md}
 Er is een natuurlijke voortzetting van het Tensorproduct naar meerdimensionale signalen.
-Dit doen we namelijk door voor bijvoorbeeld $m$ dimensies als basis voor $V^{(m)}_j$ de basis te kiezen die we verkrijgen 
-door de basis van $V_j$ met tensorproducten tot de $m$-de macht te verheffen.
-Vervolgens is het algoritme aan te passen zodat het steeds over \'e\'en co\"ordinaat de FWT uitvoert, 
-met bijbehorende inverse.
+Dit doen we door voor bijvoorbeeld  $V^{(m)}_j$ de basis te kiezen die voortkomt uit
+een tensorproduct van $m$ maal de basis van $V_j$.
+Vervolgens is de algoritme te veralgemeniseren naar een algoritme dat over elke co\"ordinaat de FWT 
+uitvoert, met bijbehorende inverse.
 
 Omdat de stap in complexiteit van de notatie vele male groter is dan de benodigde denkstap laten we hier een rigoreuze
 behandeling van de meerdimensionale Tensor Fast Wavelet Transform achterwege.
 
 \subsection{Mengvormen van Tensor en Mallat}
-Zoals uitgelegd in de secties \ref{tensor_md} en \ref{mallat_md} kunnen zowel de Mallatdecompositie en 
-het Tensorproduct toegepast worden op meer dan $2$ dimensies. We zullen beargumenteren dat de beide
-vormen ook naar eigen inzicht gemengd kunnen worden. We schrijven daarvoor de $m$ dimensionale 
+Zoals uitgelegd in de secties \ref{tensor_md} en \ref{mallat_md} kunnen zowel de Mallatdecompositie als
+het Tensorproduct toegepast worden op $3$ of meer dimensies. We zullen beargumenteren dat de beide
+vormen ook naar eigen inzicht gemengd kunnen worden. We schrijven daarvoor de $m$-dimensionale 
 ruimte $V_j^{(m)}$ op als een tensorproduct:
 \begin{equation*}
 \begin{array}{ccccccc}
@@ -904,11 +936,10 @@ ruimte $V_j^{(m)}$ op als een tensorproduct:
             &=& V_j^{(k-1)} &\otimes& (V_0 \otimes \cdots \otimes W_{j-1}) &\otimes& V_j^{(m-k)}
 \end{array}
 \end{equation*}
-Hier is te zien dat we de $k$-de term $V_j$ weer uitgeschreven hebben volgens de gewone $FWT$
-decompositie. Het staat ons nu vrij om de term $V_j^{(k-1)}$ en $V_j^{m-k}$ te ontbinden
+Hier zien we dat de $k$-de term $V_j$ uitgeschreven is volgens de gewone $FWT$
+decompositie. Het staat ons nu vrij om de termen $V_j^{(k-1)}$ en $V_j^{m-k}$ te ontbinden
 op een andere manier. De gebruikte algoritmes volgen analoog aan de implementatie van het Tensorproduct
-en de Mallatdecompositie door steeds weer co\"ordinaten vast te houden.\footnote{De notatie voor de mengvorm en de specifieke bewijzen laten we achterwege, deze leiden teveel af van het
-doel van het project }
+en de Mallatdecompositie door co\"ordinaten vast te houden.\footnote{De notatie voor de mengvorm en de specifieke bewijzen laten we achterwege. Deze leiden teveel af van hetdoel van het project }
 
 \begin{voorbeeld}
 We kunnen in 3 dimensies een Tensor-Mallat mengvorm maken:
@@ -923,19 +954,19 @@ V_j^{(3)} = &
 &\otimes (V_0\oplus\cdots\oplus W_{j-1})
 \end{split}
 \end{equation}
-Hier is de eerste term ontbonden volgens de Mallatdecompositie en hebben we met het tensorproduct
-een normale FWT decompositie recht op gezet.
+Hier is de eerste term ontbonden volgens de Mallatdecompositie en hebben we met het Tensorproduct
+een normale FWT decompositie hier recht op gezet.
 \end{voorbeeld}
 \begin{gevolg}
-Wanneer we de eerste term opvatten als een ruimte van afbeelding op een bepaald moment en
-de tweede term als de tijdruimte die het verloop van deze afbeelding geeft dan kunnen we deze
+Wanneer we in \ref{3d_mengvorm} de eerste term opvatten als een ruimte van afbeeldingen op een bepaald moment en
+de tweede term als de tijdruimte die het verloop van een afbeelding geeft, dan kunnen we deze
 decompositie toepassen op videomateriaal. 
 \end{gevolg}
 
 \section{Analyse van de fout van beide decomposities}
 \label{daling_wavelet}
 
-Bij compressie is men op zoek naar een manier om stukjes data weg te kunnen gooien of te schrijven op zo'n manier dat het minder ruimte inneemt. Wij zijn in het bijzonder ge\"interesseerd naar \emph{hoe dichtbij} we bij perfecte reconstructie zitten wanneer we een vooraf bepaald aantal data opslaan. Er is al uitgebreid onderzoek gedaan naar hoe dit werkt bij de waveletbasis en een aantal resultaten hiervan zullen we opnemen in ons verslag.
+Bij compressie is men op zoek naar een manier om stukjes data weg te kunnen gooien of te schrijven op zo'n manier dat het minder ruimte inneemt. Wij zijn in het bijzonder ge\"interesseerd in \emph{hoe dichtbij} we bij perfecte reconstructie zitten wanneer we een vooraf bepaald hoeveelheid data opslaan. Er is al uitgebreid onderzoek gedaan naar hoe dit werkt bij de waveletbasis en een aantal resultaten hiervan zullen we opnemen in ons verslag.
 
 Laat $f$ een functie in $L_2(\Box)$ met aftelbare orthonormale basis $\mathcal{B} = \{ g_m \}$. Dan valt $f$ in deze basis te schrijven als (zie Lemma \ref{parseval})
 \begin{equation}
@@ -943,17 +974,20 @@ Laat $f$ een functie in $L_2(\Box)$ met aftelbare orthonormale basis $\mathcal{B
 f = \sum_{m = 0}^\infty \langle f, g_m \rangle g_m.
 \end{equation}
 
-Wanneer we niet de hele basis bekijken, maar slechts de eerste $N$ elementen pakken, 
+Wanneer we niet de hele basis bekijken, maar slechts een $N$ aantal elementen pakken, 
 krijgen we een verzameling $\mathcal{B}_N \subset \mathcal{B}$ zodat
 \[
-f_{\mathcal{B}_N} := \sum_{m = 1}^N \langle f, g_m \rangle g_m.
+f|_{\mathcal{B}_N} := \sum_{g_m \in \mathcal{B}} \langle f, g_m \rangle g_m.
 \]
-In het bijzonder zijn we op zoek naar de \emph{fout} $\| f - f_{\mathcal{B}_N} \|$:
+In het bijzonder zijn we op zoek naar de \emph{fout} van de reconstructie $\| f - f|_{\mathcal{B}_N} \|$:
 \[
-\| f - f_{\mathcal{B}_N} \|^2 = \left\| \sum_{m=1}^\infty\langle f, g_m \rangle g_m - \sum_{m=1}^N \langle f, g_m \rangle g_m \right\|^2 = \left\| \sum_{m=N+1}^\infty\langle f, g_m \rangle g_m \right\|^2 = \sum_{m=N+1}^\infty | \langle f, g_m \rangle |^2.
+\| f - f|_{\mathcal{B}_N} \|^2 
+= \left\| \sum_{g_m \in \mathcal{B}} \langle f, g_m \rangle g_m - 
+\sum_{g_m\in\mathcal{B}_N} \langle f, g_m \rangle g_m \right\|^2 
+= \left\| \sum_{g_m\in \mathcal{B}\backslash\mathcal{B}_N} \langle f, g_m \rangle g_m \right\|^2 
+= \sum_{g_m\in \mathcal{B}\backslash\mathcal{B}_N} | \langle f, g_m \rangle |^2.
 \]
-Duidelijk moge zijn dat voor $N \to \infty$, $\| f - f_{\mathcal{B}_N} \|^2 \to 0$.
-
+Duidelijk moge zijn dat voor $N \to \infty$, $\| f - f|_{\mathcal{B}_N} \|^2 \to 0$.
 
 \begin{definitie}[Sobolevruimte]
 Een Sobolevruimte $H^p(\Omega)$ over $\Omega \subset \R^n$ is de verzameling van alle functies $u \in L_2(\Omega)$ z\'o dat voor elke $\alpha \in \N_0^n$ geldt dat $|\alpha| = \alpha_1 + \cdots + \alpha_n \leq p \implies D^\alpha u \in L_2(\Omega)$. De zwakke parti\"ele afgeleide $D^\alpha u$ betekent
@@ -968,13 +1002,13 @@ De norm op $H^p$ die hierbij hoort is gedefini\"eerd als
 \end{definitie}
 
 \subsection{Fout van de Mallatdecompositie}
-Wij zijn op het moment ge\"interesseerd in de Mallat-waveletbasis $\boldsymbol\Phi$ die we vonden in stelling \ref{mallatbasis}. Deze is ook duidelijk aftelbaar dus we kunnen gevolg~\ref{linfout} gebruiken. 
+Wij zijn op het ge\"interesseerd in de Mallat-waveletbasis $\boldsymbol\Phi$ die we vonden in stelling \ref{mallatbasis}.Deze is duidelijk aftelbaar, dus we kunnen \eqref{linfout} gebruiken. 
 
 Defini\"eer $J_M := \{ l \in \N^n: \| l \|_\infty \leq M \}$. Laat $\boldsymbol\Phi_M := \{ \boldsymbol{\psi}_{\boldsymbol{\lambda}} \in \boldsymbol\Phi: |\boldsymbol\lambda| \in J_M \}$ met $|\boldsymbol\lambda| = (|\lambda_1|, \ldots, |\lambda_n|)$ de verzameling basisfuncties tot een niveau $M$.
 
 \begin{stelling}[Fout van Mallatdecompositie]
 \label{thm:foutmallat}
-Wanneer $f \in H^p(\Box)$, zal de fout $\| f - f_{\boldsymbol\Phi_M} \|$ bij een Mallatdecompositie met de basisfuncties tot niveau $M$ hoogstens $\theta(N^{-p/n})$ zijn, met $N := \# \boldsymbol\Phi_M$ het aantal basisfuncties tot niveau $M$.
+Wanneer $f \in H^p(\Box)$, zal de fout $\| f - f_{\boldsymbol\Phi_M} \|$ bij een Mallatdecompositie met de basisfuncties tot niveau $M$ precies $\theta(N^{-\tfrac p{2n}})$ zijn, met $N := \# \boldsymbol\Phi_M$ het aantal basisfuncties tot niveau $M$.
 \end{stelling}
 \begin{proof}
 
@@ -984,17 +1018,18 @@ Wanneer $f \in H^p(\Box)$, zal de fout $\| f - f_{\boldsymbol\Phi_M} \|$ bij een
   \]
   wanneer $f \in H^p(\Box)$.
 
-  Voor elke dimensie zitten er $\theta(2^M)$ basisfuncties in $\{ \psi_\lambda: |\lambda| \leq M \}$. Er zijn $n$ dimensies dus $2^{Mn} = N$ basisfuncties in totaal.
-
-  Bekijk de fout:
+  Voor elke dimensie zitten er $\theta(2^M)$ basisfuncties in $\{ \psi_\lambda: |\lambda| \leq M \}$. Er zijn $n$ dimensies dus $2^{Mn} = N$ basisfuncties in totaal. Bekijk de fout:
   \[
-  \left\| f - f_{\boldsymbol\Phi_M} \right\|^2_{L_2(\Box)} = \sum_{{\boldsymbol\psi} \in \boldsymbol\Phi \setminus \boldsymbol\Phi_M} | \langle f, \boldsymbol\psi \rangle |^2 \simeq \sum_{|\boldsymbol\lambda| > M} 2^{-|\boldsymbol\lambda|p} \simeq 2^{-Mp},
+  \left\| f - f|_{\boldsymbol\Phi_M} \right\|^2_{L_2(\Box)} 
+  = \sum_{{\boldsymbol\psi} \in \boldsymbol\Phi \setminus \boldsymbol\Phi_M} | \langle f, \boldsymbol\psi \rangle |^2 
+  \simeq \sum_{|\boldsymbol\lambda| > M} 2^{-|\boldsymbol\lambda|p} \simeq 2^{-Mp},
   \]
-  waarbij het laatste isteken voortkomt uit
+  waarbij het laatste gelijkheidsteken voortkomt uit de relatie
   \[
   \sum_{k=M+1}^\infty 2^{- kp} = \frac{2^{-Mp}}{2^p-1}
   \]
-  en de notie dat $p$ constant is voor een keuze van de wavelet. De fout is  $2^{-Mp/2} \simeq 2^{-Mp}$. Omschrijven geeft dat dit overeenkomt met een fout van $N^{-p/n}$.
+  en de notie dat $p$ constant is voor een keuze van de wavelet. 
+  De fout is nu $2^{-Mp/2}$. Omschrijven geeft dat dit overeenkomt met een fout van $N^{-\frac p {2n}}$.
 \end{proof}
 
 \subsection{Fout van het Tensorproduct}
@@ -1002,35 +1037,34 @@ We bekijken een aftelbare basis van $L_2(\Box)$. In 1 dimensie wordt deze basis 
 
 Volgens \cite[L3.1.7]{tammo} is 
 \[ 
-  \boldsymbol\Psi = \Psi \otimes \cdots \otimes \Psi = \{ \boldsymbol{\psi_\lambda} := \psi_{\lambda_1} \otimes \cdots \otimes \psi_{\lambda_n}: \lambda_i \in \nabla \}
+  \boldsymbol\Phi_T = \Phi \otimes \cdots \otimes \Phi = \{ \boldsymbol{\psi_\lambda} := \psi_{\lambda_1} \otimes \cdots \otimes \psi_{\lambda_n}: \lambda_i \in \nabla \}
 \]
 met $\boldsymbol\lambda := (\lambda_1, \ldots, \lambda_n) \in \boldsymbol{\nabla} := \nabla^n$ een orthogonale basis voor $L_2(\Box)$.
 
 Laat vervolgens $I_M := \{ l \in \N^n_0: ||l||_1 \leq M \}$ en maak de \emph{sparse grid index set} $\boldsymbol{\nabla}_M := \{ \boldsymbol{(j,n)} \in \boldsymbol{\nabla}: \boldsymbol{j} \in I_M \}$.
 
+We zullen nu een aantal lemma's enumereren die we willen gebruiken om de fout af te schatten. De bewijzen hiervoor
+staan in \cite{tammo} en zullen we niet verder behandelen.
 \begin{lemm}{\cite[P3.2.3]{tammo}}
   \label{en_daarom_jongens_en_meisjes}
-  Voor $f \in H^p(\Box)$ geldt dat de fout van de benadering op basis van de sparse grid index set $\boldsymbol{\nabla}_M$ hoogstens voldoet aan
+  Voor $f \in H^p(\Box)$ geldt dat de fout van de benadering op basis van de sparse grid index set $\boldsymbol{\nabla}_M$ voldoet aan
   \[
-  \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim 2^{-pM} M^{(n-1)/2} \| f \|_{H^p(\Box)}
+  \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim 2^{-pM} M^{(n-1)/2} \| f \|_{H^p(\Box)}.
   \]
 \end{lemm}
-
-Het aantal elementen in deze verzameling $\boldsymbol{\nabla}_M$ nu, kunnen we vinden.
 \begin{lemm}{\cite[L3.3.1]{tammo}}
   \label{gebruiken_we_referenties}
   Het aantal elementen in $\boldsymbol{\nabla}_M$ is proportioneel met $2^M M^{n-1}$.
 \end{lemm}
-
 \begin{lemm}{\cite[L3.4.1]{tammo}}
   \label{want_dit_werkt_goed_zo}
-  Wanneer er voor twee functies $h, g$ geldt dat $h(J) \lesssim J^{-s}\log_2(J)^\mu$ en $g(J) \simeq= \log_2(J)^\nu J =: N$, dan
+  Wanneer er voor twee functies $h, g$ geldt dat $h(J) \lesssim J^{-s}\log_2(J)^\mu$ en $g(J) \simeq= \log_2(J)^\nu J =: N$ voor zekere $\mu$ en $\nu$, dan geldt:
   \[
   (h \circ g^{-1})(N) \lesssim N^{-s} \log_2{N}^{\mu + \nu s}.
   \]
 \end{lemm}
 
-Met bovenstaande drie lemma's is het nu mogelijk een goede afschatting te maken.
+Dit is voldoende om een goede afschatting te maken van de \emph{fout van het Tensorproduct}.
 \begin{stelling}[Fout van het Tensorproduct]
 \label{thm:fouttensor}
   Laat $f \in H^p(\Box)$ en $N = \#\boldsymbol{\nabla}_M$. Dan:
@@ -1039,9 +1073,9 @@ Met bovenstaande drie lemma's is het nu mogelijk een goede afschatting te maken.
   \]
 \end{stelling}
 \begin{proof}
-  We kunnen met het lemma \ref{en_daarom_jongens_en_meisjes} om de fout af te schatten:
+  We kunnen met het lemma \ref{en_daarom_jongens_en_meisjes} de fout af schatten. Er geldt dat
   \[
-  \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim M^{(n-1)/2}2^{-Mp}\| f \|_{H^p(\Box)}
+  \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim M^{(n-1)/2}2^{-Mp}\| f \|_{H^p(\Box)}.
   \]
   We verplaatsen alle termen die niet van $M$ afhangen naar het linkerlid, dit geeft:
   \[
@@ -1051,20 +1085,20 @@ Met bovenstaande drie lemma's is het nu mogelijk een goede afschatting te maken.
   het linkerlid van deze vergelijking geeft door:
   \[
   \begin{split}
-    h: \N \to& \R \\
-    2^M \mapsto& \frac{\left\| f - f_{\boldsymbol\nabla_M}  \right\|_{L_2(\Box)}}{\| f \|_{H^p(\Box)}}
+    h: \N \to&\, \R \\
+    2^M \mapsto&\, \frac{\left\| f - f_{\boldsymbol\nabla_M}  \right\|_{L_2(\Box)}}{\| f \|_{H^p(\Box)}}.
   \end{split}
   \]
   Vervolgens defini\"eren we de functie $g$ die het aantal wavelets geeft van dit niveau:
   \[
   \begin{split}
-    g: \N \to& \N\\
-    2^M \mapsto& N = \#\boldsymbol{\nabla}_M
+    g: \N \to&\, \N\\
+    2^M \mapsto&\, N = \#\boldsymbol{\nabla}_M.
   \end{split}
   \]
   Gebruik lemma \ref{gebruiken_we_referenties} om te vinden dat 
   \[
-  g(2^M) = N \simeq M^{n-1}2^M
+  g(2^M) = N \simeq M^{n-1}2^M.
   \]
   Met deze definities kunnen we lemma \ref{want_dit_werkt_goed_zo} toepassen. Neem $J=2^M$
   dan voldoen $h$ en $g$ aan de voorwaarden van het lemma voor $s=p$, $\mu=\tfrac{n-1}{2}$ en $\nu=n-1$,
@@ -1077,26 +1111,30 @@ Met bovenstaande drie lemma's is het nu mogelijk een goede afschatting te maken.
   \frac{\left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)}}{\| f \|_{H^p(\Box)}}
   \lesssim N^{-p} \log_2(N)^{(n-1)(1/2 + p)}, 
   \]
-  en dit is precies wat we willen bewijzen.
+  en dit is precies wat we wilden bewijzen.
 \end{proof}
 
 \subsection{Vergelijking van Mallat en Tensor}
-We vinden dus dat voor een voldoend gladde $f$ dat (gebruikend een beperkte hoeveelheid basisfuncties) de Mallatdecompositie hoogstens een convergentiesnelheid $N^{-p/n}$ bereikt, terwijl het Tensorproduct een snelheid $N^{-p} \log_2(N)^{(n-1)(p+1/2)}$ bereikt. De zogenaamde \emph{curse of dimensionality} kan dus verbroken worden door het gebruik van een Tensorproduct.
+We hebben nu gevonden dat voor een voldoend gladde $f$ en met een beperkte hoeveelheid co\"effici\"enten, 
+de Mallatdecompositie slechts een convergentiesnelheid $N^{-p/n}$ bereikt, 
+terwijl het Tensorproduct een snelheid $N^{-p} \log_2(N)^{(n-1)(p+1/2)}$ heeft. 
+De zogenaamde \emph{curse of dimensionality} kan dus verbroken worden door het gebruik van een Tensorproduct.
 
 In de praktijk hebben we echter nooit te maken met compleet gladde functies. 
 Gevolg is dat deze stellingen niet helemaal opgaan. 
-Niet \emph{helemaal}, omdat per constructie van onze wavelets de basis compact is zijn alleen 
-lokaal wavelets nodig zijn om een discontinuiteit te reconstrueren;
-we `zoomen we in' op de functie. Lokaal is de functie $f$ meestal wel glad zodat de benadering daar goed is.
+Niet \emph{helemaal}, want we hebben wavlets geconstrueerd met een compacte basis, zodat alleen 
+lokaal wavelets nodig zijn om een discontinu\"iteit te reconstrueren; we `zoomen we in' op de functie. 
+Lokaal is de functie $f$ vaak wel glad genoeg zodat de benadering daar goed is.
 
-Een gevolg van de verschillen in lokale gladheid is dat we wavelets beter moeten selecteren: meer wavelets rond een discontinuiteit en minder op de gladde delen. Hiervoor gebruiken we een zogenaamde \emph{adaptieve} deelverzameling die selecteert op de grootte van de co\"efficienten.
+Een gevolg van de verschillen in lokale gladheid is echter dat we wavelets beter moeten selecteren: meer wavelets rond een discontinuiteit en minder op de gladde delen. 
+Hiervoor gebruiken we een zogenaamde \emph{adaptieve} algoritme die selecteert op de grootte van de co\"effici\"enten.
 
 \subsection{Vergelijking met Fouriertransformatie}
-Wanneer we het convergentiegedrag van de wavelet co\"efficienten vergelijken met de daling 
+Wanneer we het convergentiegedrag van de Waveletco\"effici\"enten vergelijken met de daling 
 van de co\"effici\"enten van de Fouriertransformatie dan zien we dat de convergentie van zijn
-co\"efficienten loopt volgens $N^{-(k-1)}$ voor $f\in C^k$. De convergentie hangt dus sterk samen
-met de gladheid van de functie, terwijl dit bij de wavelets afhangt van de gekozen wavelet.
+co\"effici\"enten loopt volgens $N^{-(p-1)}$ voor $f\in C^p$. Hierdoor valt te verwachten dat 
+de Fouriertransformatie beter werkt voor dit soort functies.
 
-Zodra de functie een discontinuiteit vertoont treden er problemen op met de Fouriertransformatie,
-het reconstrueren van de discontinuiteit wordt bemoeilijkt en de reconstructie heeft enkel nog zachte
-randen. In zo'n situatie verwachten we dan ook dat de wavelettransformatie betere resultaten vertoont.
+Zodra de functie echter een discontinuiteit vertoont, treden er problemen op met de Fouriertransformatie.
+Het reconstrueren van de discontinu\"iteit wordt enorm bemoeilijkt en de reconstructie voert harde randen over
+in zachte randen. In zo'n situatie verwachten we dan ook dat de Wavelettransformatie betere resultaten vertoont.
