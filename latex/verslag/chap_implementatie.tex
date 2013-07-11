@@ -1,82 +1,44 @@
 \chapter{Onze implementie}
 \label{implementatieH}
-Een discreet signaal in 1 dimensie kan over het algemeen geschreven worden als een vector re\"ele getallen van een bepaalde lengte (de signaallengte). Wanneer we plaatjes willen beschrijven, bekijken we daarom vaak matrices. Dit is een matrix van grijswaardes, waarbij vier kanalen (rood, groen, blauw, doorzichtigheid) elk een eigen matrix hebben die bij elkaar de representatie geven van een kleurenplaatje.
+Een discreet signaal in 1 dimensie kan over het algemeen geschreven worden als een vector re\"ele getallen van een bepaalde lengte (de signaallengte). Wanneer we afbeeldingen willen beschrijven, bekijken we daarom vaak matrices van grijswaardes, waarbij de vier kanalen (rood, groen, blauw, doorzichtigheid) elk een eigen matrix hebben die bij elkaar de representatie geven van een kleurenafbeelding.
 
-Omdat het menselijk oog niet heel nauwkeurig is, en door de limitaties van computers, slaan we de matrixco\"effici\"enten niet op als re\"ele getallen. In plaats daarvan worden vaak integerwaardes tussen 0 en 255 gebruikt. Omdat elk van de 3 kleurenkanalen zo 256 waardes krijgt, is het kleurenpallet toch groot. In elk van onze implementaties worden beelden gescheiden in haar vier kanalen en wordt op elk kanaal afzonderlijk het algoritme toegpast. De reden voor deze keuze is dat de verschillende kanalen niet veel met elkaar van doen hoeven hebben.
+Omdat het menselijk oog niet heel nauwkeurig is -- en door de limitaties van computers -- slaat men de matrixco\"effici\"enten niet op als re\"ele getallen. In plaats daarvan worden vaak integerwaardes tussen 0 en 255 gebruikt. Omdat elk van de 3 kleurenkanalen zo 256 waardes krijgt, is het kleurenpallet toch groot. In elk van onze implementaties worden beelden gescheiden in haar vier kanalen en wordt op elk kanaal afzonderlijk het algoritme toegpast. De reden voor deze keuze is dat de verschillende kanalen niet veel met elkaar van doen hoeven hebben.
 
-Bewegend beeld is zo op precies dezelfde manier te zien als een driedimensionale matrix.
+Bewegend beeld is zo op precies dezelfde manier te zien als een driedimensionale matrix waarbij we meerdere afbeeldingen achter elkaar plakken.
 
 \section{Implementatie van Fouriertransformatie in Python}
 Met de theoretische basis uit voorgaande secties is de implementatie van het 
 \emph{Fast Fourier Transform}-algoritme nu aan bod gekomen. 
-In deze sectie zullen we uitweiden over enkele genomen hordes en gemaakte keuzes, de resultaten volgen
+In deze sectie zullen we uitweiden over enkele genomen hordes en gemaakte keuzes. De resultaten volgen
 in een latere sectie.
 
 \subsection{Fast Fourier Transform Implementatie}
-De Pythoncode die gebruikt is om het FFT-algoritme in te programmeren volgt precies het schema van de eerder gegeven pseudocode.
-
-\begin{lstlisting}[caption={FFT algoritme in Python, voert de pseudocode uit zoals in sectie~\ref{fft_sec}}]
-def FFT( xs ):
-    N = len(xs)
-    if N <= 1:                  # randconditie
-        return xs
-    else:
-        even = FFT(xs[0::2])    # voer FFT uit op even indices
-        odd  = FFT(xs[1::2])    # voer FFT uit op oneven indices
-
-        return [0.5*(even[k] + exp(-2j*pi*k/N)*odd[k]) for k in range(N/2)] + 
-               [0.5*(even[k] - exp(-2j*pi*k/N)*odd[k]) for k in range(N/2)]
-\end{lstlisting}as
+De Pythoncode uit \autoref{fft} die gebruikt is om het FFT-algoritme in te programmeren volgt precies het schema van de eerder gegeven pseudocode.
 
 Hierbij dient uitgelegd te worden dat de notatie \texttt{a + b} voor twee lijsten de \emph{concatenatie} van de lijsten geeft.
 Dit algoritme werkt -- zoals eerder beschreven -- enkel op signalen waarvan de lengte
-$N$ een macht van $2$ is. We hebben daarom signaalextensie toe moeten passen door middel van zero-padding
+$N$ een macht van $2$ is. We hebben daarom signaalextensie toe moeten passen in \autoref{zeropad} door middel van zero-padding
 om het programma ook op andersvormige signalen te laten werken.
 
-\begin{lstlisting}[caption={Zero-padding algoritme in Python, voegt nullen toe tot een tweemacht is bereikt}]
-def Zero_Padding( xs ):
-    N_old = len(xs)
-    N_new = 2**ceil(log(N_old,2))         # rond logaritme af voor kleinste tweemacht
-    return [xs[k] if (k < N_old) else 0 for k in range(N_new)]
-\end{lstlisting}
-
-Vervolgens hebben we deze code toegepast in twee dimensies. We maken hier gebruik van de definitie van het
+Vervolgens hebben we deze code toegepast in twee dimensies. We maken hier gebruik van de definitie van de
 MFFT-algoritme, dat grofweg zegt dat een meerdimensionaal algoritme kan worden geconstrueerd door herhaald 
 het 1-dimensionale geval toe te passen. Voor 2 dimensies in het bijzonder betekent dit dat we simpelweg 
-FFT konden toepassen op rijen en kolommen.
+FFT konden toepassen op rijen en kolommen: zie \autoref{fft2d}.
 
-\begin{lstlisting}[caption=2-Dimensionaal FFT algoritme]
-def FFT_2D( xss ):
-    xss = map(FFT, xss)        # voer FFT uit op rijen
-
-    xss_t = transpose(xss)     # verwissel rijen met kolommen
-    xss_t = map(FFT, xss_t)    # voer FFT uit op kolommen
-    xss   = transpose(xss_t)   # maak verwisseling ongedaan 
-
-    return xss
-\end{lstlisting}
-Hier is dus gebruik gemaakt van function-mapping.
-Met het oog op duidelijkheid is hier de Zero-Padding fase weggelaten, 
-dit algoritme verwacht nu nog een $2^n \times 2^m$ matrix maar dit i
-s gemakkelijk te implementeren door Zero-Padding toe te passen op rijen en kolommen.
+Hier is gebruik gemaakt van function-mapping uit \S \ref{python}.
+Met het oog op duidelijkheid is de Zero-Padding-fase weggelaten en
+deze algoritme verwacht nu nog een $2^n \times 2^m$ matrix maar dit is gemakkelijk te implementeren door Zero-Padding toe te passen op rijen en kolommen.
 
 \subsection{Compressie}
 Zoals in de introductie van ons verslag al aan bod gekomen is, hebben we compressie bereikt door de kleinste 
 co\"effici\"enten weg te gooien en aan de slag te gaan met een kleinere lijst. 
-Dit brengt twee problemen met zich mee: (1) welke waarde nemen we als \emph{cutoff}, 
-en (2) hoe slaan we de overgebleven co\"effici\"enten op?
+Dit brengt twee problemen met zich mee: als eerste, welke waarde moet er als \emph{cutoff} genomen worden en ten tweede, hoe slaan we de overgebleven co\"effici\"enten op?
+
 \subsubsection{Cutoff}
 Hoewel ons eerste programma een voorgegeven cutoff verwachtte, wilden we liever op compressieratio selecteren.
-Daarom hebben latere versies de volgende routine gebruikt. 
-\begin{lstlisting}[caption=Het vinden van een goede cutoff-waarde gegeven een gewenst compressieniveau]
-def find_cutoff( mat, ratio ):
-	if ratio < 0 or ratio > 1: return
-	length = reduce( lambda x, y: x*y, array.shape ) #aantal cellen in de matrix 
-	vector = reshape(array, length) 				 #reshape naar 1 lange vector
-	sort(modulus(vector)) 							 #sorteer de vector
-	return vector[ int( ratio*len(vector) ) ]
-\end{lstlisting}
-We sorteren hier de co\"effici\"enten in \texttt{mat} op grootte en kiezen de cutoff als de co\"effici\"ent
+Daarom hebben latere versies de routine uit \autoref{cutoff} gebruikt. 
+
+We sorteren de co\"effici\"enten in \texttt{mat} op grootte en kiezen de cutoff als de co\"effici\"ent
 die de lijst opdeelt ten opzichte van de \texttt{ratio}.
 
 \subsubsection{Opslaan van de co\"effici\"enten}
@@ -85,74 +47,20 @@ we moesten daarom bijgehouden \emph{welke} co\"effici\"enten er opgeslagen worde
 Hier hebben wij een feature van Python gebruikt, de \emph{dictionary}.
 Een dictionary in Python is niks meer dan een lijst van (naam, waarde)-paren. 
 De naam is in ons geval de plek in de matrix en de waarde is het (complexe) getal wat in die cel hoort te staan. 
-Dit geeft aanleiding tot het schrijven van twee routines \texttt{dict2mat} en \texttt{mat2dict}.
-\begin{lstlisting}[caption=Matrix naar dictionary conversie]
-def mat2dict( mat, cutoff ):
-	N, M = mat.shape
-	dict = {}
-	for y in range(N):
-		for x in range(M):
-			if modulus( mat[y][x] ) >= cutoff:
-				dict[(y,x)] = mat[y][x]
-	return (dict, N, M)
-\end{lstlisting}
+Dit geeft aanleiding tot het schrijven van twee routines \texttt{dict2mat} (\autoref{mat2dict}) en \texttt{mat2dict} (\autoref{dict2mat}).
 
-\begin{lstlisting}[caption=Dictionary naar matrix conversie]
-def dict2mat( dict, N, M ):
-	mat = []
-	for y in range( N ):
-		row = []
-		for x in range( M ):
-			i = (y, x)
-			row[x] = dict[i] if i in dict else 0.0
-		mat[y] = row
-	return mat
-\end{lstlisting}
-
-Duidelijk moge zijn dat we, door deze twee functies na elkaar uit te voeren, een matrix terugkrijgen met nullen waar eerst kleine co\"effici\"enten stonden.
+Duidelijk moge zijn dat we, door deze twee functies na elkaar uit te voeren, een matrix terugkrijgen met nullen waar eerst co\"effici\"enten kleiner dan \texttt{cutoff} stonden.
 
 \subsection{Het .wvg-beeldformaat}
-Hoewel we een eigen beeldformaat gemaakt hebben, is het ons niet gelukt om de plaatjes echt in minder ruimte op te slaan dan hun ongecomprimeerde versie. Dit heeft met twee dingen te maken. Ten eerste is de manier waarop wij de dictionaries opgeslagen hebben niet optimaal geweest.\footnote{Later bedachten we nog een manier die ongeveer 50\% van de oorspronkelijke ruimte in zou nemen, door niet (index, waarde)-paren op te slaan maar met een zogenaamde bitmap.} Ten tweede is de Fouriertransformatie een complex algoritme in de zin dat zij complexe co\"effici\"enten teruggeeft. Door het isomorfisme $\C \simeq \R^2$ moesten wij zodoende twee waardes voor elke co\"effici\"ent opslaan.
+Hoewel we een eigen beeldformaat gemaakt hebben, is het ons niet gelukt om de afbeeldingen echt in minder ruimte op te slaan dan hun ongecomprimeerde versie. Dit heeft met twee dingen te maken. Ten eerste is de manier waarop wij de dictionaries opgeslagen hebben niet optimaal geweest.\footnote{Later bedachten we nog een manier die ongeveer 50\% van de oorspronkelijke ruimte in zou nemen, door niet (index, waarde)-paren op te slaan maar met een zogenaamde bitmap.} Ten tweede is de Fouriertransformatie een complex algoritme in de zin dat zij complexe co\"effici\"enten teruggeeft. Door het isomorfisme $\C \simeq \R^2$ moesten wij zodoende twee waardes voor elke co\"effici\"ent opslaan.
 
 \section{Wavelets in 1 dimensie}
 Een orthogonale wavelet wordt discreet helemaal gekenmerkt door haar filter $h$. Zoals beschreven in de sectie over de FWT, hebben we daarmee (via vergelijkingen~\ref{highpassfilter}, \ref{approx_rec}, \ref{detail_rec}, \ref{reconstr_FWT}) feitelijk het algoritme al helemaal in handen. Definieer
 \[
 	\texttt{dec\_l} := \bar{h} \quad \texttt{dec\_h} := \bar{g} \quad 
-        \texttt{rec\_l} := h; \quad \texttt{rec\_h} := g.
+        \texttt{rec\_l} := h \quad \quad \texttt{rec\_h} := g.
 \]
-Dan kunnen we met twee routines in elke richting het algoritme simpel implementeren.
-\begin{lstlisting}[caption=De FWT]
-def next(wavelet, signal):
-	low = downsampling_convolution( signal, wavelet.dec_l )
-	hi = downsampling_convolution( signal, wavelet.dec_h )
-	return concatenate(low, hi)
-	
-def fwt(wavelet, signal):
-	signal = zero_pad(signal)
-	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte
-	
-	for i in range( steps ):
-		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
-		signal[0:k] = next( signal[0:k], wavelet )
-	return signal
-\end{lstlisting}
-\begin{lstlisting}[caption=De iFWT]
-def prev(wavelet, signal):
-	N = len(signal)
-	low = upsampling_convolution( signal[:N//2], wavelet.rec_l )
-	hi = upsampling_convolution( signal[N//2:], wavelet.rec_h )
-	return  sum(low, hi) 	#elementsgewijze sommatie
-	
-def ifwt( wavelet, signal, original_length ):
-	steps = int( log( len(signal), 2) ) #neem de 2-log van de lengte
-	
-	for i in range( steps ):
-		j = steps - i - 1 #we gaan andersom
-		k = len(signal) / 2**j
-		signal[0:k] = prev( signal[0:k], wavelet)
-	return signal[0:original_length] #het signaal was aangevuld tot een tweemacht
-
-\end{lstlisting}
+Dan kunnen we met twee routines (\autoref{next} en \autoref{prev}) in elke richting het algoritme simpel implementeren.
 
 \section{Wavelets in twee dimensies}
 Zoals eerder beschreven is, kunnen we in meer dimensies twee kanten op: de Mallatdecompositie en het Tensorproduct.
@@ -162,151 +70,21 @@ We zullen aan beiden wat aandacht besteden.
 De Mallatdecompositie is qua implementatie vrij simpel. 
 We gebruiken nog steeds de eendimensionale \texttt{next} en \texttt{prev} routines 
 door deze bij elke stap op rijen en kolommen uit te voeren, wat equivalent is met een tweedimensionale convolutie.
-Omdat we hier in twee richtingen werken, moet het signaal bovendien aangevuld worden tot een vierkante tweemacht.
-\footnote{Het is mogelijk om een rechthoek te transformeren maar daar hebben wij hier geen aandacht aan besteed.}
+Omdat we hier in twee richtingen werken, moet het signaal bovendien aangevuld worden tot een vierkante tweemacht.\footnote{Het is mogelijk om een rechthoek te transformeren maar daar hebben wij hier geen aandacht aan besteed.} Zie \autoref{fwt2d} en \autoref{ifwt2d}.
 
-\begin{lstlisting}[caption=De Mallatdecompositie in 2 dimensies]
-def next_2d( wavelet, signal ):
-	x, y = signal.shape
-	for j in range(x): #1d-fwt op de rijen
-		signal[j, :] = next( wavelet, signal[j, :] )
-	for i in range(y): #1d-fwt op de kolommen
-		signal[:, i] = next( wavelet, signal[:, i] )
-	return signal
-
-def fwt2d(wavelet, signal):
-	signal = zero_pad_2d(signal)
-	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte
-	
-	for i in range( steps ):
-		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
-		signal[0:k,0:k] = next_2d( signal[0:k,0:k], wavelet )
-	return signal
-\end{lstlisting}
-\begin{lstlisting}[caption=De omgekeerde Mallatdecompositie in 2 dimensies]
-def prev_2d( wavelet, signal ):
-	x, y = signal.shape
-	for j in range(x): #1d-ifwt op de rijen
-		signal[j, :] = prev( wavelet, signal[j, :] )
-	for i in range(y): #1d-ifwt op de kolommen
-		signal[:, i] = prev( wavelet, signal[:, i] )
-	return signal
-
-def ifwt2d( wavelet, signal, N, M ): #N en M zijn originele lengte en breedte
-	steps = int( log( len(signal), 2) ) #neem de 2-log van de lengte
-	
-	for i in range( steps ):
-		j = steps - i - 1 #we gaan andersom
-		k = len(signal) / 2**j
-		signal[0:k,0:k] = prev_2d( signal[0:k,0:k], wavelet)
-	return signal[0:N,0:M]
-\end{lstlisting}
 
 \subsection{Tensorproduct}
-Het Tensorproduct in meer dimensies gaat in principe net zoals de Fouriertransformatie in meer dimensies, door op rijen en kolommen het algoritme in 1 dimensie toe te passen.
-\begin{lstlisting}[caption=De 2d FWT in het Tensorgeval]
-def fwt2d_tensor(wavelet, signal):
-	signal = zero_pad(signal)
-	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte
-	
-	for i in range( steps ):
-		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
-		for p in range( len( signal ) ):
-			signal[p, 0:k] = next( signal[p, 0:k], wavelet )
-		for q in range( len( signal ) ):
-			signal[0:k, q] = next( signal[0:k, q], wavelet )
-	return signal
-\end{lstlisting}
-\begin{lstlisting}[caption=De 2d iFWT in het Tensorgeval]
-def ifwt2d_tensor( wavelet, signal, original_length ):
-	steps = int( log( len(signal), 2) ) #neem de 2-log van de lengte
-	
-	for i in range( steps ):
-		j = steps - i - 1 #we gaan andersom
-		k = len(signal) / 2**j
-		for q in range( len( signal ) ):
-			signal[0:k, q] = prev( signal[0:k, q], wavelet )
-		for p in range( len( signal ) ):
-			signal[p, 0:k] = prev( signal[p, 0:k], wavelet )
-	return signal[0:original_length] #het signaal was aangevuld tot een tweemacht
-\end{lstlisting}
+Het Tensorproduct in meer dimensies uit \autoref{tensorimpl} gaat in principe net zoals de Fouriertransformatie in meer dimensies door op rijen en kolommen de algoritme in 1 dimensie toe te passen.
 
 \section{Hogere dimensies}
-In hogere dimensies wordt het nog interessanter. In bijvoorbeeld drie dimensies kunnen we naast de Mallatdecompositie en het Tensorproduct, ook een \emph{mengvorm} toepassen. Wij hebben er voor gekozen om in dit geval de Mallatdecompositie in het $x,y$-vlak te gebruiken, en het Tensorproduct in de $z$-richting hier loodrecht op.
+In hogere dimensies wordt het nog interessanter. In bijvoorbeeld drie dimensies kunnen we -- naast de Mallatdecompositie en het Tensorproduct -- ook de eerder genoemde mengvorm toepassen. Wij hebben er voor gekozen om in dit geval de Mallatdecompositie in het $x,y$-vlak te gebruiken, en het Tensorproduct in de $z$-richting hier loodrecht op.
 
 \subsection{Mallatdecompositie}
-De Mallatdecompositie in drie dimensies is gemakkelijk voort te zetten uit de tweedimensionale variant interessant,
-er moet nu tijdens elke stap naast een \texttt{next} of \texttt{prev} stap in de $y$ en $z$ richting ook nog een 
-in de $z$ richting gedaan worden. 
-\begin{lstlisting}[caption=De Mallatdecompositie in 3 dimensies]
-def next_3d( wavelet, signal ):
-	x, y, z = signal.shape
-	for j in range(x): #2d-fwt op de rijen
-		signal[j, :, :] = next_2d( wavelet, signal[j, :, :] )
-	for k in range(y):
-		for l in range(z): #1d-fwt op de kolommen
-			signal[:,k,l] = next( wavelet, signal[:,k,l] )
-	return signal
-
-def fwt3d(wavelet, signal):
-	signal = zero_pad_3d(signal)
-	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte in 1 richting
-	
-	for i in range( steps ):
-		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
-		signal[0:k,0:k,0:k] = next_3d( signal[0:k,0:k,0:k], wavelet )
-	return signal
-\end{lstlisting}
-\begin{lstlisting}[caption=De omgekeerde Mallatdecompositie in 3 dimensies]
-def prev_3d( wavelet, signal ):
-	x, y, z = signal.shape
-	for j in range(x): #2d-ifwt op de rijen
-		signal[j, :, :] = prev_2d( wavelet, signal[j, :, :] )
-	for k in range(y):
-		for l in range(z): #1d-ifwt op de kolommen
-			signal[:,k,l] = prev( wavelet, signal[:,k,l] )
-	return signal
-
-def ifwt3d( wavelet, signal, N, M, O ): #N, M en O zijn originele lengte, breedte en diepte
-	steps = int( log( len(signal), 2) )
-	
-	for i in range( steps ):
-		j = steps - i - 1 #we gaan andersom
-		k = len(signal) / 2**j
-		signal[0:k,0:k,0:k] = prev_3d( signal[0:k,0:k,0:k], wavelet)
-	return signal[0:N,0:M,0:O]
-\end{lstlisting}
+De Mallatdecompositie in drie dimensies is gemakkelijk voort te zetten uit de tweedimensionale variant en
+er moet nu tijdens elke stap naast een \texttt{next} of \texttt{prev}-stap in de $y$-en $z$-richting ook nog een stap 
+in de $z$-richting gedaan worden. Zie \autoref{mallat3d} 
 
 \subsection{Mengvorm}
-Bij de mengvorm gaan we iets interessanters doen, zoals bij het tweedimensionale Tensorproduct
-voeren we weer functionmapping uit, echter dit maal voeren we de tweedimensionale Mallatdecompositie
-uit op elk $x,y$ vlak en voeren we vervolgens de \emph{FWT} uit op elke rij in de $z$ richting.
-\begin{lstlisting}[caption=De mengvorm in 3 dimensies]
-def fwt3d_mix(wavelet, signal):
-	signal = zero_pad_3d(signal)
-	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte in 1 richting
-	
-	for i in range( steps ):
-		m = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
-		for j in range(len( signal )): #2d-fwt op de rijen
-			signal[j, 0:k, 0:k] = next_2d( wavelet, signal[j, 0:k, 0:k] )
-		for k in range(len( signal )):
-			for l in range(len( signal )): #1d-fwt op de kolommen
-				signal[0:k,m,l] = next( wavelet, signal[0:k,m,l] )
-
-	return signal
-\end{lstlisting}
-\begin{lstlisting}[caption=De omgekeerde mengvorm in 3 dimensies]
-def ifwt3d_mix( wavelet, signal, N, M, O ): #N, M en O zijn originele lengte, breedte en diepte
-	steps = int( log( len(signal), 2) )
-	
-	for i in range( steps ):
-		j = steps - i - 1 #we gaan andersom
-		m = len(output) / 2**j #pak eerst alles, dan de helft, dan een kwart etc.
-		for n in range(len( signal )): #2d-fwt op de rijen
-			signal[n, 0:k, 0:k] = prev_2d( wavelet, signal[n, 0:k, 0:k] )
-		for k in range(len( signal )):
-			for l in range(len( signal )): #1d-fwt op de kolommen
-				signal[0:k,m,l] = prev( wavelet, signal[0:k,m,l] )
-	return signal[0:N,0:M,0:O]
-\end{lstlisting}
+Bij de mengvorm gaan we iets interessanters doen: zoals bij het tweedimensionale Tensorproduct
+voeren we weer function-mapping uit maar dit maal voeren we de tweedimensionale Mallatdecompositie
+uit op elk $(x,y)$-vlak en voeren we vervolgens de \emph{FWT} uit op elke rij in de $z$-richting. Het resultaat is te vinden in \autoref{mengertje}

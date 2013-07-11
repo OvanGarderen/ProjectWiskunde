@@ -1,0 +1,229 @@
+\chapter{Pythoncode}
+
+\begin{lstlisting}[label=fft,float=h!,caption={FFT algoritme in Python, voert de pseudocode uit zoals in sectie~\ref{fft_sec}}]
+def FFT( xs ):
+    N = len(xs)
+    if N <= 1:                  # randconditie
+        return xs
+    else:
+        even = FFT(xs[0::2])    # voer FFT uit op even indices
+        odd  = FFT(xs[1::2])    # voer FFT uit op oneven indices
+
+        return [0.5*(even[k] + exp(-2j*pi*k/N)*odd[k]) for k in range(N/2)] + 
+               [0.5*(even[k] - exp(-2j*pi*k/N)*odd[k]) for k in range(N/2)]
+\end{lstlisting}
+
+\begin{lstlisting}[label=zeropad,float=h!,caption={Zero-padding algoritme in Python, voegt nullen toe tot een tweemacht is bereikt}]
+def zero_pad( xs ):
+    N_old = len(xs)
+    N_new = 2**ceil(log(N_old,2))         # rond logaritme af voor kleinste tweemacht
+    return [xs[k] if (k < N_old) else 0 for k in range(N_new)]
+\end{lstlisting}
+
+\begin{lstlisting}[label=fft2d,float=h!,caption=2-Dimensionaal FFT algoritme]
+def FFT_2D( xss ):
+    xss = map(FFT, xss)        # voer FFT uit op rijen
+
+    xss_t = transpose(xss)     # verwissel rijen met kolommen
+    xss_t = map(FFT, xss_t)    # voer FFT uit op kolommen
+    xss   = transpose(xss_t)   # maak verwisseling ongedaan 
+
+    return xss
+\end{lstlisting}
+
+\begin{lstlisting}[label=cutoff,float=h!,caption=Het vinden van een goede cutoff-waarde gegeven een gewenst compressieniveau]
+def find_cutoff( mat, ratio ):
+	if ratio < 0 or ratio > 1: return
+	length = reduce( lambda x, y: x*y, array.shape ) #aantal cellen in de matrix 
+	vector = reshape(array, length) 				 #reshape naar 1 lange vector
+	sort(modulus(vector)) 							 #sorteer de vector
+	return vector[ int( ratio*len(vector) ) ]
+\end{lstlisting}
+
+\begin{lstlisting}[label=mat2dict,float=h!,caption=Matrix naar dictionary conversie]
+def mat2dict( mat, cutoff ):
+	N, M = mat.shape
+	dict = {}
+	for y in range(N):
+		for x in range(M):
+			if modulus( mat[y][x] ) >= cutoff:
+				dict[(y,x)] = mat[y][x]
+	return (dict, N, M)
+\end{lstlisting}
+
+\begin{lstlisting}[label=dict2mat,float=h!,caption=Dictionary naar matrix conversie]
+def dict2mat( dict, N, M ):
+	mat = []
+	for y in range( N ):
+		row = []
+		for x in range( M ):
+			i = (y, x)
+			row[x] = dict[i] if i in dict else 0.0
+		mat[y] = row
+	return mat
+\end{lstlisting}
+
+\begin{lstlisting}[label=next,float=h!,caption=De FWT]
+def next(signal):
+	low = downsampling_convolution( signal, dec_l )
+	hi = downsampling_convolution( signal, dec_h )
+	return concatenate(low, hi)
+	
+def fwt(signal):
+	signal = zero_pad(signal)
+	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte
+	
+	for i in range( steps ):
+		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		signal[0:k] = next( signal[0:k] )
+	return signal
+	
+\end{lstlisting}
+
+\begin{lstlisting}[label=prev,float=h!,caption=De iFWT]
+def prev(signal):
+	N = len(signal)
+	low = upsampling_convolution( signal[:N//2], rec_l )
+	hi = upsampling_convolution( signal[N//2:], rec_h )
+	return  sum(low, hi) 	#elementsgewijze sommatie
+	
+def ifwt( wavelet, signal, original_length ):
+	steps = int( log( len(signal), 2) ) #neem de 2-log van de lengte
+	
+	for i in range( steps ):
+		j = steps - i - 1 #we gaan andersom
+		k = len(signal) / 2**j
+		signal[0:k] = prev( signal[0:k])
+	return signal[0:original_length] #het signaal was aangevuld tot een tweemacht
+\end{lstlisting}
+
+\begin{lstlisting}[label=fwt2d,float=h!,caption=De Mallatdecompositie in 2 dimensies]
+def next_2d( signal ):
+	x, y = signal.shape
+	for j in range(x): #1d-fwt op de rijen
+		signal[j, :] = next( signal[j, :] )
+	for i in range(y): #1d-fwt op de kolommen
+		signal[:, i] = next( signal[:, i] )
+	return signal
+
+def fwt2d(wavelet, signal):
+	signal = zero_pad_2d(signal)
+	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte
+	
+	for i in range( steps ):
+		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		signal[0:k,0:k] = next_2d( signal[0:k,0:k] )
+	return signal
+\end{lstlisting}
+
+\begin{lstlisting}[label=ifwt2d,float=h!,caption=De inverse Mallatdecompositie in 2 dimensies]	
+def prev_2d( signal ):
+	x, y = signal.shape
+	for j in range(x): #1d-ifwt op de rijen
+		signal[j, :] = prev( signal[j, :] )
+	for i in range(y): #1d-ifwt op de kolommen
+		signal[:, i] = prev( signal[:, i] )
+	return signal
+
+def ifwt2d( signal, N, M ): #N en M zijn originele lengte en breedte
+	steps = int( log( len(signal), 2) ) #neem de 2-log van de lengte
+	
+	for i in range( steps ):
+		j = steps - i - 1 #we gaan andersom
+		k = len(signal) / 2**j
+		signal[0:k,0:k] = prev_2d( signal[0:k,0:k] )
+	return signal[0:N,0:M]
+\end{lstlisting}
+
+\begin{lstlisting}[label=tensorimpl,float=h!,caption=De 2D FWT in het Tensorgeval]
+def fwt2d_tensor(signal):
+	signal = zero_pad(signal)
+	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte
+	
+	for i in range( steps ):
+		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		for p in range( len( signal ) ):
+			signal[p, 0:k] = next( signal[p, 0:k] )
+		for q in range( len( signal ) ):
+			signal[0:k, q] = next( signal[0:k, q] )
+	return signal
+
+def ifwt2d_tensor( signal, N, M ):
+	steps = int( log( len(signal), 2) ) #neem de 2-log van de lengte
+	
+	for i in range( steps ):
+		j = steps - i - 1 #we gaan andersom
+		k = len(signal) / 2**j
+		for q in range( len( signal ) ):
+			signal[0:k, q] = prev( signal[0:k, q] )
+		for p in range( len( signal ) ):
+			signal[p, 0:k] = prev( signal[p, 0:k] )
+	return signal[0:N,0:M] #het signaal was aangevuld tot een tweemacht
+\end{lstlisting}
+
+\begin{lstlisting}[label=mallat3d,float=h!,caption=De Mallatdecompositie in 3 dimensies]
+def next_3d( signal ):
+	x, y, z = signal.shape
+	for j in range(x): #2d-fwt op de rijen
+		signal[j, :, :] = next_2d( signal[j, :, :] )
+	for k in range(y):
+		for l in range(z): #1d-fwt op de kolommen
+			signal[:,k,l] = next( signal[:,k,l] )
+	return signal
+
+def fwt3d(wavelet, signal):
+	signal = zero_pad_3d(signal)
+	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte in 1 richting
+	
+	for i in range( steps ):
+		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		signal[0:k,0:k,0:k] = next_3d( signal[0:k,0:k,0:k] )
+	return signal
+
+def prev_3d( signal ):
+	x, y, z = signal.shape
+	for j in range(x): #2d-ifwt op de rijen
+		signal[j, :, :] = prev_2d( signal[j, :, :] )
+	for k in range(y):
+		for l in range(z): #1d-ifwt op de kolommen
+			signal[:,k,l] = prev( signal[:,k,l] )
+	return signal
+
+def ifwt3d( wavelet, signal, N, M, O ): #N, M en O zijn originele lengte, breedte en diepte
+	steps = int( log( len(signal), 2) )
+	
+	for i in range( steps ):
+		j = steps - i - 1 #we gaan andersom
+		k = len(signal) / 2**j
+		signal[0:k,0:k,0:k] = prev_3d( signal[0:k,0:k,0:k] )
+	return signal[0:N,0:M,0:O]
+\end{lstlisting}
+
+\begin{lstlisting}[label=mengertje,float=h!,caption=De mengvorm in 3 dimensies]
+def fwt3d_mix(signal):
+	signal = zero_pad_3d(signal)
+	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte in 1 richting
+	
+	for i in range( steps ):
+		m = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		for j in range(len( signal )): #2d-fwt op de rijen
+			signal[j, 0:k, 0:k] = next_2d( signal[j, 0:k, 0:k] )
+		for k in range(len( signal )):
+			for l in range(len( signal )): #1d-fwt op de kolommen
+				signal[0:k,m,l] = next( signal[0:k,m,l] )
+
+	return signal
+
+def ifwt3d_mix( signal, N, M, O ): #N, M en O zijn originele lengte, breedte en diepte
+	steps = int( log( len(signal), 2) )
+	
+	for i in range( steps ):
+		j = steps - i - 1 #we gaan andersom
+		m = len(output) / 2**j #pak eerst alles, dan de helft, dan een kwart etc.
+		for n in range(len( signal )): #2d-fwt op de rijen
+			signal[n, 0:k, 0:k] = prev_2d( signal[n, 0:k, 0:k] )
+		for k in range(len( signal )):
+			for l in range(len( signal )): #1d-fwt op de kolommen
+				signal[0:k,m,l] = prev( signal[0:k,m,l] )
+	return signal[0:N,0:M,0:O]
+\end{lstlisting}

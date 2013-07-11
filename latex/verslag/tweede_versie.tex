@@ -18,13 +18,14 @@
 
 % PYTHON CODE
 \usepackage{listings}
+
 \usepackage{color}
 
 \DeclareCaptionFont{black}{ \color{black} }
 \DeclareCaptionFormat{listing}{
   \parbox{\textwidth}{\hfill#3}
 }
-\captionsetup[lstlisting]{ format=listing, textfont=black, singlelinecheck=false, margin=0pt, font={footnotesize} }
+%\captionsetup[lstlisting]{ format=listing, textfont=black, singlelinecheck=false, margin=0pt, font={footnotesize} }
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -39,15 +40,18 @@
   columns=flexible,
   basicstyle={\small\ttfamily},
   numbers=none,
-  numberstyle=\tiny\color{gray},
+\iffalse
+  numberstyle=\tiny,\color{gray},
   keywordstyle=\color{blue},
   commentstyle=\color{dkgreen},
   stringstyle=\color{mauve},
+\fi
   breaklines=true,
   breakatwhitespace=true,
   captionpos=b,
   tabsize=3
 }
+
 %PYTHON CODE
 
 \usepackage[dutch]{babel}
@@ -108,7 +112,7 @@
 
 \setlength\parindent{0pt}
 \parskip = \baselineskip
-\setcounter{tocdepth}{2}
+\setcounter{tocdepth}{1}
 \setcounter{secnumdepth}{1}
 
 \title{JPEG-2000: de wondere wereld van Wavelets}
@@ -122,8 +126,8 @@
 	\includegraphics[width=0.6\linewidth]{plaatjes/voorkant.png}
 }
 
-%\includeonly{chap_fourier}
 \begin{document}
+\pagenumbering{roman}
 \maketitle
 
 \begin{abstract}
@@ -146,9 +150,12 @@ Op het voorblad is te zien, vanaf linksboven en dan met de klok mee:
 \end{itemize}
 \end{abstract}
 
+\newgeometry{left=2cm,right=2cm,top=1cm,bottom=1cm}
 \tableofcontents
+\restoregeometry
 \newpage
 
+\pagenumbering{arabic}
 \chapter*{Inleiding}
 \addcontentsline{toc}{chapter}{Inleiding}
 Wanneer we foto's naar elkaar versturen, wanneer we grote bestanden downloaden, bij het opslaan van muziek: we hebben allemaal te maken met compressie. Compressie is het encoderen van informatie met minder bits (informatie-eenheden) dan de originele representatie. In het bijzonder heeft beeldcompressie als doel om irrelevante en redundante informatie in het beeld te verminderen zodat zij effici\"enter opgeslagen of verstuurd kan worden.
@@ -210,7 +217,7 @@ Een belangrijk deel van ons project is de implementatie, waarover is te lezen is
 Voor de implementatie van de algoritmes uit dit verslag is de taal Python gebruikt.
 Enkele redenen hiervoor waren:
 \begin{itemize}
-\item Voorzieningen om beeld en geluid te laden m.b.v. de \emph{scipy}\cite{scipy} en \emph{Python Image Library}\cite{pil} pakketten.
+\item Voorzieningen om beeld en geluid te laden m.b.v.~de \emph{scipy}\cite{scipy} en \emph{Python Image Library}\cite{pil} pakketten.
   Deze pakketten lieten ons bijvoorbeeld toe om beelden te laden als matrix van kleurwaarden en deze weer op te slaan
   nadat we deze gereconstrueerd hadden. Zo hoefden we ons niet te bekommeren om het inladen van de verschillende beeldformaten.
 \item Robuuste pakketten voor wiskunde zoals \emph{numpy}\cite{numpy} en \emph{scipy}. Dit stelde ons in staat gemakkelijk om te gaan met matrices en lijsten van arbitraire dimensie.
@@ -236,6 +243,10 @@ omdat we ons niet bezighouden met kleine optimalisaties en vertrouwen op de Pyth
 \include{chap_reflectie_en_discussie}
 
 \include{chap_samenvatting}
+
+\appendix
+
+\include{chap_pythoncode}
 
 \begin{thebibliography}{11}
 \addcontentsline{toc}{chapter}{Bibliografie} 
