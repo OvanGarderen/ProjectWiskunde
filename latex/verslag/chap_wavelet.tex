@@ -337,10 +337,9 @@ in termen van de co\"effici\"enten op de resolutie $2^j$:
   d_{j-1}[n] = \inpr{f}{\psi_{j-1,n}}
   = \sum_{k=-\infty}^{\infty} g[k-2n] \inpr{f}{\phi_{j,k}}
   = \sum_{k=-\infty}^\infty g[k-2n] a_{j}[k]
-  = (a_j \star \bar g)[2n].
+  = (a_j \star \bar g)[2n],
 \end{equation}
-Waarbij $\bar f: x \mapsto f(-x)$ en $x\star y$ de discrete convolutie aangeeft,
-als kortere schrijfwijze van deze sommatie.
+waarbij $\bar f: x \mapsto f(-x)$.
 De relatie die hier gevonden is geeft aanleiding tot een algoritme.
 
 \begin{algo}[Fast Wavelet Transform]
@@ -1135,6 +1134,6 @@ van de co\"effici\"enten van de Fouriertransformatie dan zien we dat de converge
 co\"effici\"enten loopt volgens $N^{-(p-1)}$ voor $f\in C^p$. Hierdoor valt te verwachten dat 
 de Fouriertransformatie beter werkt voor dit soort functies.
 
-Zodra de functie echter een discontinuiteit vertoont, treden er problemen op met de Fouriertransformatie.
+Zodra de functie echter een discontinuiteit vertoont treden er problemen op met de Fouriertransformatie.
 Het reconstrueren van de discontinu\"iteit wordt enorm bemoeilijkt en de reconstructie voert harde randen over
 in zachte randen. In zo'n situatie verwachten we dan ook dat de Wavelettransformatie betere resultaten vertoont.

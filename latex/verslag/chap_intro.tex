@@ -78,6 +78,14 @@ Hier zijn $i_1$'de tot en met de $i_k$'de co\"ordinaat vastgenomen. Voor een mat
 bijvoorbeeld gezien worden als een rij of een kolom. Dan geeft $i_1$ aan of de rij of kolom
 vast staat en geeft $a_{i_1}$ aan welke rij respectievelijk kolom bekeken wordt.
 
+We willen ook de convolutie-notatie introduceren. We schrijven voor $m$-dimensionale functies $f$, $g$
+de convolutie $f\star g$ als:
+\[
+(f\star g)[a_1,\ldots,a_m] = \sum_{k_1=-\infty}^\infty\cdots \sum_{k_m=-\infty}^\infty
+f[k_1,\ldots,k_m]\cdot g[a_1-k_1,\ldots,a_m-k_m]
+\]
+We zullen deze notatie toepassen om onze algoritmen inzichtelijker op te schrijven.
+
 \subsection{Complexiteit}
 
 Aangezien we algoritmes behandelen in het verslag willen we hiervan de tijdscomplexiteit bepalen.
@@ -98,8 +106,6 @@ We voeren daarom $o$, $\O$ en $\theta$ als notatie in.
 \end{equation*}
 Merk op dat $o$ een \emph{sterker} begrip is dan $\O$: als $f \in o(g)$ dan $f \in \O(g)$. Ook geldt dat $f\simeq g \implies f\in\theta(g) \implies f \in \O(g)$. We zouden dus ook alles over \'e\'en kam kunnen strijken en enkel $\O$ gebruiken (maar voor de volledigheid zullen we dit niet doen). Als laatste is er ook een eenzijdige variant van $\simeq$, namelijk $\lesssim$: $f \lesssim g$ wat betekent dat er een $C$ is z\'o dat $f \leq C \cdot g$. Er geldt dus zeker dat $f\simeq g$ implicieert dat $f\lesssim g$.
 
-We zullen in de praktijk algoritmes bekijken die een 1-, 2- of 3-dimensionale lijst data als input hebben en zijn dan ge\"interesseerd in de complexiteit als functie van de grootte.
-
 \subsection{Ruimtes}
 \label{ruimtes}
 Een familie van ruimtes die wij gedurende het hele verslag zullen gebruiken is die van de Lebesgue-ruimtes. De $L_p$-ruimte is de ruimte over functies van $\R$ naar $\C$ die $p$'e-machts integreerbaar zijn:
@@ -119,7 +125,7 @@ Het is duidelijk dat $ || f ||_{L_2} := \sqrt{\langle f, f \rangle}$ nu overeenk
 
 Naast deze $L_2$-ruimte over $\R$ zullen we ook haar tegenhanger over $\R^n$ bekijken. Integraaltekens uit \eqref{lebesgue} en \eqref{l2} worden nu gewoon integralen over $\R^n$. Wanneer we spreken over $L_2(\Omega)$ voor $\Omega \subset \R^n$, wordt een integraal over $\Omega$ bedoeld.
 
-Een belangrijk lemma dat we zullen gebruiken is het volgende lemma van Parseval.
+Een belangrijk lemma dat we voor deze ruimtes zullen gebruiken is het lemma van Parseval.
 \begin{lemm}[Parsevalgelijkheid\cite{parseval}]
   \label{parseval}
   Laat $f$ een functie in $L^2(\Omega)$ met $\Omega \subset \C^n$ of $\Omega\subset\R^n$, die geschreven kan worden in een aftelbare 
@@ -129,4 +135,15 @@ Een belangrijk lemma dat we zullen gebruiken is het volgende lemma van Parseval.
   \]
 \end{lemm}
 
+Verder zullen we ook een discrete tegenhanger van $L_2$ bekijken, namelijk de $\ell_2$ ruimte:
+\[
+\ell_2 :=\Big \{f:\Z \to \C \largediv \|f\| = \sum_{m=-\infty}^\infty |f[m]|^2 < \infty \Big \}.
+\]
+We defini\"eeren op deze ruimte ook een inproduct, analoog aan dat op $L_2$:
+\[
+\inpr{f}{g} = \sum_{m=-\infty}^\infty f[m]\cdot g^\star[m].
+\]
+Vaak zullen we functies $f$ bekijken die een eindige drager hebben, deze zijn in het bijzonder altijd een element
+van $\ell_2$. Ook dienen we op te merken dat de Parsevalgelijkheid ook geldt voor $\ell_2$.
+ 
 
