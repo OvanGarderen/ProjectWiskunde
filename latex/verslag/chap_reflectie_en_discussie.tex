@@ -1,4 +1,4 @@
-\chapter{Reflectie en discussie}
+\chapter{Discussie van de resultaten}
 \label{discH}
 In dit laatste hoofdstuk zullen we een analyse maken van het praktische deel van ons project.
 We beginnen met een discussie van de gebruikte methoden en bruikbaarheid van de gevonden resultaten.
@@ -7,48 +7,48 @@ Tensorproduct en als laatste het gebruik van de Tensor/Mallat mengvorm op filmma
 
 \section{Discussie}
 \subsection{Gebruik van PSNR als maatstaf voor kwaliteit}
-Omdat we te maken hebben met `lossy' beeldcompressie dienen we dit verlies in kaart te brengen op een 
+Omdat we te maken hebben met lossy beeldcompressie dienen we dit verlies in kaart te brengen op een 
 objectieve en kwantitatieve manier. 
-De PSNR is een gebruikelijke grootheid voor dit soort analyses, er wordt gezegd dat dit voor eenzelfde 
+De PSNR is een gebruikelijke grootheid voor dit soort analyses: er wordt gezegd dat dit voor eenzelfde 
 beginsignaal een goede reflectie geeft van de menselijke beleving van de kwaliteit van de reconstructie.
-Uit onderzoek\cite{PSNR} blijkt dat de PSNR een goede maatstaf is zolang er in zeker zin \emph{ceteris paribus}
+Uit onderzoek \cite{PSNR} blijkt dat de PSNR een goede maatstaf is zolang er in zeker zin \emph{ceteris paribus}
 is aangehouden; voor hetzelfde beeldmateriaal presteert deze maat goed.
 
+\iffalse
 \subsection{Bruikbaarheid van resultaten}
 
-De resultaten beslaan slechts een kleine set beelmateriaal, dit heeft vooral met tijdgebrek te maken gehad.
-We zullen geen uitspraak doen over de specifieke beeldcategori\"een (zoals boven beschreven) 
-omdat hier simpelweg te weinig studie naar is verricht, echter menen we dat de set beelden gevari\"eerd 
+De resultaten beslaan slechts een kleine set beelmateriaal: dit heeft vooral met tijdgebrek te maken gehad.
+We zullen geen uitspraak doen over de specifieke beeldcategorie\"en uit hoofdstuk \ref{testjes}.
+omdat hier simpelweg te weinig studie naar is verricht maar we menen dat de set beelden gevarieerd 
 genoeg is om algemene uitspraken te doen over de prestatie van de verschillende algoritmes.
+\fi
 
 \subsection{Adaptieve basis}
 \label{adaptief_parseval}
-We hebben in onze implementatie een adaptieve basis gebruikt, het compressie algoritme selecteerde co\"effici\"enten
-die in absolute waarde het kleinst zijn. 
+We hebben in onze implementatie een adaptieve basis gebruikt: de compressie-algoritme behoudt co\"effici\"enten
+die in absolute waarde het grootst zijn. 
 We beweren dat dit de beste reconstructie geeft, preciezer: de totale kwadratische fout is zo het kleinst.
-We beroepen ons daarvoor op de Parseval gelijkheid. Wanneer we een selectie $S$ doen van basisfuncties
-waarvan we het inproduct weggelaten hebben wordt de totale fout na reconstructie
+We beroepen ons daarvoor op de Parsevalgelijkheid. Wanneer we een selectie $S$ doen van basisfuncties wordt de totale fout na reconstructie
 \[
-\|f-f|_{S^c}\|^2 = \sum_{k\in S} |\inpr{f}{k}|^2 = \sum_{k\in S} |c_k|^2,
+\|f-f|_{S}\|^2_{L_2} = \sum_{k\not\in S} |\inpr{f}{k}|^2 = \sum_{k\not\in S} |c_k|^2,
 \]
-waar $c_k$ de co\"efficienten is van de basisfunctie $k$ en $\|\cdot\|$ de norm op de betreffende ruimte. 
+waar $c_k$ de co\"efficienten is van de basisfunctie $k$. 
 Deze sommatie is nu het kleinst wanneer alle termen in de sommatie zo klein mogelijk zijn. 
 
-\section{Fourier/Wavelet compressie van afbeeldingen}
+\section{Compressie van afbeeldingen}
 
 \subsection{Prestatie van Fourier vs. Wavelets}
-Uit de PSNR grafieken blijkt dat de Fouriertransformatie een slechtere reconstructie levert voor 
-dezelfde dataset dan zowel de Haar als de Daubechies(2/4) wavelettransformaties, 
-ongeacht de catagorie waartoe het beeld behoort.
+Uit de PSNR-grafieken blijkt dat de Fouriertransformatie een slechtere reconstructie levert voor 
+dezelfde dataset dan zowel de Haar- als de Daubechies-2-wavelettransformaties, 
+ongeacht de categorie waartoe het beeld behoort.
 
 \subsection{Wavelet vs. Wavelet}
-Tussen de twee wavelets zien we verder wat we theoretisch verwachten, Haar presteert goed bij harde randen en grote kleurvlakken
-vanwege zijn kleine drager, terwijl Daubechies voor fotografisch materiaal een goede reconstructie geeft door zijn grote drager.
-We kunnen dit echter niet hard maken doordat we te weinig beeldmateriaal hebben bekeken in de verschillende catagori\"een. 
+Tussen de twee wavelets zien we verder wat we theoretisch verwachten: Haar presteert goed bij harde randen
+vanwege zijn kleine drager terwijl Daubechies voor vloeiend/fotografisch materiaal een goede reconstructie geeft.
 
 \subsection{Convergentie bij kleine dataset}
 Uit de grafiek blijkt dat het verschil in kwaliteit tussen de verschillende compressie algoritmes afneemt wanneer
-de hoeveelheid data die opgeslagen wordt klein wordt. 
+de hoeveelheid data die opgeslagen wordt, kleiner wordt. 
 Door de kleine dataset is de willekeur van de vorm van het plaatje erg van invloed op kwaliteit van de reconstructie 
 voor verschillende algoritmes. 
 Ook is het dubieus of de PSNR nog een goede maatstaf is voor de menselijke perceptie wanneer de algoritmes
@@ -58,16 +58,15 @@ We zullen daarom hier geen uitspraak over kunnen doen.
 \section{Het Tensorproduct op afbeeldingen}
 Voor de volledigheid hebben we er voor gekozen \'o\'ok het Tensorproduct te bekijken bij een aantal 
 van onze afbeeldingen: zie figuren \ref{fig:tensor_start}-\ref{fig:tensor_end}. We hebben er voor 
-gekozen om niet alle afbeeldingen in dit formaat weer te geven omdat de strekking wel duidelijk wordt 
-uit een tweetal.
+gekozen om niet alle afbeeldingen in dit formaat weer te geven: deze twee afbeeldingen geven een goede representatie.
 
 Het eerste wat op te merken valt, zijn de horizontale en verticale balken die bij het Tensorproduct 
 tevoorschijn komen. Deze zijn in de Mallatdecompositie een stuk minder aanwezig. De reden 
-hiervoor is redelijk simpel aan te wijzen. Bij de Mallatdecompositie bekijken we wavelets met een 
+hiervoor is simpel aan te wijzen. Bij de Mallatdecompositie bekijken we wavelets met een 
 drager die in beide richtingen even groot is (een vierkant dus). Het Tensorproduct legt deze eis 
 niet op met als gevolg dat er een wavelet is met een drager die heel breed is en ook weer 
-heel kort: een balk dus. Als deze balk door de compressie-algoritme weggelaten wordt, mist de 
-reconstructie hier een benadering en kan er een gekke horizontale balk in de reconstructie onstaan.
+heel kort: een balk. Als deze balk door de compressie-algoritme weggelaten wordt, mist de 
+reconstructie hier een benadering en kan er een gekke horizontale/verticale balk in de reconstructie onstaan.
 
 Het tweede wat we opmerkten is dat de PSNR structureel lager is bij het Tensorproduct in vergelijking 
 met de Mallatdecompositie. Dit komt ook wel overeen met wat we zien in de figuren \ref{fig:tensor_start} 
@@ -79,8 +78,8 @@ PSNR-waardes oplevert -- in strijd zijn met de claims die gemaakt worden in \cit
 hoewel er teveel onbekende factoren zijn om te weten of dit misschien een andere reden heeft.
 
 \section{Gemengde decompositie op 3D signalen}
-Het bekijken van 3D signalen was een interessante toevoeging aan ons project, is de analyse  
-van filmmateriaal moeilijker gebleken, dit had twee redenen.
+Het bekijken van 3D signalen was een interessante toevoeging aan ons project maar de analyse  
+van filmmateriaal is moeilijker gebleken. Dit had twee redenen.
 
 Ten eerste is onze implementatie, hoewel effici\"ent, niet erg snel. Het comprimeren van een 
 afbeelding duurt ongeveer dertig seconden en het comprimeren van filmmateriaal duurt al snel het 
@@ -96,11 +95,10 @@ reconstructie, blijkt het bij het beeldmateriaal dat wij bekeken hebben minder g
 Zie bijvoorbeeld de grafiek links in \ref{fig:cockto}, hier is te zien dat de PSNR slechts weinig verschilt
 tussen de verschillende compressieniveau's zodat we geen nuttige conclusies kunnen trekken.
 Daarentegen zien we in grafiek rechts in \ref{fig:cockto} een patroon dat we verwachten, daling van de PSNR
-bij kleinere compressie percentages.
+bij kleinere compressiepercentages.
+
 Aangezien we niet erg veel beeldmateriaal bekeken hebben zullen we de PSNR als maat loslaten en ons richten 
 op de optische verschillen die we kunnen aanwijzen tussen de twee reconstructies.
-
-TODO: misschien die grafieken die je gemaakt had nog toevoegen met frame-gewijze PSNR
 
 \begin{figure}[h]
 \centering
@@ -122,12 +120,12 @@ Omdat een bewegend beeld over het algemeen continu is in de tijdsdimensie, is he
 
 Wanneer er w\'el een grote sprong in de tijd optreedt, zoals bij een scenewisseling, is de fout van 
 het Tensorproduct ineens een stuk groter dan die van de Mallatdecompositie. 
-Dit is vooral duidelijk bij de typmachinescene, die voor zowel de Mallatdecompositie als de mengvorm
+Dit is vooral duidelijk bij de typmachinescene, die voor de Mallatdecompositie en de mengvorm
 weergegeven is in figuren \ref{fig:frames_tensor} en \ref{fig:frames_nontensor}.
 Het gele mannetje vervaagt in de Mallatdecompositie gedurende ongeveer 5 tijdseenheden 
 terwijl de randen in de mengvorm voor 7 frames zichtbaar blijven.
 
-Dit resultaat is ten eerste te wijten aan de grote drager van de Daubechies wavelet, 
+Dit resultaat is ten eerste te wijten aan de grote(re) drager van de Daubechieswavelet, 
 waardoor harde randen slechter gereconstrueerd worden.
 Het effect wordt echter versterkt in de mengvorm doordat hier veel wavelets een langwerpige
 drager in de tijdsrichting hebben, wanneer de scherpe randen in frame $71$ gereconstrueerd moeten worden
@@ -146,6 +144,6 @@ zijn deze ook goed te zien in de volgende frames.
 \caption{Mengvorm}
 \label{fig:frames_nontensor}
 \end{subfigure}
-\caption{\texttt{croppedgif.gif} ingezoomd op de verstoring, frames 71 t/m 80 met 2\% compressie door de Daubechies 2 wavelet
+\caption{\texttt{croppedgif.gif} (met verhoogd contrast) ingezoomd op de verstoring, frames 71 t/m 80 met 2\% compressie door de Daubechies 2-wavelet
 met de verschillende decomposities.}
 \end{figure}

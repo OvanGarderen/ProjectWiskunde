@@ -1,6 +1,6 @@
 \chapter{Resultaten}
 \label{sectie_psnr}
-In dit hoofdstuk zullen we een kwantitatieve vergelijking tussen de verschillende algoritmes maken. Hierbij zullen we het begrip \emph{Peak Signal To Noise Ratio} gebruiken. Dit is een veelgebruikte methode om de reconstructiequaliteit van een lossy compressie-algoritme te testen.
+In dit hoofdstuk zullen we een kwantitatieve vergelijking tussen de verschillende algoritmes maken. Hierbij zullen we het begrip \emph{Peak Signal To Noise Ratio} introduceren, een veelgebruikte methode om de reconstructiequaliteit van een lossy compressie-algoritme te testen.
 
 \begin{definitie}[Peak Signal To Noise Ratio (PSNR)]
   Gegeven een signaal $f: \Z^k \to \R^k$ en een reconstructie $\hat f$, is de $PSNR$ gelijk aan
@@ -15,31 +15,31 @@ In dit hoofdstuk zullen we een kwantitatieve vergelijking tussen de verschillend
   \[
   S := \sum_{\boldsymbol j \in \Z^k} (f[\boldsymbol j] - \hat f[\boldsymbol j])^2.
   \]
-  Hoe hoger de PSNR is, hoe beter de reconstructie (over het algemeen) zal zijn.
+  Hoe hoger de PSNR is, hoe beter de reconstructie over het algemeen zal zijn.
   Merk op dat deze $S$ een discrete variant is van de fout in de $L_2$ norm op non-discrete functies,
-  precies wat we beschreven hebben in secties \ref{daling_FFT} en \ref{daling_wavelet}
+  die we beschreven hebben in secties \ref{daling_FFT} en \ref{daling_wavelet}.
 \end{definitie}
 
 \subsection{Gebruikte testbeelden}
+\label{testjes}
 Met een beetje kwade wil kan altijd een beeld geconstrueerd worden dat met minder co\"effici\"enten is te schrijven
-in de ene basis dan in de andere, voor een extreem voorbeeld zie figuur \ref{fig:sinus_fig}.
-Omdat het object van studie een beeldcompressie algoritme is, hebben wij ons gericht op een realistische vari\"eteit
+in de ene basis dan in de andere: voor een extreem voorbeeld zie figuur \ref{fig:sinus_fig}.
+Omdat het object van studie een beeldcompressie-algoritme is, hebben wij ons gericht op een realistische vari\"eteit
 beeldmateriaal waarvoor dit algoritme gebruikt zou kunnen worden. 
-Dit kan ruwweg verdeeld worden in een aantal catagori\"en:
-\begin{itemize}
-\item Fotorealistische beelden, worden gekarakteriseerd door het ontbreken van scherpe randen hoewel
-  er veel \emph{details} belangrijk zijn. Ook is het verloop in het beeld voornamelijk \emph{vloeiend}. 
-  (zie figuren \ref{fig:lenna_start} - \ref{fig:lenna_eind})
-\item Cartoony beelden, over het algemeen minder complex (weinig belangrijke details en minder vloeiend) 
-  en bestaat in het algemeen uit \emph{kleurvlakken} omgeven met \emph{scherpe randen}.
-  (zie figuren \ref{fig:shyguy_start} - \ref{fig:shyguy_eind})
-\item Computer Graphics, een grotere catagorie die de \emph{scherpe randen} deelt met de Cartoony beelden
-  maar ook veel \emph{vloeiende} verlopen (gradients) heeft in plaats van kleurvlakken.
-  (zie figuren \ref{fig:gentoo_start} - \ref{fig:gentoo_eind})
-\item Pixel Art, lijkt op de Cartoony beelden vanwege de \emph{scherpe randen} en \emph{kleurvlakken}
-  maar heeft bijna altijd een enorme hoeveelheid \emph{details} aangezien het beeld pixel voor pixel vervaardigd is.
-\end{itemize}
-
+De afbeeldingen kunnen ruwweg verdeeld worden in een aantal categorie\"en:
+\begin{description}
+\item[Fotorealistische beelden] worden gekarakteriseerd door het ontbreken van scherpe randen hoewel
+  er veel \emph{details} belangrijk zijn. Ook is het verloop in het beeld voornamelijk \emph{vloeiend}
+  (zie figuren \ref{fig:lenna_start} - \ref{fig:lenna_eind}).
+\item[Cartoony beelden] zijn over het algemeen minder complex (weinig belangrijke details en minder vloeiend) 
+  en bestaat in het algemeen uit \emph{kleurvlakken} omgeven met \emph{scherpe randen}
+  (zie figuren \ref{fig:shyguy_start} - \ref{fig:shyguy_eind}).
+\item [Computer Graphics] spant een grotere categorie op die de \emph{scherpe randen} deelt met de Cartoony beelden
+  maar ook veel \emph{vloeiende} verlopen heeft in plaats van kleurvlakken
+  (zie figuren \ref{fig:gentoo_start} - \ref{fig:gentoo_eind}).
+\item[Pixel Art] lijkt op de Cartoony beelden vanwege de \emph{scherpe randen} en \emph{kleurvlakken}
+  maar heeft bijna altijd een enorme hoeveelheid \emph{details} aangezien het beeld pixel voor pixel vervaardigd is (zie figuur~\ref{fig:tensor_end}).
+\end{description}
 
 \begin{figure}[h]
   \centering
@@ -59,7 +59,7 @@ echter een slechte reconstructie.}
 \subsection{3D signalen}
 Behalve de illustraties die op de volgende pagina's te zien zijn, hebben we ook een aantal bewegende beelden (3D-signalen) gecomprimeerd. Deze kunt u als lezer vinden door te navigeren naar de \url{gifjes/} submap en daar dubbel te klikken op \url{index.html}.
 
-We hebben bij deze 3D signalen niet Fourier vergeleken met Wavelets, dit was het gevolg van praktische bezwaren 
+We hebben bij deze 3D-signalen niet Fourier vergeleken met Wavelets. Dit was het gevolg van praktische bezwaren 
 (de Fouriertransformatie deed er simpelweg te lang over). 
 Wel hebben we de Mallatdecompositie vergeleken met onze mengvorm: 
 in het $(x,y)$-vlak gebruiken we de Mallatdecompositie in twee dimensies, 
@@ -156,7 +156,6 @@ met daar loodrecht op een Tensorproduct in de tijdsrichting.
     \vspace{0pt}
     \includegraphics[height=\textwidth]{plaatjes/grafiek_gentoo_0_15-0_01.png}
   \end{subfigure}
-  \caption{Grafiek en PSNR.}
 \end{figure}
 \restoregeometry
 \pagebreak
@@ -251,7 +250,6 @@ met daar loodrecht op een Tensorproduct in de tijdsrichting.
     \vspace{0pt}
     \includegraphics[height=\textwidth]{plaatjes/grafiek_Lenna_0_15-0_01.png}
   \end{subfigure}
-  \caption{Grafiek en PSNR.}
 \end{figure}
 \restoregeometry
 \pagebreak
@@ -346,7 +344,6 @@ met daar loodrecht op een Tensorproduct in de tijdsrichting.
     \vspace{0pt}
     \includegraphics[height=\textwidth]{plaatjes/grafiek_shyguy_0_15-0_01.png}
   \end{subfigure}
-  \caption{Grafiek en PSNR.}
 \end{figure}
 \pagebreak
 \begin{figure}
@@ -360,7 +357,7 @@ met daar loodrecht op een Tensorproduct in de tijdsrichting.
 	\begin{subfigure}[t]{0.32\textwidth}
 	\includegraphics[width=\linewidth]{plaatjes/spongebob_db2_t_0_025.jpg}
 	\end{subfigure}
-	\caption{Links: de originele Spongebob-afbeelding. Midden: compressieniveau 0.025 met Daubechies 2. Rechts: compressie 0.025 met Daubechies-2 Tensor.}
+	\caption{Links: \texttt{plaatjes/spongebob.jpg}. Midden: compressieniveau 0.025 met Daubechies 2. Rechts: compressie 0.025 met Daubechies-2 Tensor.}
 	\label{fig:tensor_start}
 \end{figure}
 \begin{figure}
@@ -385,7 +382,7 @@ met daar loodrecht op een Tensorproduct in de tijdsrichting.
 	\begin{subfigure}[t]{0.32\textwidth}
 	\includegraphics[width=\linewidth]{plaatjes/bonkers_haar_t_0_025.png}
 	\end{subfigure}
-	\caption{Links: de originele afbeelding. Midden: compressieniveau 0.025 met Haar. Rechts: compressie 0.025 met Haar Tensor.}
+	\caption{Links: \texttt{plaatjes/bonkers.png}. Midden: compressieniveau 0.025 met Haar. Rechts: compressie 0.025 met Haar Tensor.}
 	\label{fig:tensor_end}
 \end{figure}
 \restoregeometry
