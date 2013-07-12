@@ -75,7 +75,7 @@ def fwt(signal):
 	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte
 	
 	for i in range( steps ):
-		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		k = len(output) / 2**i #eerst alles, dan de helft, dan een kwart
 		signal[0:k] = next( signal[0:k] )
 	return signal
 	
@@ -95,7 +95,7 @@ def ifwt( wavelet, signal, original_length ):
 		j = steps - i - 1 #we gaan andersom
 		k = len(signal) / 2**j
 		signal[0:k] = prev( signal[0:k])
-	return signal[0:original_length] #het signaal was aangevuld tot een tweemacht
+	return signal[0:original_length] #het signaal was aangevuld tot tweemacht
 \end{lstlisting}
 
 \begin{lstlisting}[label=fwt2d,float=h!,caption=De Mallatdecompositie in 2 dimensies]
@@ -112,7 +112,7 @@ def fwt2d(wavelet, signal):
 	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte
 	
 	for i in range( steps ):
-		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		k = len(output) / 2**i #eerst alles, dan de helft, dan een kwart
 		signal[0:k,0:k] = next_2d( signal[0:k,0:k] )
 	return signal
 \end{lstlisting}
@@ -142,7 +142,7 @@ def fwt2d_tensor(signal):
 	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte
 	
 	for i in range( steps ):
-		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		k = len(output) / 2**i #eerst alles, dan de helft, dan een kwart
 		for p in range( len( signal ) ):
 			signal[p, 0:k] = next( signal[p, 0:k] )
 		for q in range( len( signal ) ):
@@ -174,10 +174,10 @@ def next_3d( signal ):
 
 def fwt3d(wavelet, signal):
 	signal = zero_pad_3d(signal)
-	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte in 1 richting
+	steps = int( log( len(signal), 2 ) ) #2-log van de lengte in 1 richting
 	
 	for i in range( steps ):
-		k = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		k = len(output) / 2**i #eerst alles, dan de helft, dan een kwart..
 		signal[0:k,0:k,0:k] = next_3d( signal[0:k,0:k,0:k] )
 	return signal
 
@@ -190,7 +190,7 @@ def prev_3d( signal ):
 			signal[:,k,l] = prev( signal[:,k,l] )
 	return signal
 
-def ifwt3d( wavelet, signal, N, M, O ): #N, M en O zijn originele lengte, breedte en diepte
+def ifwt3d( wavelet, signal, N, M, O ): #N, M en O zijn lengte, breedte en diepte
 	steps = int( log( len(signal), 2) )
 	
 	for i in range( steps ):
@@ -203,10 +203,10 @@ def ifwt3d( wavelet, signal, N, M, O ): #N, M en O zijn originele lengte, breedt
 \begin{lstlisting}[label=mengertje,float=h!,caption=De mengvorm in 3 dimensies]
 def fwt3d_mix(signal):
 	signal = zero_pad_3d(signal)
-	steps = int( log( len(signal), 2 ) ) #neem de 2-log van de lengte in 1 richting
+	steps = int( log( len(signal), 2 ) ) #2-log van de lengte in 1 richting
 	
 	for i in range( steps ):
-		m = len(output) / 2**i #pak eerst alles, dan de helft, dan een kwart etc.
+		m = len(output) / 2**i #eerst alles, dan de helft, dan een kwart..
 		for j in range(len( signal )): #2d-fwt op de rijen
 			signal[j, 0:k, 0:k] = next_2d( signal[j, 0:k, 0:k] )
 		for k in range(len( signal )):
@@ -215,12 +215,12 @@ def fwt3d_mix(signal):
 
 	return signal
 
-def ifwt3d_mix( signal, N, M, O ): #N, M en O zijn originele lengte, breedte en diepte
+def ifwt3d_mix( signal, N, M, O ): #N, M en O zijn lengte, breedte en diepte
 	steps = int( log( len(signal), 2) )
 	
 	for i in range( steps ):
 		j = steps - i - 1 #we gaan andersom
-		m = len(output) / 2**j #pak eerst alles, dan de helft, dan een kwart etc.
+		m = len(output) / 2**j #eerst alles, dan de helft, dan een kwart..
 		for n in range(len( signal )): #2d-fwt op de rijen
 			signal[n, 0:k, 0:k] = prev_2d( signal[n, 0:k, 0:k] )
 		for k in range(len( signal )):
