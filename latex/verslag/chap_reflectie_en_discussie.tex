@@ -1,11 +1,11 @@
-\chapter{Discussie van de resultaten}
+\chapter{Discussie}
 \label{discH}
 In dit laatste hoofdstuk zullen we een analyse maken van het praktische deel van ons project.
 We beginnen met een discussie van de gebruikte methoden en bruikbaarheid van de gevonden resultaten.
 Verder worden de resultaten besproken voor het comprimeren van afbeeldingen, het toepassen van het 
 Tensorproduct en als laatste het gebruik van de Tensor/Mallat mengvorm op filmmateriaal. 
 
-\section{Discussie}
+\section{Onderzoeksmethoden}
 \subsection{Gebruik van PSNR als maatstaf voor kwaliteit}
 Omdat we te maken hebben met lossy beeldcompressie dienen we dit verlies in kaart te brengen op een 
 objectieve en kwantitatieve manier. 
@@ -28,7 +28,8 @@ genoeg is om algemene uitspraken te doen over de prestatie van de verschillende 
 We hebben in onze implementatie een adaptieve basis gebruikt: de compressie-algoritme behoudt co\"effici\"enten
 die in absolute waarde het grootst zijn. 
 We beweren dat dit de beste reconstructie geeft, preciezer: de totale kwadratische fout is zo het kleinst.
-We beroepen ons daarvoor op de Parsevalgelijkheid. Wanneer we een selectie $S$ doen van basisfuncties wordt de totale fout na reconstructie
+We beroepen ons daarvoor op de Parsevalgelijkheid. Wanneer we een selectie $S$ doen van basisfuncties die we behouden
+wordt de totale fout na reconstructie
 \[
 \|f-f|_{S}\|^2_{L_2} = \sum_{k\not\in S} |\inpr{f}{k}|^2 = \sum_{k\not\in S} |c_k|^2,
 \]
@@ -47,10 +48,13 @@ Tussen de twee wavelets zien we verder wat we theoretisch verwachten: Haar prest
 vanwege zijn kleine drager terwijl Daubechies voor vloeiend/fotografisch materiaal een goede reconstructie geeft.
 
 \subsection{Convergentie bij kleine dataset}
-Uit de grafiek blijkt dat het verschil in kwaliteit tussen de verschillende compressie algoritmes afneemt wanneer
+Uit de grafiek blijkt dat het verschil in kwaliteit tussen de verschillende compressie-algoritmes afneemt wanneer
 de hoeveelheid data die opgeslagen wordt, kleiner wordt. 
-Door de kleine dataset is de willekeur van de vorm van het plaatje erg van invloed op kwaliteit van de reconstructie 
-voor verschillende algoritmes. 
+De verschillen in prestatie nemen waarschijnlijk af omdat bij een kleine dataset alleen een \emph{globale}
+approximatie gemaakt kan worden. 
+Het voordeel van de Wavelettransformatie, namelijk die van een \emph{lokale} drager,
+is daardoor niet meer van belang.
+
 Ook is het dubieus of de PSNR nog een goede maatstaf is voor de menselijke perceptie wanneer de algoritmes
 zo'n slechte maar zeer verschillende benadering geven van het originele beeld.
 We zullen daarom hier geen uitspraak over kunnen doen.
@@ -90,6 +94,7 @@ dat dit beeldmateriaal klein in afmeting moet zijn. Als de afbeelding klein is, 
 om een bepaalde compressie-ratio te halen met een goede reconstructie. Dit maakte de zoektocht lastig.
 
 \subsection{PSNR}
+\vspace{-10pt}
 Hoewel de PSNR in het geval van de afbeeldingen een prima representatie geeft van de kwaliteit van de 
 reconstructie, blijkt het bij het beeldmateriaal dat wij bekeken hebben minder goed te werken. 
 Zie bijvoorbeeld de grafiek links in \ref{fig:cockto}, hier is te zien dat de PSNR slechts weinig verschilt
@@ -113,11 +118,13 @@ op de optische verschillen die we kunnen aanwijzen tussen de twee reconstructies
 \end{figure}
 
 \subsection{Mallatdecompositie versus de mengvorm}
+\vspace{-10pt}
 Wat we wel direct opmerkten is het enorme verschil in detail tussen de twee compressiemethoden. 
 Dit komt omdat het Tensorproduct sneller convergeert bij continue signalen 
 (zie stellingen \ref{thm:foutmallat} en \ref{thm:fouttensor}). 
 Omdat een bewegend beeld over het algemeen continu is in de tijdsdimensie, is het gevolg niet vreemd.
 
+\vspace{-3pt}
 Wanneer er w\'el een grote sprong in de tijd optreedt, zoals bij een scenewisseling, is de fout van 
 het Tensorproduct ineens een stuk groter dan die van de Mallatdecompositie. 
 Dit is vooral duidelijk bij de typmachinescene, die voor de Mallatdecompositie en de mengvorm
@@ -125,12 +132,14 @@ weergegeven is in figuren \ref{fig:frames_tensor} en \ref{fig:frames_nontensor}.
 Het gele mannetje vervaagt in de Mallatdecompositie gedurende ongeveer 5 tijdseenheden 
 terwijl de randen in de mengvorm voor 7 frames zichtbaar blijven.
 
+\vspace{-3pt}
 Dit resultaat is ten eerste te wijten aan de grote(re) drager van de Daubechieswavelet, 
 waardoor harde randen slechter gereconstrueerd worden.
 Het effect wordt echter versterkt in de mengvorm doordat hier veel wavelets een langwerpige
 drager in de tijdsrichting hebben, wanneer de scherpe randen in frame $71$ gereconstrueerd moeten worden
 zijn deze ook goed te zien in de volgende frames.
 
+\vspace{-7pt}
 \begin{figure}[h]
 \centering
 \begin{subfigure}{\linewidth}
@@ -144,6 +153,6 @@ zijn deze ook goed te zien in de volgende frames.
 \caption{Mengvorm}
 \label{fig:frames_nontensor}
 \end{subfigure}
-\caption{\texttt{croppedgif.gif} (met verhoogd contrast) ingezoomd op de verstoring, frames 71 t/m 80 met 2\% compressie door de Daubechies 2-wavelet
+\caption{\texttt{croppedgif.gif} ingezoomd op de verstoring, frames 71 t/m 80 met 2\% compressie door de Daubechies 2-wavelet
 met de verschillende decomposities.}
 \end{figure}

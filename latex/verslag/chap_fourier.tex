@@ -41,11 +41,14 @@ Merk op dat $\Ldnorm{f-f^\circ}{a,b}=0$ niet betekent dat $f - f^\circ = 0$.
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{De \emph{Discrete Fourier Transform}}
-Zoals we gezien hebben in het voorafgaande, kan de Fouriertransformatie gebruikt worden om continue signalen te karakteriseren door verschillende frequenties. Een groot gebied binnen de signaalanalyse is echter van discrete aard aangezien hier veelal digitale instrumenten worden gebruikt.
+Zoals we gezien hebben in het voorafgaande, kan de Fouriertransformatie gebruikt worden om continue signalen te karakteriseren door verschillende frequenties. 
+Een groot gebied binnen de signaalanalyse is echter van discrete aard aangezien hier veelal digitale instrumenten worden gebruikt.
 
-Om discrete signalen te analyseren lijkt het voor de hand te liggen om een deze als stapfuncties te zien. Een stapfunctie zit immers in $L_2$. De discontinu\"iteiten van de stapfunctie leiden echter tot ongewenste resultaten, zoals is te zien aan de reconstructie van een blokgolf door middel van Fouriertransformatie. TODO MISCHIEN PLAATJE?
-
-Erger nog, elke reconstructie in termen van eindig veel basisfuncties is weer continu, zodat voor een perfecte reconstructie van een discreet signaal is met deze methode altijd een oneindige rij co\"effici\"enten nodig zijn. Bovendien is het moeilijk om uit deze co\"effici\"enten relevante informatie te destilleren over de aard van het signaal.
+Om discrete signalen te analyseren lijkt het voor de hand te liggen om een deze als stapfuncties te zien;
+een stapfunctie zit immers in $L_2$. De discontinu\"iteiten van de stapfunctie leiden echter tot ongewenste resultaten.
+Elke reconstructie in termen van eindig veel continue basisfuncties is namelijk weer continu,
+zodat voor een perfecte reconstructie van een stapfunctie met deze methode altijd een oneindige rij co\"effici\"enten nodig is. 
+Bovendien is het moeilijk om uit deze co\"effici\"enten relevante informatie te destilleren over de aard van het signaal.
 
 In plaats van de discrete signalen in te bedden in $L_2$ zullen we ze beschouwen als rijen in $\ell_2$ (zie sectie \ref{ruimtes}).
 Hiervoor zullen we de Fourier-basis discretiseren en ons richten op de ruimte $\R^n$.
@@ -82,9 +85,9 @@ Vervolgens hebben we een inverse voor deze operatie die $X$ afbeeldt op de recon
   x^\circ[j] = \inpr{X}{s_j^{-1}} \quad j\in \{1, \ldots, n\}.
 \]
 Waarbij we de notatie $s_j^{-1} = (s_j[1]^{-1},\ldots, s_j[n]^{-1})$ gebruiken.
-Volgens de regels van de Lineaire Algebra is dit is een perfecte reconstructie ($x[k] = x^\circ[k]$).
+Vanwege de orthogonaliteit van de basis $S_n$ is dit een perfecte reconstructie ($x[k] = x^\circ[k]$).
 
-Om de claim te ondersteunen dat de DFT-methode een echte discretisatie is van de continue Fouriertransformatie ,
+Om de claim te ondersteunen dat de DFT-methode een echte discretisatie is van de continue Fouriertransformatie,
 willen we bewijzen dat deze algoritme voor een steeds fijnere selectie van waardes van een functie in de 
 limiet hetzelfde resultaat geeft als de continue Fouriertransformatie. 
 Zoals gebruikelijk bij het overschakelen van een discrete naar een continue setting kunnen we dit doen 

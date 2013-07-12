@@ -6,85 +6,104 @@ Omdat het menselijk oog niet heel nauwkeurig is -- en door de limitaties van com
 
 Bewegend beeld is zo op precies dezelfde manier te zien als een driedimensionale matrix waarbij we meerdere afbeeldingen achter elkaar plakken.
 
+In dit hoofdstuk zullen we de \emph{Python}-code die we geschreven hebben toelichten. De code zelf is te vinden in de
+appendix \ref{muhappendix}; we zullen hier per sectie naar verwijzen.
+
 \section{Implementatie van Fouriertransformatie in Python}
 Met de theoretische basis uit voorgaande secties is de implementatie van het 
 \emph{Fast Fourier Transform}-algoritme nu aan bod gekomen. 
 In deze sectie zullen we uitweiden over enkele genomen hordes en gemaakte keuzes. De resultaten volgen
 in een latere sectie.
 
-\subsection{Fast Fourier Transform Implementatie}
-De Pythoncode uit \autoref{fft} die gebruikt is om het FFT-algoritme in te programmeren volgt precies het schema van de eerder gegeven pseudocode.
-
-Hierbij dient uitgelegd te worden dat de notatie \texttt{a + b} voor twee lijsten de \emph{concatenatie} van de lijsten geeft.
-Dit algoritme werkt -- zoals eerder beschreven -- enkel op signalen waarvan de lengte
-$N$ een macht van $2$ is. We hebben daarom signaalextensie toe moeten passen in \autoref{zeropad} door middel van zero-padding
-om het programma ook op andersvormige signalen te laten werken.
+\subsection{Fast Fourier Transform Implementatie [Listings: \ref{fft}, \ref{zeropad}, \ref{fft2d}]}
+De Pythoncode die we gebruikt hebben om het FFT-algoritme in te programmeren volgt precies het schema van de eerder 
+gegeven pseudocode. 
+Dit algoritme werkt -- zoals eerder beschreven -- enkel op signalen waarvan de lengte $N$ een macht van $2$ is. 
+We hebben daarom signaalextensie toe moeten passen in  door middel van zero-padding om het programma ook op 
+andersvormige signalen te laten werken. Zie hiervoor de functies \texttt{FFT} en \texttt{zero\_pad}.
 
 Vervolgens hebben we deze code toegepast in twee dimensies. We maken hier gebruik van de definitie van de
 MFFT-algoritme, dat grofweg zegt dat een meerdimensionaal algoritme kan worden geconstrueerd door herhaald 
 het 1-dimensionale geval toe te passen. Voor 2 dimensies in het bijzonder betekent dit dat we simpelweg 
-FFT konden toepassen op rijen en kolommen: zie \autoref{fft2d}.
+FFT konden toepassen op rijen en kolommen, zoals we doen in \texttt{FFT\_2D}.
 
-Hier is gebruik gemaakt van function-mapping uit \S \ref{python}.
-Met het oog op duidelijkheid is de Zero-Padding-fase weggelaten en
-deze algoritme verwacht nu nog een $2^n \times 2^m$ matrix maar dit is gemakkelijk te implementeren door Zero-Padding toe te passen op rijen en kolommen.
+We hebben dit toegepast door middel van function-mapping zoals in \S \ref{python}.
+Met het oog op duidelijkheid is de Zero-Padding-fase uit de code weggelaten en de algoritme verwacht dus nog een 
+$2^n \times 2^m$ matrix. Dit is echter gemakkelijk te implementeren door ook \texttt{zero\_padding} 
+toe te passen op rijen en kolommen.
 
-\subsection{Compressie}
+\subsection{Compressie [Listings: \ref{cutoff}, \ref{mat2dict}, \ref{dict2mat}]}
 Zoals in de introductie van ons verslag al aan bod gekomen is, hebben we compressie bereikt door de kleinste 
 co\"effici\"enten weg te gooien en aan de slag te gaan met een kleinere lijst. 
-Dit brengt twee problemen met zich mee: als eerste, welke waarde moet er als \emph{cutoff} genomen worden en ten tweede, hoe slaan we de overgebleven co\"effici\"enten op?
+Dit brengt twee problemen met zich mee: als eerste, welke waarde moet er als \emph{cutoff} genomen worden en ten tweede, 
+hoe slaan we de overgebleven co\"effici\"enten op?
 
 \subsubsection{Cutoff}
 Hoewel ons eerste programma een voorgegeven cutoff verwachtte, wilden we liever op compressieratio selecteren.
-Daarom hebben latere versies de routine uit \autoref{cutoff} gebruikt. 
-
-We sorteren de co\"effici\"enten in \texttt{mat} op grootte en kiezen de cutoff als de co\"effici\"ent
-die de lijst opdeelt ten opzichte van de \texttt{ratio}.
+Daarom hebben latere versies de \texttt{find\_cutoff} routine gebruikt. 
+We sorteren hierbij de co\"effici\"enten die we vinden op grootte en kiezen de cutoff als de co\"effici\"ent
+die de lijst opdeelt ten opzichte van de ingegeven \texttt{ratio}. Zo krijgen we precies de drempel die we willen.
 
 \subsubsection{Opslaan van de co\"effici\"enten}
-Voor het opslaan van de co\"effici\"enten hebben we een adaptieve basis gebruikt
-we moesten daarom bijgehouden \emph{welke} co\"effici\"enten er opgeslagen worden. 
+Voor het opslaan van de co\"effici\"enten hebben we een adaptieve basis gebruikt,
+waarvoor we moesten bijhouden \emph{welke} co\"effici\"enten er opgeslagen werden. 
 Hier hebben wij een feature van Python gebruikt, de \emph{dictionary}.
 Een dictionary in Python is niks meer dan een lijst van (naam, waarde)-paren. 
 De naam is in ons geval de plek in de matrix en de waarde is het (complexe) getal wat in die cel hoort te staan. 
-Dit geeft aanleiding tot het schrijven van twee routines \texttt{dict2mat} (\autoref{mat2dict}) en \texttt{mat2dict} (\autoref{dict2mat}).
+Dit geeft aanleiding tot het schrijven van twee routines: \texttt{mat2dict} en \texttt{dict2mat}.
 
-Duidelijk moge zijn dat we, door deze twee functies na elkaar uit te voeren, een matrix terugkrijgen met nullen waar eerst co\"effici\"enten kleiner dan \texttt{cutoff} stonden.
+De \texttt{mat2dict} functie selecteert direct de co\"effici\"enten op basis van een ingegeven \texttt{cutoff}.
+Duidelijk moge zijn dat we, door deze twee functies na elkaar uit te voeren, een matrix terugkrijgen met nullen 
+waar eerst co\"effici\"enten kleiner dan \texttt{cutoff} stonden.
 
 \subsection{Het .wvg-beeldformaat}
 Hoewel we een eigen beeldformaat gemaakt hebben, is het ons niet gelukt om de afbeeldingen echt in minder ruimte op te slaan dan hun ongecomprimeerde versie. Dit heeft met twee dingen te maken. Ten eerste is de manier waarop wij de dictionaries opgeslagen hebben niet optimaal geweest.\footnote{Later bedachten we nog een manier die ongeveer 50\% van de oorspronkelijke ruimte in zou nemen, door niet (index, waarde)-paren op te slaan maar met een zogenaamde bitmap.} Ten tweede is de Fouriertransformatie een complex algoritme in de zin dat zij complexe co\"effici\"enten teruggeeft. Door het isomorfisme $\C \simeq \R^2$ moesten wij zodoende twee waardes voor elke co\"effici\"ent opslaan.
 
-\section{Wavelets in 1 dimensie}
+\section{Wavelets in 1 dimensie [Listings: \ref{next}, \ref{prev}]}
 Een orthogonale wavelet wordt discreet helemaal gekenmerkt door haar filter $h$. Zoals beschreven in de sectie over de FWT, hebben we daarmee (via vergelijkingen~\ref{highpassfilter}, \ref{approx_rec}, \ref{detail_rec}, \ref{reconstr_FWT}) feitelijk het algoritme al helemaal in handen. Definieer
 \[
 	\texttt{dec\_l} := \bar{h} \quad \texttt{dec\_h} := \bar{g} \quad 
         \texttt{rec\_l} := h \quad \texttt{rec\_h} := g.
 \]
-Dan kunnen we met twee routines (\autoref{next} en \autoref{prev}) in elke richting het algoritme simpel implementeren.
+Hiermee hebben we twee routines geschreven die beiden \'e\'en van de stappen van de recursief gedefini\"eerde FWT 
+respectievelijk iFWT uitvoeren:
+\texttt{next} en \texttt{prev}.
+Deze functies implementeren de convoluties die we gebruikt hebben in de definitie van de discrete wavelet transformaties.
+We passen deze routines herhaald toe op de approximatie-co\"effici\"enten in de routines \texttt{fwt} en \texttt{ifwt},
+daarmee is de implementatie gedaan.
 
-\section{Wavelets in twee dimensies}
+\section{Wavelets in twee dimensies [Listings: \ref{fwt2d}, \ref{ifwt2d}, \ref{tensorimpl}]}
 Zoals eerder beschreven is, kunnen we in meer dimensies twee kanten op: de Mallatdecompositie en het Tensorproduct.
 We zullen aan beiden wat aandacht besteden.
 
 \subsection{Mallatdecompositie}
-De Mallatdecompositie is qua implementatie vrij simpel. 
-We gebruiken nog steeds de eendimensionale \texttt{next} en \texttt{prev} routines 
-door deze bij elke stap op rijen en kolommen uit te voeren, wat equivalent is met een tweedimensionale convolutie.
-Omdat we hier in twee richtingen werken, moet het signaal bovendien aangevuld worden tot een vierkante tweemacht.\footnote{Het is mogelijk om een rechthoek te transformeren maar daar hebben wij hier geen aandacht aan besteed.} Zie \autoref{fwt2d} en \autoref{ifwt2d}.
+De implementatie van de Mallatdecompositie maakt gebruik van de functies die we voor het \'e\'en dimensionale geval 
+gebruik hebben, namelijk \texttt{next} en \texttt{prev}.
+We gebruiken deze in de nieuwe routines \texttt{next\_2d} en \texttt{prev\_2d} die een function-mapping doen
+van \texttt{next} en \texttt{prev} over het deel van de matrix dat we bekijken.
+Deze routines worden weer herhaald uitgevoerd op het approximatie-kwadrant van de matrix door de 
+functies \texttt{fwt2d} en \texttt{ifwt2d}.
 
+Omdat we hier in twee richtingen werken, moet het signaal bovendien aangevuld worden tot een vierkante tweemacht,
+\footnote{Het is mogelijk om een rechthoek te transformeren maar daar hebben wij hier geen aandacht aan besteed.}
+hiervoor gebruikten we de tweedimensionale \texttt{zero\_pad\_2d}.
 
 \subsection{Tensorproduct}
-Het Tensorproduct in meer dimensies uit \autoref{tensorimpl} gaat in principe net zoals de Fouriertransformatie in meer dimensies door op rijen en kolommen de algoritme in 1 dimensie toe te passen.
-
-\section{Hogere dimensies}
-In hogere dimensies wordt het nog interessanter. In bijvoorbeeld drie dimensies kunnen we -- naast de Mallatdecompositie en het Tensorproduct -- ook de eerder genoemde mengvorm toepassen. Wij hebben er voor gekozen om in dit geval de Mallatdecompositie in het $x,y$-vlak te gebruiken, en het Tensorproduct in de $z$-richting hier loodrecht op.
+Het Tensorproduct in meer dimensies uit  gaat in principe net zoals de Fouriertransformatie in meer dimensies 
+door op rijen en kolommen de algoritme in 1 dimensie toe te passen.
+Dit wordt gedaan door de functies \texttt{fwt2d\_tensor} en \texttt{ifwt2d\_tensor}.
+ 
+\section{Hogere dimensies [Listings: \ref{mallat3d}, \ref{mengertje}]}
+In hogere dimensies wordt het nog interessanter. In bijvoorbeeld drie dimensies kunnen we -- naast de Mallatdecompositie en het Tensorproduct -- ook de eerder genoemde mengvorm toepassen. Wij hebben er voor gekozen om in dit geval de Mallatdecompositie in het $(x,y)$-vlak te gebruiken, en het Tensorproduct in de $z$-richting hier loodrecht op.
 
 \subsection{Mallatdecompositie}
-De Mallatdecompositie in drie dimensies is gemakkelijk voort te zetten uit de tweedimensionale variant en
-er moet nu tijdens elke stap naast een \texttt{next} of \texttt{prev}-stap in de $y$-en $z$-richting ook nog een stap 
-in de $z$-richting gedaan worden. Zie \autoref{mallat3d} 
+De Mallatdecompositie in drie dimensies is gemakkelijk voort te zetten uit de tweedimensionale variant,
+er moet nu namelijk tijdens elke stap naast een \texttt{next} of \texttt{prev}-stap in de $y$-en $z$-richting ook nog een stap 
+in de $z$-richting gedaan worden. Dit hebben we geimplementeerd in de \texttt{next\_3d} en \texttt{prev\_3d} functies die
+weer aangeroepen worden door de \texttt{fwt3d} en \texttt{ifwt3d} functies.
 
 \subsection{Mengvorm}
 Bij de mengvorm gaan we iets interessanters doen: zoals bij het tweedimensionale Tensorproduct
 voeren we weer function-mapping uit maar dit maal voeren we de tweedimensionale Mallatdecompositie
-uit op elk $(x,y)$-vlak en voeren we vervolgens de \emph{FWT} uit op elke rij in de $z$-richting. Het resultaat is te vinden in \autoref{mengertje}
+uit op elk $(x,y)$-vlak en voeren we vervolgens de \emph{FWT} uit op elke rij in de $z$-richting.
+Dit hebben we ge\"implementeerd in \texttt{fwt3d\_mix} en \texttt{ifwt3d\_mix}.
