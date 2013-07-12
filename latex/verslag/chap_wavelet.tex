@@ -119,7 +119,7 @@ Per definitie van de multiresolutie weten we dat $V_{j-1} \subset V_j$. In het b
   \label{filter}
   Laat $\phi \in L_2(\R)$ een schalingsfunctie die ook integreerbaar is. Dan ligt de multiresolutie vast.
 
-  Andersom, als $h[n]$ een filter is zodat $\hat{h}(\omega)$ periodiek $2\pi$ is en continu differentieerbaar in een omgeving van $\omega = 0$ en als daarnaast geldt
+  Andersom, als $h[n]$ een filter is zodat de Discrete-Tijd Fouriergetransformeerde\footnote{De DTFT van $h$ is precies de DFT, met als enige verschil dat $\hat h$ een re\"ele waarde als argument krijgt: \[\hat h(\omega) = \sum_{n=-\infty}^\infty h[n] e^{- i n \omega}\].} $\hat{h}(\omega)$ periodiek $2\pi$ is en continu differentieerbaar in een omgeving van $\omega = 0$ en als daarnaast geldt
   \begin{align*}
     \forall \omega \in \R: | \hat{h}(\omega)|^2 + |\hat{h}(\omega + \pi)|^2 = 2, \\
     \hat{h}(0) = \sqrt{2}, \\
@@ -240,15 +240,14 @@ Hoewel $\phi$ een functie uit $L_2$ is, en $h$ een functie uit $\ell_2$, is het 
   \cite[P965-967]{daubechies}.
 
   Om deze dragers gelijk te krijgen: stel dat de drager van $h[n]$ gelijk $[N_1,N_2]$ is
-  en die van $\phi$ is $[K_1, K_2]$. De drager van $\phi(t/2)$ is $[2K_1, 2K_2]$ en de drager van de rechterzijde 
-  van $\eqref{phi_t2}$ is $[N_1 + K_1, N_2 + K_2]$. We concluderen dat $K_1 = N_1$ en $K_2 = N_2$.
+  en die van $\phi$ is $[K_1, K_2]$. Via \eqref{phi_t2} is de drager van de rechterkant gelijk aan $[N_1/2 + K_1/2, N_2/2 + K_2/2]$. We concluderen dat $K_1 = N_1$ en $K_2 = N_2$.
 \end{proof}
 \begin{proof}[Bewijs 2]
   Kijk nu naar
   \[
   \psi\left(t\right) = \sum_{n=-\infty}^{\infty} g[n] \phi(2t-n) = \sum_{n=-\infty}^{\infty} (-1)^{n}h[1-n] \phi(2t-n).
   \]
-  Met de informatie uit het begin van de stelling kunnen we de drager van de rechterkant vinden: $[N_1 - N_2 + 1, N_2 - N_1 + 1]$. De functie $\psi(t/2)$ is precies een dilatie met factor twee dus de drager van $\psi(t)$ moet wel gelijk zijn aan $[(N_1 - N_2 + 1)/2, (N_2 - N_1 + 1)/2]$.
+  Met de informatie uit het begin van de stelling kunnen we de drager van de rechterkant vinden: $[N_1/2 - N_2/2 + 1/2, N_2/2 - N_1/2 + 1/2]$. Het linkerlid heeft dezelfde drager en die moet zo wel gelijk zijn aan $[(N_1 - N_2 + 1)/2, (N_2 - N_1 + 1)/2]$.
 \end{proof}
 
 \subsection{Daubechieswavelets}
@@ -560,7 +559,7 @@ en we zullen bewijzen dat deze functies tezamen met $\phi^{(2)}_{0,n}$ een basis
   \]
   zodat
   $\boldsymbol{\Phi} = \{ \phi^{(2)}_{0, n}: n \in \Z^2 \} \cup \{ \psi^1_{j,n}, \psi^2_{j,n}, \psi^3_{j,n}: n \in \Z^2, j \in \N_0 \}$
-  een basis is voor $L^2(\R^2)$.
+  een basis is voor $L_2(\R^2)$.
 \end{proof}
 \begin{gevolg}
 We kunnen de laatste paar regels van het bewijs ook gedeeltelijk toepassen door te stoppen bij een ruimte $V_j$.
@@ -700,11 +699,11 @@ Van dit tweedimensionale algoritme kunnen nu ook de inverse algoritme bepalen, a
       + \breve{d}_{j-1}^3 \star (g \otimes g)[n_1,n_2]
     \end{split}
   \end{equation}
-  Waarbij 
+  waarbij 
   \[
   \breve y [n_1,n_2] = \begin{cases} 
     y[n_1/2,n_2/2] & \text{als } 2|n_1 \text{ en } 2|n_2 \\ 
-    0 &\text{anders}\end{cases}
+    0 &\text{anders.}\end{cases}
   \]
 \end{algo}
 \begin{stelling}
@@ -829,7 +828,7 @@ Dit geeft aanleiding tot een nieuwe basis, namelijk het tensorproduct van de bas
 we duiden deze basis dan ook aan als de \emph{Tensorbasis}~\footnote{In de literatuur wordt de Mallatdecompositie ook regelmatig een tensorproduct genoemd. 
 De verwarring ontstaat hier doordat in de Mallatbasis de basisfuncties ook tensorproducten zijn van wavelet- 
 en schalingsfuncties. We doelen echter in onze naamgeving op \emph{het tensorproduct van twee bases}.}.
-Schrijf namelijk $A^2 = \{a\otimes b \largediv a,b\in A\}$ voor het \emph{Tensorproduct} van een basis met zichzelf,
+Schrijf namelijk \mbox{$A^2 = \{a\otimes b \largediv a,b\in A\}$} voor het \emph{Tensorproduct} van een basis met zichzelf,
 dan krijgen we:
 \begin{equation}
   \label{tensor_basis_def}
@@ -938,7 +937,7 @@ ruimte $V_j^{(m)}$ op als een tensorproduct:
 Hier zien we dat de $k$-de term $V_j$ uitgeschreven is volgens de gewone $FWT$
 decompositie. Het staat ons nu vrij om de termen $V_j^{(k-1)}$ en $V_j^{m-k}$ te ontbinden
 op een andere manier. De gebruikte algoritmes volgen analoog aan de implementatie van het Tensorproduct
-en de Mallatdecompositie door co\"ordinaten vast te houden.\footnote{De notatie voor de mengvorm en de specifieke bewijzen laten we achterwege. Deze leiden teveel af van hetdoel van het project }
+en de Mallatdecompositie door co\"ordinaten vast te houden.\footnote{De notatie voor de mengvorm en de specifieke bewijzen laten we achterwege. Deze leiden teveel af van het doel van het project.}
 
 \begin{voorbeeld}
 We kunnen in 3 dimensies een Tensor-Mallat mengvorm maken:
@@ -989,33 +988,38 @@ In het bijzonder zijn we op zoek naar de \emph{fout} van de reconstructie $\| f 
 Duidelijk moge zijn dat voor $N \to \infty$, $\| f - f|_{\mathcal{B}_N} \|^2 \to 0$.
 
 \begin{definitie}[Sobolevruimte]
-Een Sobolevruimte $H^p(\Omega)$ over $\Omega \subset \R^n$ is de verzameling van alle functies $u \in L_2(\Omega)$ z\'o dat voor elke $\alpha \in \N_0^n$ geldt dat $|\alpha| = \alpha_1 + \cdots + \alpha_n \leq p \implies D^\alpha u \in L_2(\Omega)$. De zwakke parti\"ele afgeleide $D^\alpha u$ betekent
+Een Sobolevruimte $H^p(\Omega)$ over $\Omega \subset \R$ is de verzameling van alle functies $u \in L_2(\Omega)$ waarvoor geldt dat
 \[
-	D^\alpha u := \frac{\partial^{|\alpha|} u}{\partial x_1^{\alpha_1} \cdots \partial x_n^{\alpha_n} }.
+	\frac{\partial^k u}{\partial x^k} \in L_2(\Omega), k \leq p.
 \]
 
 De norm op $H^p$ die hierbij hoort is gedefini\"eerd als
 \[
-	\| u \|_{H^p(\Omega)} := \sum_{|\alpha| \leq k} \| D^\alpha u \|_{L_2(\Omega)}.
+	\| u \|_{H^p(\Omega)} := \sum_{k \leq p} \left\| \frac{\partial^k u}{\partial x^k} \right\|_{L_2(\Omega)}.
+\]
+
+In $n$ dimensies:
+\[
+	H^{(p_1,p_2,\ldots,p_n)}(\Box) := \bigotimes_{k=1}^n H^{p_k}([0,1]).
 \]
 \end{definitie}
 
 \subsection{Fout van de Mallatdecompositie}
 Wij zijn op het ge\"interesseerd in de Mallat-waveletbasis $\boldsymbol\Phi$ die we vonden in stelling \ref{mallatbasis}.Deze is duidelijk aftelbaar, dus we kunnen \eqref{linfout} gebruiken. 
 
-Defini\"eer $J_M := \{ l \in \N^n: \| l \|_\infty \leq M \}$. Laat $\boldsymbol\Phi_M := \{ \boldsymbol{\psi}_{\boldsymbol{\lambda}} \in \boldsymbol\Phi: |\boldsymbol\lambda| \in J_M \}$ met $|\boldsymbol\lambda| = (|\lambda_1|, \ldots, |\lambda_n|)$ de verzameling basisfuncties tot een niveau $M$.
+Defini\"eer $J_M := \{ l \in \N^n: \| l \|_\infty \leq M \}$. Laat $\boldsymbol\Phi_M := \{ \boldsymbol{\psi}_{\boldsymbol{\lambda}} \in \boldsymbol\Phi: |\boldsymbol\lambda| \in J_M \}$ met \mbox{$|\boldsymbol\lambda| = (|\lambda_1|, \ldots, |\lambda_n|)$} de verzameling basisfuncties tot een niveau $M$.
 
 \begin{stelling}[Fout van Mallatdecompositie]
 \label{thm:foutmallat}
-Wanneer $f \in H^p(\Box)$, zal de fout $\| f - f_{\boldsymbol\Phi_M} \|$ bij een Mallatdecompositie met de basisfuncties tot niveau $M$ precies $\theta(N^{-\tfrac p{2n}})$ zijn, met $N := \# \boldsymbol\Phi_M$ het aantal basisfuncties tot niveau $M$.
+Wanneer $f \in H^{(p,\ldots,p)}(\Box)$, zal de fout \mbox{$\| f - f|_{\boldsymbol\Phi_M} \|$} bij een Mallatdecompositie met de basisfuncties tot niveau $M$ precies $\theta(N^{-\tfrac p{2n}})$ zijn, met \mbox{$N := \# \boldsymbol\Phi_M$} het aantal basisfuncties tot niveau $M$.
 \end{stelling}
 \begin{proof}
 
   We maken gebruik van de zogenaamde Jacksonongelijkheid \cite{jackson} die zegt dat, gegeven de ruimte $\mathbb{P}_{p-1}$ van polynomen van orde $p-1$, geldt: 
   \[
-  \inf_{q \in \mathbb{P}_{p-1}} ||f - q||_{L_2(\Box)} \simeq 2^{-jp} ||f||_{H^p(\Box)}
+  \inf_{q \in \mathbb{P}_{p-1}} ||f - q||_{L_2(\Box)} \simeq 2^{-jp} ||f||_{H^{(p,\ldots,p)}(\Box)}
   \]
-  wanneer $f \in H^p(\Box)$.
+  wanneer $f \in H^{(p,\ldots,p)}(\Box)$.
 
   Voor elke dimensie zitten er $\theta(2^M)$ basisfuncties in $\{ \psi_\lambda: |\lambda| \leq M \}$. Er zijn $n$ dimensies dus $2^{Mn} = N$ basisfuncties in totaal. Bekijk de fout:
   \[
@@ -1040,15 +1044,15 @@ Volgens \cite[L3.1.7]{tammo} is
 \]
 met $\boldsymbol\lambda := (\lambda_1, \ldots, \lambda_n) \in \boldsymbol{\nabla} := \nabla^n$ een orthogonale basis voor $L_2(\Box)$.
 
-Laat vervolgens $I_M := \{ l \in \N^n_0: ||l||_1 \leq M \}$ en maak de \emph{sparse grid index set} $\boldsymbol{\nabla}_M := \{ \boldsymbol{(j,n)} \in \boldsymbol{\nabla}: \boldsymbol{j} \in I_M \}$.
+Laat vervolgens $I_M := \{ l \in \N^n_0: ||l||_1 \leq M \}$ en maak de \emph{sparse grid index set} \mbox{$\boldsymbol{\nabla}_M := \{ \boldsymbol{(j,n)} \in \boldsymbol{\nabla}: \boldsymbol{j} \in I_M \}$}.
 
 We zullen nu een aantal lemma's enumereren die we willen gebruiken om de fout af te schatten. De bewijzen hiervoor
 staan in \cite{tammo} en zullen we niet verder behandelen.
 \begin{lemm}{\cite[P3.2.3]{tammo}}
   \label{en_daarom_jongens_en_meisjes}
-  Voor $f \in H^p(\Box)$ geldt dat de fout van de benadering op basis van de sparse grid index set $\boldsymbol{\nabla}_M$ voldoet aan
+  Voor $f \in H^{(p,\ldots,p)}(\Box)$ geldt dat de fout van de benadering op basis van de sparse grid index set $\boldsymbol{\nabla}_M$ voldoet aan
   \[
-  \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim 2^{-pM} M^{(n-1)/2} \| f \|_{H^p(\Box)}.
+  \left\| f - f|_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim 2^{-pM} M^{(n-1)/2} \| f \|_{H^{(p,\ldots,p)}(\Box)}.
   \]
 \end{lemm}
 \begin{lemm}{\cite[L3.3.1]{tammo}}
@@ -1066,26 +1070,26 @@ staan in \cite{tammo} en zullen we niet verder behandelen.
 Dit is voldoende om een goede afschatting te maken van de \emph{fout van het Tensorproduct}.
 \begin{stelling}[Fout van het Tensorproduct]
 \label{thm:fouttensor}
-  Laat $f \in H^p(\Box)$ en $N = \#\boldsymbol{\nabla}_M$. Dan:
+  Laat $f \in H^{(p,\ldots,p)}(\Box)$ en $N = \#\boldsymbol{\nabla}_M$. Dan:
   \[
-  \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim N^{-p} \log_2(N)^{(n-1)(1/2 + p)} \| f \|_{H^p(\Box)}.
+  \left\| f - f|_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim N^{-p} \log_2(N)^{(n-1)(1/2 + p)} \| f \|_{H^{(p,\ldots,p)}(\Box)}.
   \]
 \end{stelling}
 \begin{proof}
   We kunnen met het lemma \ref{en_daarom_jongens_en_meisjes} de fout af schatten. Er geldt dat
   \[
-  \left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim M^{(n-1)/2}2^{-Mp}\| f \|_{H^p(\Box)}.
+  \left\| f - f|_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)} \lesssim M^{(n-1)/2}2^{-Mp}\| f \|_{H^{(p,\ldots,p)}(\Box)}.
   \]
   We verplaatsen alle termen die niet van $M$ afhangen naar het linkerlid, dit geeft:
   \[
-  \frac{\left\| f - f_{\boldsymbol\nabla_M}  \right\|_{L_2(\Box)}}{\| f \|_{H^p(\Box)}} \lesssim M^{(n-1)/2}2^{-Mp}.
+  \frac{\left\| f - f|_{\boldsymbol\nabla_M}  \right\|_{L_2(\Box)}}{\| f \|_{H^{(p,\ldots,p)}(\Box)}} \lesssim M^{(n-1)/2}2^{-Mp}.
   \]
   We defini\"eren de functie die voor een gegeven niveau $2^M$ 
   het linkerlid van deze vergelijking geeft door:
   \[
   \begin{split}
     h: \N \to&\, \R \\
-    2^M \mapsto&\, \frac{\left\| f - f_{\boldsymbol\nabla_M}  \right\|_{L_2(\Box)}}{\| f \|_{H^p(\Box)}}.
+    2^M \mapsto&\, \frac{\left\| f - f|_{\boldsymbol\nabla_M}  \right\|_{L_2(\Box)}}{\| f \|_{H^{(p,\ldots,p)}(\Box)}}.
   \end{split}
   \]
   Vervolgens defini\"eren we de functie $g$ die het aantal wavelets geeft van dit niveau:
@@ -1107,7 +1111,7 @@ Dit is voldoende om een goede afschatting te maken van de \emph{fout van het Ten
   \]
   Maar dit betekent precies dat de orde van $h$ herschreven wordt in termen van $N$ door
   \[
-  \frac{\left\| f - f_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)}}{\| f \|_{H^p(\Box)}}
+  \frac{\left\| f - f|_{\boldsymbol\nabla_M} \right\|_{L_2(\Box)}}{\| f \|_{H^{(p,\ldots,p)}(\Box)}}
   \lesssim N^{-p} \log_2(N)^{(n-1)(1/2 + p)}, 
   \]
   en dit is precies wat we wilden bewijzen.
