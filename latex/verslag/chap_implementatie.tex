@@ -58,7 +58,7 @@ Hoewel we een eigen beeldformaat gemaakt hebben, is het ons niet gelukt om de af
 Een orthogonale wavelet wordt discreet helemaal gekenmerkt door haar filter $h$. Zoals beschreven in de sectie over de FWT, hebben we daarmee (via vergelijkingen~\ref{highpassfilter}, \ref{approx_rec}, \ref{detail_rec}, \ref{reconstr_FWT}) feitelijk het algoritme al helemaal in handen. Definieer
 \[
 	\texttt{dec\_l} := \bar{h} \quad \texttt{dec\_h} := \bar{g} \quad 
-        \texttt{rec\_l} := h \quad \quad \texttt{rec\_h} := g.
+        \texttt{rec\_l} := h \quad \texttt{rec\_h} := g.
 \]
 Dan kunnen we met twee routines (\autoref{next} en \autoref{prev}) in elke richting het algoritme simpel implementeren.
 

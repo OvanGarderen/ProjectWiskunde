@@ -41,12 +41,13 @@ Merk op dat $\Ldnorm{f-f^\circ}{a,b}=0$ niet betekent dat $f - f^\circ = 0$.
 
 %-----------------------------------------------------------------------------------------------------------------
 \section{De \emph{Discrete Fourier Transform}}
-Zoals we gezien hebben in het vorige hoofdstuk kan de Fouriertransformatie gebruikt worden om continue signalen te karakteriseren voor verschillende frequenties. Een groot gebied binnen de signaalanalyse is echter van discrete aard aangezien hier veelal digitale instrumenten worden gebruikt. De toepassingen waarnaar wij op zoek zijn liggen in dit digitale domein (JPEG is een beeldcompressie-algoritme) en dus zal het verslag zich verder afspelen in deze discrete setting.
+Zoals we gezien hebben in het voorafgaande, kan de Fouriertransformatie gebruikt worden om continue signalen te karakteriseren door verschillende frequenties. Een groot gebied binnen de signaalanalyse is echter van discrete aard aangezien hier veelal digitale instrumenten worden gebruikt.
 
-Om discrete signalen te analyseren lijkt het voor de hand te liggen om een deze als stapfuncties te zien. Een stapfunctie zit immers in $L_2$. De discontinuiteiten van de stapfunctie leiden echter tot ongewenste resultaten, zoals is te zien aan de reconstructie van een blokgolf door middel van Fouriertransformatie. TODO MISCHIEN PLAATJE?
-Erger nog, elke eindige som van continue functies is weer continu, zodat voor een perfecte reconstructie van een discreet signaal is met deze methode altijd een oneindige rij \coefficient en nodig. Bovendien is het moeilijk om uit deze \coefficient en relevante informatie te destilleren over de aard van het signaal.
+Om discrete signalen te analyseren lijkt het voor de hand te liggen om een deze als stapfuncties te zien. Een stapfunctie zit immers in $L_2$. De discontinu\"iteiten van de stapfunctie leiden echter tot ongewenste resultaten, zoals is te zien aan de reconstructie van een blokgolf door middel van Fouriertransformatie. TODO MISCHIEN PLAATJE?
 
-In plaats van de discrete signalen in te bedden in $L_2$ zullen we een discreet analogon gebruiken voor de Fouriertransformatie.
+Erger nog, elke reconstructie in termen van eindig veel basisfuncties is weer continu, zodat voor een perfecte reconstructie van een discreet signaal is met deze methode altijd een oneindige rij co\"effici\"enten nodig zijn. Bovendien is het moeilijk om uit deze co\"effici\"enten relevante informatie te destilleren over de aard van het signaal.
+
+In plaats van de discrete signalen in te bedden in $L_2$ zullen we ze beschouwen als rijen in $\ell_2$ (zie sectie \ref{ruimtes}).
 Hiervoor zullen we de Fourier-basis discretiseren en ons richten op de ruimte $\R^n$.
 We veranderen daarvoor de co\"ordinaten naar een discrete $j$ volgens
 \[
@@ -494,5 +495,5 @@ wanneer de verschillen klein zijn en de verzameling $A$ groot is komt dit overee
 continue functie en zeggen we dat de functie glad is. Zo kunnen we analoga geven voor hogere afgeleiden.
 
 We zullen in onze resultaten de discrete fout in kaart brengen door de zogenaamde PSNR-functie te gebruiken,
-een logaritmische schaal die het analogon van de $L_2$ norm gebruikt. Zie hiervoor hoofdstuk \ref{sectie_psnr}.
+een logaritmische schaal die werkt over discrete signalen, welke ook als elementen uit $\ell_2$ kunnen worden beschouwd. Zie hiervoor hoofdstuk \ref{sectie_psnr}.
 
