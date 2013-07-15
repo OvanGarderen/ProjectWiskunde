@@ -6,7 +6,17 @@ Bij deze compressie zijn twee types te onderscheiden. Bijvoorbeeld tekst moet na
 
 In het bijzonder zullen wij ons vizier richten op beeldmateriaal, eerst stil en daarna bewegend. Foto's worden veelal opgeslagen in het zogenaamde JPEG-beeldformaat: \texttt{.jpg}. De wiskunde achter dit compressie-algoritme is niet triviaal en wij zullen hier dan ook grondig op ingaan in ons verslag. De Fouriertransformatie wordt in \emph{signaalverwerking} al honderden jaren toegepast om signalen (functies, geluid, foto's, films) te schrijven in een andere \emph{basis}, namelijk de basis van de complexe $e$-machten $e^{2 \pi i t}$. We hopen hierbij maar dat ons signaal goed te benaderen valt in deze basis: een klein aantal grote co\"effici\"enten en een groot aantal kleine.
 
-Het lot wil dat dit helemaal niet altijd goed werkt. Mede doordat Fourier niet goed werkt met harde randen is er in de laatste dertig jaar een nieuwe speler op het gebied van signaalverwerking opgedoken, de \mbox{\emph{Wavelettransformatie}}. In de praktijk worden deze wavelets gebruikt in een nieuwere variant van JPEG: JPEG-2000. Een wavelet is niks anders dan een functie $\psi: \R \to \R$ waarvoor geldt dat $\int_{-\infty}^\infty \psi(t) dt = 0$. Dit op zich is nog niet handig, maar er zijn wavelets met een zogenaamde \emph{compacte drager}. Merk op dat voor de complexe $e$-machten geldt dat de drager $\mathbb{F} = \overline{\{ t \in \R: e^{2 \pi i t} \not= 0 \}}$ gelijk is aan $\R$. Een wavelet heeft een compacte drager wanneer deze drager een compacte verzameling in $\R$ is. Zie figuur \ref{fig:samenv}.
+Het lot wil dat dit helemaal niet altijd goed werkt, de Fouriertransformatie werkt namelijk niet goed wanneer een afbeelding harde randen heeft.
+Daarm is er in de laatste dertig jaar een nieuwe speler op het gebied van signaalverwerking opgedoken, de \mbox{\emph{Wavelettransformatie}}. 
+We spreken dan over een nieuwe versie van JPEG: JPEG-2000.
+ 
+De wavelettransformatie maakt gebruik van de wavelet, een r\"eele functie waarvoor geldt dat $\int_{-\infty}^\infty \psi(t) dt = 0$;
+deze heeft dus net als een golf even hoge pieken als dalen, vanwaar de naam.
+Dit op zich is nog niet handig, maar er zijn wavelets met een zogenaamde \emph{compacte drager}:
+de functie is identiek $0$ buiten een \emph{begrensd} en \emph{gesloten} gebied. 
+Hierin ligt dan het verschil met de complexe $e$-machten van de Fouriertransformatie, waarvan de drager gelijk is aan $\R$. 
+Het effect van deze compacte drager is nu dat niet elke wavelet last heeft van een harde rand in het plaatje, maar slechts een deel van de functies.
+Zie figuur \ref{fig:samenv}.voor twee van de wavelets die we gebruikt hebben.
 
 \begin{figure}[h]
   \centering
@@ -20,9 +30,13 @@ Het lot wil dat dit helemaal niet altijd goed werkt. Mede doordat Fourier niet g
 \label{fig:samenv}
 \end{figure}
 
+TODO: DIT MOET MISCHIEN MAAR WEG: te technisch
+
 Een orthogonale waveletbasis is nu een verzameling $\{ \psi_{j,n}: j \in \N_0, n \in \Z \}$ waarbij $\psi_{j,n}(t) = 2^{j/2} \psi(2^jt - n)$: een verschuiving over $n$ en een dilatie met factor $2^j$. Zij heet dan orthogonaal omdat de extra eis is dat zij een orthonormale basis opspant: \[\langle \psi_{a,b}, \psi_{c,d} \rangle = \delta_{a,c} \cdot \delta_{b,d}.\]
 
 Zie wederom figuur \ref{fig:samenv} voor een grafiek van $\psi_{0,0} = \psi$ en $\psi_{0,-1}$ voor twee wavelets. De Haarwavelet is de oudste (en meest simpele) wavelet in gebruik en staat centraal in ons verslag. Rechts is de Daubechies-2 wavelet te zien. Deze hebben we als tweede wavelet ook bekeken.
+
+TODO: TOT HIER
 
 De Fouriertransformatie en Wavelettransformatie geven ons op deze manier een wiskundig onderbouwde manier om signalen in \'e\'en dimensie (bijvoorbeeld geluid) te comprimeren naar een fractie van haar oorsponkelijke grootte. We hopen dan dat de reconstructie nog dichtbij het origineel ligt (en het geluid goed te verstaan is). In twee dimensies gebruiken we voor de Fouriertransformatie het zogenaamde \emph{Tensorproduct}: $f \otimes g$. Dit is een natuurlijke manier om meer ruimtes (in ons geval van functies) loodrecht op elkaar te zetten tot een $n$-dimensionale ruimte. In twee dimensies krijgen de basiselementen zo een tweedimensionale vorm: $(f \otimes g)(x,y) = f(x)g(y)$, waarbij $f$ en $g$ (mogelijk verschillende) basiselementen uit de eendimensionale basis zijn.
 
