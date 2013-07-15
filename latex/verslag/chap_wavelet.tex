@@ -163,6 +163,30 @@ er een wavelet $\psi$ bestaat zo dat
 een orthonormale basis is voor $W_j$ en $\{ \psi_{j,n}: (j,n) \in \Z^2 \}$ een basis voor $L_2(\R)$. 
 Deze functie is dan een \emph{orthogonale} wavelet, omdat $W_{j-1} \perp V_{j-1}$.
 
+\begin{lemm}
+\label{jarob}
+De verzameling $\{ \phi_{0, n}: n \in \Z \} \cup \{ \psi_{j,n}: j \in \N_0, n \in \Z \}$ is ook een basis voor $L_2(\R)$.
+\end{lemm}
+
+\begin{proof}[Bewijs]
+We bekijken de definitie van de multiresolutie, die zegt dat
+\[
+	L_2(\R) = \lim_{j\to \infty}V_j.
+\]
+Verder weten we dat
+\begin{equation}
+  \label{ruimte_splitsing}
+  V_j = V_k \oplus W_k \oplus \cdots \oplus W_{j-1} = \ldots
+  = V_0 \oplus W_0 \oplus \cdots \oplus W_{j-1}.
+\end{equation}
+
+Combineer deze twee gelijkheden om te vinden dat
+\[
+	L_2(\R) = \lim_{j \to \infty} V_j = V_0 \oplus \left( \bigoplus_{j=0}^\infty W_j \right).
+\]
+Nu moet wel gelden dat $\{ \phi_{0, n}: n \in \Z \} \cup \{ \psi_{j,n}: j \in \N_0, n \in \Z \}$ een basis voor $L_2(\R)$ is.
+\end{proof}
+
 Vanwege de relatie $W_{j-1} \subset V_{j}$, waaruit volgt dat $\psi(t) \in W_0 \subset V_1$,
 kunnen we $\psi(t)$ schrijven in termen van  $\{ \sqrt{2}\phi(2t-n): n \in \Z \}$, de orthonormale basis van $V_1$: 
 \[
@@ -270,12 +294,8 @@ Wij hebben in het praktische deel van ons project aandacht besteed aan de zogena
 
 Door de recursieve relatie van de ruimtes in \eqref{ruimterec} herhaald toe te passen,
 kunnen we de ruimte $V_j$ schrijven in termen van $V_0$ en een scala aan
-orthogonaal-complementsruimtes $W_k$, volgens:
-\begin{equation}
-  \label{ruimte_splitsing}
-  V_j = V_k \oplus W_k \oplus \cdots \oplus W_{j-1} = \ldots
-  = V_0 \oplus W_0 \oplus \cdots \oplus W_{j-1}.
-\end{equation}
+orthogonaal-complementsruimtes $W_k$ volgens \eqref{ruimte_splitsing}.
+
 We willen een functie $f$ benaderen in de ruimte $V_j$ door $P_{V_j}f$ te schrijven in
 de basis van de ruimtes $V_0$ en de verschillende ruimtes $W_k$. Hiervoor dienen we de inproducten
 te berekenen van $f$ met de basisvectoren in deze ruimtes.
@@ -460,7 +480,7 @@ van de waveletfamilie naar twee dimensies door
 \[
 \{ \psi_{j_1,n_1}(x_1) \psi_{j_2,n_2}(x_2): (j_i,n_i) \in \Z^4 \}.
 \]
-We zullen zien dat deze familie, in combinatie met enkele schalingsfuncties, een basis kan vormen voor de $L_2(\R^2)$.
+We zullen zien dat we samen met een verzameling tweedimensionale schalingsfuncties (analoog aan lemma \ref{jarob}) een basis kunnen vormen voor de $L_2(\R^2)$.
 Merk nu op dat we met zulke wavelets op de $x_1$-as met resolutie $2^{j_1}$ kijken 
 terwijl de $x_2$-as een resolutie $2^{j_2}$ kent.
 
