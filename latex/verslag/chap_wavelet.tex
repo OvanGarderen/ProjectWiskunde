@@ -160,12 +160,14 @@ er een wavelet $\psi$ bestaat zo dat
 \[
 \left\{ \psi_{j,n}(t) := \sqrt{2^j} \psi\left(2^jt - n\right) : n \in \Z \right\}
 \] 
-een orthonormale basis is voor $W_j$ en $\{ \psi_{j,n}: (j,n) \in \Z^2 \}$ een basis voor $L_2(\R)$. 
-Deze functie is dan een \emph{orthogonale} wavelet, omdat $W_{j-1} \perp V_{j-1}$.
+een orthonormale basis is voor $W_j$. Deze functie is dan een \emph{orthogonale} wavelet, omdat $W_{j-1} \perp V_{j-1}$.
+We zouden nu de verzameling $\{ \psi_{j,n}: (j,n) \in \Z^2 \}$ kunnen gebruiken als basis voor $L_2(\R)$; dit is hij.
+In de praktijk hebben we echter liever dat de recursieve relatie in \eqref{ruimterec} ophoudt bij een bepaalde $V_j$,
+daarom formuleren we een andere basis.
 
 \begin{lemm}
 \label{jarob}
-De verzameling $\{ \phi_{0, n}: n \in \Z \} \cup \{ \psi_{j,n}: j \in \N_0, n \in \Z \}$ is ook een basis voor $L_2(\R)$.
+De verzameling $\{ \phi_{0, n}: n \in \Z \} \cup \{ \psi_{j,n}: j \in \N_0, n \in \Z \}$ is een basis voor $L_2(\R)$.
 \end{lemm}
 
 \begin{proof}[Bewijs]
