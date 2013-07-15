@@ -394,7 +394,7 @@ We kunnen nu de transformatie inverteren aan de hand van het volgende algoritme
   + \sum_{-\infty}^\infty \inpr{\phi_{j,n}}{\psi_{j-1,k}}\psi_{j-1,k}.
   \]
   Deze inproducten komen weer overeen met de filterco\"effici\"enten. Nemen we dus aan
-  beide zeiden het inproduct dan volgt
+  beide zijden het inproduct dan volgt
   \[
   a_j[n] = \sum_{k=-\infty}^\infty h[n-2k]a_{j-1}[k]
   + \sum_{-\infty}^\infty g[n-2k]d_{j-1}[k].
@@ -455,13 +455,13 @@ operaties. Dus deze DWT is een $\theta(KN)$ algoritme.
 Ook de complexiteit van de inverse wordt zo van orde $KN$.
 
 \section{Meer dimensies: de Mallatdecompositie}
-Met een orthonormale waveletbasis $\{ \psi_{j,n}: (j,n) \in \Z^2\}$ van $L_2(\R)$ volgt een natuurlijke voortzetting
+Met een familie van orthonormale wavelets $\{ \psi_{j,n}: (j,n) \in \Z^2\}$ voor de ruimte $L_2(\R)$ volgt een natuurlijke voortzetting
 van de waveletfamilie naar twee dimensies door
 \[
-\{ \psi_{j_1,n_1}(x_1) \psi_{j_2,n_2}(x_2): (j_i,n_i) \in \Z^4 \},
+\{ \psi_{j_1,n_1}(x_1) \psi_{j_2,n_2}(x_2): (j_i,n_i) \in \Z^4 \}.
 \]
-wat een orthonormale basis voor $L_2(\R^2)$ is. 
-We zien direct dat we met zulke wavelets op de $x_1$-as met resolutie $2^{j_1}$ kijken 
+We zullen zien dat deze familie, in combinatie met enkele schalingsfuncties, een basis kan vormen voor de $L_2(\R^2)$.
+Merk nu op dat we met zulke wavelets op de $x_1$-as met resolutie $2^{j_1}$ kijken 
 terwijl de $x_2$-as een resolutie $2^{j_2}$ kent.
 
 Mallat vond dit iets om te vermijden \cite[\S 7.7]{mallat} en legt in zijn analyse dan ook de eis $j_1 = j_2 =: j$ op. 
@@ -1011,7 +1011,7 @@ Defini\"eer $J_M := \{ l \in \N^n: \| l \|_\infty \leq M \}$. Laat $\boldsymbol\
 
 \begin{stelling}[Fout van Mallatdecompositie]
 \label{thm:foutmallat}
-Wanneer $f \in H^{(p,\ldots,p)}(\Box)$, zal de fout \mbox{$\| f - f|_{\boldsymbol\Phi_M} \|$} bij een Mallatdecompositie met de basisfuncties tot niveau $M$ precies $\theta(N^{-\tfrac p{2n}})$ zijn, met \mbox{$N := \# \boldsymbol\Phi_M$} het aantal basisfuncties tot niveau $M$.
+Wanneer $f \in H^{(p,\ldots,p)}(\Box)$, zal de fout \mbox{$\| f - f|_{\boldsymbol\Phi_M} \|$} bij een Mallatdecompositie met de basisfuncties tot niveau $M$ precies $\theta(N^{-p/n})$ zijn, met \mbox{$N := \# \boldsymbol\Phi_M$} het aantal basisfuncties tot niveau $M$.
 \end{stelling}
 \begin{proof}
 
@@ -1025,14 +1025,14 @@ Wanneer $f \in H^{(p,\ldots,p)}(\Box)$, zal de fout \mbox{$\| f - f|_{\boldsymbo
   \[
   \left\| f - f|_{\boldsymbol\Phi_M} \right\|^2_{L_2(\Box)} 
   = \sum_{{\boldsymbol\psi} \in \boldsymbol\Phi \setminus \boldsymbol\Phi_M} | \langle f, \boldsymbol\psi \rangle |^2 
-  \simeq \sum_{|\boldsymbol\lambda| > M} 2^{-|\boldsymbol\lambda|p} \simeq 2^{-Mp},
+  \simeq \sum_{|\boldsymbol\lambda| > M} 2^{-|\boldsymbol\lambda|2p} \simeq 2^{-2Mp},
   \]
   waarbij het laatste gelijkheidsteken voortkomt uit de relatie
   \[
   \sum_{k=M+1}^\infty 2^{- kp} = \frac{2^{-Mp}}{2^p-1}
   \]
   en de notie dat $p$ constant is voor een keuze van de wavelet. 
-  De fout is nu $2^{-Mp/2}$. Omschrijven geeft dat dit overeenkomt met een fout van $N^{-\frac p {2n}}$.
+  De fout is nu $2^{-Mp}$. Omschrijven geeft dat dit overeenkomt met een fout van $N^{-p/n}$.
 \end{proof}
 
 \subsection{Fout van het Tensorproduct}
